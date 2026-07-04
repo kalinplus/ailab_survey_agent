@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 from typing import Any
 
 import httpx
@@ -19,6 +20,8 @@ class InternS2Client:
 
     def __init__(self, config: AppConfig) -> None:
         self.config = config
+        self._last_call: float = 0.0
+        self._min_interval: float = 2.1  # Intern-S2 rate limit: 1 req per 2s
 
     def is_configured(self) -> bool:
         return bool(self.config.intern_api_key)
@@ -49,8 +52,13 @@ class InternS2Client:
 
         last_error: Exception | None = None
         for _ in range(self.config.max_llm_retries + 1):
+            # Rate limiting: Intern-S2 allows 1 request per 2s
+            elapsed = time.monotonic() - self._last_call
+            if elapsed < self._min_interval:
+                time.sleep(self._min_interval - elapsed)
             try:
                 with httpx.Client(timeout=self.config.request_timeout_seconds) as client:
+                    self._last_call = time.monotonic()
                     response = client.post(url, headers=headers, json=payload)
                     response.raise_for_status()
                     data = response.json()
