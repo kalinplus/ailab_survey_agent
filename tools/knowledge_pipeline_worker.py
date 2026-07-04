@@ -55,7 +55,7 @@ def run(request_path: str) -> dict:
         demand.aspects, surveys, llm, mineru, cleaner, sciverse)
     retrieved, parsed = phase3_paper_retriever.run(
         request.task_id, demand.aspects, survey_struct.expansion_candidates,
-        sciverse, mineru, cleaner, seed_papers, request.pipeline_config)
+        sciverse, mineru, cleaner, seed_papers, request.pipeline_config, llm)
     cards = phase5_cards.run(
         request.task_id, parsed, retrieved, llm,
         demand.aspects, request.pipeline_config.aspect_match_threshold)

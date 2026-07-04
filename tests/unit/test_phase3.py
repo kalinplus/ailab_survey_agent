@@ -3,10 +3,10 @@ from tools.models.artifacts import RetrievedPaper
 
 
 class FakeSV:
-    def meta_search(self, **kw):
+    def meta_search(self, query, **kw):
         return {
             "results": [
-                {"unique_id": "paper:1", "title": "A", "year": 2023, "url": "http://a"},
+                {"unique_id": "paper:1", "title": "A", "year": 2023, "url": "http://a/paper.pdf"},
                 {"unique_id": "paper:1", "title": "A", "year": 2023},
             ]  # dup
         }
@@ -66,7 +66,7 @@ def test_seed_fallback_when_no_hits():
     from tools.models.requests import PipelineConfig
 
     class EmptySV:
-        def meta_search(self, **kw):
+        def meta_search(self, query, **kw):
             return {"results": []}
 
     seeds = [{"title": "DreamerV3", "year": 2023, "keywords": ["wm"]}]
@@ -82,7 +82,7 @@ def test_no_seed_fallback_when_disabled():
     from tools.models.requests import PipelineConfig
 
     class EmptySV:
-        def meta_search(self, **kw):
+        def meta_search(self, query, **kw):
             return {"results": []}
 
     seeds = [{"title": "DreamerV3", "year": 2023, "keywords": ["wm"]}]
@@ -111,7 +111,7 @@ def test_parse_status_abstract_only_when_no_url():
     from tools.models.requests import PipelineConfig
 
     class NoUrlSV:
-        def meta_search(self, **kw):
+        def meta_search(self, query, **kw):
             return {"results": [{"unique_id": "p1", "title": "NoUrl", "year": 2024}]}
 
     rp, pp = run(
@@ -147,7 +147,7 @@ def test_max_papers_truncation():
     from tools.models.requests import PipelineConfig
 
     class ManySV:
-        def meta_search(self, **kw):
+        def meta_search(self, query, **kw):
             return {
                 "results": [
                     {"unique_id": f"paper:{i}", "title": f"P{i}", "year": 2023, "url": f"http://p{i}"}
@@ -176,7 +176,7 @@ def test_per_aspect_resilience():
     call_count = {"n": 0}
 
     class FlakySV:
-        def meta_search(self, **kw):
+        def meta_search(self, query, **kw):
             call_count["n"] += 1
             if call_count["n"] == 1:
                 raise RuntimeError("aspect 1 search failed")

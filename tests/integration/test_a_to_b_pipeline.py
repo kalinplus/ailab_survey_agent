@@ -155,7 +155,7 @@ class TestAToB:
                 demand.aspects, surveys, fake_llm, mineru, cleaner, sciverse)
             retrieved, parsed = phase3_paper_retriever.run(
                 request.task_id, demand.aspects, survey_struct.expansion_candidates,
-                sciverse, mineru, cleaner, seed_papers, request.pipeline_config)
+                sciverse, mineru, cleaner, seed_papers, request.pipeline_config, fake_llm)
             cards = phase5_cards.run(
                 request.task_id, parsed, retrieved, fake_llm,
                 demand.aspects, request.pipeline_config.aspect_match_threshold)

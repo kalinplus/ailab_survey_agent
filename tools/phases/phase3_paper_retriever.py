@@ -48,6 +48,28 @@ def _to_retrieved(hit: dict, source="sciverse") -> RetrievedPaper:
     )
 
 
+def _has_non_ascii(text: str) -> bool:
+    return any(ord(c) > 127 for c in text)
+
+
+def _generate_search_queries(keywords: list[str], llm) -> list[str]:
+    """Use LLM to translate/expand non-English keywords into English academic queries."""
+    raw = " ".join(keywords)
+    if not _has_non_ascii(raw):
+        return [raw]
+    prompt = (
+        f"Translate the following topic keywords into 2-3 concise English academic "
+        f"search queries for finding research papers. Return ONLY the queries, one per line.\n"
+        f"Keywords: {raw}"
+    )
+    try:
+        result = llm.chat([{"role": "user", "content": prompt}], temperature=0.1)
+        lines = [ln.strip().strip("-•*").strip() for ln in result.strip().splitlines() if ln.strip()]
+        return lines[:3] if lines else [raw]
+    except Exception:
+        return [raw]
+
+
 def dedup(papers: list[RetrievedPaper]) -> list[RetrievedPaper]:
     seen, out = set(), []
     for p in papers:
@@ -68,6 +90,7 @@ def run(
     cleaner,
     seed_papers,
     pipeline_config,
+    llm=None,
 ):
     retrieved = []
     # 1. expansion refs via meta-paper-relations (skip if sciverse offline -> caught upstream)
@@ -77,32 +100,43 @@ def run(
         {"field": "publication_published_year", "operator": "FILTER_OP_LTE", "value": 2026},
     ]
     for a in aspects:
-        try:
-            res = sciverse.meta_search(
-                query=" ".join(a.get("keywords", [])),
-                filters=year_filters,
-                impact_boost="MILD",  # prefer highly-cited papers for the survey core
-                page_size=25,
-            )
-            for hit in res.get("results", []):
-                retrieved.append(_to_retrieved(hit))
-        except Exception:
-            pass  # fail fast per-aspect suppressed only to keep other aspects; logged in quality_report
+        keywords = a.get("keywords", [])
+        # If keywords contain non-ASCII (Chinese topic) and LLM available, generate English queries
+        if llm and any(_has_non_ascii(kw) for kw in keywords):
+            queries = _generate_search_queries(keywords, llm)
+        else:
+            queries = [" ".join(keywords)]
+        for query in queries:
+            try:
+                res = sciverse.meta_search(
+                    query=query,
+                    filters=year_filters,
+                    impact_boost="MILD",
+                    page_size=25,
+                )
+                for hit in res.get("results", []):
+                    retrieved.append(_to_retrieved(hit))
+            except Exception:
+                pass
     # 3. seed fallback if empty
     if not retrieved and pipeline_config.use_seed_fallback:
         retrieved = [_to_retrieved(s, source="seed") for s in seed_papers]
     retrieved = dedup(retrieved)[:pipeline_config_extra(pipeline_config, "max_papers", 40)]
-    # 4. parse via real MinerU; degrade per-paper to abstract_only on failure (keep real abstract, no mock)
+    # 4. parse via real MinerU; only feed actual PDF URLs; degrade per-paper on failure or empty result
     parsed = []
     for p in retrieved:
-        if not p.url or not pipeline_config.use_mineru:
+        if not p.url or not pipeline_config.use_mineru or not _is_pdf_url(p.url):
             p.parse_status = "abstract_only"
             continue
         try:
             raw = mineru.parse_url(p.url, light=True)
             raw = cleaner.clean_parsed(raw)
-            p.parse_status = "light"
-            parsed.append(_to_parsed(p, raw))
+            paper = _to_parsed(p, raw)
+            if not paper.paragraphs and not paper.sections:
+                p.parse_status = "abstract_only"
+            else:
+                p.parse_status = "light"
+                parsed.append(paper)
         except Exception:
             p.parse_status = "abstract_only"
     return (RetrievedPapers(task_id=task_id, papers=retrieved),
