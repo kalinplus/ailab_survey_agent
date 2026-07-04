@@ -1,0 +1,41 @@
+{
+  "task_id": "task_世界模型_001",
+  "topic": "世界模型",
+  "request_type": "knowledge_build",
+  "inputs": {
+    "task_request_path": "cache/task_request.json",
+    "search_strategy_path": "cache/search_strategy.json"
+  },
+  "outputs": {
+    "knowledge_bundle_path": "cache/knowledge_bundle.json",
+    "retrieved_papers_path": "cache/retrieved_papers.json",
+    "parsed_papers_path": "cache/parsed_papers.json",
+    "figure_bank_path": "cache/figure_bank.json",
+    "table_bank_path": "cache/table_bank.json",
+    "paper_cards_path": "cache/paper_cards.json",
+    "evidence_store_path": "cache/evidence_store.json",
+    "taxonomy_path": "cache/taxonomy.json",
+    "citation_index_path": "cache/citation_index.json"
+  },
+  "pipeline_config": {
+    "use_online_search": true,
+    "use_seed_fallback": true,
+    "use_mineru": false,
+    "use_mock_mineru_if_failed": false,
+    "max_papers": 5,
+    "max_core_papers": 3,
+    "download_pdfs": true,
+    "extract_figures": true,
+    "extract_tables": true,
+    "extract_captions": true,
+    "build_taxonomy": true,
+    "build_citation_index": true
+  },
+  "quality_requirements": {
+    "min_total_papers": 10,
+    "min_core_papers": 5,
+    "min_figures": 1,
+    "min_evidence_per_core_paper": 1,
+    "allow_abstract_only_fallback": true
+  }
+}
