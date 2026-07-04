@@ -54,7 +54,7 @@ def load_config() -> AppConfig:
         root_dir=ROOT_DIR,
         intern_api_base_url=os.getenv(
             "INTERN_API_BASE_URL",
-            os.getenv("API_BASE_URL", "https://chat.intern-ai.org.cn/api"),
+            os.getenv("API_BASE_URL", "https://chat.intern-ai.org.cn/api/v1"),
         ).rstrip("/"),
         intern_api_key=os.getenv("INTERN_API_KEY", os.getenv("API_KEY", "")),
         intern_model_name=os.getenv("INTERN_MODEL_NAME", "intern-s2-preview"),
