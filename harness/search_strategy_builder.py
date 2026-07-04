@@ -530,9 +530,61 @@ def _probe_sciverse(
             limit=limit,
         )
 
+    papers: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    per_query_limit = max(5, min(limit, 12))
+    for query in _probe_queries(topic):
+        try:
+            candidates = _probe_sciverse_agentic_search(
+                query=query,
+                api_key=api_key,
+                api_base_url=api_base_url,
+                timeout_seconds=timeout_seconds,
+                limit=per_query_limit,
+            )
+        except httpx.HTTPError:
+            continue
+        for paper in candidates:
+            key = _paper_identity(paper)
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            papers.append(paper)
+            if len(papers) >= limit:
+                return papers
+    return papers
+
+
+def _probe_queries(topic: str) -> list[str]:
+    base = [
+        f"{topic} survey review research overview",
+        f"{topic} methods architectures benchmark evaluation",
+        f"{topic} dataset toolkit system application",
+        f"{topic} foundational recent representative papers",
+    ]
+    text = topic.lower()
+    if "world" in text and "game" in text:
+        base.extend(
+            [
+                f"{topic} interactive world model game simulation",
+                f"{topic} game world model agent planning benchmark",
+                f"{topic} GameNGen Genie DIAMOND Oasis GameCraft WorldMark",
+            ]
+        )
+    return list(dict.fromkeys(base))
+
+
+def _probe_sciverse_agentic_search(
+    *,
+    query: str,
+    api_key: str,
+    api_base_url: str,
+    timeout_seconds: float,
+    limit: int,
+) -> list[dict[str, Any]]:
     endpoint = _join_url(api_base_url, "agentic-search")
     payload = {
-        "query": f"{topic} survey review research overview",
+        "query": query,
         "limit": max(1, min(limit, 50)),
         "top_k": max(1, min(limit, 50)),
     }
@@ -598,7 +650,64 @@ def _probe_sciverse(
                 or _first_text(metadata, ["doc_id", "id", "unique_id"]),
             }
         )
-    return papers
+    return _filter_probe_papers(query, papers)
+
+
+def _paper_identity(paper: dict[str, Any]) -> str:
+    doi = str(paper.get("doi") or "").strip().lower()
+    if doi:
+        return f"doi:{doi}"
+    title = re.sub(r"\W+", " ", str(paper.get("title") or "").lower()).strip()
+    year = paper.get("year") or ""
+    return f"title:{title[:120]}:{year}" if title else ""
+
+
+def _filter_probe_papers(query: str, papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    query_tokens = set(_tokenize(query))
+    focused: list[dict[str, Any]] = []
+    for paper in papers:
+        text = f"{paper.get('title', '')}. {paper.get('abstract', '')}".lower()
+        tokens = set(_tokenize(text))
+        if not tokens:
+            continue
+        overlap = len(tokens & query_tokens)
+        if overlap < 2:
+            continue
+        if _looks_like_social_or_educational_game_noise(text, query):
+            continue
+        focused.append(paper)
+    return focused
+
+
+def _looks_like_social_or_educational_game_noise(text: str, query: str) -> bool:
+    if "game" not in query.lower():
+        return False
+    technical_markers = [
+        "world model",
+        "reinforcement learning",
+        "generative",
+        "simulation",
+        "interactive",
+        "benchmark",
+        "agent",
+        "diffusion",
+        "transformer",
+        "latent",
+    ]
+    if any(marker in text for marker in technical_markers):
+        return False
+    noise_markers = [
+        "world of warcraft",
+        "mmog",
+        "education",
+        "addictive",
+        "cyberspace",
+        "entertainment",
+        "social",
+        "minor",
+        "book review",
+    ]
+    return any(marker in text for marker in noise_markers)
 
 
 def _probe_elsevier_scopus(
