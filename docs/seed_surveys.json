@@ -1,0 +1,35 @@
+[
+  {
+    "paper_id": "survey_embodied_wm_2024",
+    "title": "A Survey of Embodied World Models",
+    "authors": ["Zhu", "Ding", "Xie", "et al."],
+    "year": 2024,
+    "venue": "arXiv",
+    "url": "https://fi.ee.tsinghua.edu.cn/public/publications/...",
+    "category": "survey_resource",
+    "abstract": "A comprehensive analysis of world models in embodied AI, covering architectures, simulators, and future directions...",
+    "keywords": ["Embodied AI", "World Models", "Robotics", "Simulators"],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Architectures (VAE, MDN-RNN, Transformer)",
+        "Learning Objectives (Prediction, Reconstruction)",
+        "Embodied Applications (Manipulation, Navigation)",
+        "Simulators (IsaacGym, Sapien, Habitat)"
+      ],
+      "key_sections": [
+        "Introduction",
+        "Taxonomy of World Models",
+        "Physical Simulators",
+        "Embodied Learning Paradigms",
+        "Challenges and Open Questions"
+      ],
+      "top_referenced_papers": [
+        "world_models_2018",
+        "dreamerv3_2023",
+        "genie_2024",
+        "gamenegen_2024"
+      ]
+    },
+    "bibtex": "@article{zhu2024embodiedwm, title={A Survey of Embodied World Models}, author={...}, year={2024} }"
+  }
+]
