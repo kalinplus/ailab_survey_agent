@@ -31,3 +31,10 @@ output/
 
 # ref repo
 ref
+
+# Module B generated dirs
+cache/*
+!cache/.gitkeep
+!cache/seed_papers.json
+output/*
+logs/*
