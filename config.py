@@ -58,7 +58,7 @@ def load_config() -> AppConfig:
         ).rstrip("/"),
         intern_api_key=os.getenv("INTERN_API_KEY", os.getenv("API_KEY", "")),
         intern_model_name=os.getenv("INTERN_MODEL_NAME", "intern-s2-preview"),
-        request_timeout_seconds=float(os.getenv("REQUEST_TIMEOUT_SECONDS", "60")),
+        request_timeout_seconds=float(os.getenv("REQUEST_TIMEOUT_SECONDS", "120")),
         max_llm_retries=int(os.getenv("MAX_LLM_RETRIES", "1")),
         tool_timeout_seconds=float(os.getenv("TOOL_TIMEOUT_SECONDS", "300")),
         tool_result_max_chars=int(os.getenv("TOOL_RESULT_MAX_CHARS", "6000")),

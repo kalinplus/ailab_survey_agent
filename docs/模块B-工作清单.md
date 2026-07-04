@@ -1,262 +1,90 @@
 # 成员 B：论文知识库、Paper Card 与可信引用
 
 > 角色：Knowledge Grounding Engineer（34%）
-> 贡献定位：让系统生成的综述不是模型凭空写出来的，而是 grounded on verified papers。
+> 状态：**核心功能已实现，集成测试通过**
 
-## 1. 职责定位
+## 1. 已完成
 
-B 负责整个系统的"知识来源"和"可信性"。核心解决：
+### 基础模块
 
-```text
-论文从哪里来？
-引用是不是真的？
-每个论断有没有证据？
-论文怎么分类？
-哪些论文是核心论文？
-```
+- [x] seed_papers.json（102 篇，6 方向，SciVerse 真实 API 检索）
+- [x] knowledge_pipeline_worker.py（Phase 1-6 编排，tool_registry 注册）
+- [x] SciVerse client（meta-search + agentic-search，合约已验证）
+- [x] MinerU client（真实 API，含空壳检测 + PDF URL 过滤）
+- [x] Phase 1: Demand Decomposition（启发式，不调 LLM）
+- [x] Phase 2: Survey Analyzer（Taxonomy Self-Refine Step 1-2）
+- [x] Phase 3: Paper Retriever（LLM 关键词翻译 + PDF 过滤 + 空壳检测 + seed fallback）
+- [x] Phase 5: Paper Cards（deep + shallow，LiRA 4 维度 bucket）
+- [x] Phase 5: EvidenceStore（parsed paragraphs + agentic-search backfill）
+- [x] Phase 5: FigureBank / TableBank / Taxonomy / CitationIndex
+- [x] Phase 6: Bundle Assembly
 
-题目特别强调不能有幻觉引用，所以 B 的模块是项目最关键的技术亮点之一。
+### 后验验证
 
----
+- [x] verify_citations.py（tool_registry 注册）
+- [x] Structural verification（citation ∈ ready_set, figure ∈ bank）
+- [x] Claim Mapper（NLI-first + LLM 边缘 case 回退）
 
-## 2. 基础任务
+### 基础设施
 
-### B1：整理 seed_papers.json
+- [x] InternS2Client（2.1s rate limit，120s timeout）
+- [x] NLI Verifier（FakeNLI for tests + 接口准备 DeBERTa）
+- [x] Data Cleaner（SurveyX 容错正则）
+- [x] 合约修复：SciVerse base URL、Intern-S2 API path、native field mapping
+- [x] Real-API-first 偏好写入 CLAUDE.md
+- [x] 移除 Phase 4 RAG（死代码 + chromadb/openai 依赖）
 
-现场网络和 API 可能不稳定，必须有本地论文种子库。
+### 测试
 
-至少覆盖 6 个方向：
+- [x] 单元测试 149 passed（0.3s）
+- [x] 集成测试：A→B 全链路（real SciVerse + fake LLM，69s）
+- [x] 全真实 API 测试框架（Intern-S2 + SciVerse，需 API key 有效）
 
-```text
-1. Game as AI Benchmark
-2. Internal World Model
-3. Neural Game Engine
-4. Foundation Interactive Game World Model / GameCraft
-5. LLM / MLLM Game Agent
-6. Benchmark / Evaluation / Toolkit
-```
+### 文档
 
-种子论文清单（至少包含）：
-
-```text
-DQN, AlphaGo, AlphaZero, AlphaStar, OpenAI Five
-World Models, PlaNet, Dreamer, DreamerV3
-MuZero, EfficientZero, IRIS, DIAMOND
-GameGAN, Genie, GameNGen, Oasis, Muse / WHAM
-Hunyuan-GameCraft, Hunyuan-GameCraft-2
-Matrix-Game 2.0, Matrix-Game 3.0, Yume, HY-WorldPlay
-Voyager, MineDojo, VPT, Cradle, Generative Agents, WorldMark
-```
-
-参考：https://github.com/tsinghua-fib-lab/World-Model
+- [x] 模块B-架构设计.md（v3，同步实现状态）
+- [x] 模块B-工具调用指南.md（面向 A/C 组）
+- [x] CLAUDE.md 外部 API 合约
 
 ---
 
-### B2：实现 Paper Card
+## 2. 待办
 
-每篇论文 → 结构化 JSON：
+### 高优先（影响全链路）
 
-```json
-{
-  "paper_id": "dreamerv3_2023",
-  "title": "DreamerV3: Mastering Diverse Domains through World Models",
-  "authors": ["..."],
-  "year": 2023,
-  "venue": "arXiv",
-  "url": "...",
-  "category": "Internal World Model",
-  "keywords": ["latent dynamics", "imagination", "model-based reinforcement learning"],
-  "problem": "What problem does this paper solve?",
-  "method": "What is the core method?",
-  "contribution": "What is the main contribution?",
-  "limitation": "What are the limitations?",
-  "evidence": [{ "source": "abstract", "text": "..." }]
-}
-```
+- [ ] 全真实 API 测试通过（当前 timeout，已调到 120s 待验证）
+- [ ] NLI 本地模型接入（cross-encoder/nli-deberta-v3-base 替代 FakeNLI）
+- [ ] 配合 Module C 联调 write_survey → verify_citations 闭环
 
-答辩话术：我们不直接让模型写综述，而是先把每篇论文压缩成结构化 Paper Card，再基于 Paper Card 生成综述。
+### 中优先（质量提升）
+
+- [ ] MinerU：找到可靠 PDF 源后开启（绕过 arxiv 防爬）
+- [ ] 多 aspect 并发 SciVerse 调用（当前串行，~2x 加速）
+- [ ] Paper Influence Score（综合引用 + 时效 + 开源影响力）
+- [ ] Taxonomy Step 3 验证空/密类别
+
+### 低优先（锦上添花）
+
+- [ ] 独立交叉验证（§4.4，SciVerse 独立验证 unsupported claims）
+- [ ] SciVerse `/content` 全文拉取（替代部分 MinerU）
+- [ ] 综述库自动更新（`update_survey_store: true`）
+- [ ] Memory 系统（论文元数据跨 session 持久化）
 
 ---
 
-### B3：实现论文分类 Taxonomy Builder
-
-6 个分类类别：
-
-```text
-1. Game as AI Benchmark
-2. Internal World Model for Agents
-3. Neural Game Engine
-4. Foundation Interactive Game World Model / GameCraft
-5. LLM / MLLM Game Agent
-6. Benchmark / Evaluation / Toolkit
-```
-
-分类依据：论文标题、摘要、关键词、研究目标、方法类型、应用场景
-
-策略：先规则分类，再让模型辅助判断。
-
----
-
-### B4：实现 Citation Verifier
-
-5 条规则：
-
-```text
-1. 综述中每个 citation_key 必须存在于 citation_index.json
-2. 参考文献只能从 paper_cards.json 自动生成
-3. 不允许模型自己编造参考文献
-4. 引用不存在则标记 invalid
-5. 引用存在但 claim 不支持则标记 weak
-```
-
-输出示例：
-
-```json
-{
-  "total_citations": 38,
-  "valid_citations": 36,
-  "invalid_citations": 2,
-  "weak_claims": 4,
-  "citation_validity_score": 0.947
-}
-```
-
----
-
-### B5：实现 Claim-to-Evidence Map
-
-每个关键论断绑定论文证据：
-
-```json
-{
-  "claim_id": "claim_012",
-  "claim": "Interactive world models shift the role of world models from internal planning modules to real-time controllable simulators.",
-  "supporting_papers": ["genie_2024", "gamenegen_2024", "hunyuan_gamecraft_2025"],
-  "evidence_status": "supported"
-}
-```
-
-比普通 Citation Checker 更高级——不仅检查引用是否存在，还检查关键论断是否能映射到具体论文证据。
-
----
-
-## 3. 创新模块
-
-### 创新 B1：Paper Store
-
-统一知识库：`cache/paper_cards.json` + `cache/citation_index.json` + `cache/paper_store.db`
-
-支撑后续所有生成。
-
----
-
-### 创新 B2：Claim-to-Evidence Map
-
-把综述里的 claim 和 paper 绑定，直接对应题目要求的"没有幻觉引用、没有缺乏事实证据的幻觉描述"。
-
----
-
-### 创新 B3：Paper Influence Score
-
-新近 arXiv 工作 citation 往往严重滞后，因此不能只按引用数判断价值。综合评分公式：
-
-```text
-final_score =
-  citation_score * 0.3
-  + recency_score * 0.2
-  + category_importance * 0.2
-  + open_source_impact * 0.2
-  + benchmark_value * 0.1
-```
-
-确保新兴 GameCraft 论文不会因为引用少而被漏掉。
-
----
-
-## 4. 负责的文件
-
-```text
-tools/
-├── search_papers.py
-├── parse_papers.py
-├── build_paper_cards.py
-├── classify_papers.py
-├── verify_citations.py
-├── build_claim_map.py
-└── paper_ranker.py
-
-cache/
-├── seed_papers.json
-├── retrieved_papers.json
-├── paper_cards.json
-├── citation_index.json
-└── claim_map.json
-```
-
----
-
-## 5. 答辩内容（第 4～7 分钟）
-
-讲 3 个点：
-
-```text
-1. Paper Card 如何把论文变成结构化知识。
-2. Citation Verifier 如何避免虚构引用。
-3. Claim-to-Evidence Map 如何保证关键论断有证据。
-```
-
-重点句：
-
-> 我们不允许模型自由生成参考文献。所有引用必须来自 Paper Store，所有关键论断必须能映射到 supporting papers。
-
-一句话总结：
-
-> 我负责让综述内容可验证、有证据、不幻觉。
-
----
-
-## 6. 时间安排
-
-### 第 0～2 小时：确定接口
-
-- 确定 paper_cards.json 格式
-- 确定 citation_index.json 格式
-- 确定 claim_map.json 格式
-- 确定与 A（工具注册）和 C（综述生成/评测）的接口
-
-### 第 2～6 小时：基础模块
-
-```text
-整理 seed_papers.json
-写 build_paper_cards.py
-写 classify_papers.py
-```
-
-### 第 6～12 小时：打通主流程
-
-确保 `python main.py --topic "World Models for GameCraft"` 能生成 `cache/paper_cards.json`、`cache/taxonomy.json`
-
-### 第 12～18 小时：创新模块
-
-```text
-Citation Verifier
-Claim-to-Evidence Map
-Paper Influence Score
-```
-
-### 第 18～22 小时：打磨
-
-- 检查引用
-- 配合 C 准备 evaluation_report.json
-- 准备答辩讲稿
-
----
-
-## 7. 与其他成员的协作接口
+## 3. 对外接口
 
 | 对接 | 方向 | 数据 |
 |------|------|------|
-| A → B | Agent Loop 调用 B 的工具 | search_papers、build_paper_cards、classify_papers、verify_citations、build_claim_map |
-| B → A | 工具注册 | 通过 Tool Registry 注册 |
-| B → C | Paper Card + Taxonomy | paper_cards.json、taxonomy.json、claim_map.json → 综述生成和评测 |
-| A + B | Memory / Cache | paper_cache.json、failed_cases.md |
+| A → B | agent_loop 调用 | `knowledge_pipeline_worker`（知识构建） |
+| A → B | agent_loop 调用 | `verify_citations`（后验验证） |
+| B → A | 文件交付 | knowledge_bundle.json → A 验证 + citation prelock |
+| B → C | 文件交付 | paper_cards / evidence_store / figure_bank / table_bank / taxonomy |
+
+---
+
+## 4. 答辩要点
+
+1. **Anti-Hallucination Chain**：SciVerse 元数据 → LLM 结构化提取 → agentic-search chunk → NLI 验证 → 后验 claim mapping
+2. **Real-API-first**：不依赖 mock，评审替换 API key 可直接重跑
+3. **Shallow Cards + Backfill**：MinerU 不可用时仍能完整产出 evidence chain
