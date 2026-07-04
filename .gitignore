@@ -28,3 +28,6 @@ output/
 # LLM cache / logs
 *.log
 .cache/
+
+# ref repo
+ref
