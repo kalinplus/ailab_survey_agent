@@ -40,14 +40,6 @@ def test_paper_with_no_abstract_only_indexes_paragraphs(tmp_path):
     assert "paper:1_abs" not in found_ids
     assert "paper:1_p1_0" in found_ids
 
-def test_empty_papers_list_returns_vectorstore(tmp_path):
-    pp = ParsedPapers(task_id="t", papers=[])
-    vs = run(pp, FakeEmbeddingClient(16), path=str(tmp_path/"v"))
-    assert vs is not None
-    # Verify no items were added by querying and getting empty results
-    hits = vs.query("anything", n=5)
-    assert len(hits) == 0
-
 def test_empty_parsedpapers_returns_vectorstore(tmp_path):
     pp = ParsedPapers(task_id="t", papers=[])
     vs = run(pp, FakeEmbeddingClient(16), path=str(tmp_path/"v"))
