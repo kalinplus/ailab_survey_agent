@@ -139,3 +139,78 @@ def test_multiple_papers():
     # p1 has supports_claims, p2 does not
     assert all(e.supports_claims for e in p1_evs)
     assert all(e.supports_claims == [] for e in p2_evs)
+
+
+# --- agentic-search backfill ---
+
+
+class FakeAgenticSV:
+    """Duck-types SciVerseClient.agentic_search (real contract: hits[].chunk/doc_id/page_no/offset)."""
+
+    def __init__(self, hits):
+        self.hits = hits
+        self.calls = 0
+
+    def agentic_search(self, query, top_k=10):
+        self.calls += 1
+        return {"hits": self.hits}
+
+
+def test_agentic_backfill_for_unsupported_claim():
+    """Claim with no parsed-paper evidence is grounded via a real SciVerse chunk."""
+    sv = FakeAgenticSV(hits=[{
+        "chunk": "DreamerV3 learns a world model and plans via imagination in latent space.",
+        "title": "DreamerV3", "publication_published_year": 2023,
+        "page_no": 2, "offset": 100, "doc_id": "abc",
+    }])
+    pp = ParsedPapers(task_id="t", papers=[])  # no parsed evidence -> claim unsupported
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="paper:1", title="DreamerV3",
+                  possible_claims={"method": [Claim(text="plans in imagination", dimension="method")]})
+    ])
+    es = run("t", pp, cards, NLIStub(), sciverse=sv)
+    agentic = [e for e in es.evidence if e.source_type == "agentic_chunk"]
+    assert len(agentic) == 1
+    assert agentic[0].source_page == 2
+    assert agentic[0].paper_id.startswith("seed:")  # title-derived real id, no fabricated authors
+    assert agentic[0].supports_claims[0]["claim_text"] == "plans in imagination"
+    assert sv.calls == 1
+
+
+def test_no_backfill_when_sciverse_none():
+    """sciverse=None -> no backfill, no agentic call (existing behavior preserved)."""
+    pp = ParsedPapers(task_id="t", papers=[])
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="paper:1", title="A",
+                  possible_claims={"method": [Claim(text="c", dimension="method")]})
+    ])
+    es = run("t", pp, cards, NLIStub())  # sciverse defaults None
+    assert es.evidence == []
+
+
+def test_backfill_skipped_when_claim_already_supported():
+    """Claim already grounded by parsed evidence -> agentic_search not called."""
+    sv = FakeAgenticSV(hits=[])
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="paper:1", title="A", abstract="abs", paragraphs=[])
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="paper:1", title="A",
+                  possible_claims={"method": [Claim(text="claim", dimension="method")]})
+    ])
+    run("t", pp, cards, NLIStub(), sciverse=sv)  # NLIStub supports -> abstract grounds claim
+    assert sv.calls == 0
+
+
+def test_backfill_skips_contradictory_chunks():
+    """Chunk that contradicts the claim (conf<=0) is not added as evidence."""
+    sv = FakeAgenticSV(hits=[{
+        "chunk": "x", "title": "T", "publication_published_year": 2024, "page_no": 1, "offset": 0, "doc_id": "d",
+    }])
+    pp = ParsedPapers(task_id="t", papers=[])
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="paper:1", title="A",
+                  possible_claims={"method": [Claim(text="c", dimension="method")]})
+    ])
+    es = run("t", pp, cards, NLIContradictoryStub(), sciverse=sv)
+    assert [e for e in es.evidence if e.source_type == "agentic_chunk"] == []

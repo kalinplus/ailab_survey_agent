@@ -1,8 +1,8 @@
 from tools.models.artifacts import Evidence, EvidenceStore
-from tools.models.common import evidence_id
+from tools.models.common import evidence_id, paper_id_from_seed
 
 
-def run(task_id, parsed_papers, paper_cards, nli):
+def run(task_id, parsed_papers, paper_cards, nli, sciverse=None):
     card_by_pid = {c.paper_id: c for c in paper_cards.paper_cards}
     evidences = []
     for p in parsed_papers.papers:
@@ -16,7 +16,43 @@ def run(task_id, parsed_papers, paper_cards, nli):
         for fig in p.figures:
             if fig.get("caption"):
                 evidences.append(_make(p.paper_id, fig.get("page", 0), fig["num"], fig["caption"], "caption", claim_texts, nli))
+
+    # agentic-search backfill: ground claims with no parsed-paper evidence against real SciVerse
+    # chunks (chunk + page_no + doc_id). MinerU-independent anti-hallucination backbone.
+    if sciverse is not None:
+        evidences = _agentic_backfill(paper_cards, evidences, sciverse, nli)
+
     return EvidenceStore(task_id=task_id, evidence=evidences)
+
+
+def _agentic_backfill(paper_cards, evidences, sciverse, nli):
+    supported = {s["claim_text"] for e in evidences for s in e.supports_claims}
+    for card in paper_cards.paper_cards:
+        for bucket in card.possible_claims.values():
+            for claim in bucket:
+                if claim.text in supported:
+                    continue  # already grounded by a parsed-paper fragment
+                try:
+                    hits = sciverse.agentic_search(claim.text, top_k=3).get("hits", [])
+                except Exception:
+                    hits = []  # external API boundary: skip this claim, parsed evidence still stands
+                for hit in hits:
+                    chunk = hit.get("chunk") or ""
+                    if not chunk:
+                        continue
+                    res = nli.best_match(chunk, [claim.text])
+                    if res.support_type == "contradictory" and res.confidence <= 0:
+                        continue
+                    pid = paper_id_from_seed(hit.get("title", ""), int(hit.get("publication_published_year") or 0))
+                    evidences.append(Evidence(
+                        evidence_id=f"{pid[:16]}_p{hit.get('page_no', 0)}_{hit.get('offset', 0)}",
+                        paper_id=pid, source_type="agentic_chunk",
+                        source_page=int(hit.get("page_no") or 0),
+                        source_paragraph_index=int(hit.get("offset") or 0),
+                        text=chunk,
+                        supports_claims=[{"claim_text": claim.text, "support_type": res.support_type, "confidence": res.confidence}],
+                    ))
+    return evidences
 
 
 def _make(paper_id, page, idx, text, source_type, claim_texts, nli):

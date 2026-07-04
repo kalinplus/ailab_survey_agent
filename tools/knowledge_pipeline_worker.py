@@ -64,7 +64,7 @@ def run(request_path: str) -> dict:
     cards = phase5_cards.run(
         request.task_id, parsed, retrieved, llm,
         demand.aspects, request.pipeline_config.aspect_match_threshold)
-    evidence = phase5_evidence.run(request.task_id, parsed, cards, NLIVerifier())
+    evidence = phase5_evidence.run(request.task_id, parsed, cards, NLIVerifier(), sciverse)
     figure_bank = phase5_synthesis_rest.build_figure_bank(request.task_id, parsed)
     table_bank = phase5_synthesis_rest.build_table_bank(request.task_id, parsed)
     taxonomy = phase5_synthesis_rest.build_taxonomy(
