@@ -12,6 +12,7 @@ from .json_io import read_json, write_json
 from .knowledge_bundle_validator import KnowledgeBundleValidator
 from .logger import WorkflowLogger
 from .planner import Planner
+from .skill_manager import SkillManager
 from .state_manager import StateManager
 from .tool_registry import ToolRegistry
 
@@ -32,6 +33,7 @@ class AgentLoop:
         self.state_manager = state_manager
         self.logger = logger
         self.validator = KnowledgeBundleValidator(config.root_dir)
+        self.skill_manager = SkillManager(config.root_dir)
 
     def run(
         self,
@@ -68,6 +70,7 @@ class AgentLoop:
             topic=topic,
             max_papers=max_papers,
             max_core_papers=max_core_papers,
+            mode=mode,
         )
         self._write("cache/search_strategy.json", search_strategy)
         self._write(
@@ -76,11 +79,17 @@ class AgentLoop:
                 task_request=task_request,
                 search_strategy=search_strategy,
                 tool_registry=self.tool_registry,
+                skill_manager=self.skill_manager,
             ),
         )
         self._write("cache/tool_manifest.json", self.tool_registry.list_specs())
+        self._write("cache/skill_manifest.json", self.skill_manager.list_manifest())
 
-        knowledge_request = self.planner.build_knowledge_build_request(task_request)
+        knowledge_request = self.planner.build_knowledge_build_request(
+            task_request,
+            active_skills=self._active_skills("knowledge_build"),
+            skill_policy=self.skill_manager.policy(),
+        )
         self._write("requests/knowledge_build_request.json", knowledge_request)
         state = self.state_manager.advance(
             state,
@@ -91,6 +100,7 @@ class AgentLoop:
                 "knowledge_build_request": "requests/knowledge_build_request.json",
                 "agent_context": "cache/agent_context.json",
                 "tool_manifest": "cache/tool_manifest.json",
+                "skill_manifest": "cache/skill_manifest.json",
             },
             pending_artifacts={"knowledge_bundle": "cache/knowledge_bundle.json"},
         )
@@ -120,7 +130,13 @@ class AgentLoop:
         )
         self._write("cache/citation_ready_set.json", citation_ready_set)
 
-        survey_request = self.planner.build_survey_generation_request(task_id, topic, language)
+        survey_request = self.planner.build_survey_generation_request(
+            task_id,
+            topic,
+            language,
+            active_skills=self._active_skills("survey_generation"),
+            skill_policy=self.skill_manager.policy(),
+        )
         self._write("requests/survey_generation_request.json", survey_request)
         state = self.state_manager.advance(
             state,
@@ -139,13 +155,22 @@ class AgentLoop:
 
         self._run_tool("write_survey", "requests/survey_generation_request.json")
 
-        verification_request = self.planner.build_verification_request(task_id)
+        verification_request = self.planner.build_verification_request(
+            task_id,
+            active_skills=self._active_skills("verification"),
+            skill_policy=self.skill_manager.policy(),
+        )
         self._write("requests/verification_request.json", verification_request)
         self._run_tool("verify_citations", "requests/verification_request.json")
 
         citation_result = self._read("output/citation_result.json")
         if not self._verification_passed(citation_result):
-            revision_request = self.planner.build_revision_request(task_id, "Evidence verification failed.")
+            revision_request = self.planner.build_revision_request(
+                task_id,
+                "Evidence verification failed.",
+                active_skills=self._active_skills("revision"),
+                skill_policy=self.skill_manager.policy(),
+            )
             self._write("requests/revision_request.json", revision_request)
             self._run_tool("revise_survey", "requests/revision_request.json")
             revised = self.config.output_dir / "survey_revised.md"
@@ -154,7 +179,12 @@ class AgentLoop:
                 survey.write_text(revised.read_text(encoding="utf-8"), encoding="utf-8")
             self._run_tool("verify_citations", "requests/verification_request.json")
 
-        evaluation_request = self.planner.build_evaluation_render_request(task_id, topic)
+        evaluation_request = self.planner.build_evaluation_render_request(
+            task_id,
+            topic,
+            active_skills=self._active_skills("evaluation_render"),
+            skill_policy=self.skill_manager.policy(),
+        )
         self._write("requests/evaluation_render_request.json", evaluation_request)
         self._run_tool("render_report", "requests/evaluation_render_request.json")
 
@@ -195,6 +225,7 @@ class AgentLoop:
                 "knowledge_build_request": "requests/knowledge_build_request.json",
                 "task_request": "cache/task_request.json",
                 "search_strategy": "cache/search_strategy.json",
+                "skill_manifest": "cache/skill_manifest.json",
                 "state": "logs/state.json",
                 "workflow_log": "logs/run.jsonl",
             },
@@ -228,6 +259,9 @@ class AgentLoop:
 
     def _path(self, relative_path: str) -> Path:
         return self.config.root_dir / relative_path
+
+    def _active_skills(self, stage: str) -> list[dict[str, Any]]:
+        return self.skill_manager.active_for_stage(stage)
 
     def _write(self, relative_path: str, data: Any) -> None:
         write_json(self._path(relative_path), data)
