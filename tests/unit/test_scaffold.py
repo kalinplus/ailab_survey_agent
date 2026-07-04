@@ -1,6 +1,6 @@
 def test_tools_package_importable():
     import tools  # noqa: F401
-    from tools import models, clients, nlp, indexer, phases, verify  # noqa: F401
+    from tools import models, clients, nlp, phases, verify  # noqa: F401
 
 
 def test_reuses_root_config_and_llm():

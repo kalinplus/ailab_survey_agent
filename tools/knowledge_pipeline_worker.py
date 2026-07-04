@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 from config import load_config
@@ -12,11 +11,10 @@ from harness.json_io import read_json, write_json
 from tools.models.requests import KnowledgeBuildRequest, SearchStrategy
 from tools.clients.sciverse_client import SciVerseClient
 from tools.clients.mineru_client import MinerUClient
-from tools.clients.embedding_client import EmbeddingClient, FakeEmbeddingClient
 from tools.nlp.nli_verifier import NLIVerifier
 from tools.nlp.data_cleaner import DataCleaner
 from tools.phases import (phase1_decompose, phase2_survey_analyzer, phase3_paper_retriever,
-    phase4_rag_indexer, phase5_cards, phase5_evidence, phase5_synthesis_rest, phase6_bundle_assembler)
+    phase5_cards, phase5_evidence, phase5_synthesis_rest, phase6_bundle_assembler)
 
 # The 8 artifact names the harness validator requires as bare keys in bundle.artifacts
 # (harness/knowledge_bundle_validator.py REQUIRED_ARTIFACTS). request.outputs carries them
@@ -49,9 +47,8 @@ def run(request_path: str) -> dict:
     sciverse = SciVerseClient()
     mineru = MinerUClient(use_mock=request.pipeline_config.use_mock_mineru_if_failed)
     cleaner = DataCleaner()
-    emb = EmbeddingClient() if os.getenv("OPENAI_API_KEY") else FakeEmbeddingClient()
 
-    # Phase 1-6 (signatures verified against source)
+    # Phase 1-6 (signatures verified against source; Phase 4 RAG removed — superseded by agentic-search)
     demand = phase1_decompose.run(request, strategy, seed_papers)
     survey_struct = phase2_survey_analyzer.run(
         request.task_id, request.topic, strategy.sub_domains,
@@ -59,8 +56,6 @@ def run(request_path: str) -> dict:
     retrieved, parsed = phase3_paper_retriever.run(
         request.task_id, demand.aspects, survey_struct.expansion_candidates,
         sciverse, mineru, cleaner, seed_papers, request.pipeline_config)
-    # RAG index is built + persisted for later retrieval; return unused (plan-mandated side effect).
-    phase4_rag_indexer.run(parsed, emb, path=str(cfg.cache_dir / "rag_index"))
     cards = phase5_cards.run(
         request.task_id, parsed, retrieved, llm,
         demand.aspects, request.pipeline_config.aspect_match_threshold)
