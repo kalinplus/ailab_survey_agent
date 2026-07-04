@@ -28,7 +28,7 @@ class SearchStrategy(BaseModel):
 class PipelineConfig(BaseModel):
     use_online_search: bool = True
     use_seed_fallback: bool = True
-    use_mineru: bool = True
+    use_mineru: bool = False
     use_mock_mineru_if_failed: bool = False  # production runs real MinerU; phase3 degrades per-paper
     update_survey_store: bool = False
     aspect_match_threshold: float = 0.6

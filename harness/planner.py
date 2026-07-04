@@ -55,7 +55,7 @@ class Planner:
             "run_config": {
                 "use_online_search": mode == "full",
                 "use_seed_fallback": True,
-                "use_mineru": mode == "full",
+                "use_mineru": False,
                 "max_papers": max_papers,
                 "max_core_papers": max_core_papers,
                 "mode": mode,
