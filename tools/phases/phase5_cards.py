@@ -50,7 +50,26 @@ def build_card(parsed, retrieved_map, llm, aspects, threshold=0.6):
         bibtex_key=None)
 
 
+def build_shallow_card(retrieved, llm, aspects, threshold=0.6):
+    """Card from abstract only (no parsed body). Used when MinerU is off."""
+    raw = llm.chat([{"role": "user", "content": CARD_PROMPT.format(
+        title=retrieved.title, abstract=retrieved.abstract, body="")}])
+    claims = parse_card_response(raw, retrieved.paper_id)
+    return PaperCard(
+        paper_id=retrieved.paper_id, title=retrieved.title,
+        authors=retrieved.authors, year=retrieved.year,
+        venue=retrieved.venue, matched_aspects=[], card_type="shallow",
+        problem="", method="", contribution="", limitations="",
+        evidence_ids=[], figure_ids=[], table_ids=[], possible_claims=claims,
+        bibtex_key=None)
+
+
 def run(task_id, parsed_papers, retrieved_papers, llm, aspects, threshold=0.6):
     rmap = {p.paper_id: p for p in retrieved_papers.papers}
+    parsed_ids = {p.paper_id for p in parsed_papers.papers}
     cards = [build_card(p, rmap, llm, aspects, threshold) for p in parsed_papers.papers]
+    # Shallow cards for abstract-only papers (not parsed by MinerU)
+    for rp in retrieved_papers.papers:
+        if rp.paper_id not in parsed_ids and rp.abstract:
+            cards.append(build_shallow_card(rp, llm, aspects, threshold))
     return PaperCards(task_id=task_id, paper_cards=cards)
