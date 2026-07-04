@@ -1,0 +1,141 @@
+import pytest
+from tools.phases.phase5_evidence import run
+from tools.models.artifacts import (
+    ParsedPapers, ParsedPaper, Paragraph,
+    PaperCards, PaperCard, Claim,
+)
+from tools.nlp.nli_verifier import NLIResult
+
+
+class NLIStub:
+    """Minimal NLI stub returning canned result for every call."""
+
+    def __init__(self, support_type="direct", confidence=0.85):
+        self._support_type = support_type
+        self._confidence = confidence
+
+    def best_match(self, evidence_text, claim_texts):
+        return NLIResult("entailment", self._support_type, self._confidence)
+
+
+class NLIContradictoryStub:
+    """Returns contradictory with confidence=0 so supports_claims stays empty."""
+
+    def best_match(self, evidence_text, claim_texts):
+        return NLIResult("contradiction", "contradictory", 0.0)
+
+
+class NLINoClaimsStub:
+    """Should never be called; placeholder for papers with no claims."""
+
+    def best_match(self, evidence_text, claim_texts):
+        raise RuntimeError("NLI called when no claims exist")
+
+
+# --- tests ---
+
+def test_evidence_id_and_supports():
+    """Paragraph gets evidence_id {paper_id}_p{page}_{idx}; abstract gets {paper_id}_p0_0.
+    supports_claims is populated when claims exist."""
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="paper:1", title="A", abstract="abs",
+                    paragraphs=[Paragraph(page=3, index=0, text="we show SOTA")])
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="paper:1", title="A",
+                  possible_claims={"key_results": [Claim(text="SOTA result", dimension="key_results")]})
+    ])
+    es = run("t", pp, cards, NLIStub())
+    ids = [e.evidence_id for e in es.evidence]
+    assert "paper:1_p3_0" in ids
+    assert "paper:1_p0_0" in ids
+    para_ev = [e for e in es.evidence if e.evidence_id == "paper:1_p3_0"][0]
+    assert para_ev.supports_claims[0]["support_type"] == "direct"
+    assert para_ev.supports_claims[0]["confidence"] == 0.85
+
+
+def test_empty_parsed_papers():
+    """Empty parsed_papers → es.evidence == []"""
+    pp = ParsedPapers(task_id="t", papers=[])
+    cards = PaperCards(task_id="t", paper_cards=[])
+    es = run("t", pp, cards, NLIStub())
+    assert es.evidence == []
+
+
+def test_no_card_for_paper():
+    """Paper with no matching card → evidences produced with empty supports_claims."""
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="paper:2", title="B", abstract="abs text",
+                    paragraphs=[Paragraph(page=1, index=0, text="content")])
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[])  # no card for paper:2
+    es = run("t", pp, cards, NLINoClaimsStub())  # NLI should never be called
+    assert len(es.evidence) == 2  # abstract + paragraph
+    for e in es.evidence:
+        assert e.supports_claims == []
+
+
+def test_source_types():
+    """Abstract → 'abstract', paragraph → 'paragraph', caption → 'caption'."""
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="paper:1", title="A", abstract="the abstract",
+                    paragraphs=[Paragraph(page=2, index=0, text="para text")],
+                    figures=[{"num": 1, "page": 5, "caption": "fig caption"}])
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="paper:1", title="A",
+                  possible_claims={"method": [Claim(text="some claim", dimension="method")]})
+    ])
+    es = run("t", pp, cards, NLIStub())
+    by_id = {e.evidence_id: e for e in es.evidence}
+    assert by_id["paper:1_p0_0"].source_type == "abstract"
+    assert by_id["paper:1_p2_0"].source_type == "paragraph"
+    assert by_id["paper:1_p5_1"].source_type == "caption"
+
+
+def test_figure_without_caption_skipped():
+    """Figure with no caption → no evidence produced."""
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="paper:1", title="A", abstract="",
+                    paragraphs=[],
+                    figures=[{"num": 1, "page": 3}])
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[])
+    es = run("t", pp, cards, NLIStub())
+    assert es.evidence == []
+
+
+def test_contradictory_low_confidence_skipped():
+    """Contradictory with confidence=0 → supports_claims stays empty."""
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="paper:1", title="A", abstract="",
+                    paragraphs=[Paragraph(page=1, index=0, text="text")])
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="paper:1", title="A",
+                  possible_claims={"key_results": [Claim(text="claim", dimension="key_results")]})
+    ])
+    es = run("t", pp, cards, NLIContradictoryStub())
+    assert es.evidence[0].supports_claims == []
+
+
+def test_multiple_papers():
+    """Two papers, only one has a card; both produce evidences."""
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="p1", title="A", abstract="a1",
+                    paragraphs=[Paragraph(page=1, index=0, text="t1")]),
+        ParsedPaper(paper_id="p2", title="B", abstract="a2",
+                    paragraphs=[Paragraph(page=2, index=0, text="t2")]),
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[
+        PaperCard(paper_id="p1", title="A",
+                  possible_claims={"key_results": [Claim(text="c1", dimension="key_results")]})
+    ])
+    es = run("t", pp, cards, NLIStub())
+    p1_evs = [e for e in es.evidence if e.paper_id == "p1"]
+    p2_evs = [e for e in es.evidence if e.paper_id == "p2"]
+    assert len(p1_evs) == 2  # abstract + paragraph
+    assert len(p2_evs) == 2
+    # p1 has supports_claims, p2 does not
+    assert all(e.supports_claims for e in p1_evs)
+    assert all(e.supports_claims == [] for e in p2_evs)
