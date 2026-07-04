@@ -1,0 +1,2411 @@
+[
+  {
+    "title": "Averaged-DQN: Variance Reduction and Stabilization for Deep Reinforcement Learning",
+    "authors": [
+      "Oron Anschel",
+      "Nir Baram",
+      "Nahum Shimkin"
+    ],
+    "year": 2016,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/1611.01929",
+    "abstract": "Instability and variability of Deep Reinforcement Learning (DRL) algorithms tend to adversely affect their performance. Averaged-DQN is a simple extension to the DQN algorithm, based on averaging previously learned Q-values estimates, which leads to a more stable training procedure and improved performance by reducing approximation error variance in the target values. To understand the effect of the algorithm, we examine the source of value function estimation errors and provide an analytical co",
+    "keywords": [
+      "Reinforcement learning",
+      "Stability (learning theory)",
+      "Benchmark (surveying)",
+      "Computer science",
+      "Extension (predicate logic)",
+      "Variance (accounting)",
+      "Reduction (mathematics)",
+      "Reinforcement"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "anschel2016averageddqn"
+  },
+  {
+    "title": "Model-Based Reinforcement Learning for Atari",
+    "authors": [
+      "Łukasz Kaiser",
+      "Mohammad Babaeizadeh",
+      "Piotr Miłoś",
+      "Błażej Osiński",
+      "Roy H. Campbell"
+    ],
+    "year": 2024,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/1903.00374",
+    "abstract": "Model-free reinforcement learning (RL) can be used to learn effective policies for complex tasks, such as Atari games, even from image observations. However, this typically requires very large amounts of interaction -- substantially more, in fact, than a human would need to learn the same games. How can people learn so quickly? Part of the answer may be that people can learn how the game works and predict which actions will lead to desirable outcomes. In this paper, we explore how video predicti",
+    "keywords": [
+      "Reinforcement learning",
+      "Computer science",
+      "Simple (philosophy)",
+      "Artificial intelligence",
+      "Architecture",
+      "Range (aeronautics)",
+      "Video game",
+      "Machine learning"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "kaiser2024modelbased"
+  },
+  {
+    "title": "Playing Atari Games with Deep Reinforcement Learning and Human Checkpoint Replay",
+    "authors": [
+      "Ionel-Alexandru Hosu",
+      "Traian Rebedea"
+    ],
+    "year": 2016,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/1607.05077v1",
+    "abstract": "This paper introduces a novel method for learning how to play the most difficult Atari 2600 games from the Arcade Learning Environment using deep reinforcement learning. The proposed method, human checkpoint replay, consists in using checkpoints sampled from human gameplay as starting points for the learning process. This is meant to compensate for the difficulties of current exploration strategies, such as epsilon-greedy, to find successful control policies in games with sparse rewards. Like ot",
+    "keywords": [
+      "Reinforcement learning",
+      "Computer science",
+      "Artificial intelligence",
+      "Function (biology)",
+      "Process (computing)",
+      "Q-learning",
+      "Convolutional neural network",
+      "Deep learning"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "hosu2016playing"
+  },
+  {
+    "title": "Deep Q Network (DQN), Double DQN, and Dueling DQN",
+    "authors": [
+      "Mohit Sewak"
+    ],
+    "year": 2019,
+    "venue": "Deep Reinforcement Learning",
+    "url": "https://doi.org/10.1007/978-981-13-8285-7_8",
+    "abstract": "In this chapter, we will take our first step towards Deep Learning based Reinforcement Learning. We will discuss the very popular Deep Q Networks and its very powerful variants like Double DQN and Dueling DQN. Extensive work has been done on these models and these models form the basis of some of the very popular applications like AlphaGo. We will also introduce the concept of General AI in this chapter and discuss how these models have been instrumental in inspiring hopes of achieving General A",
+    "keywords": [
+      "Reinforcement learning",
+      "Computer science",
+      "Artificial intelligence",
+      "Deep learning"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "sewak2019deep"
+  },
+  {
+    "title": "Visual Rationalizations in Deep Reinforcement Learning for Atari Games",
+    "authors": [
+      "Laurens Weitkamp",
+      "Elise van der Pol",
+      "Zeynep Akata"
+    ],
+    "year": 2019,
+    "venue": "Communications in computer and information science",
+    "url": "http://arxiv.org/pdf/1902.00566",
+    "abstract": "Due to the capability of deep learning to perform well in high dimensional problems, deep reinforcement learning agents perform well in challenging tasks such as Atari 2600 games. However, clearly explaining why a certain action is taken by the agent can be as important as the decision itself. Deep reinforcement learning models, as other deep learning models, tend to be opaque in their decision-making process. In this work, we propose to make deep reinforcement learning more transparent by visua",
+    "keywords": [
+      "Deep_learning",
+      "Reinforcement_learning",
+      "Explainable_AI",
+      "Reinforcement learning",
+      "Action (physics)",
+      "Computer science",
+      "Artificial intelligence",
+      "Deep learning"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "weitkamp2019visual"
+  },
+  {
+    "title": "Simulation-Based Algorithms for Markov Decision Processes: Monte Carlo Tree Search from AlphaGo to AlphaZero",
+    "authors": [
+      "Michael C. Fu"
+    ],
+    "year": 2019,
+    "venue": "Asia-Pacific Journal of Operational Research",
+    "url": "https://doi.org/10.1142/s0217595919400098",
+    "abstract": "<jats:p> AlphaGo and its successors AlphaGo Zero and AlphaZero made international headlines with their incredible successes in game playing, which have been touted as further evidence of the immense potential of artificial intelligence, and in particular, machine learning. AlphaGo defeated the reigning human world champion Go player Lee Sedol 4 games to 1, in March 2016 in Seoul, Korea, an achievement that surpassed previous computer game-playing program milestones by IBM’s Deep Blue in chess an",
+    "keywords": [
+      "artificial intelligence",
+      "Monte Carlo tree search",
+      "AlphaGo",
+      "neural networks",
+      "machine learning",
+      "AlphaZero",
+      "deep learning",
+      "Monte Carlo simulation"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "fu2019simulationbased"
+  },
+  {
+    "title": "Overview on DeepMind and Its AlphaGo Zero AI",
+    "authors": [
+      "Sean D. Holcomb",
+      "William K. Porter",
+      "Shaun V. Ault",
+      "Guifen Mao",
+      "Jin Wang"
+    ],
+    "year": 2018,
+    "venue": "International Conference on Big Data and Education",
+    "url": "https://doi.org/10.1145/3206157.3206174",
+    "abstract": "The goal of this paper is to give insight into what the company known as DeepMind is and what accomplishments it is making in the fields of Machine Learning and Artificial Intelligence. Among their accomplishments, particular focus will be placed upon the recent success of AlphaGo Zero which made waves in the machine learning and artificial intelligence communities. The various parts of AlphaGo Zero's implementation such as reinforcement learning, neural networks, and Monte Carlo Tree Searches w",
+    "keywords": [
+      "Zero (linguistics)",
+      "Artificial intelligence",
+      "Computer science",
+      "Reinforcement learning",
+      "Process (computing)",
+      "Artificial neural network",
+      "Monte Carlo tree search",
+      "Focus (optics)"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "holcomb2018overview"
+  },
+  {
+    "title": "AlphaGo与AlphaZero原理和未来应用研究",
+    "authors": [
+      "陈铭禹"
+    ],
+    "year": 2019,
+    "venue": "Telecom World  |  <span class='highlight'>通讯</span><span class='highlight'>世界</span>",
+    "url": "https://doi.org/10.3969/j.issn.1006-4222.2019.12.012",
+    "abstract": "人工智能长期以来的目标就是创造机器的完全主导领域,在人类生活中发挥作用.AlphaGo成为首个在围棋中战胜人类世界冠军的系统.AlphaGo神经网络使用人类的棋盘数据进行学习训练,同时也通过自我对弈进行强化学习.围棋对于人工智能来说是最具有挑战性的经典博弈比赛,它的巨大的搜索空间,棋局和落子地点让机器学习难以应对.科学家创造了一种新的人工智能程序系统AlphaGo,使用估值网络来评估局势以及使用  |  AlphaZero原理学习,我们可以在掌握现有先进技术的基础上,开拓创新,思考类似的人工智能在医学,军事等领域的未来应用可能性.  |  策略网络来选择如何落子.这些深度神经网络被一种新的组合来训练:使用了人类专业比赛数据的监督学习,以及自我对弈的强化学习.AlphaZero没有使用任何预测搜索的方法,神经网络搭配最先进的蒙特卡洛树搜索算法让程序达到了更加精确和智能的水准,这程序模拟了数以千计的自我对弈的随机博弈.Alpha系列达到了99.8％的胜率,这是史上第一次计算机程序在全尺寸围棋中击败人类职业棋手.通过对AlphaGo和",
+    "keywords": [
+      "策略网络与决策网络",
+      "蒙特卡洛树搜索",
+      "AlphaGo",
+      "AlphaZero"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "陈铭禹2019alphago与alphazero原理和未来应用研究"
+  },
+  {
+    "title": "From AlphaGo to Power System AI: What Engineers Can Learn from Solving the Most Complex Board Game",
+    "authors": [
+      "Fangxing Li",
+      "Yan Du"
+    ],
+    "year": 2018,
+    "venue": "IEEE Power and Energy Magazine",
+    "url": "https://doi.org/10.1109/mpe.2017.2779554",
+    "abstract": "Since its early development in the 1950s, artificial intelligence (AI) has been studied to mimic the function of human brains in solving science and engineering problems. Despite alternating bust and boom periods, AI has consistently progressed with a number of development milestones such as evolutionary algorithms, neural networks, and deep learning. For many AI test applications, the game of Go has been long considered one of the hardest problems and the most difficult among all major board ga",
+    "keywords": [
+      "Artificial intelligence",
+      "Bust",
+      "Artificial neural network",
+      "Boom",
+      "Computer science",
+      "Deep learning",
+      "Engineering"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "li2018from"
+  },
+  {
+    "title": "AlphaZero for a Non-Deterministic Game",
+    "authors": [
+      "Chu-Hsuan Hsueh",
+      "I‐Chen Wu",
+      "Jr-Chang Chen",
+      "Tsan‐sheng Hsu"
+    ],
+    "year": 2018,
+    "venue": "International Conference on Technologies and Applications of Artificial Intelligence",
+    "url": "https://doi.org/10.1109/taai.2018.00034",
+    "abstract": "The AlphaZero algorithm, developed by DeepMind, achieved superhuman levels of play in the games of chess, shogi, and Go, by learning without domain-specific knowledge except game rules. This paper investigates whether the algorithm can also learn theoretical values and optimal plays for non-deterministic games. Since the theoretical values of such games are expected win rates, not a simple win, loss, or draw, it is worthy investigating the ability of the AlphaZero algorithm to approximate expect",
+    "keywords": [
+      "Computer science"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "hsueh2018alphazero"
+  },
+  {
+    "title": "Grandmaster level in StarCraft II using multi-agent reinforcement learning",
+    "authors": [
+      "Oriol Vinyals",
+      "I. Babuschkin",
+      "Wojciech Marian Czarnecki",
+      "Michaël Mathieu",
+      "Andrew Dudzik"
+    ],
+    "year": 2019,
+    "venue": "Nature",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/31666705",
+    "abstract": "Many real-world applications require artificial agents to compete and coordinate with other agents in complex environments. As a stepping stone to this goal, the domain of StarCraft has emerged as an important challenge for artificial intelligence research, owing to its iconic and enduring status among the most difficult professional esports and its relevance to the real world in terms of its raw complexity and multi-agent challenges. Over the course of a decade and numerous competitions1-3, the",
+    "keywords": [
+      "Reinforcement learning",
+      "Computer science",
+      "Artificial intelligence",
+      "Relevance (law)",
+      "Domain (mathematical analysis)",
+      "Matching (statistics)",
+      "Mathematics"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "vinyals2019grandmaster"
+  },
+  {
+    "title": "StarCraft Micromanagement With Reinforcement Learning and Curriculum Transfer Learning",
+    "authors": [
+      "Kun Shao",
+      "Yuanheng Zhu",
+      "Dongbin Zhao"
+    ],
+    "year": 2018,
+    "venue": "IEEE Transactions on Emerging Topics in Computational Intelligence",
+    "url": "http://arxiv.org/pdf/1804.00810",
+    "abstract": "Real-time strategy games have been an important field of game artificial intelligence in recent years. This paper presents a reinforcement learning and curriculum transfer learning method to control multiple units in StarCraft micromanagement. We define an efficient state representation, which breaks down the complexity caused by the large state space in the game environment. Then, a parameter sharing multi-agent gradient-descent Sarsa($lambda$) algorithm is proposed to train the units. The lear",
+    "keywords": [
+      "Neural networks",
+      "Training",
+      "Machine learning",
+      "Learning (artificial intelligence)",
+      "Learning systems",
+      "Games",
+      "Reinforcement learning",
+      "Computer science"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "shao2018starcraft"
+  },
+  {
+    "title": "AlphaStar Unplugged: Large-Scale Offline Reinforcement Learning",
+    "authors": [
+      "Michaël Mathieu",
+      "Sherjil Ozair",
+      "Srivatsan Srinivasan",
+      "Çağlar Gülçehre",
+      "Shangtong Zhang"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2308.03526v1",
+    "abstract": "StarCraft II is one of the most challenging simulated reinforcement learning environments; it is partially observable, stochastic, multi-agent, and mastering StarCraft II requires strategic planning over long time horizons with real-time low-level execution. It also has an active professional competitive scene. StarCraft II is uniquely suited for advancing offline RL algorithms, both because of its challenging nature and because Blizzard has released a massive dataset of millions of StarCraft II",
+    "keywords": [
+      "Reinforcement learning",
+      "Benchmark (surveying)",
+      "Computer science",
+      "Artificial intelligence",
+      "Cloning (programming)",
+      "Machine learning",
+      "Offline learning",
+      "Baseline (sea)"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "mathieu2023alphastar"
+  },
+  {
+    "title": "Modular Architecture for StarCraft II with Deep Reinforcement Learning",
+    "authors": [
+      "Dennis Lee",
+      "Haoran Tang",
+      "Jeffrey O. Zhang",
+      "Huazhe Xu",
+      "Trevor Darrell"
+    ],
+    "year": 2018,
+    "venue": "Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment",
+    "url": "https://arxiv.org/pdf/1811.03555",
+    "abstract": "We present a novel modular architecture for StarCraft II AI. The architecture splits responsibilities between multiple modules that each control one aspect of the game, such as buildorder selection or tactics. A centralized scheduler reviews macros suggested by all modules and decides their order of execution. An updater keeps track of environment changes and instantiates macros into series of executable actions. Modules in this framework can be optimized independently or jointly via human desig",
+    "keywords": [
+      "Reinforcement learning",
+      "Modular design",
+      "Executable",
+      "Computer science",
+      "Architecture",
+      "Macro",
+      "Orchestration",
+      "Artificial intelligence"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "lee2018modular"
+  },
+  {
+    "title": "AlphaStar",
+    "authors": [
+      "Kai Arulkumaran",
+      "Antoine Cully",
+      "Julian Togelius"
+    ],
+    "year": 2019,
+    "venue": "Proceedings of the Genetic and Evolutionary Computation Conference Companion",
+    "url": "http://arxiv.org/pdf/1902.01724",
+    "abstract": "In January 2019, DeepMind revealed AlphaStar to the world---the first artificial intelligence (AI) system to beat a professional player at the game of StarCraft II---representing a milestone in the progress of AI. AlphaStar draws on many areas of AI research, including deep learning, reinforcement learning, game theory, and evolutionary computation (EC). In this paper we analyze AlphaStar primarily through the lens of EC, presenting a new look at the system and relating it to many concepts in th",
+    "keywords": [
+      "Bridge (graph theory)",
+      "Reinforcement learning",
+      "Evolutionary computation",
+      "Milestone",
+      "Key (lock)"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "arulkumaran2019alphastar"
+  },
+  {
+    "title": "Literature Review of OpenAI Five’s Mechanisms in Dota 2’s Bot Player",
+    "authors": [
+      "Edbert Felix Fangasadha",
+      "Steffi Soeroredjo",
+      "Anderies",
+      "Alexander Agung Santoso Gunawan"
+    ],
+    "year": 2022,
+    "venue": "2022 International Seminar on Application for Technology of Information and Communication (iSemantic)",
+    "url": "https://doi.org/10.1109/isemantic55962.2022.9920480",
+    "abstract": "Multiplayer Online Battle Arena (MOBA) games, such as Dota 2, present significant problems to AI systems, such as multi-agent, massive state-action space, and sophisticated action control. Those problems will become increasingly important in the development of more powerful AI systems. OpenAI Five has demonstrated that DRL (Deep Reinforcement Learning) agents can be trained to achieve superhuman competence in matches that involve thousands of steps before reaching the end goal without the need o",
+    "keywords": [
+      "Reinforcement learning",
+      "Computer science",
+      "Artificial intelligence",
+      "Macro",
+      "Hyperparameter",
+      "Battle",
+      "Action (physics)",
+      "Competence (human resources)"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "fangasadha2022literature"
+  },
+  {
+    "title": "OpenAI Gym",
+    "authors": [
+      "Greg Brockman",
+      "Vicki Cheung",
+      "Ludwig Pettersson",
+      "Jonas Schneider",
+      "John Schulman"
+    ],
+    "year": 2016,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/1606.01540",
+    "abstract": "OpenAI Gym is a toolkit for reinforcement learning research. It includes a growing collection of benchmark problems that expose a common interface, and a website where people can share their results and compare the performance of algorithms. This whitepaper discusses the components of OpenAI Gym and the design decisions that went into the software.",
+    "keywords": [
+      "Psychology"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "brockman2016openai"
+  },
+  {
+    "title": "Game Play Differences by Expertise Level in Dota 2, A Complex Multiplayer Video Game",
+    "authors": [
+      "Lisa M. Castaneda",
+      "Manrita Sidhu",
+      "Jonathan J. Azose",
+      "Tom Swanson"
+    ],
+    "year": 2016,
+    "venue": "International Journal of Gaming and Computer-Mediated Simulations",
+    "url": "https://doi.org/10.4018/ijgcms.2016100101",
+    "abstract": "Dota 2, a complex team based video game, was used to study expertise and attentional allocation in a multiplayer online battle arena (MOBA) setting. Pre- and post-play survey questions and eye-tracker data were collected from 67 video game players during a session of Dota 2 play. Questions explored abstract versus concrete conceptualizations of game-play and individual versus team focus. Quantitative eye-tracker data was evaluated for differences in visual attention and scan patterns. The author",
+    "keywords": [
+      "Session (web analytics)",
+      "Video game",
+      "Qualitative property",
+      "Focus (optics)",
+      "Focus group",
+      "Multimedia",
+      "Game design",
+      "Computer science"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "castaneda2016game"
+  },
+  {
+    "title": "OpenAI o1 System Card",
+    "authors": [
+      "OpenAI",
+      ":",
+      "Aaron Jaech",
+      "Adam Tauman Kalai",
+      "Adam Lerer"
+    ],
+    "year": 2024,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2412.16720",
+    "abstract": "The o1 model series is trained with large-scale reinforcement learning to reason using chain of thought. These advanced reasoning capabilities provide new avenues for improving the safety and robustness of our models. In particular, our models can reason about our safety policies in context when responding to potentially unsafe prompts, through deliberative alignment. This leads to state-of-the-art performance on certain benchmarks for risks such as generating illicit advice, choosing stereotype",
+    "keywords": [
+      "Computer science"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "openai2024openai"
+  },
+  {
+    "title": "Dota 2 with Large Scale Deep Reinforcement Learning",
+    "authors": [
+      "OpenAI",
+      ":",
+      "Christopher Berner",
+      "Greg Brockman",
+      "Brooke Chan"
+    ],
+    "year": 2019,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/1912.06680",
+    "abstract": "On April 13th, 2019, OpenAI Five became the first AI system to defeat the world champions at an esports game. The game of Dota 2 presents novel challenges for AI systems such as long time horizons, imperfect information, and complex, continuous state-action spaces, all challenges which will become increasingly central to more capable AI systems. OpenAI Five leveraged existing reinforcement learning techniques, scaled to learn from batches of approximately 2 million frames every 2 seconds. We dev",
+    "keywords": [
+      "Reinforcement learning",
+      "Champion",
+      "Task (project management)",
+      "Artificial intelligence",
+      "Computer science",
+      "Scale (ratio)",
+      "DOTA",
+      "Management"
+    ],
+    "category": "Game as AI Benchmark",
+    "bibtex_key": "openai2019dota"
+  },
+  {
+    "title": "Meta Reinforcement Learning with Latent Variable Gaussian Processes",
+    "authors": [
+      "Steindór Sæmundsson",
+      "Katja Hofmann",
+      "Marc Peter Deisenroth"
+    ],
+    "year": 2018,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/1803.07551",
+    "abstract": "Learning from small data sets is critical in many practical applications where data collection is time consuming or expensive, e.g., robotics, animal experiments or drug design. Meta learning is one way to increase the data efficiency of learning algorithms by generalizing learned concepts from a set of training tasks to unseen, but related, tasks. Often, this relationship between tasks is hard coded or relies in some other way on human expertise. In this paper, we frame meta learning as a hiera",
+    "keywords": [
+      "Latent variable",
+      "Reinforcement learning",
+      "Reinforcement",
+      "Latent variable model",
+      "Variable (mathematics)",
+      "Gaussian process",
+      "Gaussian",
+      "Latent inhibition"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "sæmundsson2018meta"
+  },
+  {
+    "title": "Model-based Reinforcement Learning: A Survey",
+    "authors": [
+      "Thomas M. Moerland",
+      "Joost Broekens",
+      "Aske Plaat",
+      "Catholijn M. Jonker"
+    ],
+    "year": 2023,
+    "venue": "Foundations and trends in machine learning  |  arXiv (Cornell University)  |  Data Archiving and Networked Services (DANS)",
+    "url": "https://repository.tudelft.nl/file/File_b12f45e3-58ae-468e-836c-3675d3eb9234",
+    "abstract": "Sequential decision making, commonly formalized as Markov Decision Process (MDP) optimization, is an important challenge in artificial intelligence. Two key approaches to this problem are reinforcement learning (RL) and planning. This survey is an integration of both fields, better known as model-based reinforcement learning. Model-based RL has two main steps. First, we systematically cover approaches to dynamics model learning, including challenges like dealing with stochasticity, uncertainty, ",
+    "keywords": [
+      "Reinforcement",
+      "Reinforcement learning",
+      "Computer science",
+      "Psychology",
+      "Artificial intelligence",
+      "Social psychology"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "moerland2023modelbased"
+  },
+  {
+    "title": "Rich-Observation Reinforcement Learning with Continuous Latent Dynamics",
+    "authors": [
+      "Yuda Song",
+      "Lili Wu",
+      "Dylan J. Foster",
+      "Akshay Krishnamurthy"
+    ],
+    "year": 2024,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2405.19269v1",
+    "abstract": "Sample-efficiency and reliability remain major bottlenecks toward wide adoption of reinforcement learning algorithms in continuous settings with high-dimensional perceptual inputs. Toward addressing these challenges, we introduce a new theoretical framework, RichCLD (Rich-Observation RL with Continuous Latent Dynamics), in which the agent performs control based on high-dimensional observations, but the environment is governed by low-dimensional latent states and Lipschitz continuous dynamics. Ou",
+    "keywords": [
+      "Dynamics (music)",
+      "Reinforcement learning",
+      "Reinforcement",
+      "Computer science",
+      "Artificial intelligence",
+      "Psychology",
+      "Social psychology"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "song2024richobservation"
+  },
+  {
+    "title": "Offline Reinforcement Learning from Images with Latent Space Models",
+    "authors": [
+      "Rafael Rafailov",
+      "Tianhe Yu",
+      "Aravind Rajeswaran",
+      "Chelsea Finn"
+    ],
+    "year": 2020,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2012.11547",
+    "abstract": "Offline reinforcement learning (RL) refers to the problem of learning policies from a static dataset of environment interactions. Offline RL enables extensive use and re-use of historical datasets, while also alleviating safety concerns associated with online exploration, thereby expanding the real-world applicability of RL. Most prior work in offline RL has focused on tasks with compact state representations. However, the ability to learn directly from rich observation spaces like images is cri",
+    "keywords": [
+      "Reinforcement learning",
+      "Computer science",
+      "Artificial intelligence",
+      "Machine learning",
+      "Task (project management)",
+      "Offline learning",
+      "State space",
+      "Robotics"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "rafailov2020offline"
+  },
+  {
+    "title": "Bootstrap Latent-Predictive Representations for Multitask Reinforcement Learning",
+    "authors": [
+      "Daniel Guo",
+      "Bernardo Ávila Pires",
+      "Bilal Piot",
+      "Jean-Bastien Grill",
+      "Florent Altché"
+    ],
+    "year": 2020,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2004.14646v1",
+    "abstract": "Learning a good representation is an essential component for deep reinforcement learning (RL). Representation learning is especially important in multitask and partially observable settings where building a representation of the unknown environment is crucial to solve the tasks. Here we introduce Prediction of Bootstrap Latents (PBL), a simple and flexible self-supervised representation learning algorithm for multitask deep RL. PBL builds on multistep predictive representations of future observa",
+    "keywords": [
+      "Reinforcement learning",
+      "Reinforcement",
+      "Multi-task learning",
+      "Machine learning",
+      "Cognitive psychology",
+      "Latent inhibition",
+      "Computer science",
+      "Artificial intelligence"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "guo2020bootstrap"
+  },
+  {
+    "title": "A diagnosis framework based on domain adaptation for bearing fault diagnosis across diverse domains",
+    "authors": [
+      "Ping Ma",
+      "Hongli Zhang",
+      "Wenhui Fan",
+      "Cong Wang"
+    ],
+    "year": 2020,
+    "venue": "ISA Transactions",
+    "url": "https://doi.org/10.1016/j.isatra.2019.08.040",
+    "abstract": "In the current research, the diagnosis process of fault diagnosis models is based on an assumption that the same feature distribution exists between training data and testing data. Regrettably, in real applications, datasets are often from diverse domains; in this case, the traditional diagnostic models lack adaptability. To address this issue, this work proposed a transfer diagnosis framework based on domain adaptation, in that the model trained by the labeled data can be applied to diagnose a ",
+    "keywords": [
+      "Computer science",
+      "Adaptability",
+      "Domain (mathematical analysis)",
+      "Fault (geology)",
+      "Adaptation (eye)",
+      "Data mining",
+      "Domain adaptation",
+      "Artificial intelligence"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "ma2020a"
+  },
+  {
+    "title": "When the World Model Lies: Measuring and Characterising Reward Exploitation in DreamerV3 under Sparse Feedback",
+    "authors": [
+      "Arkat Khassanov Arkat Khassanov"
+    ],
+    "year": 2026,
+    "venue": "Open MIND",
+    "url": "https://doi.org/10.5281/zenodo.18879122",
+    "abstract": "Model-based reinforcement learning agents that plan entirely in imagination can achieve high imagined returns while completely failing the actual task — a failure mode we term the exploitation gap. We provide the first systematic characterisation of this gap in DreamerV3 on AntMaze, where the world model receives near-zero reward from real experience. Instrumenting the training loop with four new metrics, we show that the imagined-to-real reward ratio reaches approximately 50x at 500k environmen",
+    "keywords": [
+      "Reinforcement learning",
+      "Task (project management)",
+      "Divergence (linguistics)",
+      "Baseline (sea)",
+      "Term (time)",
+      "Matching (statistics)",
+      "Stability (learning theory)",
+      "Mode (computer interface)"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "khassanov2026when"
+  },
+  {
+    "title": "New World Bats Harbor Diverse Influenza A Viruses",
+    "authors": [
+      "Suxiang Tong",
+      "Xueyong Zhu",
+      "Yan Li",
+      "Mǎng Shī",
+      "Jing Zhang"
+    ],
+    "year": 2013,
+    "venue": "PLoS Pathogens",
+    "url": "https://journals.plos.org/plospathogens/article/file?id=10.1371/journal.ppat.1003657&type=printable",
+    "abstract": "Aquatic birds harbor diverse influenza A viruses and are a major viral reservoir in nature. The recent discovery of influenza viruses of a new H17N10 subtype in Central American fruit bats suggests that other New World species may similarly carry divergent influenza viruses. Using consensus degenerate RT-PCR, we identified a novel influenza A virus, designated as H18N11, in a flat-faced fruit bat (Artibeus planirostris) from Peru. Serologic studies with the recombinant H18 protein indicated that",
+    "keywords": [
+      "Biology",
+      "Neuraminidase",
+      "Virus",
+      "Virology",
+      "Hemagglutinin (influenza)",
+      "Influenza A virus",
+      "Virus classification",
+      "Host (biology)"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "tong2013new"
+  },
+  {
+    "title": "Domain-Driven Summarization: Models for Diverse Content Realms",
+    "authors": [
+      "D. Bryan Prince",
+      "Lija Jacob",
+      "Kandula Balagangadhar Reddy"
+    ],
+    "year": 2024,
+    "venue": "Lecture notes in networks and systems",
+    "url": "https://doi.org/10.1007/978-981-97-0975-5_26",
+    "abstract": "In today’s information-rich landscape, automatic text summarization systems are pivotal in condensing extensive textual content into concise and informative summaries. The current study ventures into domain-agnostic summarization, delving into advanced models spanning various domains, such as business, entertainment, sports, politics, and technology. The study aims to uncover domain-specific enhancements, assess resource efficiency, and explore the boundaries of applicability. This study covers ",
+    "keywords": [
+      "Automatic summarization",
+      "Domain (mathematical analysis)",
+      "Content (measure theory)",
+      "Computer science",
+      "Information retrieval",
+      "Mathematics",
+      "Summarization_techniques",
+      "Automatic_text_summarization"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "prince2024domaindriven"
+  },
+  {
+    "title": "Lessons Learned About Planning",
+    "authors": [
+      "Richard E. Klosterman"
+    ],
+    "year": 2013,
+    "venue": "Journal of the American Planning Association",
+    "url": "https://doi.org/10.1080/01944363.2013.882647",
+    "abstract": "The author summarizes the most important lessons he has learned in more than 40 years of studying planning from the perspectives of planning theory, planning methods, and computer applications in planning. He suggests that planner's traditional -professional roles, models, and methods often fail to adequately consider alternative futures and unnecessarily restrict meaningful public participation. He proposes that these problems can be overcome, but not easily, by adopting more community-centered",
+    "keywords": [
+      "Planner",
+      "Futures contract",
+      "Management science",
+      "Computer science",
+      "Advice (programming)",
+      "Scenario planning",
+      "Plan (archaeology)",
+      "Operations research"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "klosterman2013lessons"
+  },
+  {
+    "title": "Robot Motion Planning in Learned Latent Spaces",
+    "authors": [
+      "Brian Ichter",
+      "Marco Pavone"
+    ],
+    "year": 2019,
+    "venue": "IEEE Robotics and Automation Letters",
+    "url": "https://ieeexplore.ieee.org/ielx7/7083369/8668830/08653875.pdf",
+    "abstract": "This letter presents latent sampling-based motion planning (L-SBMP), a methodology toward computing motion plans for complex robotic systems by learning a plannable latent representation. Recent works in control of robotic systems have effectively leveraged local, low-dimensional embeddings of high-dimensional dynamics. In this letter, we combine these recent advances with techniques from sampling-based motion planning (SBMP) in order to design a methodology capable of planning for high-dimensio",
+    "keywords": [
+      "Computer science",
+      "Motion planning",
+      "Artificial intelligence",
+      "Representation (politics)",
+      "Sampling (signal processing)",
+      "Robot",
+      "Space (punctuation)",
+      "Motion (physics)"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "ichter2019robot"
+  },
+  {
+    "title": "Path Planning and Micromanipulation Using a Learned Model",
+    "authors": [
+      "Vinoth Venkatesan",
+      "David J. Cappelleri"
+    ],
+    "year": 2018,
+    "venue": "IEEE Robotics and Automation Letters",
+    "url": "https://doi.org/10.1109/lra.2018.2849568",
+    "abstract": "This letter presents a system for manipulating microscale objects in an obstacle prone environment using push manipulations based on a learned model. The path planning is done using a RRT* search algorithm adapted for this setup and the manipulation is done using a regression model trained on manipulation data collected a priori . This model is used to capture the dynamics of the micropart and its interaction with the environment such as frictional contacts and other uncertainties that are diffi",
+    "keywords": [
+      "Microscale chemistry",
+      "Obstacle",
+      "Computer science",
+      "Motion planning",
+      "Path (computing)",
+      "A priori and a posteriori",
+      "Task (project management)",
+      "Artificial intelligence"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "venkatesan2018path"
+  },
+  {
+    "title": "Planning with learned ignorance-aware models",
+    "authors": [
+      "Filos, Angelos"
+    ],
+    "year": 2022,
+    "venue": "Oxford University Research Archive (ORA) (University of Oxford)",
+    "url": "https://doi.org/10.5287/ora-wr4nxpm7p",
+    "abstract": "One of the goals of artificial intelligence research is to create decision-makers (i.e., <em>agents</em>) that improve from experience (i.e., <em>data</em>), collected through interaction with an environment. Models of the environment (i.e., <em>world models</em>) are an explicit way that agents use to represent their knowledge, enabling them to make counterfactual predictions and <em>plans</em> without requiring additional environment interactions. Although agents that plan with a perfect model",
+    "keywords": [
+      "Counterfactual thinking",
+      "Imperfect",
+      "Plan (archaeology)",
+      "Scope (computer science)",
+      "Exploit",
+      "Automated planning and scheduling"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "angelos2022planning"
+  },
+  {
+    "title": "Nonlinear Hybrid Planning with Deep Net Learned Transition Models and Mixed-Integer Linear Programming",
+    "authors": [
+      "Buser Say",
+      "Ga Wu",
+      "Yu Zhou",
+      "Scott Sanner"
+    ],
+    "year": 2017,
+    "venue": "International Joint Conference on Artificial Intelligence",
+    "url": "https://www.ijcai.org/proceedings/2017/0104.pdf",
+    "abstract": "In many real-world hybrid (mixed discrete continuous) planning problems such as Reservoir Control, Heating, Ventilation and Air Conditioning (HVAC), and Navigation, it is difficult to obtain a model of the complex nonlinear dynamics that govern state evolution. However, the ubiquity of modern sensors allow us to collect large quantities of data from each of these complex systems and build accurate, nonlinear deep network models of their state transitions. But there remains one major problem for ",
+    "keywords": [
+      "Computer science",
+      "Deep learning",
+      "Integer programming",
+      "Artificial intelligence",
+      "Mathematical optimization",
+      "Nonlinear system",
+      "Linear programming",
+      "Algorithm"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "say2017nonlinear"
+  },
+  {
+    "title": "A Small World Network Model for Energy Efficient Wireless Networks",
+    "authors": [
+      "Tiankui Zhang",
+      "Jinlong Cao",
+      "Yue Chen",
+      "Laurie Cuthbert",
+      "Maged Elkashlan"
+    ],
+    "year": 2013,
+    "venue": "IEEE Communications Letters",
+    "url": "https://doi.org/10.1109/lcomm.2013.081313.131394",
+    "abstract": "Wireless ad hoc networks can be modeled as small world networks based on the complex network theory. In this letter, we propose a new energy efficient small world network model which considers the battery energy of the wireless nodes, the multi-hop transmission distance and the geographical distance between wireless nodes. In order to quantify the energy efficiency of the proposed model, we propose a new energy efficiency metric which jointly considers: 1) the energy efficiency of the wireless l",
+    "keywords": [
+      "Computer science",
+      "Computer network",
+      "Wireless network",
+      "Wireless ad hoc network",
+      "Wireless WAN",
+      "Efficient energy use",
+      "Wireless sensor network",
+      "Key distribution in wireless sensor networks"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "zhang2013a"
+  },
+  {
+    "title": "World Models",
+    "authors": [
+      "David R Ha",
+      "J. Schmidhuber"
+    ],
+    "year": 2018,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/1803.10122v4",
+    "abstract": "We explore building generative neural network models of popular reinforcement learning environments. Our world model can be trained quickly in an unsupervised manner to learn a compressed spatial and temporal representation of the environment. By using features extracted from the world model as inputs to an agent, we can train a very compact and simple policy that can solve the required task. We can even train our agent entirely inside of its own hallucinated dream generated by its world model, ",
+    "keywords": [],
+    "category": "Internal World Model",
+    "bibtex_key": "ha2018world"
+  },
+  {
+    "title": "Efficient Simulation Sampling Allocation Using Multifidelity Models",
+    "authors": [
+      "Yijie Peng",
+      "Jie Xu",
+      "Loo Hay Lee",
+      "Jian-Qiang Hu",
+      "Chun‐Hung Chen"
+    ],
+    "year": 2019,
+    "venue": "IEEE Transactions on Automatic Control",
+    "url": "https://doi.org/10.1109/tac.2018.2886165",
+    "abstract": "Simulation is often used to estimate the performance of alternative system designs for selecting the best. For a complex system, high-fidelity simulation is usually time-consuming and expensive. In this paper, we provide a new framework that integrates information from the multifidelity models to increase efficiency for selecting the best. A Gaussian mixture model is introduced to capture performance clustering information in the multifidelity models. Posterior information obtained by a clusteri",
+    "keywords": [
+      "simulation optimization",
+      "sequential sampling",
+      "multifidelity models",
+      "Clustering analysis",
+      "ranking and selection",
+      "Cluster analysis",
+      "Computer science",
+      "Fidelity"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "peng2019efficient"
+  },
+  {
+    "title": "EfficientZero V2: Mastering Discrete and Continuous Control with Limited Data",
+    "authors": [
+      "Shengjie Wang",
+      "S.C. Liu",
+      "Weirui Ye",
+      "Jiacheng You",
+      "Yang Gao"
+    ],
+    "year": 2024,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2403.00564v2",
+    "abstract": "Sample efficiency remains a crucial challenge in applying Reinforcement Learning (RL) to real-world tasks. While recent algorithms have made significant strides in improving sample efficiency, none have achieved consistently superior performance across diverse domains. In this paper, we introduce EfficientZero V2, a general framework designed for sample-efficient RL algorithms. We have expanded the performance of EfficientZero to multiple domains, encompassing both continuous and discrete action",
+    "keywords": [
+      "Computer science",
+      "Control (management)",
+      "Artificial intelligence"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "wang2024efficientzero"
+  },
+  {
+    "title": "Efficient Imitation Learning with Conservative World Models",
+    "authors": [
+      "Victor Kolev",
+      "Rafael Rafailov",
+      "Kyle Hatch",
+      "Jiajun Wu",
+      "Chelsea Finn"
+    ],
+    "year": 2024,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2405.13193",
+    "abstract": "We tackle the problem of policy learning from expert demonstrations without a reward function. A central challenge in this space is that these policies fail upon deployment due to issues of distributional shift, environment stochasticity, or compounding errors. Adversarial imitation learning alleviates this issue but requires additional on-policy training samples for stability, which presents a challenge in realistic domains due to inefficient learning and high sample complexity. One approach to",
+    "keywords": [
+      "Imitation",
+      "Computer science",
+      "Artificial intelligence",
+      "Cognitive science",
+      "Psychology",
+      "Neuroscience"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "kolev2024efficient"
+  },
+  {
+    "title": "Traveling the token world: A graph analysis of Ethereum ERC20 token ecosystem",
+    "authors": [
+      "Weili Chen",
+      "Tuo Zhang",
+      "Zhiguang Chen",
+      "Zibin Zheng",
+      "Yutong Lu"
+    ],
+    "year": 2020,
+    "venue": "The Web Conference",
+    "url": "https://doi.org/10.1145/3366423.3380215",
+    "abstract": "The birth of Bitcoin ushered in the era of cryptocurrency, which has now become a financial market attracted extensive attention worldwide. The phenomenon of startups launching Initial Coin Offerings (ICOs) to raise capital led to thousands of tokens being distributed on blockchains. Many studies have analyzed this phenomenon from an economic perspective. However, little is know about the characteristics of participants in the ecosystem. To fill this gap and considering over 80% of ICOs launched",
+    "keywords": [
+      "Security token",
+      "Computer science",
+      "Cryptocurrency",
+      "Database transaction",
+      "Graph",
+      "Parsing",
+      "Token bus network",
+      "Theoretical computer science"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "chen2020traveling"
+  },
+  {
+    "title": "Genhancer: High-Fidelity Speech Enhancement via Generative Modeling on Discrete Codec Tokens",
+    "authors": [
+      "Haici Yang",
+      "Jiaqi Su",
+      "Minje Kim",
+      "Zeyu Jin"
+    ],
+    "year": 2024,
+    "venue": "Interspeech",
+    "url": "https://doi.org/10.21437/interspeech.2024-590",
+    "abstract": "We present a high-fidelity generative speech enhancement model, Genhancer, which generates clean speech as discrete codec tokens while conditioning on the input speech features. Discrete codec tokens provide an efficient latent domain in place of the conventional time or time-frequency domain of signals, so as to enable complex modeling of speech and allow generative modeling to enforce speaker consistency and content continuity. We provide insights into the best-fit generation scheme for enhanc",
+    "keywords": [
+      "Computer science",
+      "Codec",
+      "High fidelity",
+      "Speech recognition",
+      "Speech enhancement",
+      "Fidelity",
+      "Speech coding",
+      "Generative model"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "yang2024genhancer"
+  },
+  {
+    "title": "High Fidelity Text-to-Speech Via Discrete Tokens Using Token Transducer and Group Masked Language Model",
+    "authors": [
+      "Joun Yeop Lee",
+      "Myeonghun Jeong",
+      "Minchan Kim",
+      "Ji-Hyun Lee",
+      "Hoon Young Cho"
+    ],
+    "year": 2024,
+    "venue": "Interspeech",
+    "url": "https://doi.org/10.21437/interspeech.2024-465",
+    "abstract": "We propose a novel two-stage text-to-speech (TTS) framework with two types of discrete tokens, i.e., semantic and acoustic tokens, for high-fidelity speech synthesis. It features two core components: the Interpreting module, which processes text and a speech prompt into semantic tokens focusing on linguistic contents and alignment, and the Speaking module, which captures the timbre of the target voice to generate acoustic tokens from semantic tokens, enriching speech reconstruction. The Interpre",
+    "keywords": [
+      "Security token",
+      "Computer science",
+      "High fidelity",
+      "Speech recognition",
+      "Fidelity",
+      "Language model",
+      "Speech synthesis",
+      "Computer network"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "lee2024high"
+  },
+  {
+    "title": "Tokenchain: A Discrete Speech Chain via Semantic Token Modeling",
+    "authors": [
+      "Mingxuan Wang",
+      "Satoshi Nakamura"
+    ],
+    "year": 2026,
+    "venue": "arXiv",
+    "url": "https://arxiv.org/pdf/2510.06201",
+    "abstract": "Machine Speech Chain, simulating the human perception-production loop, proves effective in jointly improving ASR and TTS. We propose TokenChain, a fully discrete speech chain coupling semantic-token ASR with a two-stage TTS: an autoregressive text-to-semantic model co-trained with ASR and a masked-generative semantic-to-acoustic model for synthesis only. End-to-end feedback across the text interface is enabled with straight-through argmax/Gumbel–Softmax and balanced with supervised ASR via dynam",
+    "keywords": [
+      "Security token",
+      "Autoregressive model",
+      "Chain (unit)",
+      "Coupling (piping)",
+      "Interface (matter)",
+      "Abstraction",
+      "SIGNAL (programming language)",
+      "Language model"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "wang2026tokenchain"
+  },
+  {
+    "title": "Cross-spectral iris recognition using CNN and supervised discrete hashing",
+    "authors": [
+      "Kuo Wang",
+      "Ajay Kumar"
+    ],
+    "year": 2018,
+    "venue": "Pattern Recognition",
+    "url": "https://doi.org/10.1016/j.patcog.2018.08.010",
+    "abstract": "This is a PDF file of an unedited manuscript that has been accepted for publication. As a service to our customers we are providing this early version of the manuscript. The manuscript will undergo copyediting, typesetting, and review of the resulting proof before it is published in its final form. Please note that during the production process errors may be discovered which could affect the content, and all legal disclaimers that apply to the journal pertain.",
+    "keywords": [
+      "Computer science",
+      "Iris recognition",
+      "Artificial intelligence",
+      "Softmax function",
+      "Pattern recognition (psychology)",
+      "Convolutional neural network",
+      "IRIS (biosensor)",
+      "Hash function"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "wang2018crossspectral"
+  },
+  {
+    "title": "Protogenetic clinopyroxene inclusions in diamond and Nd diffusion modeling—Implications for diamond dating",
+    "authors": [
+      "Leonardo Pasqualetto",
+      "Fabrizio Nestola",
+      "Dorrit E. Jacob",
+      "Martha G. Pamato",
+      "Beñat Oliveira"
+    ],
+    "year": 2022,
+    "venue": "Geology (2022) 50 (9): 1038–1042.",
+    "url": "https://pubs.geoscienceworld.org/gsa/geology/article-pdf/50/9/1038/5677549/g50273.1.pdf",
+    "abstract": "Diamonds are witnesses of processes that have operated in Earth's mantle over more than 3 b.y. Essential to our understanding of these processes is the determination of diamond crystallization ages. These cannot be directly determined on diamond, but they can be calculated using radiogenic isotopic systematics of suitable minerals included in a diamond. This method relies on the assumption that the mineral inclusions were in isotopic equilibrium with the diamond-forming medium. We evaluated the ",
+    "keywords": [
+      "RE-OS",
+      "ECLOGITIC DIAMONDS",
+      "AGE",
+      "CRYSTALLOGRAPHIC ORIENTATION",
+      "ORIGIN",
+      "EARTH ELEMENT DIFFUSION",
+      "CONSTRAINTS",
+      "MORPHOLOGY"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "pasqualetto2022protogenetic"
+  },
+  {
+    "title": "Q-Diffusion: Quantizing Diffusion Models",
+    "authors": [
+      "Xiuyu Li",
+      "Yijiang Liu",
+      "Long Lian",
+      "Huanrui Yang",
+      "Zhen Dong"
+    ],
+    "year": 2023,
+    "venue": "IEEE International Conference on Computer Vision",
+    "url": "https://doi.org/10.1109/iccv51070.2023.01608",
+    "abstract": "Diffusion models have achieved great success in image synthesis through iterative noise estimation using deep neural networks. However, the slow inference, high memory consumption, and computation intensity of the noise estimation model hinder the efficient adoption of diffusion models. Although post-training quantization (PTQ) is considered a go-to compression method for other tasks, it does not work out-of-the-box on diffusion models. We propose a novel PTQ method specifically tailored towards",
+    "keywords": [
+      "Computer science",
+      "Quantization (signal processing)",
+      "Diffusion process",
+      "Noise (video)",
+      "Algorithm",
+      "Inference",
+      "Computation",
+      "Artificial intelligence"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "li2023qdiffusion"
+  },
+  {
+    "title": "Diffusion Models in Experimental Psychology",
+    "authors": [
+      "Andreas Voß",
+      "Markus Nagler",
+      "Veronika Lerche"
+    ],
+    "year": 2013,
+    "venue": "Experimental Psychology",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/23895923",
+    "abstract": "Stochastic diffusion models (Ratcliff, 1978) can be used to analyze response time data from binary decision tasks. They provide detailed information about cognitive processes underlying the performance in such tasks. Most importantly, different parameters are estimated from the response time distributions of correct responses and errors that map (1) the speed of information uptake, (2) the amount of information used to make a decision, (3) possible decision biases, and (4) the duration of nondec",
+    "keywords": [
+      "diffusion model",
+      "fast-dm",
+      "response times.",
+      "EZ diffusion",
+      "mathematical model",
+      "DMAT",
+      "Computer science",
+      "Diffusion"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "voß2013diffusion"
+  },
+  {
+    "title": "Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets",
+    "authors": [
+      "Robin Rombach",
+      "Varun Jampani",
+      "Zion English",
+      "Dominik Lorenz",
+      "Tim Dockhorn"
+    ],
+    "year": 2023,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2311.15127v1",
+    "abstract": "We present Stable Video Diffusion - a latent video diffusion model for high-resolution, state-of-the-art text-to-video and image-to-video generation. Recently, latent diffusion models trained for 2D image synthesis have been turned into generative video models by inserting temporal layers and finetuning them on small, high-quality video datasets. However, training methods in the literature vary widely, and the field has yet to agree on a unified strategy for curating video data. In this paper, w",
+    "keywords": [
+      "Computer science",
+      "Video tracking",
+      "Video quality",
+      "Video post-processing",
+      "Artificial intelligence",
+      "Video processing",
+      "Generative model",
+      "Computer vision"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "rombach2023stable"
+  },
+  {
+    "title": "Diffusion Models Without Attention",
+    "authors": [
+      "Jing Nathan Yan",
+      "Jiatao Gu",
+      "Alexander M. Rush"
+    ],
+    "year": 2024,
+    "venue": "Computer Vision and Pattern Recognition",
+    "url": "https://doi.org/10.1109/cvpr52733.2024.00787",
+    "abstract": "In recent advancements in high-fidelity image generation, Denoising Diffusion Probabilistic Models (DDPMs) have emerged as a key player. However, their application at high resolutions presents significant computational challenges. Current methods, such as patchifying, expedite processes in UNet and Transformer architectures but at the expense of rep-resentational capacity. Addressing this, we introduce the Dif-fusion State Space Model (DIFFUSSM), an architecture that supplants attention mechanis",
+    "keywords": [
+      "Diffusion",
+      "Computer science",
+      "Physics",
+      "Thermodynamics"
+    ],
+    "category": "Internal World Model",
+    "bibtex_key": "yan2024diffusion"
+  },
+  {
+    "title": "Game Engine Architecture",
+    "authors": [
+      "Jason Gregory"
+    ],
+    "year": 2017,
+    "venue": "arXiv",
+    "url": "https://doi.org/10.1201/9781315106946",
+    "abstract": "Hailed as a \"must-have textbook\" (CHOICE, January 2010), the first edition of Game Engine Architecture provided readers with a complete guide to the theory and practice of game engine software development. Updating the content to match today’s landscape of game engine architecture, this second edition continues to thoroughly cover the major components that make up a typical commercial game engine. New to the Second Edition Information on new topics, including the latest variant of the C++ progra",
+    "keywords": [
+      "Game engine",
+      "Architecture",
+      "Computer science",
+      "Human–computer interaction",
+      "Art",
+      "Visual arts"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "gregory2017game"
+  },
+  {
+    "title": "Game Engines",
+    "authors": [
+      "Jonas Freiknecht",
+      "Christian Geiger",
+      "Daniel Drochtert",
+      "Wolfgang Effelsberg",
+      "Ralf Dörner"
+    ],
+    "year": 2016,
+    "venue": "Serious Games",
+    "url": "https://link.springer.com/chapter/10.1007/978-3-319-40612-1_6",
+    "abstract": "From a technical perspective, a game engine represents the basis of a game, providing the functionality for optimized and efficient graphic rendering, file system access, player input via devices such as keyboard and mouse, sound playback, and networking—as well saving and loading the game state. Game development studios realized that reusing software is not only the way to make the development process more efficient, but that it is also important to free developers from the tedious tasks of mer",
+    "keywords": [
+      "Graphic_Processing_Unit",
+      "Global_Illumination",
+      "Game_State",
+      "Augmented_Reality",
+      "Collision_Detection",
+      "Game development tool",
+      "Game programming",
+      "Game Developer"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "freiknecht2016game"
+  },
+  {
+    "title": "MC-GAN: A Reimplementation of GameGAN With a Gaming Perspective",
+    "authors": [
+      "Saeid Ghasemshirazi",
+      "Ghazaleh Shirvani",
+      "Saeed Raisi"
+    ],
+    "year": 2021,
+    "venue": "2021 7th International Conference on Web Research (ICWR)",
+    "url": "https://doi.org/10.1109/icwr51868.2021.9443138",
+    "abstract": "Creating games is a costly process involving tons of vigorous efforts, time, and resources. Different game engines were introduced to facilitate the game-making process, such as Unreal Engine, Unity, and Godot. However, despite the advent of game engines, the vacuum of automatically creating new games by computers was still felt. With artificial intelligence (AI) development and its growing presence in the industry, game developers made a new game development branch using AI. One of the essentia",
+    "keywords": [
+      "Computer science",
+      "Context (archaeology)",
+      "Game design",
+      "Process (computing)",
+      "Game art design",
+      "Game Developer",
+      "Class (philosophy)",
+      "Video game design"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "ghasemshirazi2021mcgan"
+  },
+  {
+    "title": "Game engines: a survey",
+    "authors": [
+      "Adriano de Oliveira Andrade"
+    ],
+    "year": 2015,
+    "venue": "EAI Endorsed Transactions on Game-Based Learning",
+    "url": "http://eudl.eu/pdf/10.4108/eai.5-11-2015.150615",
+    "abstract": "Due to hardware limitations at the origin of the video game industry, each new game was generally coded from the ground up. Years later, from the evolution of hardware and the need for quick game development cycles, spawned the concept of game engine. A game engine is a reusable software layer allowing the separation of common game concepts from the game assets (levels, graphics, etc.). This paper surveys fourteen different game engines relevant today, ranging from the industry-level to the newc",
+    "keywords": [
+      "Game Developer",
+      "Video game",
+      "Video game development",
+      "Game programming",
+      "Computer science",
+      "Game design document",
+      "Game testing",
+      "Game art design"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "andrade2015game"
+  },
+  {
+    "title": "Game Engine Architecture and Comparative Study of Different Game Engines",
+    "authors": [
+      "Chaitya Vohera",
+      "Heet Chheda",
+      "Dhruveel Chouhan",
+      "Ayush Desai",
+      "Vijal Jain"
+    ],
+    "year": 2021,
+    "venue": "International Conference on Computing Communication and Networking Technologies",
+    "url": "https://doi.org/10.1109/icccnt51525.2021.9579618",
+    "abstract": "Nowadays Game Engines have become an integral component of the game development environment. Not only do they accelerate the game development process but also facilitate the integration of gaming modules like animations, graphics, artificial intelligence, and physics using their in-built functionalities. Game Engines also provide a major advantage of reusability of their components making them highly scalable and modifiable. Game engines can be used by the developers to construct and develop gam",
+    "keywords": [
+      "Computer science",
+      "Game Developer",
+      "Video game development",
+      "Game development tool",
+      "Game design",
+      "Game engine",
+      "Game programming",
+      "Level design"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "vohera2021game"
+  },
+  {
+    "title": "Genie: Generative Interactive Environments",
+    "authors": [
+      "Jake Bruce",
+      "Michael J. Dennis",
+      "Ashley Edwards",
+      "Jack Parker-Holder",
+      "Yuge Shi"
+    ],
+    "year": 2024,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2402.15391",
+    "abstract": "We introduce Genie, the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos. The model can be prompted to generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches. At 11B parameters, Genie can be considered a foundation world model. It is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action mod",
+    "keywords": [
+      "Generative grammar",
+      "Computer science",
+      "Human–computer interaction",
+      "Generative Design",
+      "Artificial intelligence",
+      "Engineering"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "bruce2024genie"
+  },
+  {
+    "title": "GenIE: Generative Information Extraction",
+    "authors": [
+      "Martin Josifoski",
+      "Nicola De Cao",
+      "Maxime Peyrard",
+      "Fabio Petroni",
+      "Robert West"
+    ],
+    "year": 2022,
+    "venue": "Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+    "url": "https://aclanthology.org/2022.naacl-main.342.pdf",
+    "abstract": "Structured and grounded representation of text is typically formalized by closed information extraction, the problem of extracting an exhaustive set of (subject, relation, object) triplets that are consistent with a predefined set of entities and relations from a knowledge base schema. Most existing works are pipelines prone to error accumulation, and all approaches are only applicable to unrealistically small numbers of entities and relations. We introduce GenIE (generative information extracti",
+    "keywords": [
+      "Generative grammar",
+      "Information extraction",
+      "Computer science",
+      "Computational linguistics",
+      "Artificial intelligence",
+      "Natural language processing",
+      "Cognitive science",
+      "Linguistics"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "josifoski2022genie"
+  },
+  {
+    "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+    "authors": [
+      "Joon Sung Park",
+      "Joseph O’Brien",
+      "Carrie J. Cai",
+      "Meredith Ringel Morris",
+      "Percy Liang"
+    ],
+    "year": 2023,
+    "venue": "ACM Symposium on User Interface Software and Technology",
+    "url": "https://dl.acm.org/doi/pdf/10.1145/3586183.3606763",
+    "abstract": "Believable proxies of human behavior can empower interactive applications ranging from immersive environments to rehearsal spaces for interpersonal communication to prototyping tools. In this paper, we introduce generative agents: computational software agents that simulate believable human behavior. Generative agents wake up, cook breakfast, and head to work; artists paint, while authors write; they form opinions, notice each other, and initiate conversations; they remember and reflect on days ",
+    "keywords": [
+      "Generative grammar",
+      "Computer science",
+      "Artificial intelligence",
+      "Human–computer interaction",
+      "Generative model"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "park2023generative"
+  },
+  {
+    "title": "GENIE Learn: Human-Centered Generative AI-Enhanced Smart Learning Environments",
+    "authors": [
+      "Carlos Delgado Kloos",
+      "Juan I. Asensio‐Pérez",
+      "Davinia Hernández‐Leo",
+      "Pedro Manuel Moreno-Marcos",
+      "Miguel L. Bote‐Lorenzo"
+    ],
+    "year": 2025,
+    "venue": "International Conference on Computer Supported Education",
+    "url": "https://doi.org/10.5220/0013076000003932",
+    "abstract": ": This paper presents the basis of the GENIE Learn project, a coordinated three-year research project funded by the Spanish Research Agency. The main goal of GENIE Learn is to improve Smart Learning Environments (SLEs) for Hybrid Learning (HL) support by integrating Generative Artificial Intelligence (GenAI) tools in a way that is aligned with the preferences and values of human stakeholders. This article focuses on analyzing the problems of this research context, as well as the affordances that",
+    "keywords": [
+      "Generative grammar",
+      "Computer science",
+      "Human–computer interaction",
+      "Artificial intelligence"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "kloos2025genie"
+  },
+  {
+    "title": "GenIE: Generative Information Extraction",
+    "authors": [
+      "Josifoski, Martin",
+      "De Cao, Nicola",
+      "Peyrard, Maxime",
+      "Petroni, Fabio",
+      "West, Robert"
+    ],
+    "year": 2021,
+    "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+    "url": "https://doi.org/10.5281/zenodo.6139235",
+    "abstract": "This repository contains the data and the models released with the paper \"GenIE: Generative Information Extraction\". Please see the GitHub repository associated with the project for a more detailed description of our work, a PyTorch implementation of the proposed system GenIE, and a comprehensive demo.",
+    "keywords": [
+      "Generative grammar",
+      "Information extraction",
+      "Generative model",
+      "Information system"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "martin2021genie"
+  },
+  {
+    "title": "Diffusion Models Are Real-Time Game Engines",
+    "authors": [
+      "Dani Valevski",
+      "Yaniv Leviathan",
+      "Moab Arar",
+      "Shlomi Fruchter"
+    ],
+    "year": 2024,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2408.14837",
+    "abstract": "We present GameNGen, the first game engine powered entirely by a neural model that also enables real-time interaction with a complex environment over long trajectories at high quality. When trained on the classic game DOOM, GameNGen extracts gameplay and uses it to generate a playable environment that can interactively simulate new trajectories. GameNGen runs at 20 frames per second on a single TPU and remains stable over extended multi-minute play sessions. Next frame prediction achieves a PSNR",
+    "keywords": [
+      "Diffusion",
+      "Game engine",
+      "Computer science",
+      "Human–computer interaction",
+      "Physics",
+      "Thermodynamics"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "valevski2024diffusion"
+  },
+  {
+    "title": "Learning Interactive Real-World Simulators",
+    "authors": [
+      "Mengjiao Yang",
+      "Yilun Du",
+      "Kamyar Ghasemipour",
+      "Jonathan Tompson",
+      "D. Schuurmans"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2310.06114",
+    "abstract": "Generative models trained on internet data have revolutionized how text, image, and video content can be created. Perhaps the next milestone for generative models is to simulate realistic experience in response to actions taken by humans, robots, and other interactive agents. Applications of a real-world simulator range from controllable content creation in games and movies, to training embodied agents purely in simulation that can be directly deployed in the real world. We explore the possibili",
+    "keywords": [
+      "Computer science",
+      "Human–computer interaction"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "yang2023learning"
+  },
+  {
+    "title": "DriveDreamer: Towards Real-World-Drive World Models forAutonomous Driving",
+    "authors": [
+      "Xiaofeng Wang",
+      "Zheng Zhu",
+      "Guan Huang",
+      "Xinze Chen",
+      "Jiagang Zhu"
+    ],
+    "year": 2024,
+    "venue": "Lecture notes in computer science",
+    "url": "https://doi.org/10.1007/978-3-031-73195-2_4",
+    "abstract": "World models, especially in autonomous driving, are trending and drawing extensive attention due to their capacity for comprehending driving environments. The established world model holds immense potential for the generation of high-quality driving videos, and driving policies for safe maneuvering. However, a critical limitation in relevant research lies in its predominant focus on gaming environments or simulated settings, thereby lacking the representation of real-world driving scenarios. The",
+    "keywords": [
+      "Computer science",
+      "Real world data",
+      "Human–computer interaction",
+      "Data science",
+      "World_models",
+      "Video_generation",
+      "Autonomous_driving"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "wang2024drivedreamer"
+  },
+  {
+    "title": "RITS: Real-Time Interactive Text Steganography Based on Automatic Dialogue Model",
+    "authors": [
+      "Zhongliang Yang",
+      "Pengyu Zhang",
+      "Minyu Jiang",
+      "Yongfeng Huang",
+      "Yu‐Jin Zhang"
+    ],
+    "year": 2018,
+    "venue": "Lecture notes in computer science",
+    "url": "https://doi.org/10.1007/978-3-030-00012-7_24",
+    "abstract": "Steganography based on texts has always been a hot but extremely hard research topic. Due to the high coding characteristics of the text compared to other information carriers, the redundancy of information is very low, which makes it really difficult to hide information inside. In this paper, combined with the recurrent neural network (RNN) and reinforcement learning (RL), we designed and implemented a real-time interactive text steganography model (RITS). The proposed model can automatically g",
+    "keywords": [
+      "Computer science",
+      "Steganography",
+      "Sentence",
+      "Embedding",
+      "Artificial intelligence",
+      "Redundancy (engineering)",
+      "Coding (social sciences)",
+      "Encoding (memory)"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "yang2018rits"
+  },
+  {
+    "title": "YOLO-World: Real-Time Open-Vocabulary Object Detection",
+    "authors": [
+      "Tianheng Cheng",
+      "Lin Song",
+      "Yixiao Ge",
+      "Wenyu Liu",
+      "Xinggang Wang"
+    ],
+    "year": 2024,
+    "venue": "Computer Vision and Pattern Recognition",
+    "url": "https://doi.org/10.1109/cvpr52733.2024.01599",
+    "abstract": "The You Only Look Once (YOLO) series of detectors have established themselves as efficient and practical tools. However, their reliance on predefined and trained object categories limits their applicability in open scenarios. Addressing this limitation, we introduce YOLO-World, an innovative approach that enhances YOLO with open-vocabulary detection capabilities through vision-language modeling and pre-training on large-scale datasets. Specifically, we propose a new Re-parameterizable Vision-Lan",
+    "keywords": [
+      "Computer science",
+      "Vocabulary",
+      "Object detection",
+      "Object (grammar)",
+      "Artificial intelligence",
+      "Linguistics",
+      "Pattern recognition (psychology)"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "cheng2024yoloworld"
+  },
+  {
+    "title": "Real-Time Inflation Forecasting in a Changing World",
+    "authors": [
+      "Jan J. J. Groen",
+      "Richard Paap",
+      "Francesco Ravazzolo"
+    ],
+    "year": 2013,
+    "venue": "Journal of Business & Economic Statistics",
+    "url": "https://doi.org/10.1080/07350015.2012.727718",
+    "abstract": "This article revisits the accuracy of inflation forecasting using activity and expectations variables. We apply Bayesian model averaging across different regression specifications selected from a set of potential predictors that includes lagged values of inflation, a host of real activity data, term structure data, (relative) price data, and surveys. In this model average, we can entertain different channels of structural instability, by either incorporating stochastic breaks in the regression p",
+    "keywords": [
+      "GDP deflator",
+      "Econometrics",
+      "Inflation (cosmology)",
+      "Economics",
+      "Variance (accounting)",
+      "Bayesian probability",
+      "Real gross domestic product",
+      "Gross domestic product"
+    ],
+    "category": "Neural Game Engine",
+    "bibtex_key": "groen2013realtime"
+  },
+  {
+    "title": "Authoring Adaptive Game World Generation",
+    "authors": [
+      "Ricardo Lopes",
+      "Elmar Eisemann",
+      "Rafael Bidarra"
+    ],
+    "year": 2018,
+    "venue": "IEEE Transactions on Games",
+    "url": "https://doi.org/10.1109/tciaig.2017.2678759",
+    "abstract": "Current research on adaptive games has mainly focused on adjusting difficulty in a variety of ways, for example, by providing some control over adaptive game world generation. These methods, however, are mostly ad-hoc and require quite some technical skills. To the best of our knowledge, so far, there has been no adaptive method that is truly generic and explicitly designed to actively include game designers in the content creation loop. In this paper, we introduce a generic method that enables ",
+    "keywords": [
+      "Computer science",
+      "Adaptation (eye)",
+      "Matching (statistics)",
+      "Game design",
+      "Multimedia",
+      "Variety (cybernetics)",
+      "Game design document",
+      "Game Developer"
+    ],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "lopes2018authoring"
+  },
+  {
+    "title": "Gamecraft : prototyping and producing your board game",
+    "authors": [
+      "Geoffrey Engelstein"
+    ],
+    "year": 2020,
+    "venue": "arXiv",
+    "url": "",
+    "abstract": "",
+    "keywords": [],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "engelstein2020gamecraft"
+  },
+  {
+    "title": "Position: Interactive Generative Video as Next-Generation Game Engine",
+    "authors": [
+      "Jiwen Yu",
+      "Yiran Qin",
+      "Haoxuan Che",
+      "Quande Liu",
+      "Xintao Wang"
+    ],
+    "year": 2025,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2503.17359",
+    "abstract": "Modern game development faces significant challenges in creativity and cost due to predetermined content in traditional game engines. Recent breakthroughs in video generation models, capable of synthesizing realistic and interactive virtual environments, present an opportunity to revolutionize game creation. In this position paper, we propose Interactive Generative Video (IGV) as the foundation for Generative Game Engines (GGE), enabling unlimited novel content generation in next-generation gami",
+    "keywords": [
+      "Generative grammar",
+      "Video game",
+      "Video game development",
+      "Game design",
+      "Game Developer",
+      "Core (optical fiber)",
+      "Game development tool",
+      "Game testing"
+    ],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "yu2025position"
+  },
+  {
+    "title": "General Video Game Level Generation",
+    "authors": [
+      "Ahmed Khalifa",
+      "Diego Pérez-Liébana",
+      "Simon M. Lucas",
+      "Julian Togelius"
+    ],
+    "year": 2016,
+    "venue": "Annual Conference on Genetic and Evolutionary Computation",
+    "url": "https://www.um.edu.mt/library/oar/handle/123456789/81555",
+    "abstract": "This paper presents a framework and an initial study in general video game level generation, the problem of generating levels for not only a single game but for any game within a specified range. While existing level generators are tailored to a particular game, this new challenge requires generators to take into account the constraints and affordances of games that might not even have been designed when the generator was constructed. The framework presented here builds on the General Video Game",
+    "keywords": [
+      "Computer science",
+      "Video game",
+      "Generator (circuit theory)",
+      "Game design",
+      "Video game development",
+      "Game art design",
+      "Affordance",
+      "Game Developer"
+    ],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "khalifa2016general"
+  },
+  {
+    "title": "Semantic Content Generation Framework for Game Worlds",
+    "authors": [
+      "M. D. Bennett"
+    ],
+    "year": 2014,
+    "venue": "International Conference on Games and Virtual Worlds for Serious Applications",
+    "url": "https://doi.org/10.1109/vs-games.2014.7012165",
+    "abstract": "As virtual worlds in games become larger and more detailed, the need for rich, interactive content to realistically populate these worlds becomes greater. Content is expensive and slow to create manually and does not scale once created. Procedural content generation offers an attractive alternative for providing this content. There are several methods for generating different types of content including terrain and some types of organisms. However, these methods are hard to control and can give i",
+    "keywords": [
+      "Computer science",
+      "Metaverse",
+      "Interactivity",
+      "Scalability",
+      "Semantics (computer science)",
+      "Content (measure theory)",
+      "Context (archaeology)",
+      "Multimedia"
+    ],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "bennett2014semantic"
+  },
+  {
+    "title": "Game Level Generation from Gameplay Videos",
+    "authors": [
+      "Matthew Guzdial",
+      "Mark Riedl"
+    ],
+    "year": 2021,
+    "venue": "Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment",
+    "url": "https://ojs.aaai.org/index.php/AIIDE/article/download/12861/12708",
+    "abstract": "We present an unsupervised process to generate full video game levels from a model trained on gameplay video. The model represents probabilistic relationships between shapes properties, and relates the relationships to stylistic variance within a domain. We utilize the classic platformer game Super Mario Bros. to evaluate this process due to its highly-regarded level design. We evaluate the output in comparison to other data-driven level generation techniques via a user study and demonstrate its",
+    "keywords": [
+      "Video game",
+      "Computer science",
+      "Variance (accounting)",
+      "Probabilistic logic",
+      "Domain (mathematical analysis)",
+      "Process (computing)",
+      "Game design",
+      "Human–computer interaction"
+    ],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "guzdial2021game"
+  },
+  {
+    "title": "Personality and video gaming: Comparing regular gamers, non-gamers, and gaming addicts and differentiating between game genres",
+    "authors": [
+      "Beate Braun",
+      "Juliane M. Stopfer",
+      "Kai W. Müller",
+      "Manfred E. Beutel",
+      "Boris Egloff"
+    ],
+    "year": 2016,
+    "venue": "Computers in Human Behavior",
+    "url": "https://doi.org/10.1016/j.chb.2015.09.041",
+    "abstract": "This study deals with personality characteristics of gaming addicts, regular gamers, and non-gamers while differentiating between the gamers' favorite game genres. In order to point out personality differences among players, we used a two-stage model that includes both personality and non- personality. Additionally, the gamers were screened with a diagnostic inventory for video game addiction and categorized according to their favorite game genre. We replicated findings in which gaming addicts w",
+    "keywords": [
+      "Neuroticism",
+      "Extraversion and introversion",
+      "Personality",
+      "Video game",
+      "Psychology",
+      "Big Five personality traits",
+      "Addiction",
+      "Social psychology"
+    ],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "braun2016personality"
+  },
+  {
+    "title": "Next Generation Mobile Cloud Gaming",
+    "authors": [
+      "Wei Cai",
+      "Victor C. M. Leung",
+      "Min Chen"
+    ],
+    "year": 2013,
+    "venue": "2013 IEEE Seventh International Symposium on Service-Oriented System Engineering",
+    "url": "https://doi.org/10.1109/sose.2013.30",
+    "abstract": "With the proliferation of smart mobile devices and broadband wireless networks, the mobile gaming market is rapidly expanding among younger generations due to its ubiquitous entertainment features. Cloud-based mobile computing is a promising technology to address the inherent restrictions of mobile devices, such as limited battery lifetime and computational capacity. In this work, we categorize the current approaches to cloud-based mobile gaming and explicitly define Mobile Cloud Gaming (MCG). B",
+    "keywords": [
+      "Computer science",
+      "Cloud computing",
+      "Mobile device",
+      "Mobile computing",
+      "Mobile Web",
+      "Mobile telephony",
+      "Mobile technology",
+      "Mobile cloud computing"
+    ],
+    "category": "Foundation Interactive Game World Model",
+    "bibtex_key": "cai2013next"
+  },
+  {
+    "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+    "authors": [
+      "Guanzhi Wang",
+      "Yuqi Xie",
+      "Yunfan Jiang",
+      "Ajay Mandlekar",
+      "Chaowei Xiao"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2305.16291",
+    "abstract": "We introduce Voyager, the first LLM-powered embodied lifelong learning agent in Minecraft that continuously explores the world, acquires diverse skills, and makes novel discoveries without human intervention. Voyager consists of three key components: 1) an automatic curriculum that maximizes exploration, 2) an ever-growing skill library of executable code for storing and retrieving complex behaviors, and 3) a new iterative prompting mechanism that incorporates environment feedback, execution err",
+    "keywords": [
+      "Codebase",
+      "Computer science",
+      "Executable",
+      "Embodied cognition",
+      "Context (archaeology)",
+      "Key (lock)",
+      "Code (set theory)",
+      "Forgetting"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "wang2023voyager"
+  },
+  {
+    "title": "AgentBench: Evaluating LLMs as Agents",
+    "authors": [
+      "Xiao Liu",
+      "Hao Yu",
+      "Hanchen Zhang",
+      "Yifan Xu",
+      "Xuanyu Lei"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2308.03688v3",
+    "abstract": "The potential of Large Language Model (LLM) as agents has been widely acknowledged recently. Thus, there is an urgent need to quantitatively \\textit{evaluate LLMs as agents} on challenging tasks in interactive environments. We present AgentBench, a multi-dimensional benchmark that consists of 8 distinct environments to assess LLM-as-Agent's reasoning and decision-making abilities. Our extensive test over \\num API-based and open-sourced (OSS) LLMs shows that, while top commercial LLMs present a s",
+    "keywords": [
+      "Competitor analysis",
+      "Computer science",
+      "Quality (philosophy)",
+      "Benchmark (surveying)",
+      "USable",
+      "Data science",
+      "Business",
+      "World Wide Web"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "liu2023agentbench"
+  },
+  {
+    "title": "Experience Transfer for Multimodal LLM Agents in Minecraft Game",
+    "authors": [
+      "Chenghao Li",
+      "Jun Liu",
+      "Songbo Zhang",
+      "Huadong Jian",
+      "Hao Ni"
+    ],
+    "year": 2026,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2604.05533v1",
+    "abstract": "Multimodal LLM agents operating in complex game environments must continually reuse past experience to solve new tasks efficiently. In this work, we propose Echo, a transfer-oriented memory framework that enables agents to derive actionable knowledge from prior interactions rather than treating memory as a passive repository of static records. To make transfer explicit, Echo decomposes reusable knowledge into five dimensions: structure, attribute, process, function, and interaction. This formula",
+    "keywords": [
+      "Reuse",
+      "Transfer of learning",
+      "Echo (communications protocol)",
+      "Adaptability",
+      "Analogy",
+      "Process (computing)",
+      "Task (project management)"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "li2026experience"
+  },
+  {
+    "title": "A LLM Benchmark based on the Minecraft Builder Dialog Agent Task",
+    "authors": [
+      "Chris Madge",
+      "Massimo Poesio"
+    ],
+    "year": 2024,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2407.12734v1",
+    "abstract": "In this work we proposing adapting the Minecraft builder task into an LLM benchmark suitable for evaluating LLM ability in spatially orientated tasks, and informing builder agent design. Previous works have proposed corpora with varying complex structures, and human written instructions. We instead attempt to provide a comprehensive synthetic benchmark for testing builder agents over a series of distinct tasks that comprise of common building operations. We believe this approach allows us to pro",
+    "keywords": [
+      "Dialog box",
+      "Benchmark (surveying)",
+      "Task (project management)",
+      "Computer science",
+      "Dialog system",
+      "Human–computer interaction",
+      "World Wide Web",
+      "Engineering"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "madge2024a"
+  },
+  {
+    "title": "Multi-Agent Collaboration: Harnessing the Power of Intelligent LLM Agents",
+    "authors": [
+      "Yashar Talebirad",
+      "Amirhossein Nadiri"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2306.03314v1",
+    "abstract": "In this paper, we present a novel framework for enhancing the capabilities of large language models (LLMs) by leveraging the power of multi-agent systems. Our framework introduces a collaborative environment where multiple intelligent agent components, each with distinctive attributes and roles, work together to handle complex tasks more efficiently and effectively. We demonstrate the practicality and versatility of our framework through case studies in artificial general intelligence (AGI), spe",
+    "keywords": [
+      "Computer science",
+      "Scalability",
+      "Intelligent agent",
+      "Multi-agent system",
+      "Work (physics)",
+      "Software engineering",
+      "Systems engineering",
+      "Knowledge management"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "talebirad2023multiagent"
+  },
+  {
+    "title": "Towards Large-Scale Small Object Detection: Survey and Benchmarks",
+    "authors": [
+      "Gong Cheng",
+      "Xiang Yuan",
+      "Xiwen Yao",
+      "Kebing Yan",
+      "Qinghua Zeng"
+    ],
+    "year": 2023,
+    "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+    "url": "https://arxiv.org/pdf/2207.14096v4",
+    "abstract": "With the rise of deep convolutional neural networks, object detection has achieved prominent advances in past years. However, such prosperity could not camouflage the unsatisfactory situation of Small Object Detection (SOD), one of the notoriously challenging tasks in computer vision, owing to the poor visual appearance and noisy representation caused by the intrinsic structure of small targets. In addition, large-scale dataset for benchmarking small object detection methods remains a bottleneck",
+    "keywords": [
+      "Computer science",
+      "Object detection",
+      "Artificial intelligence",
+      "Convolutional neural network",
+      "Benchmarking",
+      "Bottleneck",
+      "Pascal (unit)",
+      "Camouflage"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "cheng2023towards"
+  },
+  {
+    "title": "HaluEval: A Large-Scale Hallucination Evaluation Benchmark for Large Language Models",
+    "authors": [
+      "Junyi Li",
+      "Xiaoxue Cheng",
+      "Wayne Xin Zhao",
+      "Jian‐Yun Nie",
+      "Ji-Rong Wen"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2305.11747",
+    "abstract": "Large language models (LLMs), such as ChatGPT, are prone to generate hallucinations, i.e., content that conflicts with the source or cannot be verified by the factual knowledge. To understand what types of content and to which extent LLMs are apt to hallucinate, we introduce the Hallucination Evaluation benchmark for Large Language Models (HaluEval), a large collection of generated and human-annotated hallucinated samples for evaluating the performance of LLMs in recognizing hallucination. To ge",
+    "keywords": [
+      "Hallucinating",
+      "Benchmark (surveying)",
+      "Computer science",
+      "Sampling (signal processing)",
+      "Face (sociological concept)",
+      "Artificial intelligence",
+      "Psychology",
+      "Natural language processing"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "li2023halueval"
+  },
+  {
+    "title": "LSHTC: A Benchmark for Large-Scale Text Classification",
+    "authors": [
+      "Ioannis Partalas",
+      "Aris Kosmopoulos",
+      "Nicolas Baskiotis",
+      "Thierry Artières",
+      "George Paliouras"
+    ],
+    "year": 2015,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/1503.08581v1",
+    "abstract": "LSHTC is a series of challenges which aims to assess the performance of classification systems in large-scale classification in a a large number of classes (up to hundreds of thousands). This paper describes the dataset that have been released along the LSHTC series. The paper details the construction of the datsets and the design of the tracks as well as the evaluation measures that we implemented and a quick overview of the results. All of these datasets are available online and runs may still",
+    "keywords": [
+      "Benchmark (surveying)",
+      "Computer science",
+      "Scale (ratio)",
+      "Series (stratigraphy)",
+      "Data mining",
+      "Data science",
+      "Information retrieval",
+      "Machine learning"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "partalas2015lshtc"
+  },
+  {
+    "title": "Benchmarking common quantification strategies for large-scale phosphoproteomics",
+    "authors": [
+      "Alexander Hogrebe",
+      "Louise von Stechow",
+      "Dorte B. Bekker‐Jensen",
+      "Brian T. Weinert",
+      "Christian D. Kelstrup"
+    ],
+    "year": 2018,
+    "venue": "Nature Communications",
+    "url": "https://www.nature.com/articles/s41467-018-03309-6.pdf",
+    "abstract": "Comprehensive mass spectrometry (MS)-based proteomics is now feasible, but reproducible quantification remains challenging, especially for post-translational modifications such as phosphorylation. Here, we compare the most popular quantification techniques for global phosphoproteomics: label-free quantification (LFQ), stable isotope labeling by amino acids in cell culture (SILAC) and MS2- and MS3-measured tandem mass tags (TMT). In a mixed species comparison with fixed phosphopeptide ratios, we ",
+    "keywords": [
+      "Stable isotope labeling by amino acids in cell culture",
+      "Phosphoproteomics",
+      "Isobaric labeling",
+      "Quantitative proteomics",
+      "Phosphopeptide",
+      "Tandem mass tag",
+      "Proteomics",
+      "Computational biology"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "hogrebe2018benchmarking"
+  },
+  {
+    "title": "GraspNet-1Billion: A Large-Scale Benchmark for General Object Grasping",
+    "authors": [
+      "Hao-Shu Fang",
+      "Chenxi Wang",
+      "Minghao Gou",
+      "Cewu Lu"
+    ],
+    "year": 2020,
+    "venue": "Computer Vision and Pattern Recognition",
+    "url": "https://doi.org/10.1109/cvpr42600.2020.01146",
+    "abstract": "Object grasping is critical for many applications, which is also a challenging computer vision problem. However, for cluttered scene, current researches suffer from the problems of insufficient training data and the lacking of evaluation benchmarks. In this work, we contribute a large-scale grasp pose detection dataset with a unified evaluation system. Our dataset contains 97,280 RGB-D image with over one billion grasp poses. Meanwhile, our evaluation system directly reports whether a grasping i",
+    "keywords": [
+      "GRASP",
+      "Computer science",
+      "Robustness (evolution)",
+      "Artificial intelligence",
+      "Point cloud",
+      "Benchmark (surveying)",
+      "Computation",
+      "Ground truth"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "fang2020graspnetbillion"
+  },
+  {
+    "title": "Cradle: Empowering Foundation Agents Towards General Computer Control",
+    "authors": [
+      "Weihao Tan",
+      "W. Zhang",
+      "Xinrun Xu",
+      "Haochong Xia",
+      "Ziluo Ding"
+    ],
+    "year": 2024,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2403.03186v3",
+    "abstract": "Despite the success in specific scenarios, existing foundation agents still struggle to generalize across various virtual scenarios, mainly due to the dramatically different encapsulations of environments with manually designed observation and action spaces. To handle this issue, we propose the General Computer Control (GCC) setting to restrict foundation agents to interact with software through the most unified and standardized interface, i.e., using screenshots as input and keyboard and mouse ",
+    "keywords": [
+      "Computer science",
+      "Control (management)",
+      "Artificial intelligence"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "tan2024cradle"
+  },
+  {
+    "title": "ALYMPICS: LLM Agents Meet Game Theory -- Exploring Strategic Decision-Making with AI Agents",
+    "authors": [
+      "Shaoguang Mao",
+      "Yuzhe Cai",
+      "Yan Xia",
+      "Wenshan Wu",
+      "Xun Wang"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2311.03220v4",
+    "abstract": "This paper introduces Alympics (Olympics for Agents), a systematic simulation framework utilizing Large Language Model (LLM) agents for game theory research. Alympics creates a versatile platform for studying complex game theory problems, bridging the gap between theoretical game theory and empirical investigations by providing a controlled environment for simulating human-like strategic interactions with LLM agents. In our pilot case study, the \"Water Allocation Challenge,\" we explore Alympics ",
+    "keywords": [
+      "Computer science",
+      "Game theory",
+      "Bridging (networking)",
+      "Management science",
+      "Game design",
+      "Knowledge management",
+      "Human–computer interaction",
+      "Engineering"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "mao2023alympics"
+  },
+  {
+    "title": "Evolving Game Skill-Depth using General Video Game AI agents",
+    "authors": [
+      "Jialin Liu",
+      "Julian Togelius",
+      "Diego Pérez-Liébana",
+      "Simon M. Lucas"
+    ],
+    "year": 2017,
+    "venue": "IEEE Congress on Evolutionary Computation",
+    "url": "http://repository.essex.ac.uk/20337/1/CEC_2017_Perez.pdf",
+    "abstract": "Most games have, or can be generalised to have, a number of parameters that may be varied in order to provide instances of games that lead to very different player experiences. The space of possible parameter settings can be seen as a search space, and we can therefore use a Random Mutation Hill Climbing algorithm or other search methods to find the parameter settings that induce the best games. One of the hardest parts of this approach is defining a suitable fitness function. In this paper we e",
+    "keywords": [
+      "Computer science",
+      "Video game",
+      "Multimedia",
+      "Video game development",
+      "Human–computer interaction",
+      "Game design",
+      "Artificial intelligence"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "liu2017evolving"
+  },
+  {
+    "title": "General Modular Harness for LLM Agents in Multi-Turn Gaming Environments",
+    "authors": [
+      "Yuxuan Zhang",
+      "Hongwen Yu",
+      "Lanxiang Hu",
+      "Haojian Jin",
+      "Hao Zhang"
+    ],
+    "year": 2025,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2507.11633v1",
+    "abstract": "We introduce a modular harness design for LLM agents that composes of perception, memory, and reasoning components, enabling a single LLM or VLM backbone to tackle a wide spectrum of multi turn gaming environments without domain-specific engineering. Using classic and modern game suites as low-barrier, high-diversity testbeds, our framework provides a unified workflow for analyzing how each module affects performance across dynamic interactive settings. Extensive experiments demonstrate that the",
+    "keywords": [
+      "Modular design",
+      "Workflow",
+      "Key (lock)",
+      "Perception",
+      "Modular construction"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "zhang2025general"
+  },
+  {
+    "title": "LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals",
+    "authors": [
+      "Joon Sung Park",
+      "Zou, Carolyn Q.",
+      "Aaron Shaw",
+      "Benjamin Mako Hill",
+      "Carrie J. Cai"
+    ],
+    "year": 2024,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2411.10109v3",
+    "abstract": "The promise of human behavioral simulation--general-purpose computational agents that replicate human behavior across domains--could enable broad applications in policymaking and social science. We present a novel agent architecture that simulates the attitudes and behaviors of 1,052 real individuals--applying large language models to qualitative interviews about their lives, then measuring how well these agents replicate the attitudes and behaviors of the individuals that they represent. The ge",
+    "keywords": [
+      "Generative grammar",
+      "Computer science",
+      "Artificial intelligence"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "park2024llm"
+  },
+  {
+    "title": "Generative Model of Agent’s Behaviors in Human-Agent Interaction",
+    "authors": [
+      "Soumia Dermouche",
+      "Catherine Pélachaud"
+    ],
+    "year": 2019,
+    "venue": "International Conference on Multimodal Interaction",
+    "url": "http://dl.acm.org/ft_gateway.cfm?id=3353758&type=pdf",
+    "abstract": "A social interaction implies a social exchange between two or more persons, where they adapt and adjust their behaviors in response to their interaction partners. With the growing interest in human-agent interactions, it is desirable to make these interactions more natural and human like. In this context, we aim at enhancing the quality of the interaction between user and Embodied Conversational Agent (ECA) by endowing ECA with the capacity to adapt its behavior in real time according the user’s",
+    "keywords": [
+      "Computer science",
+      "Embodied agent",
+      "Novelty",
+      "Human–computer interaction",
+      "Dialog system",
+      "Embodied cognition",
+      "Social relation",
+      "Context (archaeology)"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "dermouche2019generative"
+  },
+  {
+    "title": "Agent-based simulation of affordance-based human behaviors in emergency evacuation",
+    "authors": [
+      "Jaekoo Joo",
+      "Namhun Kim",
+      "Richard A. Wysk",
+      "Ling Rothrock",
+      "Young‐Jun Son"
+    ],
+    "year": 2013,
+    "venue": "Simulation Modelling Practice and Theory",
+    "url": "https://doi.org/10.1016/j.simpat.2012.12.007",
+    "abstract": "",
+    "keywords": [
+      "Affordance",
+      "Computer science",
+      "Perception",
+      "Action (physics)",
+      "Human behavior",
+      "Human–computer interaction",
+      "Fidelity",
+      "Emergency evacuation"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "joo2013agentbased"
+  },
+  {
+    "title": "Humanoid Agents: Platform for Simulating Human-like Generative Agents",
+    "authors": [
+      "Zhilin Wang",
+      "Yu Ying Chiu",
+      "Yu Cheung Chiu"
+    ],
+    "year": 2023,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2310.05418v1",
+    "abstract": "Just as computational simulations of atoms, molecules and cells have shaped the way we study the sciences, true-to-life simulations of human-like agents can be valuable tools for studying human behavior. We propose Humanoid Agents, a system that guides Generative Agents to behave more like humans by introducing three elements of System 1 processing: Basic needs (e.g. hunger, health and energy), Emotion and Closeness in Relationships. Humanoid Agents are able to use these dynamic elements to adap",
+    "keywords": [
+      "Computer science",
+      "Human–computer interaction",
+      "Closeness",
+      "Generative grammar",
+      "Analytics",
+      "Visualization",
+      "Visual analytics",
+      "Interface (matter)"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "wang2023humanoid"
+  },
+  {
+    "title": "Modeling human behavior during emergency evacuation using intelligent agents: A multi-agent simulation approach",
+    "authors": [
+      "Sharad Sharma",
+      "Kola Ogunlana",
+      "David Scribner",
+      "Jock O. Grynovicki"
+    ],
+    "year": 2017,
+    "venue": "Information Systems Frontiers",
+    "url": "https://doi.org/10.1007/s10796-017-9791-x",
+    "abstract": "It is costly and takes a lot of time for disaster employees to execute several evacuation drills for a building. One cannot glean information to advance the plan and blueprint of forthcoming buildings without executing many drills. We have developed a multi-agent system simulation application to aid in running several evacuation drills and theoretical situations. This paper combines the genetic algorithm (GA) with neural networks (NNs) and fuzzy logic (FL) to explore how intelligent agents can l",
+    "keywords": [
+      "Computer science",
+      "Cooperativeness",
+      "Emergency evacuation",
+      "Intelligent agent",
+      "Adaptive behavior",
+      "Plan (archaeology)",
+      "Adaptation (eye)",
+      "Artificial intelligence"
+    ],
+    "category": "LLM / MLLM Game Agent",
+    "bibtex_key": "sharma2017modeling"
+  },
+  {
+    "title": "Benchmarking web accessibility evaluation tools",
+    "authors": [
+      "Markel Vigo",
+      "Justin Brown",
+      "Vivienne Conway"
+    ],
+    "year": 2013,
+    "venue": "International Cross-Disciplinary Conference on Web Accessibility",
+    "url": "https://doi.org/10.1145/2461121.2461124",
+    "abstract": "The use of web accessibility evaluation tools is a widespread practice. Evaluation tools are heavily employed as they help in reducing the burden of identifying accessibility barriers. However, an over-reliance on automated tests often leads to setting aside further testing that entails expert evaluation and user tests. In this paper we empirically show the capabilities of current automated evaluation tools. To do so, we investigate the effectiveness of 6 state-of-the-art tools by analysing thei",
+    "keywords": [
+      "Benchmarking",
+      "Correctness",
+      "Computer science",
+      "False positive paradox",
+      "Completeness (order theory)",
+      "Software engineering",
+      "Machine learning",
+      "Programming language"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "vigo2013benchmarking"
+  },
+  {
+    "title": "Benchmark for Evaluating Pedestrian Action Prediction",
+    "authors": [
+      "Iuliia Kotseruba",
+      "Amir Rasouli",
+      "John K. Tsotsos"
+    ],
+    "year": 2021,
+    "venue": "IEEE Workshop/Winter Conference on Applications of Computer Vision",
+    "url": "https://doi.org/10.1109/wacv48630.2021.00130",
+    "abstract": "Pedestrian action prediction has been a topic of active research in recent years resulting in many new algorithmic solutions. However, measuring the overall progress towards solving this problem is difficult due to the lack of publicly available benchmarks and common training and evaluation procedures. To this end, we introduce a benchmark based on two public datasets for pedestrian behavior understanding. Using the proposed evaluation procedures, we rank a number of baseline and state-of-the-ar",
+    "keywords": [
+      "Benchmark (surveying)",
+      "Pedestrian",
+      "Computer science",
+      "Baseline (sea)",
+      "Code (set theory)",
+      "Machine learning",
+      "Action (physics)",
+      "Rank (graph theory)"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "kotseruba2021benchmark"
+  },
+  {
+    "title": "EvalCrafter: Benchmarking and Evaluating Large Video Generation Models",
+    "authors": [
+      "Yaofang Liu",
+      "Xiaodong Cun",
+      "Xuebo Liu",
+      "Xintao Wang",
+      "Yong Zhang"
+    ],
+    "year": 2024,
+    "venue": "Computer Vision and Pattern Recognition",
+    "url": "https://doi.org/10.1109/cvpr52733.2024.02090",
+    "abstract": "The vision and language generative models have been overgrown in recent years. For video generation, various open-sourced models and public-available services have been developed to generate high-quality videos. However, these methods often use a few metrics, e.g., FVD [56] or IS [45], to evaluate the performance. We argue that it is hard to judge the large conditional generative models from the simple metrics since these models are often trained on very large datasets with multi-aspect abilitie",
+    "keywords": [
+      "Benchmarking",
+      "Computer science",
+      "Business"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "liu2024evalcrafter"
+  },
+  {
+    "title": "Evaluating AAL Systems Through Competitive Benchmarking",
+    "authors": [
+      "Stefano Chessa",
+      "Stefan Knauth"
+    ],
+    "year": 2013,
+    "venue": "Evaluating AAL Systems Through Competitive Benchmarking",
+    "url": "https://doi.org/10.1007/978-3-642-37419-7",
+    "abstract": "This book constitutes the refereed proceedings of the international competition aimed at the evaluation and assessment of Ambient Assisted Living, EvAAL 2012, which was organized in three major events",
+    "keywords": [
+      "Benchmarking",
+      "Computer science",
+      "Business",
+      "Marketing",
+      "smart_home",
+      "AAL_environments",
+      "context_awareness",
+      "wireless_networks"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "chessa2013evaluating"
+  },
+  {
+    "title": "The TUM VI Benchmark for Evaluating Visual-Inertial Odometry",
+    "authors": [
+      "David Schubert",
+      "Thore Goll",
+      "Nikolaus Demmel",
+      "Vladyslav Usenko",
+      "Jörg Stückler"
+    ],
+    "year": 2018,
+    "venue": "IEEE/RJS International Conference on Intelligent RObots and Systems",
+    "url": "https://arxiv.org/pdf/1804.06120",
+    "abstract": "Visual odometry and SLAM methods have a large variety of applications in domains such as augmented reality or robotics. Complementing vision sensors with inertial measurements tremendously improves tracking accuracy and robustness, and thus has spawned large interest in the development of visual-inertial (VI) odometry approaches. In this paper, we propose the TUM VI benchmark, a novel dataset with a diverse set of sequences in different scenes for evaluating VI odometry. It provides camera image",
+    "keywords": [
+      "Odometry",
+      "Artificial intelligence",
+      "Visual odometry",
+      "Computer vision",
+      "Inertial measurement unit",
+      "Robustness (evolution)",
+      "Computer science",
+      "Ground truth"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "schubert2018the"
+  },
+  {
+    "title": "Team Sports for Game AI Benchmarking Revisited",
+    "authors": [
+      "Maxim Mozgovoy",
+      "Mike Preuß",
+      "Rafael Bidarra"
+    ],
+    "year": 2021,
+    "venue": "International Journal of Computer Games Technology",
+    "url": "https://downloads.hindawi.com/journals/ijcgt/2021/5521877.pdf",
+    "abstract": "Sport games are among the oldest and best established genres of computer games. Sport-inspired environments, such as RoboCup, have been used for AI benchmarking for years. We argue that, in spite of the rise of increasingly more sophisticated game genres, team sport games will remain an important testbed for AI benchmarking due to two primary factors. First, there are several genre-specific challenges for AI systems that are neither present nor emphasized in other types of games, such as team AI",
+    "keywords": [
+      "Benchmarking",
+      "Testbed",
+      "Context (archaeology)",
+      "Computer science",
+      "Artificial intelligence",
+      "Human–computer interaction",
+      "Data science",
+      "World Wide Web"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "mozgovoy2021team"
+  },
+  {
+    "title": "Video-Bench: A Comprehensive Benchmark and Toolkit for Evaluating Video-based Large Language Models",
+    "authors": [
+      "Munan Ning",
+      "Bin Zhu",
+      "Yujia Xie",
+      "Bin Lin",
+      "Jiaxi Cui"
+    ],
+    "year": 2023,
+    "venue": "arXiv.org",
+    "url": "https://arxiv.org/pdf/2311.16103",
+    "abstract": "Video-based large language models (Video-LLMs) have been recently introduced, targeting both fundamental improvements in perception and comprehension, and a diverse range of user inquiries. In pursuit of the ultimate goal of achieving artificial general intelligence, a truly intelligent Video-LLM model should not only see and understand the surroundings, but also possess human-level commonsense, and make well-informed decisions for the users. To guide the development of such a model, the establi",
+    "keywords": [
+      "Benchmark (surveying)",
+      "Comprehension",
+      "Computer science",
+      "Process (computing)",
+      "Perception",
+      "Data science",
+      "Multimedia",
+      "Artificial intelligence"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "ning2023videobench"
+  },
+  {
+    "title": "BEExAI: Benchmark to Evaluate Explainable AI",
+    "authors": [
+      "Samuel Sithakoul",
+      "Sara Meftah",
+      "Clément Feutry"
+    ],
+    "year": 2024,
+    "venue": "xAI",
+    "url": "https://arxiv.org/pdf/2407.19897",
+    "abstract": "Recent research in explainability has given rise to numerous post-hoc attribution methods aimed at enhancing our comprehension of the outputs of black-box machine learning models. However, evaluating the quality of explanations lacks a cohesive approach and a consensus on the methodology for deriving quantitative metrics that gauge the efficacy of explainability post-hoc attribution methods. Furthermore, with the development of increasingly complex deep learning models for diverse data applicati",
+    "keywords": [
+      "Benchmark (surveying)",
+      "Computer science",
+      "Artificial intelligence",
+      "Geography",
+      "Cartography"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "sithakoul2024beexai"
+  },
+  {
+    "title": "MultiMedEval: A Benchmark and a Toolkit for Evaluating Medical Vision-Language Models",
+    "authors": [
+      "Corentin Royer",
+      "Bjoern Menze",
+      "Anjany Sekuboyina"
+    ],
+    "year": 2024,
+    "venue": "arXiv (Cornell University)",
+    "url": "https://arxiv.org/pdf/2402.09262",
+    "abstract": "We introduce MultiMedEval, an open-source toolkit for fair and reproducible evaluation of large, medical vision-language models (VLM). MultiMedEval comprehensively assesses the models' performance on a broad array of six multi-modal tasks, conducted over 23 datasets, and spanning over 11 medical domains. The chosen tasks and performance metrics are based on their widespread adoption in the community and their diversity, ensuring a thorough evaluation of the model's overall generalizability. We o",
+    "keywords": [
+      "Benchmark (surveying)",
+      "Computer science",
+      "Artificial intelligence",
+      "Natural language processing",
+      "Data science",
+      "Cartography",
+      "Geography"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "royer2024multimedeval"
+  },
+  {
+    "title": "Generative AI and LLMs for Critical Infrastructure Protection: Evaluation Benchmarks, Agentic AI, Challenges, and Opportunities",
+    "authors": [
+      "Yagmur Yigit",
+      "Mohamed Amine Ferrag",
+      "Mohamed Chahine Ghanem",
+      "Iqbal H. Sarker",
+      "Λέανδρος Μαγλαράς"
+    ],
+    "year": 2025,
+    "venue": "Sensors",
+    "url": "https://www.mdpi.com/1424-8220/25/6/1666/pdf?version=1741366243",
+    "abstract": "Critical National Infrastructures (CNIs)—including energy grids, water systems, transportation networks, and communication frameworks—are essential to modern society yet face escalating cybersecurity threats. This review paper comprehensively analyzes AI-driven approaches for Critical Infrastructure Protection (CIP). We begin by examining the reliability of CNIs and introduce established benchmarks for evaluating Large Language Models (LLMs) within cybersecurity contexts. Next, we explore core c",
+    "keywords": [
+      "Critical infrastructure",
+      "Benchmarking",
+      "Critical infrastructure protection",
+      "Resilience (materials science)",
+      "Computer security",
+      "Computer science",
+      "Risk analysis (engineering)",
+      "Business"
+    ],
+    "category": "Benchmark / Evaluation / Toolkit",
+    "bibtex_key": "yigit2025generative"
+  }
+]
