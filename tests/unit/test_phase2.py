@@ -1,0 +1,87 @@
+from tools.clients.llm_fake import FakeLLMClient
+from tools.phases.phase2_survey_analyzer import (
+    SurveyStructure,
+    analyze_surveys,
+    run,
+)
+from tools.models.common import paper_id_from_seed
+
+
+def _make_llm():
+    return FakeLLMClient(responses=[
+        ("Generate a paper taxonomy", {"categories": [{"name": "prelim_cat", "description": "dp"}]}),
+        ("Refine this taxonomy", {"categories": [{"name": "refined_cat", "description": "dr", "incorporated_from": ["s1"]}]}),
+    ])
+
+
+def _surveys(paper_id="sv1"):
+    return [{"paper_id": paper_id, "title": "T", "year": 2024,
+             "meta_data": {"taxonomy_skeleton": ["x"], "top_referenced_papers": ["genie_2024"],
+                           "key_sections": ["intro", "method"]}}]
+
+
+def test_two_llm_calls_distinct_taxonomies():
+    llm = _make_llm()
+    s = run("t1", "world models", ["sim"], [{"aspect_name": "sim"}], _surveys(), llm)
+    assert llm.calls == 2
+    assert s.preliminary_taxonomy[0]["name"] == "prelim_cat"
+    assert s.refined_taxonomy[0]["name"] == "refined_cat"
+    assert s.preliminary_taxonomy != s.refined_taxonomy
+
+
+def test_expansion_candidates_from_referenced_papers():
+    llm = _make_llm()
+    s = run("t1", "world models", ["sim"], [{"aspect_name": "sim"}], _surveys(), llm)
+    assert len(s.expansion_candidates) == 1
+    assert s.expansion_candidates[0]["paper_id_hint"] == "genie_2024"
+    assert s.expansion_candidates[0]["source_survey"] == "sv1"
+    assert s.expansion_candidates[0]["priority"] == "high"
+
+
+def test_paper_id_fallback():
+    llm = _make_llm()
+    surveys_no_pid = [{"title": "Survey On World Models", "year": 2024,
+                        "meta_data": {"taxonomy_skeleton": [], "top_referenced_papers": []}}]
+    s = run("t1", "wm", [], [], surveys_no_pid, llm)
+    expected_id = paper_id_from_seed("Survey On World Models", 2024)
+    assert s.analyzed_surveys[0]["paper_id"] == expected_id
+    assert expected_id.startswith("seed:")
+
+
+def test_analyzed_surveys_carries_metadata():
+    llm = _make_llm()
+    s = run("t1", "wm", ["sim"], [{"aspect_name": "sim"}], _surveys(), llm)
+    a = s.analyzed_surveys[0]
+    assert a["taxonomy_skeleton"] == ["x"]
+    assert a["key_sections"] == ["intro", "method"]
+    assert a["referenced_paper_ids"] == ["genie_2024"]
+    assert a["key_claims"] == []
+
+
+def test_empty_surveys_still_produces_taxonomy():
+    llm = _make_llm()
+    s = run("t1", "wm", [], [], [], llm)
+    assert s.analyzed_surveys == []
+    assert s.expansion_candidates == []
+    assert llm.calls == 2
+    assert s.preliminary_taxonomy
+    assert s.refined_taxonomy
+
+
+def test_analyze_surveys_direct():
+    surveys = [{"paper_id": "p1", "title": "T", "year": 2023,
+                "meta_data": {"taxonomy_skeleton": ["a"], "top_referenced_papers": ["r1", "r2"],
+                              "key_sections": ["s1"]}}]
+    result = analyze_surveys(surveys, mineru=None, cleaner=None)
+    assert len(result) == 1
+    assert result[0]["paper_id"] == "p1"
+    assert result[0]["referenced_paper_ids"] == ["r1", "r2"]
+    assert result[0]["key_claims"] == []
+
+
+def test_survey_structure_defaults():
+    ss = SurveyStructure(
+        task_id="t", analyzed_surveys=[], preliminary_taxonomy=[],
+        refined_taxonomy=[], expansion_candidates=[],
+    )
+    assert ss.survey_update_log == []

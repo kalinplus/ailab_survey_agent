@@ -59,7 +59,7 @@ class Planner:
             "run_config": {
                 "use_online_search": mode == "full",
                 "use_seed_fallback": True,
-                "use_mineru": mode == "full",
+                "use_mineru": False,
                 "max_papers": max_papers,
                 "max_core_papers": max_core_papers,
                 "mode": mode,
@@ -121,7 +121,7 @@ class Planner:
                 "use_online_search": run_config["use_online_search"],
                 "use_seed_fallback": run_config["use_seed_fallback"],
                 "use_mineru": run_config["use_mineru"],
-                "use_mock_mineru_if_failed": True,
+                "use_mock_mineru_if_failed": False,
                 "max_papers": run_config["max_papers"],
                 "max_core_papers": run_config["max_core_papers"],
                 "download_pdfs": run_config["mode"] == "full",

@@ -23,25 +23,71 @@
 
 ---
 
+## Harness Integration Contract (AUTHORITATIVE — overrides conflicting task pseudocode below)
+
+The A-module harness already exists in-repo (`config.py`, `llm_client.py`, `harness/*`). Module B plugs into it. Where any task pseudocode below conflicts with this section, **this section wins.**
+
+### B exposes exactly TWO tools — each a module with `run(request_path: str) -> dict`
+
+The harness `harness/tool_registry.py` imports `tools.<module>.run` and calls it with a path to a request JSON file (NOT a parsed object). It runs the tool in a ThreadPoolExecutor with a timeout and truncates the returned dict for the LLM context.
+
+1. **`tools/knowledge_pipeline_worker.py` → `run(request_path: str) -> dict`**
+   - `request_path` points to a `KnowledgeBuildRequest` JSON (interface doc §6.2): `requests/knowledge_build_request.json`
+   - Reads inputs `cache/task_request.json`, `cache/search_strategy.json`
+   - Runs Phase 1–6 internally
+   - Writes: `cache/{retrieved_papers,parsed_papers,figure_bank,table_bank,paper_cards,evidence_store,taxonomy,citation_index,knowledge_bundle}.json`
+   - Returns: `{"status": "success"|"partial_success"|"failed", "outputs": [<written paths>], "metrics": {<counts>}, "message": "..."}` (registry fills `tool`/`input_request`/`timestamp`)
+
+2. **`tools/verify_citations.py` → `run(request_path: str) -> dict`**
+   - `request_path` points to `requests/verification_request.json`
+   - Reads `output/survey.md`, `cache/citation_ready_set.json`, `cache/evidence_store.json`, `cache/generated_artifact_bank.json`
+   - Runs §4.2 structural check + §4.3 claim mapping
+   - Writes `output/citation_result.json`, `cache/claim_map.json`
+   - Returns: `{"status", "outputs", "metrics", "message"}`
+
+The two tool-entry modules are **thin**: load request → call internal phase/verify functions → write artifacts → return summary dict. **No `tools/tool_executor.py`, no `tools/tool_definitions.py`.** (Original Task 3.4 is replaced — see Wave 3.)
+
+### Reuse, do not recreate
+
+- **Config:** `from config import AppConfig, load_config` (root `config.py`). `AppConfig` carries Intern creds + `cache_dir`/`requests_dir`/`output_dir`/`logs_dir` Path properties. **No `tools/config.py`.** B's own clients (SciVerse/MinerU/Embedding) read their keys via `os.getenv("SCIVERSE_API_KEY"|"MINERU_API_KEY"|"OPENAI_API_KEY")` directly, because `AppConfig` only carries Intern credentials.
+- **LLM:** `from llm_client import InternS2Client` (root `llm_client.py`). API: `.chat(messages, temperature=0.2) -> str`, `.json_chat(messages, temperature=0.1) -> dict`. **No `tools/clients/llm_client.py`.** Internal phase functions accept a duck-typed `llm` exposing `.chat` / `.json_chat`; tests pass a `FakeLLMClient` implementing those two methods.
+
+### JSON shapes enforced by the harness validator (`harness/knowledge_bundle_validator.py`)
+
+Field names are a **hard contract** — the validator raises on mismatch:
+
+- `paper_cards.json` top-level key MUST be **`paper_cards`** (list); each card MUST have `paper_id`; cards SHOULD carry **`category`** (human-readable name, read by `harness/citation_prelock.py`).
+- `evidence_store.json` top-level key MUST be **`evidence`** (list); each item MUST have `paper_id` + `evidence_id`.
+- `citation_index.json` top-level key MUST be **`citations`** (list of `{paper_id, ...}`).
+- `knowledge_bundle.json` MUST have `status` ∈ {`success`, `partial_success`} and `artifacts` dict with all 8 keys mapping to **existing** files.
+- Invariants the validator checks: every `paper_id` in paper_cards appears in citation_index; every evidence `paper_id` exists in paper_cards.
+
+> **Field-name alias rule for pseudocode below:** some task pseudocode was written before this contract and uses internal field names `.cards` / `.evidences`. Read every such reference as `.paper_cards` / `.evidence` respectively. The Task 0.2 model definition is authoritative.
+
+### Shared JSON helper
+
+Prefer the harness helper `from harness.json_io import read_json, write_json` for artifact I/O (UTF-8, `ensure_ascii=False`, creates parent dirs). Pydantic models serialize via `model_dump_json(indent=2)`.
+
+---
+
 ## File Structure
 
 ```text
-tools/
+tools/                              # B's package; harness imports tools.knowledge_pipeline_worker / tools.verify_citations
 ├── __init__.py
-├── config.py                       # env + config loading (INTERN/SCIVERSE/MINERU/OPENAI keys)
-├── models/
+├── models/                         # (no tools/config.py — reuse root config.AppConfig)
 │   ├── __init__.py
 │   ├── common.py                   # ID builders + small shared types
 │   ├── requests.py                 # KnowledgeBuildRequest, VerificationRequest, SearchStrategy
 │   ├── artifacts.py                # RetrievedPapers, ParsedPapers, PaperCard, EvidenceStore,
 │   │                               #   FigureBank, TableBank, Taxonomy, CitationIndex
 │   └── bundle.py                   # KnowledgeBundle, CitationResult, ClaimMap
-├── clients/
+├── clients/                        # (no llm_client.py — reuse root llm_client.InternS2Client)
 │   ├── __init__.py
-│   ├── llm_client.py               # Intern-S2-Preview (OpenAI-compatible) + FakeLLMClient
+│   ├── llm_fake.py                 # FakeLLMClient (.chat/.json_chat) for tests only
 │   ├── sciverse_client.py          # meta-search / agentic-search / content / resource / relations
 │   ├── mineru_client.py            # extract/task (async) + agent/parse/url (light) + mock
-│   └── embedding_client.py         # OpenAI text-embedding-3-small + mock
+│   └── embedding_client.py         # OpenAI text-embedding-3-small + fake
 ├── nlp/
 │   ├── __init__.py
 │   ├── nli_verifier.py             # reuse SurGE logic; NLIVerifier + FakeNLIModel
@@ -55,15 +101,16 @@ tools/
 │   ├── phase2_survey_analyzer.py   # Layer 1 + Taxonomy Self-Refine step 1-2
 │   ├── phase3_paper_retriever.py   # Layer 2 retrieval + MinerU parse
 │   ├── phase4_rag_indexer.py       # build ChromaDB index
-│   ├── phase5_knowledge_synthesizer.py  # cards / evidence / figures / tables / taxonomy step3 / citation_index
+│   ├── phase5_cards.py             # Paper Cards (LiRA dimension decomposition)
+│   ├── phase5_evidence.py          # EvidenceStore (NLI auto-fill)
+│   ├── phase5_synthesis_rest.py    # FigureBank/TableBank + Taxonomy step3 + CitationIndex
 │   └── phase6_bundle_assembler.py  # assemble KnowledgeBundle
 ├── verify/
 │   ├── __init__.py
-│   ├── verify_citations.py         # structural citation check
-│   └── build_claim_map.py          # NLI-first claim mapping + LLM fallback
-├── knowledge_pipeline_worker.py    # main entry: orchestrate 6 phases
-├── tool_executor.py                # route tool_calls to search_papers/build_paper_cards/verify_citations
-└── tool_definitions.py             # 3 tool JSON schemas (Intern tools param)
+│   ├── structural.py               # §4.2 structural citation check
+│   └── claim_mapper.py             # §4.3 NLI-first claim mapping + LLM fallback
+├── knowledge_pipeline_worker.py    # TOOL ENTRY: run(request_path)->dict, orchestrates Phase 1-6
+└── verify_citations.py             # TOOL ENTRY: run(request_path)->dict, runs structural + claim_mapper
 
 cache/                              # runtime artifacts (see .gitignore; keep seed + surveys)
 ├── seed_papers.json                # B1 deliverable: local fallback corpus
@@ -102,29 +149,30 @@ tests/
 
 Foundation everything else imports. Must land first.
 
-## Task 0.1: Project scaffold, config, dependencies
+## Task 0.1: Project scaffold + dependencies (reuse root config)
 
 **Files:**
-- Create: `tools/__init__.py` (empty), `tools/config.py`, `tools/models/__init__.py` (empty), `tools/clients/__init__.py` (empty), `tools/nlp/__init__.py` (empty), `tools/indexer/__init__.py` (empty), `tools/phases/__init__.py` (empty), `tools/verify/__init__.py` (empty)
+- Create: `tools/__init__.py` (empty), `tools/models/__init__.py` (empty), `tools/clients/__init__.py` (empty), `tools/nlp/__init__.py` (empty), `tools/indexer/__init__.py` (empty), `tools/phases/__init__.py` (empty), `tools/verify/__init__.py` (empty), `tests/__init__.py` (empty), `tests/unit/__init__.py` (empty), `tests/integration/__init__.py` (empty)
 - Create: `pyproject.toml`
 - Modify: `requirements.txt`
-- Modify: `.gitignore` (add `cache/*.json` except seed/surveys, add `cache/rag_index/`, `cache/assets/`)
-- Test: `tests/unit/test_config.py`
+- Modify: `.gitignore`
+- Test: `tests/unit/test_scaffold.py`
 
 **Interfaces:**
-- Produces: `tools.config.get_config() -> Config` where `Config` has `.intern_api_base_url`, `.intern_api_key`, `.sciverse_api_key`, `.mineru_api_key`, `.openai_api_key`, `.embedding_provider`. Used by every client.
+- Produces: importable `tools` package + test dirs. B reuses `from config import AppConfig, load_config` and `from llm_client import InternS2Client` from the repo root — **do not create `tools/config.py` or `tools/clients/llm_client.py`.** SciVerse/MinerU/Embedding clients (later tasks) read their keys via `os.getenv(...)` directly.
 
 - [ ] **Step 1: Add dependencies**
 
-`requirements.txt` (append to existing):
+`requirements.txt` (append to existing `python-dotenv`, `httpx`):
 ```
-openai>=1.40.0
 pydantic>=2.6.0
 chromadb>=0.5.0
 sentence-transformers>=3.0.0
+openai>=1.40.0
 pytest>=8.0.0
 respx>=0.21.0
 ```
+(`openai` is only used by the embedding client; Intern-S2-Preview chat goes through the existing root `llm_client.py` via httpx.)
 
 `pyproject.toml`:
 ```toml
@@ -135,72 +183,40 @@ requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 markers = ["nli_real: loads the real DeBERTa NLI model (slow, opt-in)"]
 ```
 
-- [ ] **Step 2: Implement `tools/config.py`**
-
-```python
-import os
-from dataclasses import dataclass
-from dotenv import load_dotenv
-
-load_dotenv()
-
-@dataclass
-class Config:
-    intern_api_base_url: str
-    intern_api_key: str
-    sciverse_api_key: str
-    mineru_api_key: str
-    openai_api_key: str
-    embedding_provider: str  # "openai" | "mock"
-
-def get_config() -> Config:
-    return Config(
-        intern_api_base_url=os.environ["INTERN_API_BASE_URL"],
-        intern_api_key=os.environ["INTERN_API_KEY"],
-        sciverse_api_key=os.environ.get("SCIVERSE_API_KEY", ""),
-        mineru_api_key=os.environ.get("MINERU_API_KEY", ""),
-        openai_api_key=os.environ.get("OPENAI_API_KEY", ""),
-        embedding_provider=os.environ.get("EMBEDDING_PROVIDER", "mock"),
-    )
-```
-
-- [ ] **Step 3: Update `.gitignore`** — append:
+- [ ] **Step 2: Update `.gitignore`** — append (keep seed + any checked-in survey fixtures):
 ```
 cache/*
 !cache/.gitkeep
 !cache/seed_papers.json
+output/*
+logs/*
 ```
 
-- [ ] **Step 4: Write tests** (`tests/unit/test_config.py`)
+- [ ] **Step 3: Write test** (`tests/unit/test_scaffold.py`) — verifies the package imports and the reused root modules are available.
 
 ```python
-import os
-import pytest
-from tools.config import get_config
+def test_tools_package_importable():
+    import tools  # noqa: F401
+    from tools import models, clients, nlp, indexer, phases, verify  # noqa: F401
 
-def test_config_reads_env(monkeypatch):
-    monkeypatch.setenv("INTERN_API_BASE_URL", "https://api.test")
-    monkeypatch.setenv("INTERN_API_KEY", "k")
-    cfg = get_config()
-    assert cfg.intern_api_base_url == "https://api.test"
-    assert cfg.intern_api_key == "k"
-    assert cfg.embedding_provider == "mock"  # default
-
-def test_config_requires_intern_base_url(monkeypatch):
-    monkeypatch.delenv("INTERN_API_BASE_URL", raising=False)
-    with pytest.raises(KeyError):
-        get_config()
+def test_reuses_root_config_and_llm():
+    from config import AppConfig, load_config
+    from llm_client import InternS2Client
+    cfg = load_config()
+    assert isinstance(cfg, AppConfig)
+    assert hasattr(InternS2Client(cfg), "chat")
 ```
 
-- [ ] **Step 5: Run + commit**
+- [ ] **Step 4: Run + commit**
 
 ```bash
-pytest tests/unit/test_config.py -v
-git add tools/__init__.py tools/config.py tools/models/__init__.py tools/clients/__init__.py tools/nlp/__init__.py tools/indexer/__init__.py tools/phases/__init__.py tools/verify/__init__.py pyproject.toml requirements.txt .gitignore tests/unit/test_config.py
-git commit -m "feat(B): project scaffold, config, dependencies"
+pytest tests/unit/test_scaffold.py -v
+git add tools/ pyproject.toml requirements.txt .gitignore tests/
+git commit -m "feat(B): package scaffold + dependencies (reuse root config/llm_client)"
 ```
 
 ---
@@ -295,6 +311,7 @@ class PaperCard(BaseModel):  # §9.5
     venue: str | None = None
     matched_aspects: list[dict] = []   # {"aspect_id": str, "score": float}
     category_id: str | None = None
+    category: str = ""                 # human-readable name (read by harness citation_prelock)
     card_type: str = "deep"            # "deep" | "light"
     problem: str = ""
     method: str = ""
@@ -308,7 +325,7 @@ class PaperCard(BaseModel):  # §9.5
 
 class PaperCards(BaseModel):
     task_id: str
-    cards: list[PaperCard]
+    paper_cards: list[PaperCard]   # top-level key MUST be "paper_cards" (harness validator)
 
 class Evidence(BaseModel):  # §9.6
     evidence_id: str
@@ -321,7 +338,7 @@ class Evidence(BaseModel):  # §9.6
 
 class EvidenceStore(BaseModel):
     task_id: str
-    evidences: list[Evidence]
+    evidence: list[Evidence]        # top-level key MUST be "evidence" (harness validator)
 
 class Figure(BaseModel):  # §9.3
     figure_id: str
@@ -518,68 +535,75 @@ git commit -m "feat(B): pydantic models + ID builders"
 
 All externals isolated here. Each is independently testable with fakes. **These 7 tasks are mutually independent** — safe to dispatch as parallel subagents after Wave 0.
 
-## Task 1.1: LLM client (Intern-S2-Preview)
+## Task 1.1: LLM test double (reuse root InternS2Client)
 
 **Files:**
-- Create: `tools/clients/llm_client.py`
-- Test: `tests/unit/test_llm_client.py`
+- Create: `tools/clients/llm_fake.py`
+- Test: `tests/unit/test_llm_fake.py`
 
 **Interfaces:**
-- Consumes: `tools.config.get_config`
-- Produces:
-  - `LLMClient(model="intern-s2-preview")` with `.complete(messages: list[dict], **kw) -> str` and `.complete_json(messages, schema_hint: str, **kw) -> dict` (parses fenced ```json``` or raw JSON).
-  - `FakeLLMClient(responses: dict)` keyed by a substring tag in the prompt → returns canned text; used in tests.
+- Consumes: nothing (the real client is `llm_client.InternS2Client` from repo root, reused as-is).
+- Produces: `FakeLLMClient` implementing the same duck-typed interface every phase uses: `.chat(messages, temperature=...) -> str` and `.json_chat(messages, temperature=...) -> dict`. Constructed with a list of `(tag, json_dict)` and/or `(tag, text)` pairs; returns the first match whose `tag` substring appears in the last user message. **No `tools/clients/llm_client.py`.**
 
-- [ ] **Step 1: Implement** (`tools/clients/llm_client.py`)
+- [ ] **Step 1: Implement** (`tools/clients/llm_fake.py`)
 
 ```python
-import json
-import re
-from openai import OpenAI
-from tools.config import get_config
+class FakeLLMClient:
+    """Test double matching llm_client.InternS2Client's .chat/.json_chat surface."""
+    def __init__(self, responses: list[tuple[str, object]] | None = None,
+                 default_text: str = "ok", default_json: dict | None = None):
+        self.responses = responses or []
+        self.default_text = default_text
+        self.default_json = default_json or {"categories": [{"name": "Default", "description": "d"}]}
+        self.calls = 0
 
-class LLMClient:
-    def __init__(self, model: str = "intern-s2-preview", config=None):
-        cfg = config or get_config()
-        self.client = OpenAI(base_url=cfg.intern_api_base_url, api_key=cfg.intern_api_key)
-        self.model = model
+    def _last_user(self, messages):
+        for m in reversed(messages):
+            if m.get("role") == "user":
+                return m.get("content", "")
+        return ""
 
-    def complete(self, messages: list[dict], **kw) -> str:
-        resp = self.client.chat.completions.create(model=self.model, messages=messages, **kw)
-        return resp.choices[0].message.content or ""
+    def chat(self, messages, temperature=0.2, response_format=None):
+        self.calls += 1
+        text = self._last_user(messages)
+        for tag, resp in self.responses:
+            if tag in text and isinstance(resp, str):
+                return resp
+        return self.default_text
 
-    def complete_json(self, messages: list[dict], schema_hint: str = "", **kw) -> dict:
-        text = self.complete(messages, **kw)
-        return extract_json(text)
-
-def extract_json(text: str) -> dict:
-    m = re.search(r"```json\s*(\{.*?\}|\[.*?\])\s*```", text, re.S)
-    raw = m.group(1) if m else text.strip()
-    return json.loads(raw)  # raises on malformed -> fail fast
+    def json_chat(self, messages, temperature=0.1):
+        self.calls += 1
+        text = self._last_user(messages)
+        for tag, resp in self.responses:
+            if tag in text and isinstance(resp, dict):
+                return resp
+        return self.default_json
 ```
 
-- [ ] **Step 2: Write tests** (`tests/unit/test_llm_client.py`) — test only `extract_json` and `FakeLLMClient`; the real client is exercised in integration via a mocked OpenAI.
+- [ ] **Step 2: Write tests** (`tests/unit/test_llm_fake.py`)
 
 ```python
-import pytest
-from tools.clients.llm_client import extract_json
+from tools.clients.llm_fake import FakeLLMClient
 
-def test_extract_fenced_json():
-    assert extract_json("here:\n```json\n{\"a\": 1}\n```") == {"a": 1}
+def test_json_chat_matches_tag():
+    llm = FakeLLMClient(responses=[("taxonomy", {"categories": [{"name": "X"}]})])
+    out = llm.json_chat([{"role": "user", "content": "build taxonomy now"}])
+    assert out == {"categories": [{"name": "X"}]}
 
-def test_extract_raw_json():
-    assert extract_json('{"b": 2}') == {"b": 2}
+def test_chat_returns_text_default():
+    llm = FakeLLMClient(default_text="hello")
+    assert llm.chat([{"role": "user", "content": "anything"}]) == "hello"
 
-def test_extract_raises_on_bad():
-    with pytest.raises(Exception):
-        extract_json("not json at all")
+def test_default_json_when_no_match():
+    llm = FakeLLMClient()
+    assert llm.json_chat([{"role": "user", "content": "nope"}])["categories"][0]["name"] == "Default"
 ```
 
 - [ ] **Step 3: Run + commit**
 ```bash
-pytest tests/unit/test_llm_client.py -v
-git add tools/clients/llm_client.py tests/unit/test_llm_client.py
-git commit -m "feat(B): Intern-S2-Preview LLM client + JSON extraction"
+pytest tests/unit/test_llm_fake.py -v
+git add tools/clients/llm_fake.py tests/unit/test_llm_fake.py
+git commit -m "feat(B): FakeLLMClient test double (reuse root InternS2Client)"
 ```
 
 ---
