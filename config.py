@@ -21,6 +21,11 @@ class AppConfig:
     intern_api_base_url: str
     intern_api_key: str
     intern_model_name: str
+    sciverse_api_token: str
+    sciverse_api_base_url: str
+    strategy_probing_enabled: bool
+    strategy_probe_limit: int
+    strategy_cluster_count: int
     request_timeout_seconds: float
     max_llm_retries: int
     tool_timeout_seconds: float
@@ -52,12 +57,25 @@ def load_config() -> AppConfig:
 
     return AppConfig(
         root_dir=ROOT_DIR,
-        intern_api_base_url=os.getenv(
-            "INTERN_API_BASE_URL",
-            os.getenv("API_BASE_URL", "https://chat.intern-ai.org.cn/api"),
-        ).rstrip("/"),
+        intern_api_base_url=_normalize_intern_base_url(
+            os.getenv(
+                "INTERN_API_BASE_URL",
+                os.getenv("API_BASE_URL", "https://chat.intern-ai.org.cn/api/v1"),
+            )
+        ),
         intern_api_key=os.getenv("INTERN_API_KEY", os.getenv("API_KEY", "")),
         intern_model_name=os.getenv("INTERN_MODEL_NAME", "intern-s2-preview"),
+        sciverse_api_token=os.getenv(
+            "SCIVERSE_API_TOKEN",
+            os.getenv("SCIVERSE_API_KEY", os.getenv("SCIVERSE_API", "")),
+        ),
+        sciverse_api_base_url=os.getenv(
+            "SCIVERSE_API_BASE_URL",
+            "https://api.sciverse.space",
+        ).rstrip("/"),
+        strategy_probing_enabled=os.getenv("STRATEGY_PROBING_ENABLED", "false").lower() in {"1", "true", "yes"},
+        strategy_probe_limit=int(os.getenv("STRATEGY_PROBE_LIMIT", "20")),
+        strategy_cluster_count=int(os.getenv("STRATEGY_CLUSTER_COUNT", "4")),
         request_timeout_seconds=float(os.getenv("REQUEST_TIMEOUT_SECONDS", "60")),
         max_llm_retries=int(os.getenv("MAX_LLM_RETRIES", "1")),
         tool_timeout_seconds=float(os.getenv("TOOL_TIMEOUT_SECONDS", "300")),
@@ -81,6 +99,15 @@ def _load_env_file(path: Path) -> None:
         key = key.strip()
         value = value.strip().strip('"').strip("'")
         os.environ.setdefault(key, value)
+
+
+def _normalize_intern_base_url(base_url: str) -> str:
+    normalized = base_url.rstrip("/")
+    if normalized == "https://api.intern-ai.org.cn":
+        return "https://chat.intern-ai.org.cn/api/v1"
+    if normalized == "https://chat.intern-ai.org.cn/api":
+        return "https://chat.intern-ai.org.cn/api/v1"
+    return normalized
 
 
 def ensure_project_dirs(config: AppConfig) -> None:
