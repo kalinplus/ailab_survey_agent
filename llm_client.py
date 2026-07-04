@@ -32,6 +32,7 @@ class InternS2Client:
         *,
         temperature: float = 0.2,
         response_format: dict[str, str] | None = None,
+        max_tokens: int | None = None,
     ) -> str:
         if not self.is_configured():
             raise LLMClientError("INTERN_API_KEY is empty; cannot call Intern-S2-Preview.")
@@ -43,6 +44,8 @@ class InternS2Client:
         }
         if response_format:
             payload["response_format"] = response_format
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
 
         headers = {
             "Authorization": f"Bearer {self.config.intern_api_key}",
@@ -68,11 +71,18 @@ class InternS2Client:
 
         raise LLMClientError(f"Intern-S2-Preview call failed: {last_error}") from last_error
 
-    def json_chat(self, messages: list[dict[str, str]], *, temperature: float = 0.1) -> dict[str, Any]:
+    def json_chat(
+        self,
+        messages: list[dict[str, str]],
+        *,
+        temperature: float = 0.1,
+        max_tokens: int | None = None,
+    ) -> dict[str, Any]:
         content = self.chat(
             messages,
             temperature=temperature,
             response_format={"type": "json_object"},
+            max_tokens=max_tokens,
         )
         try:
             return json.loads(content)

@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import ast
+import json
 import re
 from datetime import datetime
 from typing import Any
 
+from llm_client import InternS2Client
 from config import AppConfig
 from .search_strategy_builder import build_search_strategy
 
@@ -13,6 +16,7 @@ from .search_strategy_builder import build_search_strategy
 class Planner:
     def __init__(self, config: AppConfig) -> None:
         self.config = config
+        self.llm_client = InternS2Client(config)
 
     def make_task_id(self, topic: str) -> str:
         slug = re.sub(r"\W+", "_", topic.lower(), flags=re.UNICODE).strip("_")
@@ -69,6 +73,7 @@ class Planner:
         topic: str,
         max_papers: int,
         max_core_papers: int,
+        mode: str = "demo",
     ) -> dict[str, Any]:
         return build_search_strategy(
             task_id=task_id,
@@ -76,11 +81,24 @@ class Planner:
             max_papers=max_papers,
             max_core_papers=max_core_papers,
             end_year=datetime.now().year,
+            use_probing=mode == "full" and self.config.strategy_probing_enabled,
+            sciverse_api_key=self.config.sciverse_api_token,
+            sciverse_api_base_url=self.config.sciverse_api_base_url,
+            request_timeout_seconds=self.config.request_timeout_seconds,
+            probe_limit=self.config.strategy_probe_limit,
+            cluster_count=self.config.strategy_cluster_count,
+            llm_json_chat=self._strategy_json_chat if self.llm_client.is_configured() else None,
         )
 
-    def build_knowledge_build_request(self, task_request: dict[str, Any]) -> dict[str, Any]:
+    def build_knowledge_build_request(
+        self,
+        task_request: dict[str, Any],
+        *,
+        active_skills: list[dict[str, Any]] | None = None,
+        skill_policy: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         run_config = task_request["run_config"]
-        return {
+        request = {
             "task_id": task_request["task_id"],
             "topic": task_request["topic"],
             "request_type": "knowledge_build",
@@ -121,9 +139,18 @@ class Planner:
                 "allow_abstract_only_fallback": True,
             },
         }
+        return self._attach_skills(request, active_skills, skill_policy)
 
-    def build_survey_generation_request(self, task_id: str, topic: str, language: str) -> dict[str, Any]:
-        return {
+    def build_survey_generation_request(
+        self,
+        task_id: str,
+        topic: str,
+        language: str,
+        *,
+        active_skills: list[dict[str, Any]] | None = None,
+        skill_policy: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        request = {
             "task_id": task_id,
             "topic": topic,
             "request_type": "survey_generation",
@@ -166,9 +193,16 @@ class Planner:
                 "must_not_be_claimed_as_paper_extracted_artifact": True,
             },
         }
+        return self._attach_skills(request, active_skills, skill_policy)
 
-    def build_verification_request(self, task_id: str) -> dict[str, Any]:
-        return {
+    def build_verification_request(
+        self,
+        task_id: str,
+        *,
+        active_skills: list[dict[str, Any]] | None = None,
+        skill_policy: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        request = {
             "task_id": task_id,
             "inputs": {
                 "survey_markdown_path": "output/survey.md",
@@ -193,9 +227,17 @@ class Planner:
                 "unsupported_claim_policy": "mark_unsupported",
             },
         }
+        return self._attach_skills(request, active_skills, skill_policy)
 
-    def build_revision_request(self, task_id: str, reason: str) -> dict[str, Any]:
-        return {
+    def build_revision_request(
+        self,
+        task_id: str,
+        reason: str,
+        *,
+        active_skills: list[dict[str, Any]] | None = None,
+        skill_policy: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        request = {
             "task_id": task_id,
             "request_type": "survey_revision",
             "reason": reason,
@@ -218,9 +260,17 @@ class Planner:
                 "Do not introduce new references.",
             ],
         }
+        return self._attach_skills(request, active_skills, skill_policy)
 
-    def build_evaluation_render_request(self, task_id: str, topic: str) -> dict[str, Any]:
-        return {
+    def build_evaluation_render_request(
+        self,
+        task_id: str,
+        topic: str,
+        *,
+        active_skills: list[dict[str, Any]] | None = None,
+        skill_policy: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        request = {
             "task_id": task_id,
             "topic": topic,
             "inputs": {
@@ -253,3 +303,89 @@ class Planner:
                 "include_evaluation_summary": True,
             },
         }
+        return self._attach_skills(request, active_skills, skill_policy)
+
+    def _attach_skills(
+        self,
+        request: dict[str, Any],
+        active_skills: list[dict[str, Any]] | None,
+        skill_policy: dict[str, Any] | None,
+    ) -> dict[str, Any]:
+        if active_skills is not None:
+            request["active_skills"] = active_skills
+        if skill_policy is not None:
+            request["skill_policy"] = skill_policy
+        return request
+
+    def _strategy_json_chat(self, messages: list[dict[str, str]]) -> dict[str, Any]:
+        try:
+            return self.llm_client.json_chat(messages, temperature=0.1, max_tokens=4000)
+        except Exception:
+            content = self.llm_client.chat(messages, temperature=0.1, max_tokens=4000)
+            return self._extract_json_object(content)
+
+    def _extract_json_object(self, content: str) -> dict[str, Any]:
+        try:
+            parsed = json.loads(content)
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError:
+            pass
+
+        decoder = json.JSONDecoder()
+        for start in [index for index, char in enumerate(content) if char == "{"]:
+            try:
+                parsed, _ = decoder.raw_decode(content[start:])
+            except json.JSONDecodeError:
+                continue
+            if isinstance(parsed, dict) and self._looks_like_strategy(parsed):
+                return parsed
+
+        for candidate in self._balanced_brace_candidates(content):
+            try:
+                parsed = ast.literal_eval(candidate)
+            except (SyntaxError, ValueError):
+                continue
+            if isinstance(parsed, dict) and self._looks_like_strategy(parsed):
+                return parsed
+
+        raise json.JSONDecodeError("No valid JSON object found in model response", content, 0)
+
+    def _balanced_brace_candidates(self, content: str) -> list[str]:
+        candidates = []
+        starts = [index for index, char in enumerate(content) if char == "{"]
+        for start in starts:
+            depth = 0
+            in_string = False
+            escape = False
+            quote = ""
+            for index in range(start, len(content)):
+                char = content[index]
+                if in_string:
+                    if escape:
+                        escape = False
+                    elif char == "\\":
+                        escape = True
+                    elif char == quote:
+                        in_string = False
+                    continue
+                if char in {"'", '"'}:
+                    in_string = True
+                    quote = char
+                elif char == "{":
+                    depth += 1
+                elif char == "}":
+                    depth -= 1
+                    if depth == 0:
+                        candidates.append(content[start : index + 1])
+                        break
+        return candidates
+
+    def _looks_like_strategy(self, data: dict[str, Any]) -> bool:
+        strategy = data.get("search_strategy", data)
+        return isinstance(strategy, dict) and (
+            "wide_search" in strategy
+            or "topic_understanding" in strategy
+            or "search_aspects" in strategy
+            or "aspects" in strategy
+        )
