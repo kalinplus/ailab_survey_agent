@@ -4,8 +4,8 @@ import httpx
 
 
 class SciVerseClient:
-    def __init__(self, base_url: str = "https://sciverse.space", api_key: str | None = None):
-        self.base_url = base_url.rstrip("/")
+    def __init__(self, base_url: str | None = None, api_key: str | None = None):
+        self.base_url = (base_url or os.getenv("SCIVERSE_API_BASE_URL", "https://api.sciverse.space")).rstrip("/")
         self.headers = {"Authorization": f"Bearer {api_key or os.getenv('SCIVERSE_API_KEY', '')}"}
 
     def _post(self, path, payload):
@@ -18,11 +18,23 @@ class SciVerseClient:
         r.raise_for_status()
         return r.json()
 
-    def meta_search(self, query, filters=None, sort=None, freshness_boost="MILD",
-                    impact_boost="MILD", page_size=25):
-        return self._post("/meta-search", {"query": query, "filters": filters or [],
-            "sort": sort or [], "freshness_boost": freshness_boost,
-            "impact_boost": impact_boost, "page_size": page_size})
+    def meta_search(self, query, filters=None, sort=None, fields=None, page=1,
+                    page_size=25, freshness_boost=None, impact_boost=None):
+        # Verified SciVerse contract. freshness_boost / impact_boost bias toward
+        # recent / highly-cited results and apply when sort is NOT set (valid: "MILD";
+        # "HIGH" is rejected). Send each optional key only when provided.
+        payload = {"query": query, "page": page, "page_size": page_size}
+        if filters:
+            payload["filters"] = filters
+        if sort:
+            payload["sort"] = sort
+        if fields:
+            payload["fields"] = fields
+        if freshness_boost:
+            payload["freshness_boost"] = freshness_boost
+        if impact_boost:
+            payload["impact_boost"] = impact_boost
+        return self._post("/meta-search", payload)
 
     def agentic_search(self, query, top_k=10, filters=None):
         return self._post("/agentic-search", {"query": query, "top_k": top_k, "filters": filters or {}})

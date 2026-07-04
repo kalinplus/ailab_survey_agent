@@ -5,7 +5,7 @@ from tools.models.artifacts import RetrievedPaper
 class FakeSV:
     def meta_search(self, **kw):
         return {
-            "hits": [
+            "results": [
                 {"unique_id": "paper:1", "title": "A", "year": 2023, "url": "http://a"},
                 {"unique_id": "paper:1", "title": "A", "year": 2023},
             ]  # dup
@@ -67,7 +67,7 @@ def test_seed_fallback_when_no_hits():
 
     class EmptySV:
         def meta_search(self, **kw):
-            return {"hits": []}
+            return {"results": []}
 
     seeds = [{"title": "DreamerV3", "year": 2023, "keywords": ["wm"]}]
     rp, pp = run(
@@ -83,7 +83,7 @@ def test_no_seed_fallback_when_disabled():
 
     class EmptySV:
         def meta_search(self, **kw):
-            return {"hits": []}
+            return {"results": []}
 
     seeds = [{"title": "DreamerV3", "year": 2023, "keywords": ["wm"]}]
     rp, pp = run(
@@ -112,7 +112,7 @@ def test_parse_status_abstract_only_when_no_url():
 
     class NoUrlSV:
         def meta_search(self, **kw):
-            return {"hits": [{"unique_id": "p1", "title": "NoUrl", "year": 2024}]}
+            return {"results": [{"unique_id": "p1", "title": "NoUrl", "year": 2024}]}
 
     rp, pp = run(
         "t", [{"keywords": ["wm"]}], [], NoUrlSV(), FakeMU(), FakeCleaner(),
@@ -149,7 +149,7 @@ def test_max_papers_truncation():
     class ManySV:
         def meta_search(self, **kw):
             return {
-                "hits": [
+                "results": [
                     {"unique_id": f"paper:{i}", "title": f"P{i}", "year": 2023, "url": f"http://p{i}"}
                     for i in range(100)
                 ]
@@ -180,7 +180,7 @@ def test_per_aspect_resilience():
             call_count["n"] += 1
             if call_count["n"] == 1:
                 raise RuntimeError("aspect 1 search failed")
-            return {"hits": [{"unique_id": "p2", "title": "Survived", "year": 2024, "url": "http://s"}]}
+            return {"results": [{"unique_id": "p2", "title": "Survived", "year": 2024, "url": "http://s"}]}
 
     aspects = [{"keywords": ["fail"]}, {"keywords": ["ok"]}]
     rp, pp = run(
@@ -205,3 +205,54 @@ def test_run_returns_tuple_of_models():
     assert pp.task_id == "t"
     assert hasattr(rp, "papers")
     assert hasattr(pp, "papers")
+
+
+# --- native SciVerse field mapping ---
+
+
+def test_to_retrieved_maps_native_sciverse_fields():
+    hit = {
+        "unique_id": "paper:42",
+        "title": "DreamerV3",
+        "author": [{"orcid": "0000-0001", "name": "Danijar Hafner"}, {"name": "Jurgis Pasukonis"}],
+        "publication_published_year": 2023.0,
+        "publication_venue_name_unified": "arXiv",
+        "abstract": "Mastering diverse domains through world models.",
+        "keywords": ["world model", "rl"],
+        "citation_count": 100.0,
+        "doi": "10.48550/arXiv.2301.04104",
+        "access_oa_url": [],
+        "locations": [{"type": "pdf", "is_oa": True, "url": "https://arxiv.org/pdf/2301.04104"}],
+    }
+    p = _to_retrieved(hit)
+    assert p.paper_id == "paper:42"
+    assert p.authors == ["Danijar Hafner", "Jurgis Pasukonis"]
+    assert p.year == 2023 and isinstance(p.year, int)
+    assert p.venue == "arXiv"
+    assert p.url == "https://arxiv.org/pdf/2301.04104"  # from locations
+    assert p.citation_count == 100 and isinstance(p.citation_count, int)
+    assert p.source == "sciverse"
+
+
+def test_to_retrieved_url_falls_back_to_doi():
+    p = _to_retrieved({"unique_id": "p1", "title": "T", "doi": "10.1/x", "author": []})
+    assert p.url == "https://doi.org/10.1/x"
+    assert p.authors == []
+
+
+# --- MinerU graceful degrade (no mock in production) ---
+
+
+def test_parse_degrades_to_abstract_only_when_mineru_raises():
+    from tools.models.requests import PipelineConfig
+
+    class BrokenMU:
+        def parse_url(self, url, light=True):
+            raise RuntimeError("mineru down")
+
+    rp, pp = run(
+        "t", [{"keywords": ["wm"]}], [], FakeSV(), BrokenMU(), FakeCleaner(),
+        [], PipelineConfig(use_mineru=True),
+    )
+    assert rp.papers[0].parse_status == "abstract_only"
+    assert len(pp.papers) == 0  # degraded; not crashed

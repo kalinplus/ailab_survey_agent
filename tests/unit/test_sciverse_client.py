@@ -1,3 +1,5 @@
+import json
+
 import httpx
 import pytest
 import respx
@@ -13,9 +15,28 @@ def client(monkeypatch):
 
 @respx.mock
 def test_meta_search(client):
-    respx.post("https://sv.test/meta-search").respond(json={"hits": [{"unique_id": "paper:1"}]})
+    route = respx.post("https://sv.test/meta-search").respond(json={"results": [{"unique_id": "paper:1"}]})
     out = client.meta_search("world models")
-    assert out["hits"][0]["unique_id"] == "paper:1"
+    assert out["results"][0]["unique_id"] == "paper:1"
+    sent = json.loads(route.calls[0].request.content)
+    assert sent["query"] == "world models"
+    assert sent["page"] == 1 and sent["page_size"] == 25
+    # boosts default to None -> omitted from body
+    assert "freshness_boost" not in sent and "impact_boost" not in sent
+
+
+@respx.mock
+def test_meta_search_sends_boosts_when_provided(client):
+    route = respx.post("https://sv.test/meta-search").respond(json={"results": []})
+    client.meta_search("wm", impact_boost="MILD", freshness_boost="MILD")
+    sent = json.loads(route.calls[0].request.content)
+    assert sent["impact_boost"] == "MILD" and sent["freshness_boost"] == "MILD"
+
+
+def test_default_base_url_is_api_host(monkeypatch):
+    monkeypatch.setenv("SCIVERSE_API_KEY", "k")
+    c = SciVerseClient()
+    assert c.base_url == "https://api.sciverse.space"
 
 
 @respx.mock

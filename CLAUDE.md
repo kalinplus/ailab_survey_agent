@@ -82,3 +82,43 @@ Output: HTML survey with figures
 - Only add error handling at system boundaries (API calls, file I/O)
 - Minimal abstraction — prefer flat, readable code over over-engineering
 - Edit existing files over creating new ones
+- **Real-API-first, no production mocks**: the harness MUST work under the real
+  SciVerse / MinerU / Intern-S2 APIs. Never rely on mock fallbacks to make the
+  pipeline produce output — mock fallbacks hide real failures and silently
+  inject fake content (anti-hallucination risk). Production clients default to
+  `use_mock=False`; when a real parse fails, degrade to the real SciVerse
+  abstract (`parse_status="abstract_only"`) rather than emit mock data. Validate
+  every integration change against the real APIs (stronger than mock-based unit
+  tests, which can match a wrong contract and give false confidence). Test
+  doubles are fine for fast unit tests but must mirror the real contract shape.
+
+## External API Contracts (verified against live APIs 2026-07-05)
+
+- **Intern-S2-Preview** (core LLM, OpenAI-compatible): base `INTERN_API_BASE_URL`,
+  key `INTERN_API_KEY`, model `intern-s2-preview`. Duck-typed surface
+  `.chat(messages, *, temperature) -> str` / `.json_chat(...) -> dict`.
+- **SciVerse meta-search** (metadata list / filtering): base
+  `https://api.sciverse.space` (NOT the `sciverse.space` website host — that
+  404s). `POST /meta-search`; body keys `query` / `filters` / `fields` / `page`
+  / `page_size` / `sort`, plus `freshness_boost` / `impact_boost` (send each
+  only when set; they bias toward recent / highly-cited results and apply when
+  `sort` is NOT set; verified valid value `"MILD"`, `"HIGH"` is rejected).
+  Response `{"results": [...]}`. Each result: `unique_id`, `title`, `author`
+  (list of `{orcid, name}`), `publication_published_year` (float),
+  `publication_venue_name_unified`, `abstract`, `keywords`, `citation_count`
+  (float), `doi`, `access_oa_url` (list), `locations` (list of
+  `{type, is_oa, url, license}`), `is_content_accessible`. Filter entry shape:
+  `{"field": "...", "operator": "FILTER_OP_GTE"|"FILTER_OP_LTE"|..., "value": ...}`.
+- **SciVerse agentic-search** (RAG / citable chunks): `POST /agentic-search`
+  `{query, top_k}`; response `{"hits": [...]}` (NOTE: `hits`, not `results`).
+  Each hit carries a citable fragment: `chunk` (text), `doc_id`, `chunk_id`,
+  `page_no`, `offset`, `score`, `title`, `publication_published_year`,
+  `publication_venue_name_unified`. Use to ground claims/evidence. Caveat: the
+  `author` field comes back mangled (ASCII codepoint lists) — do not use it;
+  fetch authors via meta-search instead. `GET /content?doc_id=...` reads full
+  text; `GET /resource?file_name=...` downloads figures/attachments (the
+  `file_name` mapping is unverified — `/resource` returned 507 in probes).
+- **MinerU** (PDF parsing): base `https://mineru.net`. `POST /api/v1/agent/parse/url`
+  `{url, light}`; `POST /api/v4/extract/task` `{url}` → `task_id`, poll
+  `GET /api/v4/extract/task/{task_id}` until `status` ∈ {succeeded, failed}.
+  Needs a real PDF URL; doi.org landing pages are not direct PDFs.
