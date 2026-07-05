@@ -1,6 +1,6 @@
 import logging
 from tools.models.artifacts import Evidence, EvidenceStore
-from tools.models.common import evidence_id, paper_id_from_seed
+from tools.models.common import evidence_id
 
 logger = logging.getLogger(__name__)
 
@@ -53,10 +53,9 @@ def _agentic_backfill(paper_cards, evidences, sciverse, nli):
                     res = nli.best_match(chunk, [claim.text])
                     if res.support_type == "contradictory" and res.confidence <= 0:
                         continue
-                    pid = paper_id_from_seed(hit.get("title", ""), int(hit.get("publication_published_year") or 0))
                     evidences.append(Evidence(
-                        evidence_id=f"{pid[:16]}_p{hit.get('page_no', 0)}_{hit.get('offset', 0)}",
-                        paper_id=pid, source_type="agentic_chunk",
+                        evidence_id=f"{card.paper_id}_agentic_{n_added}_p{hit.get('page_no', 0)}_{hit.get('offset', 0)}",
+                        paper_id=card.paper_id, source_type="agentic_chunk",
                         source_page=int(hit.get("page_no") or 0),
                         source_paragraph_index=int(hit.get("offset") or 0),
                         text=chunk,

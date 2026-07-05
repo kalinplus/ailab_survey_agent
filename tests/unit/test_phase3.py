@@ -281,7 +281,7 @@ def test_relevance_prefilter_removes_highly_cited_off_topic_paper():
     cancer = RetrievedPaper(
         paper_id="paper:cancer", title="Cancer statistics 2024", year=2024,
         citation_count=10_000, abstract="Annual cancer incidence and mortality statistics.",
-        venue="CA Cancer J Clin", url="https://x/cancer")
+        venue="CA Cancer J Clin", url="https://x/cancer", source="survey_expansion")
     world_model = RetrievedPaper(
         paper_id="paper:wm", title="Learning World Models for Game Agents", year=2024,
         citation_count=2, abstract="Latent dynamics and world models for interactive environments.",
@@ -299,7 +299,7 @@ def test_relevance_prefilter_removes_highly_cited_off_topic_paper():
     assert [p.paper_id for p in ranked] == ["paper:wm"]
 
 
-def test_relevance_prefilter_fails_open_when_nothing_matches():
+def test_relevance_prefilter_fails_closed_when_nothing_matches():
     off_topic = RetrievedPaper(
         paper_id="paper:only", title="Cancer statistics 2024", year=2024,
         citation_count=10_000, abstract="Annual cancer incidence and mortality statistics.",
@@ -309,7 +309,58 @@ def test_relevance_prefilter_fails_open_when_nothing_matches():
         [off_topic],
         [{"keywords": ["world model", "dreamer"]}],
     )
-    assert [p.paper_id for p in filtered] == ["paper:only"]
+    assert filtered == []
+
+
+def test_relevance_prefilter_uses_multiword_token_overlap():
+    off_topic = RetrievedPaper(
+        paper_id="paper:cancer", title="Cancer statistics 2024", year=2024,
+        citation_count=10_000, abstract="Annual cancer incidence and mortality statistics.",
+        venue="CA Cancer J Clin", url="https://x/cancer")
+    relevant = RetrievedPaper(
+        paper_id="paper:game", title="Controllable Game World Simulation", year=2024,
+        citation_count=1, abstract="A user-in-the-loop framework for interactive environments.",
+        venue="arXiv", url="https://x/game.pdf")
+
+    filtered = _filter_relevant_candidates(
+        [off_topic, relevant],
+        [{"keywords": ["game world controllable simulation user-in-the-loop"]}],
+    )
+    assert [p.paper_id for p in filtered] == ["paper:game"]
+
+
+def test_generated_queries_are_used_for_relevance_prefilter():
+    from tools.models.requests import PipelineConfig
+
+    class QueryLLM:
+        def chat(self, messages, temperature=0.1):
+            return "game world controllable simulation user-in-the-loop"
+
+    class MixedSV:
+        def meta_search(self, query, **kw):
+            return {"results": [
+                {
+                    "unique_id": "paper:cancer",
+                    "title": "Cancer statistics 2024",
+                    "publication_published_year": 2024,
+                    "abstract": "Annual cancer incidence and mortality statistics.",
+                    "citation_count": 10_000,
+                },
+                {
+                    "unique_id": "paper:game",
+                    "title": "Controllable Game World Simulation",
+                    "publication_published_year": 2024,
+                    "abstract": "A user-in-the-loop framework for interactive environments.",
+                    "citation_count": 1,
+                },
+            ]}
+
+    rp, pp = run(
+        "t", [{"aspect_id": "a1", "keywords": ["游戏世界模型"]}], [], MixedSV(), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False, use_mineru=False, max_papers=5), QueryLLM(),
+    )
+    assert [p.paper_id for p in rp.papers] == ["paper:game"]
+    assert pp.papers == []
 
 
 # --- expansion candidates ---
@@ -347,6 +398,28 @@ def test_expansion_candidates_are_searched_and_marked():
     assert len(pp.papers) == 0
 
 
+def test_expansion_candidates_skip_hits_that_do_not_match_hint():
+    from tools.models.requests import PipelineConfig
+
+    class OffTopicExpansionSV:
+        def meta_search(self, query, **kw):
+            return {"results": [{
+                "unique_id": "paper:cancer",
+                "title": "Cancer statistics, 2024",
+                "publication_published_year": 2024,
+                "abstract": "Annual cancer incidence and mortality statistics.",
+                "citation_count": 10_000,
+            }]}
+
+    rp, pp = run(
+        "t", [], [{"paper_id_hint": "genie_2024", "survey_ref_count": 2}],
+        OffTopicExpansionSV(), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False, use_mineru=False),
+    )
+    assert rp.papers == []
+    assert pp.papers == []
+
+
 # --- per-aspect resilience ---
 
 
@@ -360,15 +433,15 @@ def test_per_aspect_resilience():
             call_count["n"] += 1
             if call_count["n"] == 1:
                 raise RuntimeError("aspect 1 search failed")
-            return {"results": [{"unique_id": "p2", "title": "Survived", "year": 2024, "url": "http://s"}]}
+            return {"results": [{"unique_id": "p2", "title": "Ok World Model", "year": 2024, "url": "http://s"}]}
 
-    aspects = [{"keywords": ["fail"]}, {"keywords": ["ok"]}]
+    aspects = [{"keywords": ["fail"]}, {"keywords": ["world model"]}]
     rp, pp = run(
         "t", aspects, [], FlakySV(), FakeMU(), FakeCleaner(),
         [], PipelineConfig(use_mineru=False),
     )
     assert len(rp.papers) == 1
-    assert rp.papers[0].title == "Survived"
+    assert rp.papers[0].title == "Ok World Model"
 
 
 # --- return tuple structure ---

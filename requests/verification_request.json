@@ -1,0 +1,46 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "inputs": {
+    "survey_markdown_path": "output/survey.md",
+    "paper_cards_path": "cache/paper_cards.json",
+    "citation_ready_set_path": "cache/citation_ready_set.json",
+    "evidence_store_path": "cache/evidence_store.json",
+    "figure_bank_path": "cache/figure_bank.json",
+    "table_bank_path": "cache/table_bank.json",
+    "generated_artifact_bank_path": "cache/generated_artifact_bank.json"
+  },
+  "outputs": {
+    "citation_result_path": "output/citation_result.json",
+    "claim_map_path": "cache/claim_map.json"
+  },
+  "verification_rules": {
+    "citation_format": "[paper_id]",
+    "citation_must_exist_in_ready_set": true,
+    "paper_figures_must_exist_in_figure_bank": true,
+    "paper_tables_must_exist_in_table_bank": true,
+    "generated_artifacts_must_exist_in_generated_artifact_bank": true,
+    "claim_should_map_to_evidence": true,
+    "unsupported_claim_policy": "mark_unsupported"
+  },
+  "active_skills": [
+    {
+      "name": "citation_verification",
+      "description": "Verify citations, paper artifacts, generated artifacts, and claim grounding.",
+      "path": "skills/citation_verification/SKILL.md",
+      "applies_to": [
+        "verification"
+      ],
+      "owner": "B",
+      "load_mode": "stage_scoped",
+      "purpose": "Verify citations, paper artifacts, generated artifacts, and claim grounding."
+    }
+  ],
+  "skill_policy": {
+    "progressive_disclosure": true,
+    "load_index_first": true,
+    "only_load_stage_relevant_skills": true,
+    "request_scoped_activation": true,
+    "unload_after_stage": true,
+    "skill_body_loading": "A passes skill paths in requests. B/C load the referenced SKILL.md only when their worker uses an LLM or needs the SOP."
+  }
+}

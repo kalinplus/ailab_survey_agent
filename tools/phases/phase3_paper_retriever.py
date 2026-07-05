@@ -170,6 +170,28 @@ def _paper_relevance_score(paper: RetrievedPaper, aspects: list[dict]) -> float:
                 term_score = 1.0
             elif term in body:
                 term_score = 0.7
+            else:
+                useful_tokens = [
+                    token for token in tokens
+                    if token not in GENERIC_RELEVANCE_TERMS
+                    and (len(token) >= 3 or token in SHORT_RELEVANCE_TERMS)
+                ]
+                useful_tokens = useful_tokens or tokens
+                required = 1 if len(useful_tokens) == 1 else 2
+                title_matches = sum(
+                    1 for token in useful_tokens
+                    if token in title_tokens or any(t.startswith(token) for t in title_tokens)
+                )
+                body_matches = sum(
+                    1 for token in useful_tokens
+                    if token in body_tokens or any(t.startswith(token) for t in body_tokens)
+                )
+                if title_matches >= required:
+                    term_score = 0.85
+                elif body_matches >= required:
+                    term_score = 0.6
+                elif title_matches + body_matches >= required:
+                    term_score = 0.55
         if term_score > 0:
             match_count += 1
             best_score = max(best_score, term_score)
@@ -182,12 +204,11 @@ def _filter_relevant_candidates(papers: list[RetrievedPaper], aspects: list[dict
         return papers
     filtered = [
         paper for paper in papers
-        if paper.source == "survey_expansion"
-        or _paper_relevance_score(paper, aspects) >= RELEVANCE_MIN_SCORE
+        if _paper_relevance_score(paper, aspects) >= RELEVANCE_MIN_SCORE
     ]
     if not filtered:
-        logger.info("[P3] relevance prefilter kept 0/%d papers -> fail-open", len(papers))
-        return papers
+        logger.info("[P3] relevance prefilter kept 0/%d papers -> fail-closed", len(papers))
+        return []
     logger.info("[P3] relevance prefilter kept %d/%d papers", len(filtered), len(papers))
     return filtered
 
@@ -220,11 +241,11 @@ def _rank_by_influence(
         ) / 3
         relevance_score = _paper_relevance_score(paper, aspects or [])
         return (
-            0.35 * relevance_score
-            + 0.25 * source_rank_score
-            + 0.18 * citation_score
-            + 0.12 * recency_score
-            + SURVEY_REF_WEIGHT * survey_score
+            0.55 * relevance_score
+            + 0.18 * source_rank_score
+            + 0.07 * citation_score
+            + 0.10 * recency_score
+            + 0.07 * survey_score
             + 0.03 * metadata_quality_score
         )
 
@@ -233,6 +254,35 @@ def _rank_by_influence(
 
 def _candidate_query(candidate: dict) -> str:
     return str(candidate.get("paper_id_hint", "")).replace("_", " ").strip()
+
+
+def _candidate_terms(candidate: dict) -> list[str]:
+    raw_terms = []
+    for part in str(candidate.get("paper_id_hint", "")).split("_"):
+        term = _normalize_relevance_text(part)
+        if not term or (len(term) == 4 and term.isdigit()):
+            continue
+        raw_terms.append(term)
+        prefix = re.sub(r"\d+$", "", term)
+        if prefix and prefix != term and len(prefix) >= 3:
+            raw_terms.append(prefix)
+    return list(dict.fromkeys(raw_terms))
+
+
+def _candidate_matches_hit(candidate: dict, hit: dict) -> bool:
+    terms = _candidate_terms(candidate)
+    if not terms:
+        return False
+    text = _normalize_relevance_text(
+        " ".join([
+            hit.get("title", "") or "",
+            hit.get("abstract", "") or "",
+            " ".join(str(k) for k in (hit.get("keywords") or [])),
+            hit.get("publication_venue_name_unified") or hit.get("venue") or "",
+        ])
+    )
+    tokens = set(text.split())
+    return any(term in text if " " in term else term in tokens for term in terms)
 
 
 def _candidate_year(candidate: dict) -> int | None:
@@ -254,6 +304,8 @@ def _search_expansion_candidates(expansion_candidates, sciverse, retrieved, firs
             hits = res.get("results", [])
             logger.info(f"[P3] expansion_search q={query!r} filters={filters} -> {len(hits)} hits")
             for hit in hits:
+                if not _candidate_matches_hit(candidate, hit):
+                    continue
                 paper = _to_retrieved(hit, source="survey_expansion")
                 paper.survey_ref_count = int(candidate.get("survey_ref_count") or 1)
                 paper.survey_ref_hints = [candidate["paper_id_hint"]]
@@ -279,6 +331,7 @@ def run(
                 f"use_influence_score={pipeline_config.use_influence_score}")
     retrieved = []
     first_seen_rank = {}
+    relevance_aspects = list(aspects)
     # 1. expansion candidates from curated surveys: exact, small-page searches.
     _search_expansion_candidates(expansion_candidates, sciverse, retrieved, first_seen_rank)
 
@@ -296,6 +349,7 @@ def run(
             logger.info(f"[P3] aspect {a.get('aspect_id', '?')} translate -> {queries}")
         else:
             queries = [" ".join(keywords)]
+        relevance_aspects.append({"keywords": queries})
         for query in queries:
             for filters in filter_sets:
                 try:
@@ -323,8 +377,8 @@ def run(
         first_seen_rank = {p.paper_id: i for i, p in enumerate(retrieved)}
     retrieved = dedup(retrieved)
     if pipeline_config.use_influence_score:
-        retrieved = _filter_relevant_candidates(retrieved, aspects)
-        retrieved = _rank_by_influence(retrieved, first_seen_rank, aspects)
+        retrieved = _filter_relevant_candidates(retrieved, relevance_aspects)
+        retrieved = _rank_by_influence(retrieved, first_seen_rank, relevance_aspects)
     retrieved = retrieved[:pipeline_config_extra(pipeline_config, "max_papers", 40)]
     logger.info(f"[P3] after dedup/cap: {len(retrieved)} papers")
     # 4. parse via real MinerU; only feed actual PDF URLs; degrade per-paper on failure or empty result

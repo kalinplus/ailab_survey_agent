@@ -126,8 +126,8 @@ CLI full flow (A planner → B/C tools): real run of the harness.
 
 ```
 python main.py --topic "世界模型综述"            # full run
-python main.py --topic "..." --max-papers 5 --max-core-papers 3   # fast smoke (caps P3 retrieval + parse)
-python main.py --topic "..." --prepare-only      # A-owned requests only, no B/C
+python main.py --topic "..." --max-papers 5 --max-core-papers 3 --mode full  # fast smoke (caps P3 retrieval + parse)
+python main.py --topic "..." --prepare-only --mode full   # A-owned requests only, no B/C
 ```
 
 Add `-s --log-cli-level=INFO` when you need the full pipeline trace (`[worker] P1/P2/P3 done`, per-call summaries).

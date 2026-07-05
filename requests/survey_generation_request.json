@@ -1,6 +1,6 @@
 {
-  "task_id": "task_world_model_for_auto_drive_001",
-  "topic": "world model for auto drive",
+  "task_id": "task_游戏世界模型_001",
+  "topic": "游戏世界模型",
   "request_type": "survey_generation",
   "language": "zh",
   "inputs": {

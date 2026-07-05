@@ -1,0 +1,77 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "topic": "游戏世界模型",
+  "inputs": {
+    "survey_markdown_path": "output/survey.md",
+    "knowledge_bundle_path": "cache/knowledge_bundle.json",
+    "paper_cards_path": "cache/paper_cards.json",
+    "taxonomy_path": "cache/taxonomy.json",
+    "timeline_path": "cache/timeline.json",
+    "citation_result_path": "output/citation_result.json",
+    "claim_map_path": "cache/claim_map.json",
+    "figure_bank_path": "cache/figure_bank.json",
+    "table_bank_path": "cache/table_bank.json",
+    "generated_artifact_bank_path": "cache/generated_artifact_bank.json",
+    "evidence_store_path": "cache/evidence_store.json"
+  },
+  "outputs": {
+    "evaluation_report_path": "output/evaluation_report.json",
+    "html_report_path": "output/final_report.html",
+    "pdf_report_path": "output/final_report.pdf"
+  },
+  "render_requirements": {
+    "include_timeline": true,
+    "include_taxonomy_graph": true,
+    "include_paper_figures": true,
+    "include_paper_tables": true,
+    "include_comparison_table": true,
+    "include_future_matrix": true,
+    "include_evidence_panel": true,
+    "include_citation_summary": true,
+    "include_evaluation_summary": true
+  },
+  "active_skills": [
+    {
+      "name": "artifact_generation",
+      "description": "Generate timeline, taxonomy graph, tables, and matrices with declared provenance.",
+      "path": "skills/artifact_generation/SKILL.md",
+      "applies_to": [
+        "survey_generation",
+        "evaluation_render"
+      ],
+      "owner": "C",
+      "load_mode": "stage_scoped",
+      "purpose": "Generate timeline, taxonomy graph, tables, and matrices with declared provenance."
+    },
+    {
+      "name": "evaluation",
+      "description": "Score coverage, citation validity, evidence grounding, structure, and visualization.",
+      "path": "skills/evaluation/SKILL.md",
+      "applies_to": [
+        "evaluation_render"
+      ],
+      "owner": "C",
+      "load_mode": "stage_scoped",
+      "purpose": "Score coverage, citation validity, evidence grounding, structure, and visualization."
+    },
+    {
+      "name": "report_rendering",
+      "description": "Render final HTML/PDF with citation summary, evidence panel, and artifact provenance.",
+      "path": "skills/report_rendering/SKILL.md",
+      "applies_to": [
+        "evaluation_render"
+      ],
+      "owner": "C",
+      "load_mode": "stage_scoped",
+      "purpose": "Render final HTML/PDF with citation summary, evidence panel, and artifact provenance."
+    }
+  ],
+  "skill_policy": {
+    "progressive_disclosure": true,
+    "load_index_first": true,
+    "only_load_stage_relevant_skills": true,
+    "request_scoped_activation": true,
+    "unload_after_stage": true,
+    "skill_body_loading": "A passes skill paths in requests. B/C load the referenced SKILL.md only when their worker uses an LLM or needs the SOP."
+  }
+}

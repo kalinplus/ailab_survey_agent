@@ -58,3 +58,39 @@
 - used_probing: false
 - organization_mode: thematic
 - aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks
+
+## 2026-07-05T11:48:50 - 游戏世界模型
+
+- event: search_strategy_generated
+- mode: demo
+- used_memory: true
+- used_probing: false
+- organization_mode: hybrid
+- aspects: Foundational Concepts, Methods and Systems, Benchmarks and Evaluation, Recent and Emerging Directions
+
+## 2026-07-05T11:58:04 - 游戏世界模型
+
+- event: search_strategy_generated
+- mode: full
+- used_memory: true
+- used_probing: false
+- organization_mode: thematic
+- aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks
+
+## 2026-07-05T12:06:39 - 游戏世界模型
+
+- event: search_strategy_generated
+- mode: full
+- used_memory: true
+- used_probing: false
+- organization_mode: thematic
+- aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks
+
+## 2026-07-05T12:39:09 - 视频世界模型
+
+- event: search_strategy_generated
+- mode: full
+- used_memory: true
+- used_probing: false
+- organization_mode: thematic
+- aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks

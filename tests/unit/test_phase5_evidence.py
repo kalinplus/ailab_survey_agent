@@ -172,7 +172,7 @@ def test_agentic_backfill_for_unsupported_claim():
     agentic = [e for e in es.evidence if e.source_type == "agentic_chunk"]
     assert len(agentic) == 1
     assert agentic[0].source_page == 2
-    assert agentic[0].paper_id.startswith("seed:")  # title-derived real id, no fabricated authors
+    assert agentic[0].paper_id == "paper:1"
     assert agentic[0].supports_claims[0]["claim_text"] == "plans in imagination"
     assert sv.calls == 1
 

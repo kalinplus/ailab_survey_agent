@@ -1,0 +1,46 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "request_type": "survey_revision",
+  "reason": "Evidence verification failed.",
+  "inputs": {
+    "survey_markdown_path": "output/survey.md",
+    "citation_result_path": "output/citation_result.json",
+    "claim_map_path": "cache/claim_map.json",
+    "citation_ready_set_path": "cache/citation_ready_set.json",
+    "evidence_store_path": "cache/evidence_store.json",
+    "figure_bank_path": "cache/figure_bank.json",
+    "table_bank_path": "cache/table_bank.json",
+    "generated_artifact_bank_path": "cache/generated_artifact_bank.json"
+  },
+  "outputs": {
+    "revised_survey_markdown_path": "output/survey_revised.md"
+  },
+  "required_changes": [
+    "Remove citations not in CitationReadySet.",
+    "Remove figures not in FigureBank.",
+    "Remove tables not in TableBank.",
+    "Rewrite unsupported claims.",
+    "Do not introduce new references."
+  ],
+  "active_skills": [
+    {
+      "name": "survey_revision",
+      "description": "Revise invalid citations, illegal artifacts, and unsupported claims without new references.",
+      "path": "skills/survey_revision/SKILL.md",
+      "applies_to": [
+        "revision"
+      ],
+      "owner": "C",
+      "load_mode": "stage_scoped",
+      "purpose": "Revise invalid citations, illegal artifacts, and unsupported claims without new references."
+    }
+  ],
+  "skill_policy": {
+    "progressive_disclosure": true,
+    "load_index_first": true,
+    "only_load_stage_relevant_skills": true,
+    "request_scoped_activation": true,
+    "unload_after_stage": true,
+    "skill_body_loading": "A passes skill paths in requests. B/C load the referenced SKILL.md only when their worker uses an LLM or needs the SOP."
+  }
+}
