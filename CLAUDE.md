@@ -132,6 +132,19 @@ python main.py --topic "..." --prepare-only      # A-owned requests only, no B/C
 
 Add `-s --log-cli-level=INFO` when you need the full pipeline trace (`[worker] P1/P2/P3 done`, per-call summaries).
 
+## HuggingFace Endpoint (NLI model download)
+
+`NLIVerifier` (phase 5 evidence + citation verify) downloads
+`cross-encoder/nli-deberta-v3-base` from HuggingFace on first use. If HF is slow
+or blocked, set `HF_ENDPOINT` in `.env` (read natively by `huggingface_hub`,
+loaded via dotenv before any model is constructed):
+
+```
+HF_ENDPOINT=https://hf-mirror.com
+```
+
+Unset = direct HF access (default).
+
 ## External API Contracts (verified against live APIs 2026-07-05)
 
 - **Intern-S2-Preview** (core LLM, OpenAI-compatible): base `INTERN_API_BASE_URL`,
