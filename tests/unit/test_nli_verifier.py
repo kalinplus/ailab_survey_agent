@@ -1,4 +1,8 @@
-from tools.nlp.nli_verifier import NLIResult, FakeNLIModel, _support
+import os
+
+import pytest
+
+from tools.nlp.nli_verifier import NLIResult, NLIVerifier, FakeNLIModel, _support
 
 
 # --- NLIResult.status ---
@@ -95,3 +99,17 @@ class TestFakeBestMatch:
         assert r.label == "neutral"
         assert r.support_type == "indirect"
         assert r.confidence == 0.5
+
+
+@pytest.mark.nli_real
+@pytest.mark.skipif(os.getenv("RUN_NLI_REAL") != "1", reason="set RUN_NLI_REAL=1 to load the real NLI model")
+def test_real_nli_smoke():
+    verifier = NLIVerifier()
+    result = verifier.judge(
+        "The model learns latent dynamics and plans in latent space.",
+        "The paper proposes planning with a latent world model.",
+    )
+
+    assert result.label in {"entailment", "neutral", "contradiction"}
+    assert result.support_type in {"direct", "indirect", "contradictory"}
+    assert isinstance(result.confidence, float)

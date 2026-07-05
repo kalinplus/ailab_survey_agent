@@ -58,6 +58,7 @@ result = run("requests/knowledge_build_request.json")
     "use_seed_fallback": true,
     "use_mineru": false,
     "use_mock_mineru_if_failed": false,
+    "use_influence_score": true,
     "aspect_match_threshold": 0.6
   },
   "quality_requirements": {
@@ -198,6 +199,10 @@ Intern-S2-Preview 限制 1 req / 2s。`InternS2Client` 内置 2.1s 节流，无�
 ### Seed Fallback
 
 若 SciVerse API 无法访问，`use_seed_fallback: true` 会使用 `cache/seed_papers.json`（102 篇预检索论文）作为兜底。
+
+### Paper Influence Score
+
+`use_influence_score: true` 是默认值。P3 会按年份分段设置 citation 门槛召回，并在本地按 SciVerse 返回顺序、引用数、年份和元数据完整度 rerank 后再截断 `max_papers`。
 
 ### 超时
 

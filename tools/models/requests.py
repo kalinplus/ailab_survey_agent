@@ -31,6 +31,7 @@ class PipelineConfig(BaseModel):
     use_mineru: bool = False
     use_mock_mineru_if_failed: bool = False  # production runs real MinerU; phase3 degrades per-paper
     update_survey_store: bool = False
+    use_influence_score: bool = True
     max_papers: int = 40
     max_core_papers: int = 15
     aspect_match_threshold: float = 0.6

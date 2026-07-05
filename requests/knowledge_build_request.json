@@ -1,6 +1,6 @@
 {
-  "task_id": "task_world_model_for_auto_drive_001",
-  "topic": "world model for auto drive",
+  "task_id": "task_世界模型_001",
+  "topic": "世界模型",
   "request_type": "knowledge_build",
   "inputs": {
     "task_request_path": "cache/task_request.json",
@@ -18,13 +18,13 @@
     "citation_index_path": "cache/citation_index.json"
   },
   "pipeline_config": {
-    "use_online_search": false,
+    "use_online_search": true,
     "use_seed_fallback": true,
-    "use_mineru": false,
+    "use_mineru": true,
     "use_mock_mineru_if_failed": false,
-    "max_papers": 5,
-    "max_core_papers": 3,
-    "download_pdfs": false,
+    "max_papers": 10,
+    "max_core_papers": 5,
+    "download_pdfs": true,
     "extract_figures": true,
     "extract_tables": true,
     "extract_captions": true,
@@ -37,37 +37,5 @@
     "min_figures": 1,
     "min_evidence_per_core_paper": 1,
     "allow_abstract_only_fallback": true
-  },
-  "active_skills": [
-    {
-      "name": "knowledge_build",
-      "description": "Build KnowledgeBundle artifacts from task and search strategy with fallback rules.",
-      "path": "skills/knowledge_build/SKILL.md",
-      "applies_to": [
-        "knowledge_build"
-      ],
-      "owner": "B",
-      "load_mode": "stage_scoped",
-      "purpose": "Build KnowledgeBundle artifacts from task and search strategy with fallback rules."
-    },
-    {
-      "name": "paper_card",
-      "description": "Normalize papers into PaperCards and bind every core claim to evidence.",
-      "path": "skills/paper_card/SKILL.md",
-      "applies_to": [
-        "knowledge_build"
-      ],
-      "owner": "B",
-      "load_mode": "stage_scoped",
-      "purpose": "Normalize papers into PaperCards and bind every core claim to evidence."
-    }
-  ],
-  "skill_policy": {
-    "progressive_disclosure": true,
-    "load_index_first": true,
-    "only_load_stage_relevant_skills": true,
-    "request_scoped_activation": true,
-    "unload_after_stage": true,
-    "skill_body_loading": "A passes skill paths in requests. B/C load the referenced SKILL.md only when their worker uses an LLM or needs the SOP."
   }
 }

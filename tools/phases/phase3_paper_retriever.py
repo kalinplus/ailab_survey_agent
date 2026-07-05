@@ -1,8 +1,15 @@
 import logging
+import math
 from tools.models.artifacts import RetrievedPaper, RetrievedPapers, ParsedPaper, ParsedPapers
 from tools.models.common import paper_id_from_seed
 
 logger = logging.getLogger(__name__)
+
+INFLUENCE_YEAR_BANDS = [
+    (2024, 2026, 0),
+    (2021, 2023, 5),
+    (2018, 2020, 20),
+]
 
 
 def _is_pdf_url(url: str) -> bool:
@@ -84,6 +91,48 @@ def dedup(papers: list[RetrievedPaper]) -> list[RetrievedPaper]:
     return out
 
 
+def _year_filters(start_year: int, end_year: int, min_citations: int | None = None) -> list[dict]:
+    filters = [
+        {"field": "publication_published_year", "operator": "FILTER_OP_GTE", "value": start_year},
+        {"field": "publication_published_year", "operator": "FILTER_OP_LTE", "value": end_year},
+    ]
+    if min_citations is not None and min_citations > 0:
+        filters.append({"field": "citation_count", "operator": "FILTER_OP_GTE", "value": min_citations})
+    return filters
+
+
+def _influence_filter_sets() -> list[list[dict]]:
+    return [_year_filters(start, end, min_citations) for start, end, min_citations in INFLUENCE_YEAR_BANDS]
+
+
+def _rank_by_influence(papers: list[RetrievedPaper], first_seen_rank: dict[str, int]) -> list[RetrievedPaper]:
+    if not papers:
+        return []
+    max_rank = max(first_seen_rank.values()) if first_seen_rank else 0
+    max_citations = max(math.log1p(max(p.citation_count, 0)) for p in papers)
+
+    def score(paper: RetrievedPaper) -> float:
+        rank = first_seen_rank.get(paper.paper_id, max_rank)
+        source_rank_score = 1.0 if max_rank <= 0 else 1.0 - (rank / max_rank)
+        citation_score = 0.0
+        if max_citations > 0:
+            citation_score = math.log1p(max(paper.citation_count, 0)) / max_citations
+        recency_score = 0.0
+        if paper.year is not None:
+            recency_score = min(max((paper.year - 2018) / (2026 - 2018), 0.0), 1.0)
+        metadata_quality_score = (
+            int(bool(paper.abstract)) + int(bool(paper.venue)) + int(bool(paper.url))
+        ) / 3
+        return (
+            0.45 * source_rank_score
+            + 0.30 * citation_score
+            + 0.20 * recency_score
+            + 0.05 * metadata_quality_score
+        )
+
+    return sorted(papers, key=lambda paper: score(paper), reverse=True)
+
+
 def run(
     task_id,
     aspects,
@@ -96,14 +145,17 @@ def run(
     llm=None,
 ):
     logger.info(f"[P3] retrieve: {len(aspects)} aspects, use_mineru={pipeline_config.use_mineru}, "
-                f"use_seed_fallback={pipeline_config.use_seed_fallback}")
+                f"use_seed_fallback={pipeline_config.use_seed_fallback}, "
+                f"use_influence_score={pipeline_config.use_influence_score}")
     retrieved = []
+    first_seen_rank = {}
     # 1. expansion refs via meta-paper-relations (skip if sciverse offline -> caught upstream)
     # 2. meta-search per aspect (verified SciVerse filter/response contract)
-    year_filters = [
-        {"field": "publication_published_year", "operator": "FILTER_OP_GTE", "value": 2018},
-        {"field": "publication_published_year", "operator": "FILTER_OP_LTE", "value": 2026},
-    ]
+    filter_sets = (
+        _influence_filter_sets()
+        if pipeline_config.use_influence_score
+        else [_year_filters(2018, 2026)]
+    )
     for a in aspects:
         keywords = a.get("keywords", [])
         # If keywords contain non-ASCII (Chinese topic) and LLM available, generate English queries
@@ -113,24 +165,34 @@ def run(
         else:
             queries = [" ".join(keywords)]
         for query in queries:
-            try:
-                res = sciverse.meta_search(
-                    query=query,
-                    filters=year_filters,
-                    impact_boost="MILD",
-                    page_size=25,
-                )
-                hits = res.get("results", [])
-                logger.info(f"[P3] meta_search q={query!r} -> {len(hits)} hits")
-                for hit in hits:
-                    retrieved.append(_to_retrieved(hit))
-            except Exception as e:
-                logger.warning(f"[P3] meta_search failed q={query!r}: {e}")
+            for filters in filter_sets:
+                try:
+                    kwargs = {
+                        "query": query,
+                        "filters": filters,
+                        "impact_boost": "MILD",
+                        "page_size": 15 if pipeline_config.use_influence_score else 25,
+                    }
+                    if pipeline_config.use_influence_score:
+                        kwargs["freshness_boost"] = "MILD"
+                    res = sciverse.meta_search(**kwargs)
+                    hits = res.get("results", [])
+                    logger.info(f"[P3] meta_search q={query!r} filters={filters} -> {len(hits)} hits")
+                    for hit in hits:
+                        paper = _to_retrieved(hit)
+                        first_seen_rank.setdefault(paper.paper_id, len(retrieved))
+                        retrieved.append(paper)
+                except Exception as e:
+                    logger.warning(f"[P3] meta_search failed q={query!r} filters={filters}: {e}")
     # 3. seed fallback if empty
     if not retrieved and pipeline_config.use_seed_fallback:
         logger.warning(f"[P3] empty retrieval -> seed fallback ({len(seed_papers)} papers)")
         retrieved = [_to_retrieved(s, source="seed") for s in seed_papers]
-    retrieved = dedup(retrieved)[:pipeline_config_extra(pipeline_config, "max_papers", 40)]
+        first_seen_rank = {p.paper_id: i for i, p in enumerate(retrieved)}
+    retrieved = dedup(retrieved)
+    if pipeline_config.use_influence_score:
+        retrieved = _rank_by_influence(retrieved, first_seen_rank)
+    retrieved = retrieved[:pipeline_config_extra(pipeline_config, "max_papers", 40)]
     logger.info(f"[P3] after dedup/cap: {len(retrieved)} papers")
     # 4. parse via real MinerU; only feed actual PDF URLs; degrade per-paper on failure or empty result
     parsed = []

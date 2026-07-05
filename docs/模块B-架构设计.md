@@ -13,6 +13,7 @@
 | 向量检索（Phase 4 RAG） | **不采用**（用 SciVerse agentic-search 替代） | 本地 ChromaDB RAG 为死代码：建索引但下游 Phase 5 从未查询；agentic-search 直接返回带 page_no/doc_id 的可引用 chunk，无需自建向量库即可完成 claim grounding |
 | MinerU 策略 | **默认关闭**（`use_mineru: false`） | arxiv PDF 防爬 → 100% 空壳；abstract + agentic-search chunk 已足够 |
 | SciVerse 策略 | meta-search 主检索 + agentic-search evidence backfill | 前者给论文列表，后者补 claim grounding |
+| Paper Influence Score | **默认开启**（`use_influence_score: true`） | meta-search 分年份/引用门槛召回 + 本地 rerank，平衡相关性、影响力和时效 |
 | 关键词翻译 | Phase 3 LLM 翻译（中→英学术查询） | SciVerse 对英文查询效果远优于中文 |
 | Paper Cards | deep（全文）+ **shallow（仅 abstract）** | MinerU 关闭时仍能产出 cards → evidence chain 不断 |
 | Evidence 来源 | parsed paragraphs + **agentic-search chunk backfill** | 无 MinerU 时 backfill 是唯一 evidence 来源 |
@@ -278,15 +279,24 @@ verify_citations → 综述引用 ∈ citation_ready_set
 
 | 测试 | 状态 | 耗时 |
 |------|------|------|
-| 单元测试 (149) | ✅ passed | 0.3s |
-| 集成测试 (real SciVerse + fake LLM) | ✅ passed | 69s |
-| 全真实 API (Intern-S2 + SciVerse) | ⚠️ timeout 120s 应修复 | ~9min |
+| 单元测试 (157) | ✅ passed | 0.33s |
+| — 反幻觉专项 (verify_citations + claim_mapper + nli + phase5_evidence, 52) | ✅ passed | 0.08s |
+| 集成测试 (real SciVerse + fake LLM) | ✅ passed | 195s |
+| 全真实 API (Intern-S2 + SciVerse + MinerU + NLI) | ✅ passed | 55s |
+
+> 反幻觉骨干验证：集成测试断言 `evidence_store` 非空（"anti-hallucination backbone
+> failed"）通过；全真实 API 用真 `NLIVerifier`(cross-encoder/nli-deberta-v3-base) +
+> 真 Intern-S2 跑通。P5.2 agentic-search backfill 的 429 限流已修复：429 用独立长退避
+> (5s/10s/20s) + 重试 3 次（`SCIVERSE_RATE_LIMIT_BACKOFF_BASE` / `SCIVERSE_MAX_RETRIES`），
+> 节流间隔 env `SCIVERSE_MIN_INTERVAL=2`。集成日志从「连续十几个 429 全部放弃」→
+> 「仅 2 次 429 且退避后成功」，backfill 兜底证据恢复有效（耗时 86s→195s 是用时间换覆盖）。
 
 ---
 
 ## 8. 待办优化
 
 - [ ] MinerU：找到绕过 arxiv 防爬的 PDF 源后开启（`use_mineru: true`）
-- [ ] 并行化：多 aspect 并发调用 SciVerse（当前串行）
-- [ ] NLI 本地模型：cross-encoder/nli-deberta-v3-base 替代 FakeNLI
-- [ ] Paper Influence Score：综合引用 + 时效 + 开源影响力排序
+- [ ] 并行化：多 aspect 并发调用 SciVerse（当前串行）；调用 Intern-s2-preview 可以尝试并行
+- [x] NLI 本地模型：生产路径已用 `cross-encoder/nli-deberta-v3-base`；`FakeNLI` 仅保留给默认测试；真实模型 smoke test 通过 `RUN_NLI_REAL=1 pytest -m nli_real` 手动触发
+- [x] Paper Influence Score：分年份/引用门槛召回 + 本地 rerank（相关性、引用、时效、元数据质量）
+- [x] SciVerse 429 退避：429 用独立长退避 base（5s/10s/20s）+ `max_retries` 默认 1→3，节流 `SCIVERSE_MIN_INTERVAL=2`
