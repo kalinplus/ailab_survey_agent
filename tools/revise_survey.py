@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 from typing import Any
@@ -23,7 +24,7 @@ def run(request_path: str) -> dict[str, Any]:
     survey_path = _resolve(root, inputs.get("survey_markdown_path", "output/survey.md"))
     citation_result = _read_optional(root, inputs.get("citation_result_path"), {"entries": []})
     claim_map = _read_optional(root, inputs.get("claim_map_path"), {"entries": []})
-    ready_set = _read_optional(root, inputs.get("citation_ready_set_path"), {"allowed_paper_ids": [], "items": []})
+    ready_set = _read_final_or_requested(root, "citation_ready_set", inputs.get("citation_ready_set_path"), {"allowed_paper_ids": [], "items": []})
     gen_bank = _read_optional(root, inputs.get("generated_artifact_bank_path"), {"artifacts": []})
 
     allowed_ids = set(ready_set.get("allowed_paper_ids", []))
@@ -154,6 +155,14 @@ def _read_optional(root: Path, raw_path: str | None, default: Any) -> Any:
     if not path.exists():
         return default
     return read_json(path)
+
+
+def _read_final_or_requested(root: Path, name: str, raw_path: str | None, default: Any) -> Any:
+    if os.getenv("FINAL_SEED_PAPERS") == "1":
+        final_path = root / "cache" / f"final_{name}.json"
+        if final_path.exists():
+            return read_json(final_path)
+    return _read_optional(root, raw_path, default)
 
 
 def _resolve(root: Path, raw_path: str | Path) -> Path:

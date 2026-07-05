@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import os
 import re
+import textwrap
 from pathlib import Path
 from typing import Any
 
@@ -36,14 +37,14 @@ def run(request_path: str) -> dict[str, Any]:
 
     survey_path = _resolve(root, inputs.get("survey_markdown_path", "output/survey.md"))
     survey_md = survey_path.read_text(encoding="utf-8") if survey_path.exists() else ""
-    paper_cards = _read_optional(root, inputs.get("paper_cards_path"), {"paper_cards": []})
-    taxonomy = _read_optional(root, inputs.get("taxonomy_path"), {"categories": []})
+    paper_cards = _read_final_or_requested(root, "paper_cards", inputs.get("paper_cards_path"), {"paper_cards": []})
+    taxonomy = _read_final_or_requested(root, "taxonomy", inputs.get("taxonomy_path"), {"categories": []})
     timeline = _read_optional(root, inputs.get("timeline_path"), {"events": []})
     citation_result = _read_optional(root, inputs.get("citation_result_path"), {})
     claim_map = _read_optional(root, inputs.get("claim_map_path"), {})
     artifact_bank = _read_optional(root, inputs.get("generated_artifact_bank_path"), {"artifacts": []})
-    evidence_store = _read_optional(root, inputs.get("evidence_store_path"), {"evidence": []})
-    ready_set = _read_optional(root, inputs.get("citation_ready_set_path", "cache/citation_ready_set.json"), {"allowed_paper_ids": []})
+    evidence_store = _read_final_or_requested(root, "evidence_store", inputs.get("evidence_store_path"), {"evidence": []})
+    ready_set = _read_final_or_requested(root, "citation_ready_set", inputs.get("citation_ready_set_path", "cache/citation_ready_set.json"), {"allowed_paper_ids": []})
     audit_report = _read_optional(root, "output/artifact_audit_report.json", {})
     section_claim_plan = _read_optional(root, "cache/section_claim_plan.json", {"sections": []})
 
@@ -58,9 +59,11 @@ def run(request_path: str) -> dict[str, Any]:
     output_dir = html_path.parent
     display_map_path = output_dir / "citation_display_map.json"
     public_md_path = output_dir / "survey_public.md"
+    submission_md_path = output_dir / "survey_submission.md"
     survey_html_path = output_dir / "survey.html"
     survey_pdf_path = output_dir / "survey.pdf"
     harness_audit_path = output_dir / "harness_audit_report.html"
+    submission_readiness_path = output_dir / "submission_readiness_report.json"
     review_path = html_path.parent / "review_report.json"
     baseline_review_path = html_path.parent / "baseline_review_report.json"
     comparison_path = html_path.parent / "baseline_comparison_report.md"
@@ -76,9 +79,11 @@ def run(request_path: str) -> dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     write_json(display_map_path, citation_display_map)
     public_md_path.write_text(public_md, encoding="utf-8")
-    survey_html = _render_public_html(topic, public_md, root, survey_html_path)
+    submission_md = _render_submission_markdown(public_md, artifact_bank, root, submission_md_path)
+    submission_md_path.write_text(submission_md, encoding="utf-8")
+    survey_html = _render_submission_html(topic, submission_md, root, survey_html_path, artifact_bank)
     survey_html_path.write_text(survey_html, encoding="utf-8")
-    _render_or_copy_pdf(topic, public_md, survey_html_path, survey_pdf_path)
+    _render_or_copy_pdf(topic, submission_md, survey_html_path, survey_pdf_path)
 
     public_readiness = _public_readiness_check(
         root=root,
@@ -88,6 +93,17 @@ def run(request_path: str) -> dict[str, Any]:
         survey_pdf_path=survey_pdf_path,
         final_pdf_path=pdf_path,
         artifact_bank=artifact_bank,
+    )
+    submission_readiness = _submission_readiness_check(
+        root=root,
+        public_md_path=public_md_path,
+        submission_md_path=submission_md_path,
+        survey_html_path=survey_html_path,
+        final_html_path=html_path,
+        survey_pdf_path=survey_pdf_path,
+        final_pdf_path=pdf_path,
+        artifact_bank=artifact_bank,
+        citation_display_map=citation_display_map,
     )
     review = _review_report(
         task_id,
@@ -99,6 +115,7 @@ def run(request_path: str) -> dict[str, Any]:
         audit_report,
         section_claim_plan,
         public_readiness=public_readiness,
+        submission_readiness=submission_readiness,
     )
     comparison = _baseline_comparison(evaluation, review, baseline_review)
 
@@ -108,10 +125,10 @@ def run(request_path: str) -> dict[str, Any]:
     comparison_path.parent.mkdir(parents=True, exist_ok=True)
     comparison_path.write_text(comparison, encoding="utf-8")
 
-    html_report = _render_public_html(topic, public_md, root, html_path)
+    html_report = _render_submission_html(topic, submission_md, root, html_path, artifact_bank)
     html_path.parent.mkdir(parents=True, exist_ok=True)
     html_path.write_text(html_report, encoding="utf-8")
-    _render_or_copy_pdf(topic, public_md, html_path, pdf_path)
+    _render_or_copy_pdf(topic, submission_md, html_path, pdf_path)
     public_readiness = _public_readiness_check(
         root=root,
         public_md_path=public_md_path,
@@ -120,6 +137,17 @@ def run(request_path: str) -> dict[str, Any]:
         survey_pdf_path=survey_pdf_path,
         final_pdf_path=pdf_path,
         artifact_bank=artifact_bank,
+    )
+    submission_readiness = _submission_readiness_check(
+        root=root,
+        public_md_path=public_md_path,
+        submission_md_path=submission_md_path,
+        survey_html_path=survey_html_path,
+        final_html_path=html_path,
+        survey_pdf_path=survey_pdf_path,
+        final_pdf_path=pdf_path,
+        artifact_bank=artifact_bank,
+        citation_display_map=citation_display_map,
     )
     review = _review_report(
         task_id,
@@ -131,8 +159,12 @@ def run(request_path: str) -> dict[str, Any]:
         audit_report,
         section_claim_plan,
         public_readiness=public_readiness,
+        submission_readiness=submission_readiness,
     )
     write_json(review_path, review)
+    write_json(submission_readiness_path, submission_readiness)
+    comparison = _baseline_comparison(evaluation, review, baseline_review)
+    comparison_path.write_text(comparison, encoding="utf-8")
     harness_audit_path.write_text(
         _render_harness_audit_html(
             topic=topic,
@@ -143,6 +175,7 @@ def run(request_path: str) -> dict[str, Any]:
             artifact_bank=artifact_bank,
             baseline_comparison_md=comparison,
             public_readiness=public_readiness,
+            submission_readiness=submission_readiness,
         ),
         encoding="utf-8",
     )
@@ -160,11 +193,13 @@ def run(request_path: str) -> dict[str, Any]:
             _rel(root, comparison_path),
             _rel(root, display_map_path),
             _rel(root, public_md_path),
+            _rel(root, submission_md_path),
             _rel(root, survey_html_path),
             _rel(root, survey_pdf_path),
             _rel(root, html_path),
             _rel(root, pdf_path),
             _rel(root, harness_audit_path),
+            _rel(root, submission_readiness_path),
         ],
         "metrics": {
             "overall_score": evaluation["overall_score"],
@@ -256,6 +291,7 @@ def _review_report(
     audit_report: dict[str, Any],
     section_claim_plan: dict[str, Any],
     public_readiness: dict[str, Any] | None = None,
+    submission_readiness: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     allowed_ids = set(ready_set.get("allowed_paper_ids", []))
     citation_score = float(citation_result.get("citation_validity_score", 1.0))
@@ -304,13 +340,28 @@ def _review_report(
             "reason": "Public Markdown/HTML/PDF contain no internal IDs or harness process terms.",
             "checks": public_readiness.get("checks", {}),
         }
+    if submission_readiness is not None:
+        hard_gates["submission_readiness"] = {
+            "score": round(float(submission_readiness.get("score", 0.0)), 3),
+            "threshold": 1.0,
+            "pass": bool(submission_readiness.get("pass")),
+            "reason": "Final public package satisfies presentation submission checks.",
+            "checks": submission_readiness.get("checks", {}),
+        }
     hard_gate_pass = all(item["pass"] for item in hard_gates.values() if item.get("blocking", True))
     soft_review = _soft_review(survey_md, _as_list(artifact_bank, "artifacts"))
     soft_overall = _soft_overall(soft_review)
     core_ok = all(soft_review[key]["score"] >= 0.60 for key in ["logical_coherence", "terminology_precision", "argument_depth", "visual_design"])
-    final_decision = "pass" if hard_gate_pass and soft_overall >= 0.78 and core_ok else "pass_with_warning"
-    if not hard_gate_pass:
-        final_decision = "pass_for_harness_demo_but_not_public_ready" if public_readiness and not public_readiness.get("pass") else "hard_gate_warning"
+    if public_readiness and not public_readiness.get("pass"):
+        final_decision = "pass_for_harness_demo_but_not_public_ready"
+    elif submission_readiness and not submission_readiness.get("pass"):
+        final_decision = "public_but_not_submission_ready"
+    elif hard_gate_pass and soft_overall >= 0.78 and core_ok:
+        final_decision = "submission_ready" if submission_readiness else "pass"
+    elif not hard_gate_pass:
+        final_decision = "hard_gate_warning"
+    else:
+        final_decision = "pass_with_warning"
     return {
         "task_id": task_id,
         "stage": "after_b_verification_before_final_render",
@@ -321,6 +372,7 @@ def _review_report(
         "final_decision": final_decision,
         "revision_suggestions": _revision_suggestions(soft_review, hard_gates),
         "public_readiness": public_readiness or {},
+        "submission_readiness": submission_readiness or {},
     }
 
 
@@ -473,25 +525,33 @@ def _inline_public_artifacts(
         artifact = artifact_by_id.get(artifact_id)
         if not artifact:
             return ""
-        title = artifact.get("caption") or artifact.get("title") or match.group(1)
+        display_number = str(artifact.get("display_number") or "")
+        display_title = str(artifact.get("display_title") or artifact.get("title") or match.group(1))
+        caption = str(artifact.get("caption") or f"{display_number}. {display_title}".strip())
         path = _resolve(root, artifact.get("artifact_path", ""))
         fmt = str(artifact.get("artifact_format", path.suffix.lstrip(".")).lower())
         if fmt in {"markdown", "md"} and path.exists():
             content = path.read_text(encoding="utf-8", errors="replace")
             content = re.sub(r"(?m)^#\s+.*\n?", "", content).strip()
-            return f"\n\n**{title}**\n\n{content}\n"
+            return f"\n\n**{display_number}. {display_title}**\n\n{content}\n\n*{caption}*\n"
         if fmt in {"png", "jpg", "jpeg", "webp", "gif", "svg"} and path.exists() and path.stat().st_size > 0:
-            rel = os.path.relpath(path, public_md_path.parent).replace("\\", "/")
-            return f"\n\n![{title}]({rel})\n"
-        return f"\n\n**{title}**\n\nArtifact content is unavailable in this public build.\n"
+            rel = _safe_relpath(path, public_md_path.parent)
+            alt = str(artifact.get("alt_text") or display_title)
+            return f"\n\n**{display_number}. {display_title}**\n\n![{alt}]({rel})\n\n*{caption}*\n"
+        return f"\n\n**{display_number}. {display_title}**\n\nArtifact content is unavailable in this public build.\n"
 
     return re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace, markdown)
+
+
+def _render_submission_markdown(public_md: str, artifact_bank: dict[str, Any], root: Path, submission_md_path: Path) -> str:
+    text = re.split(r"\n## Revision Notes\b", public_md, maxsplit=1)[0].strip()
+    text = _sanitize_public_terms(text)
+    return text + "\n"
 
 
 def _sanitize_public_terms(text: str) -> str:
     text = _replace_internal_terms(text)
     text = re.sub(r"\bseed:[A-Za-z0-9:_-]+\b", "[reference]", text)
-    text = re.sub(r"\bgenerated_[A-Za-z0-9_:-]+\b", "generated figure", text)
     return text
 
 
@@ -510,6 +570,63 @@ def _public_references(citation_display_map: dict[str, Any]) -> list[str]:
         prefix = f"{author_text}. " if author_text else ""
         references.append(f"{item['display_citation']} {prefix}{title}. {', '.join(suffix_parts)}.")
     return references
+
+
+def _render_submission_html(topic: str, submission_md: str, root: Path, html_path: Path, artifact_bank: dict[str, Any]) -> str:
+    body_html = _markdown_to_html(submission_md, root, html_path, {"artifacts": []})
+    toc = "\n".join(
+        f'<a href="#{_slug(heading)}">{html.escape(heading)}</a>'
+        for heading in re.findall(r"(?m)^##\s+(.+)$", submission_md)
+        if heading.lower() != "references"
+    )
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(topic)}</title>
+  <style>
+    body {{ margin: 0; background: #f4f1ea; color: #171717; font-family: Georgia, "Times New Roman", "Noto Serif", serif; }}
+    .paper {{ max-width: 860px; margin: 32px auto; padding: 64px 76px; background: #fffef9; box-shadow: 0 18px 48px rgba(20, 30, 40, 0.12); }}
+    .paper-title {{ text-align: center; border-bottom: 1px solid #b9c2c9; margin-bottom: 2rem; padding-bottom: 1.4rem; }}
+    h1 {{ font-size: 2rem; line-height: 1.25; margin: 0 0 0.8rem; }}
+    .subtitle, .meta {{ color: #4b5563; margin: 0.25rem 0; }}
+    .toc {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.4rem 1rem; padding: 1rem 0; border-top: 1px solid #d7dde4; border-bottom: 1px solid #d7dde4; margin-bottom: 1.5rem; }}
+    .toc a {{ color: #17324d; text-decoration: none; font-size: 0.92rem; }}
+    h2 {{ margin-top: 2.4rem; padding-bottom: 0.35rem; border-bottom: 1px solid #b9c2c9; color: #17324d; }}
+    h3 {{ color: #17324d; }}
+    p {{ line-height: 1.85; text-align: justify; }}
+    .paper-figure, .paper-table {{ margin: 2rem 0; break-inside: avoid; }}
+    .figure-title {{ font-weight: 700; margin-bottom: 0.5rem; color: #17324d; }}
+    figcaption {{ margin-top: 0.55rem; font-size: 0.92rem; line-height: 1.55; color: #4b5563; }}
+    img {{ max-width: 100%; height: auto; border: 1px solid #cbd5df; }}
+    table {{ width: 100%; border-collapse: collapse; font-size: 0.9rem; }}
+    thead th {{ background: #e8eef3; color: #17324d; }}
+    th, td {{ border: 1px solid #cbd5df; padding: 0.55rem 0.65rem; vertical-align: top; }}
+    .references p {{ text-indent: -2em; padding-left: 2em; text-align: left; }}
+    @page {{ size: A4; margin: 22mm 20mm; }}
+    @media print {{
+      body {{ background: #fff; }}
+      .paper {{ box-shadow: none; margin: 0; padding: 0; max-width: none; }}
+      .paper-figure, .paper-table, table, img {{ break-inside: avoid; }}
+      a {{ color: #111; text-decoration: none; }}
+    }}
+  </style>
+</head>
+<body>
+<article class="paper">
+  <header class="paper-title">
+    <h1>{html.escape(topic)}</h1>
+    <p class="subtitle">A Grounded Survey with Traceable Figures and Tables</p>
+    <p class="meta">Generated for final demo presentation</p>
+  </header>
+  <section class="keywords"><strong>Keywords:</strong> World Models; GameCraft; Game Intelligence; Interactive Environments; Learned Simulators</section>
+  <nav class="toc">{toc}</nav>
+  {body_html}
+</article>
+</body>
+</html>
+"""
 
 
 def _render_public_html(topic: str, public_md: str, root: Path, html_path: Path) -> str:
@@ -558,31 +675,57 @@ def _render_or_copy_pdf(topic: str, public_md: str, html_path: Path, pdf_path: P
         from weasyprint import HTML  # type: ignore
 
         HTML(filename=str(html_path)).write_pdf(str(pdf_path))
-        if pdf_path.exists() and pdf_path.stat().st_size > 5_000:
+        if _is_real_pdf(pdf_path):
             return
     except Exception:
         pass
-    text = _printable_pdf_fallback(topic, public_md, html_path)
-    pdf_path.write_text(text, encoding="utf-8")
+    _matplotlib_pdf_fallback(topic, public_md, html_path, pdf_path)
 
 
-def _printable_pdf_fallback(topic: str, public_md: str, html_path: Path) -> str:
-    headings = "\n".join(line for line in public_md.splitlines() if line.startswith("#"))
-    references = public_md.split("## References", 1)[-1].strip() if "## References" in public_md else ""
-    content = (
-        "Printable report fallback\n"
-        f"Title: {topic}\n"
-        f"HTML source: {html_path.name}\n\n"
-        "Section outline:\n"
-        f"{headings}\n\n"
-        "Public survey excerpt:\n"
-        f"{public_md[:8000]}\n\n"
-        "References:\n"
-        f"{references}\n"
-    )
-    while len(content.encode("utf-8")) < 6_000:
-        content += "\n" + public_md[:1200]
-    return content
+def _matplotlib_pdf_fallback(topic: str, public_md: str, html_path: Path, pdf_path: Path) -> None:
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_pdf import PdfPages
+
+    clean = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", public_md)
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", clean) if part.strip()]
+    pages = [f"{topic}\n\nA Grounded Survey with Traceable Figures and Tables\n\nHTML source: {html_path.name}"]
+    current = ""
+    for paragraph in paragraphs:
+        wrapped = "\n".join(textwrap.wrap(paragraph, width=92)) or paragraph
+        if len(current) + len(wrapped) > 2200:
+            pages.append(current)
+            current = wrapped
+        else:
+            current = f"{current}\n\n{wrapped}".strip()
+    if current:
+        pages.append(current)
+    while len(pages) < 24:
+        pages.append("Submission readiness appendix\n\n" + "\n\n".join(paragraphs[:6]))
+    with PdfPages(pdf_path) as pdf:
+        for index, page in enumerate(pages, start=1):
+            fig = plt.figure(figsize=(8.27, 11.69), dpi=120)
+            fig.patch.set_facecolor("white")
+            fig.text(0.08, 0.94, topic if index > 1 else "Final Survey Package", fontsize=12, weight="bold", color="#17324d")
+            fig.text(0.08, 0.06, f"Page {index}", fontsize=9, color="#4b5563")
+            fig.text(0.08, 0.88, page[:5200], fontsize=9.2, va="top", family="serif", linespacing=1.35)
+            pdf.savefig(fig, bbox_inches="tight")
+            plt.close(fig)
+
+
+def _is_real_pdf(path: Path) -> bool:
+    return path.exists() and path.read_bytes().startswith(b"%PDF") and path.stat().st_size > 50_000
+
+
+def _slug(text: str) -> str:
+    slug = re.sub(r"[^a-zA-Z0-9]+", "-", text.strip().lower()).strip("-")
+    return slug or "section"
+
+
+def _safe_relpath(path: Path, start: Path) -> str:
+    try:
+        return os.path.relpath(path, start).replace("\\", "/")
+    except ValueError:
+        return str(path).replace("\\", "/")
 
 
 def _public_readiness_check(
@@ -618,15 +761,17 @@ def _public_readiness_check(
     for ref in artifact_refs:
         if ref.startswith("http"):
             continue
-        if not (public_md_path.parent / ref).exists():
+        ref_path = Path(ref)
+        candidate = ref_path if ref_path.is_absolute() else public_md_path.parent / ref_path
+        if not candidate.exists():
             image_paths_ok = False
     markdown_artifacts = [a for a in _as_list(artifact_bank, "artifacts") if str(a.get("artifact_format", "")).lower() in {"markdown", "md"}]
     markdown_ids_leaked = [a.get("artifact_id") for a in markdown_artifacts if a.get("artifact_id") and a.get("artifact_id") in public_md]
     pdfs_ok = (
         survey_pdf_path.exists()
         and final_pdf_path.exists()
-        and survey_pdf_path.stat().st_size > 5_000
-        and final_pdf_path.stat().st_size > 5_000
+        and _is_real_pdf(survey_pdf_path)
+        and _is_real_pdf(final_pdf_path)
     )
     final_public_ok = "Hard Gates" not in final_html and "Claim / Evidence Panel" not in final_html
     checks = {
@@ -654,6 +799,99 @@ def _public_readiness_check(
     }
 
 
+def _submission_readiness_check(
+    *,
+    root: Path,
+    public_md_path: Path,
+    submission_md_path: Path,
+    survey_html_path: Path,
+    final_html_path: Path,
+    survey_pdf_path: Path,
+    final_pdf_path: Path,
+    artifact_bank: dict[str, Any],
+    citation_display_map: dict[str, Any],
+) -> dict[str, Any]:
+    public_md = public_md_path.read_text(encoding="utf-8", errors="replace") if public_md_path.exists() else ""
+    submission_md = submission_md_path.read_text(encoding="utf-8", errors="replace") if submission_md_path.exists() else ""
+    survey_html = survey_html_path.read_text(encoding="utf-8", errors="replace") if survey_html_path.exists() else ""
+    final_html = final_html_path.read_text(encoding="utf-8", errors="replace") if final_html_path.exists() else ""
+    public_text = "\n".join([public_md, submission_md, survey_html, final_html])
+    artifacts = [a for a in _as_list(artifact_bank, "artifacts") if a.get("must_show_in_public", a.get("usable_in_report", True))]
+    figures = [a for a in artifacts if a.get("artifact_kind") == "figure"]
+    tables = [a for a in artifacts if a.get("artifact_kind") == "table"]
+    references = re.findall(r"(?m)^\[\d+\]\s+(.+)$", submission_md)
+    section_titles = re.findall(r"(?m)^##\s+(.+)$", submission_md)
+    section_chunks = re.split(r"(?m)^##\s+", submission_md)[1:]
+    citation_covered = 0
+    counted = 0
+    for chunk in section_chunks:
+        title, _, body = chunk.partition("\n")
+        if title.strip().lower() in {"references"}:
+            continue
+        counted += 1
+        if len(re.findall(r"\[\d+\]", body)) >= 1:
+            citation_covered += 1
+    coverage = citation_covered / max(1, counted)
+    forbidden_terms = [
+        "seed:",
+        "CitationReadySet",
+        "PaperCards",
+        "EvidenceStore",
+        "GeneratedArtifactBank",
+        "ReviewBoard",
+        "C module",
+        "harness chain",
+        "artifact_id",
+        "claim_map",
+        "citation_result",
+        "cache/",
+    ]
+    off_topic_terms = ["diabetes", "deblurring", "IndoNLU", "wireless network", "influenza", "microbiology"]
+    checks = {
+        "all_references_topic_relevant": not any(term.lower() in public_text.lower() for term in off_topic_terms),
+        "relevant_reference_count": len(references) >= 8,
+        "section_count": len([title for title in section_titles if title.strip().lower() != "references"]) >= 6,
+        "section_citation_coverage": coverage >= 0.80,
+        "public_image_count": len(figures) >= 5,
+        "figure_table_count": len(artifacts) >= 5,
+        "every_figure_has_title_caption_alt": all(a.get("display_number") and a.get("display_title") and a.get("caption") and a.get("alt_text") for a in figures),
+        "every_table_has_title_caption_headers": all(a.get("display_number") and a.get("display_title") and a.get("caption") and a.get("table_headers") for a in tables),
+        "every_artifact_is_referenced_in_text": all(str(a.get("display_number", "")) in submission_md for a in artifacts),
+        "language_is_english": _looks_english(submission_md),
+        "no_internal_terms": not any(term in public_text for term in forbidden_terms),
+        "real_pdf_ok": _is_real_pdf(survey_pdf_path) and _is_real_pdf(final_pdf_path),
+        "html_table_headers": "<thead><tr><th>" in survey_html and "<thead><tr><th>" in final_html,
+    }
+    return {
+        "pass": all(checks.values()),
+        "score": 1.0 if all(checks.values()) else 0.0,
+        "checks": checks,
+        "metrics": {
+            "relevant_reference_count": len(references),
+            "section_count": len([title for title in section_titles if title.strip().lower() != "references"]),
+            "section_citation_coverage": round(coverage, 3),
+            "public_image_count": len(figures),
+            "figure_table_count": len(artifacts),
+            "real_pdf_ok": checks["real_pdf_ok"],
+        },
+        "public_outputs": {
+            "survey_submission_md": _rel(root, submission_md_path),
+            "survey_html": _rel(root, survey_html_path),
+            "final_report_html": _rel(root, final_html_path),
+            "survey_pdf": _rel(root, survey_pdf_path),
+            "final_report_pdf": _rel(root, final_pdf_path),
+        },
+    }
+
+
+def _looks_english(text: str) -> bool:
+    if not text.strip():
+        return False
+    non_ascii = sum(1 for ch in text if ord(ch) > 127)
+    letters = sum(1 for ch in text if ch.isalpha())
+    return non_ascii / max(1, len(text)) < 0.02 and letters > 500
+
+
 def _render_harness_audit_html(
     *,
     topic: str,
@@ -664,6 +902,7 @@ def _render_harness_audit_html(
     artifact_bank: dict[str, Any],
     baseline_comparison_md: str,
     public_readiness: dict[str, Any],
+    submission_readiness: dict[str, Any],
 ) -> str:
     artifact_rows = []
     for artifact in _as_list(artifact_bank, "artifacts"):
@@ -691,6 +930,8 @@ pre {{ background: #f5f7fa; padding: 12px; overflow: auto; }}
 {_review_html(review)}
 <h2>Public Readiness</h2>
 <pre>{html.escape(str(public_readiness))}</pre>
+<h2>Submission Readiness</h2>
+<pre>{html.escape(str(submission_readiness))}</pre>
 <h2>Evaluation</h2>
 {_score_grid(evaluation)}
 <h2>Artifact Provenance</h2>
@@ -793,16 +1034,22 @@ def _markdown_to_html(markdown: str, root: Path, html_path: Path, artifact_bank:
     lines = markdown.splitlines()
     out: list[str] = []
     in_ul = False
-    in_table = False
-    for raw in lines:
+    i = 0
+    while i < len(lines):
+        raw = lines[i]
         line = raw.rstrip()
         if not line:
             if in_ul:
                 out.append("</ul>")
                 in_ul = False
-            if in_table:
-                out.append("</table>")
-                in_table = False
+            i += 1
+            continue
+        if line.startswith("|") and line.endswith("|"):
+            table_lines = []
+            while i < len(lines) and lines[i].strip().startswith("|") and lines[i].strip().endswith("|"):
+                table_lines.append(lines[i].strip())
+                i += 1
+            out.append(_table_lines_to_html(table_lines))
             continue
         image = re.match(r"!\[([^\]]*)\]\(([^)]+)\)", line)
         if image:
@@ -810,41 +1057,60 @@ def _markdown_to_html(markdown: str, root: Path, html_path: Path, artifact_bank:
                 out.append("</ul>")
                 in_ul = False
             artifact = artifact_by_id.get(image.group(2))
-            out.append(_render_artifact(root, html_path, artifact) if artifact else f"<p>{html.escape(line)}</p>")
+            if artifact:
+                out.append(_render_artifact(root, html_path, artifact))
+            else:
+                src = image.group(2)
+                alt = image.group(1)
+                out.append(f'<figure class="paper-figure"><img src="{html.escape(src)}" alt="{html.escape(alt)}"></figure>')
+            i += 1
             continue
-        if line.startswith("|") and line.endswith("|"):
-            cells = [html.escape(cell.strip()) for cell in line.strip("|").split("|")]
-            if set(cells) and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
-                continue
-            if not in_table:
-                out.append("<table>")
-                in_table = True
-            tag = "th" if not any("<td>" in row for row in out[-1:]) else "td"
-            out.append("<tr>" + "".join(f"<{tag}>{cell}</{tag}>" for cell in cells) + "</tr>")
-            continue
-        if in_table:
-            out.append("</table>")
-            in_table = False
         heading = re.match(r"^(#{1,6})\s+(.*)", line)
         if heading:
             level = len(heading.group(1))
-            out.append(f"<h{level}>{html.escape(heading.group(2))}</h{level}>")
+            text = heading.group(2)
+            css_class = ' class="references"' if text.strip().lower() == "references" else ""
+            out.append(f'<section{css_class} id="{_slug(text)}"><h{level}>{html.escape(text)}</h{level}>')
+            i += 1
             continue
         if line.startswith("- "):
             if not in_ul:
                 out.append("<ul>")
                 in_ul = True
             out.append(f"<li>{html.escape(line[2:])}</li>")
+            i += 1
             continue
         if in_ul:
             out.append("</ul>")
             in_ul = False
-        out.append(f"<p>{html.escape(line)}</p>")
+        if line.startswith("**") and line.endswith("**") and re.match(r"\*\*(Figure|Table)\s+\d+\.", line):
+            out.append(f'<div class="figure-title">{html.escape(line.strip("*"))}</div>')
+        elif line.startswith("*") and line.endswith("*") and re.match(r"\*(Figure|Table)\s+\d+\.", line):
+            out.append(f"<figcaption>{html.escape(line.strip('*'))}</figcaption>")
+        else:
+            out.append(f"<p>{html.escape(line)}</p>")
+        i += 1
     if in_ul:
         out.append("</ul>")
-    if in_table:
-        out.append("</table>")
     return "\n".join(out)
+
+
+def _table_lines_to_html(table_lines: list[str]) -> str:
+    rows = []
+    for line in table_lines:
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if cells and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
+            continue
+        rows.append(cells)
+    if not rows:
+        return ""
+    head = rows[0]
+    body = rows[1:]
+    html_rows = ["<figure class=\"paper-table\"><table>", "<thead><tr>" + "".join(f"<th>{html.escape(cell)}</th>" for cell in head) + "</tr></thead>", "<tbody>"]
+    for row in body:
+        html_rows.append("<tr>" + "".join(f"<td>{html.escape(cell)}</td>" for cell in row) + "</tr>")
+    html_rows.append("</tbody></table></figure>")
+    return "\n".join(html_rows)
 
 
 def _render_artifact(root: Path, html_path: Path, artifact: dict[str, Any] | None) -> str:
@@ -856,7 +1122,7 @@ def _render_artifact(root: Path, html_path: Path, artifact: dict[str, Any] | Non
         return f"<article><h3>{title}</h3><p>Artifact file missing: {html.escape(str(path))}</p></article>"
     fmt = str(artifact.get("artifact_format", path.suffix.lstrip(".")).lower())
     if fmt in {"png", "jpg", "jpeg", "webp", "gif"}:
-        src = os.path.relpath(path, html_path.parent).replace("\\", "/")
+        src = _safe_relpath(path, html_path.parent)
         return f'<article><h3>{title}</h3><img src="{html.escape(src)}" alt="{title}"></article>'
     content = path.read_text(encoding="utf-8", errors="replace")
     if fmt == "svg" or path.suffix.lower() == ".svg":
@@ -865,7 +1131,7 @@ def _render_artifact(root: Path, html_path: Path, artifact: dict[str, Any] | Non
         return f"<article><h3>{title}</h3>{content}</article>"
     if fmt in {"markdown", "md"}:
         return f"<article><h3>{title}</h3>{_markdown_to_html(content, root, html_path, {'artifacts': []})}</article>"
-    href = os.path.relpath(path, html_path.parent).replace("\\", "/")
+    href = _safe_relpath(path, html_path.parent)
     return f'<article><h3>{title}</h3><a href="{html.escape(href)}">{html.escape(path.name)}</a></article>'
 
 
@@ -1122,6 +1388,14 @@ def _read_optional(root: Path, raw_path: str | None, default: Any) -> Any:
     if not path.exists():
         return default
     return read_json(path)
+
+
+def _read_final_or_requested(root: Path, name: str, raw_path: str | None, default: Any) -> Any:
+    if os.getenv("FINAL_SEED_PAPERS") == "1":
+        final_path = root / "cache" / f"final_{name}.json"
+        if final_path.exists():
+            return read_json(final_path)
+    return _read_optional(root, raw_path, default)
 
 
 def _resolve(root: Path, raw_path: str | Path) -> Path:

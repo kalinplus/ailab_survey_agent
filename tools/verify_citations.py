@@ -33,13 +33,13 @@ def run(request_path: str) -> dict:
 
     survey_md = resolve(inputs["survey_markdown_path"]).read_text(encoding="utf-8")
 
-    ready_set = read_json(resolve(inputs["citation_ready_set_path"]))
+    ready_set = _final_or_requested_json(cfg.root_dir, "citation_ready_set", resolve(inputs["citation_ready_set_path"]))
     citation_index = CitationIndex(
         task_id=task_id,
         citations=[{"paper_id": pid} for pid in ready_set.get("allowed_paper_ids", [])],
     )
 
-    figure_bank = FigureBank(**read_json(resolve(inputs["figure_bank_path"])))
+    figure_bank = FigureBank(**_final_or_requested_json(cfg.root_dir, "figure_bank", resolve(inputs["figure_bank_path"])))
     gen_bank = read_json(resolve(inputs["generated_artifact_bank_path"]))
     gen_figures = [
         Figure(figure_id=a["artifact_id"], paper_id="generated", caption=a.get("artifact_path", ""), page=0)
@@ -48,8 +48,8 @@ def run(request_path: str) -> dict:
     ]
     figure_bank = FigureBank(task_id=task_id, figures=list(figure_bank.figures) + gen_figures)
 
-    table_bank = TableBank(**read_json(resolve(inputs["table_bank_path"])))
-    evidence_store = EvidenceStore(**read_json(resolve(inputs["evidence_store_path"])))
+    table_bank = TableBank(**_final_or_requested_json(cfg.root_dir, "table_bank", resolve(inputs["table_bank_path"])))
+    evidence_store = EvidenceStore(**_final_or_requested_json(cfg.root_dir, "evidence_store", resolve(inputs["evidence_store_path"])))
     logger.info(
         "[verify] start task_id=%s survey_md=%s chars ready_citations=%s evidence=%s",
         task_id,
@@ -113,6 +113,14 @@ def _nli_model():
     if os.getenv("EVISURVEY_REAL_NLI", "false").lower() in {"1", "true", "yes"}:
         return NLIVerifier()
     return FakeNLIModel(mapping=_demo_entailment_keywords())
+
+
+def _final_or_requested_json(root: Path, name: str, requested_path: Path) -> dict:
+    if os.getenv("FINAL_SEED_PAPERS") == "1":
+        final_path = root / "cache" / f"final_{name}.json"
+        if final_path.exists():
+            return read_json(final_path)
+    return read_json(requested_path)
 
 
 def _demo_entailment_keywords():

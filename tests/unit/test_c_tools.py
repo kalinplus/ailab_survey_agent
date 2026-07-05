@@ -2,6 +2,7 @@ import json
 import re
 from pathlib import Path
 
+from scripts.build_final_seed_papers import build_final_seed_data, write_final_seed_files
 from tools import render_report, revise_survey, write_survey
 
 
@@ -111,13 +112,14 @@ def test_write_survey_uses_ready_set_and_falls_back_without_generate_key(tmp_pat
     survey = (output / "survey.md").read_text(encoding="utf-8")
     assert _citations(survey) <= {"p1", "p2"}
     assert len(survey) > 1800
-    assert "generated_timeline_001" in survey
-    assert "generated_summary_table_001" in survey
+    assert "publication_timeline" in survey
+    assert "representative_systems" in survey
     bank = json.loads((cache / "generated_artifact_bank.json").read_text(encoding="utf-8"))
-    assert len(bank["artifacts"]) >= 5
-    assert all(Path(a["artifact_path"]).suffix != ".png" for a in bank["artifacts"])
+    assert len(bank["artifacts"]) >= 8
     assert all(a["source_artifacts"] and a["supporting_papers"] for a in bank["artifacts"])
-    assert all("placement_section" in a and "caption" in a for a in bank["artifacts"])
+    assert all("placement_section" in a and "caption" in a and "display_number" in a for a in bank["artifacts"])
+    assert all(a.get("alt_text") for a in bank["artifacts"] if a.get("artifact_kind") == "figure")
+    assert all(a.get("table_headers") for a in bank["artifacts"] if a.get("artifact_kind") == "table")
     claim_plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))
     assert claim_plan["sections"][0]["selected_papers"]
     assert "topic_relevance_score" in claim_plan["sections"][0]["selected_papers"][0]
@@ -223,6 +225,8 @@ def test_render_report_inlines_artifact_and_writes_review_outputs(tmp_path):
     assert (output / "survey_public.md").exists()
     assert (output / "survey.html").exists()
     assert (output / "survey.pdf").exists()
+    assert (output / "survey_submission.md").exists()
+    assert (output / "submission_readiness_report.json").exists()
     assert (output / "harness_audit_report.html").exists()
     public_md = (output / "survey_public.md").read_text(encoding="utf-8")
     public_html = (output / "final_report.html").read_text(encoding="utf-8")
@@ -232,7 +236,89 @@ def test_render_report_inlines_artifact_and_writes_review_outputs(tmp_path):
     assert "seed:" not in public_md
     assert "CitationReadySet" not in public_md
     assert "ReviewBoard" not in public_html
-    assert (output / "survey.pdf").stat().st_size > 5000
-    assert (output / "final_report.pdf").stat().st_size > 5000
+    assert (output / "survey.pdf").read_bytes().startswith(b"%PDF")
+    assert (output / "final_report.pdf").read_bytes().startswith(b"%PDF")
+    assert (output / "survey.pdf").stat().st_size > 50000
+    assert (output / "final_report.pdf").stat().st_size > 50000
     audit_html = (output / "harness_audit_report.html").read_text(encoding="utf-8")
     assert "artifact_id" in audit_html
+
+
+def test_final_seed_papers_are_topic_relevant(tmp_path):
+    data = build_final_seed_data()
+    cards = data["paper_cards"]["paper_cards"]
+    assert len(cards) >= 12
+    text = " ".join(card["title"] + " " + card["category"] for card in cards).lower()
+    for forbidden in ["diabetes", "deblurring", "indonlu", "wireless network"]:
+        assert forbidden not in text
+    assert all(card["topic_relevance_score"] >= 0.9 for card in cards)
+
+
+def test_final_seed_write_and_render_submission_ready(tmp_path, monkeypatch):
+    monkeypatch.setenv("FINAL_SEED_PAPERS", "1")
+    monkeypatch.delenv("GENERATE_KEY", raising=False)
+    root = Path.cwd()
+    write_final_seed_files(root)
+    request = {
+        "task_id": "t_final",
+        "topic": "World Models and GameCraft for Interactive Game Intelligence",
+        "language": "en",
+        "inputs": {
+            "paper_cards_path": "cache/paper_cards.json",
+            "evidence_store_path": "cache/evidence_store.json",
+            "figure_bank_path": "cache/figure_bank.json",
+            "table_bank_path": "cache/table_bank.json",
+            "taxonomy_path": "cache/taxonomy.json",
+            "citation_ready_set_path": "cache/citation_ready_set.json",
+        },
+        "outputs": {
+            "survey_markdown_path": str(tmp_path / "output" / "survey.md"),
+            "timeline_path": str(tmp_path / "cache" / "timeline.json"),
+            "generated_artifact_bank_path": str(tmp_path / "cache" / "generated_artifact_bank.json"),
+        },
+    }
+    request_path = tmp_path / "requests" / "survey_generation_request.json"
+    _write_json(request_path, request)
+    write_result = write_survey.run(str(request_path))
+    assert write_result["status"] == "success"
+
+    output = tmp_path / "output"
+    cache = tmp_path / "cache"
+    _write_json(output / "citation_result.json", {"total_citations": 20, "valid_citations": 20, "invalid_citations": 0, "citation_validity_score": 1.0, "entries": []})
+    _write_json(cache / "claim_map.json", {"entries": []})
+    render_request = {
+        "task_id": "t_final",
+        "topic": "World Models and GameCraft for Interactive Game Intelligence",
+        "inputs": {
+            "survey_markdown_path": str(output / "survey.md"),
+            "paper_cards_path": "cache/paper_cards.json",
+            "taxonomy_path": "cache/taxonomy.json",
+            "timeline_path": str(cache / "timeline.json"),
+            "citation_result_path": str(output / "citation_result.json"),
+            "claim_map_path": str(cache / "claim_map.json"),
+            "generated_artifact_bank_path": str(cache / "generated_artifact_bank.json"),
+            "evidence_store_path": "cache/evidence_store.json",
+            "citation_ready_set_path": "cache/citation_ready_set.json",
+        },
+        "outputs": {
+            "evaluation_report_path": str(output / "evaluation_report.json"),
+            "html_report_path": str(output / "final_report.html"),
+            "pdf_report_path": str(output / "final_report.pdf"),
+        },
+    }
+    render_request_path = tmp_path / "requests" / "evaluation_render_request.json"
+    _write_json(render_request_path, render_request)
+    render_report.run(str(render_request_path))
+
+    submission = (output / "survey_submission.md").read_text(encoding="utf-8")
+    html = (output / "final_report.html").read_text(encoding="utf-8")
+    for forbidden in ["seed:", "CitationReadySet", "PaperCards", "EvidenceStore", "ReviewBoard", "C module", "harness chain", "diabetes", "deblurring", "IndoNLU"]:
+        assert forbidden not in submission
+        assert forbidden not in html
+    assert "<thead><tr><th>" in html
+    assert (output / "survey.pdf").read_bytes().startswith(b"%PDF")
+    assert (output / "final_report.pdf").read_bytes().startswith(b"%PDF")
+    readiness = json.loads((output / "submission_readiness_report.json").read_text(encoding="utf-8"))
+    assert readiness["pass"]
+    review = json.loads((output / "review_report.json").read_text(encoding="utf-8"))
+    assert review["final_decision"] == "submission_ready"

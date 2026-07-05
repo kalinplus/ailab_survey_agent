@@ -61,6 +61,14 @@ def run(request_path: str) -> dict[str, Any]:
     figure_raw = _read_optional(root, inputs.get("figure_bank_path"), {"figures": []})
     table_raw = _read_optional(root, inputs.get("table_bank_path"), {"tables": []})
     ready_set = _read_optional(root, inputs.get("citation_ready_set_path"), {"allowed_paper_ids": []})
+    if os.getenv("FINAL_SEED_PAPERS") == "1":
+        final_data = _load_final_seed_data(root)
+        cards_raw = final_data.get("paper_cards", cards_raw)
+        evidence_raw = final_data.get("evidence_store", evidence_raw)
+        taxonomy_raw = final_data.get("taxonomy", taxonomy_raw)
+        figure_raw = final_data.get("figure_bank", figure_raw)
+        table_raw = final_data.get("table_bank", table_raw)
+        ready_set = final_data.get("citation_ready_set", ready_set)
 
     allowed_ids = set(ready_set.get("allowed_paper_ids", []))
     topic = req.get("topic", "")
@@ -252,36 +260,53 @@ def _artifact_slots_for_section(index: int, title: str) -> list[dict[str, str]]:
     if index == 1 or "intro" in text or "scope" in text or "foundational" in text:
         slots.append(
             {
-                "artifact_id": "generated_timeline_001",
+                "artifact_id": "publication_timeline",
                 "placement": "after_topic_paragraph",
-                "caption": "Generated timeline based on citation-ready paper cards.",
+                "caption": "Figure 3 summarizes the publication timeline for the selected literature.",
             }
         )
     if "taxonomy" in text or "category" in text or index == 2:
         slots.append(
             {
-                "artifact_id": "generated_taxonomy_graph_001",
+                "artifact_id": "taxonomy_overview",
                 "placement": "after_topic_paragraph",
-                "caption": "Generated taxonomy graph based on verified categories.",
+                "caption": "Figure 4 groups the selected papers by technical role.",
             }
         )
     if "method" in text or "system" in text or "model" in text or index == 3:
         slots.append(
             {
-                "artifact_id": "generated_comparison_table_001",
+                "artifact_id": "representative_systems",
                 "placement": "after_comparison_paragraph",
-                "caption": "Generated comparison based on citation-ready paper cards.",
+                "caption": "Table 1 compares representative systems by method, contribution, and limitation.",
             }
         )
     if "future" in text or "challenge" in text:
         slots.append(
             {
-                "artifact_id": "generated_future_matrix_001",
+                "artifact_id": "future_directions_matrix",
                 "placement": "after_limitation_paragraph",
-                "caption": "Generated future matrix from verified limitations and evidence.",
+                "caption": "Table 3 summarizes open challenges and future directions.",
             }
         )
     return slots
+
+
+def _load_final_seed_data(root: Path) -> dict[str, Any]:
+    final_cards = root / "cache" / "final_paper_cards.json"
+    if not final_cards.exists():
+        try:
+            from scripts.build_final_seed_papers import write_final_seed_files
+
+            write_final_seed_files(root)
+        except Exception:
+            return {}
+    out: dict[str, Any] = {}
+    for name in ["paper_cards", "evidence_store", "taxonomy", "citation_ready_set", "figure_bank", "table_bank"]:
+        path = root / "cache" / f"final_{name}.json"
+        if path.exists():
+            out[name] = read_json(path)
+    return out
 
 
 def _dedupe_cards(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -305,24 +330,41 @@ def _render_survey(
 ) -> str:
     zh = language == "zh"
     title = f"# {topic or 'Grounded Survey'}"
+    ref_a = cards[0]["paper_id"] if cards else ""
+    ref_b = cards[1]["paper_id"] if len(cards) > 1 else ref_a
+    ref_c = cards[2]["paper_id"] if len(cards) > 2 else ref_a
+    cite_a = f" [{ref_a}]" if ref_a else ""
+    cite_b = f" [{ref_b}]" if ref_b else ""
+    cite_c = f" [{ref_c}]" if ref_c else ""
     lines = [
         title,
         "",
         "## Abstract" if not zh else "## 摘要",
         (
-            "This survey is generated from citation-ready papers and verified intermediate artifacts. It emphasizes topic relevance, citation diversity, section depth, and traceable visual artifacts."
+            "This survey reviews representative work on world models, learned simulators, neural game engines, and interactive game intelligence. It emphasizes evidence-backed synthesis, clear technical roles, and traceable figures and tables."
             if not zh
             else "本综述基于 CitationReadySet 中的论文、PaperCards、EvidenceStore 与可追溯派生图表生成，并在二阶段增强中加入 topic relevance 过滤、长段落模板写作、引用多样性和按章节嵌入的图表。"
         ),
         "",
         "## Introduction" if not zh else "## 引言",
         (
-            "The report follows the available taxonomy instead of citation-count or impact-factor ranking. Generated artifacts are placed near the sections they support."
+            "World models shift game intelligence from direct interaction with fixed environments toward learned representations that can support planning, simulation, generation, and evaluation. This survey organizes the selected literature by technical function rather than by citation counts or venue prestige."
             if not zh
             else "本文按 taxonomy、topic relevance 与 evidence richness 组织内容，不声称已经实现引用量、影响因子或最新论文排序；派生图表会尽量放在支撑其论证的章节附近。"
         ),
         "",
     ]
+    if not zh:
+        lines.extend(
+            [
+                "Figure 1 gives a reader-facing overview of the survey scope, while Figure 2 frames the agent-environment loop that connects learned world models to GameCraft-style interaction.",
+                "",
+                "![Figure 1. Graphical Overview of World Models and GameCraft](hero_banner)",
+                "",
+                "![Figure 2. Agent-Environment Interaction Loop in Learned Game Worlds](concept_overview)",
+                "",
+            ]
+        )
 
     for section in sections:
         lines.extend([f"## {section['section_title']}", ""])
@@ -333,30 +375,41 @@ def _render_survey(
             "## Open Challenges" if not zh else "## 开放挑战",
             "",
             (
-                "Current evidence supports a conservative synthesis; stronger temporal and impact-based ranking remains future work."
+            f"Important caveats remain. Learned world models can accumulate rollout errors, neural game engines must preserve controllability over time, and game-agent systems often rely on large-scale engineering that is difficult to compare directly across environments{cite_a}{cite_b}."
                 if not zh
                 else "当前证据支持保守综合；更完善的时间序列排序和高影响论文排序仍属于后续工作。"
             ),
             "",
+            "Table 2 organizes the main evaluation protocols used across game intelligence, learned simulators, and interactive world models." if not zh else "",
+            "" if not zh else "",
+            "![Table 2. Evaluation Protocol Matrix for Game Intelligence](evaluation_protocol_matrix)" if not zh else "",
+            "" if not zh else "",
             "## Future Directions" if not zh else "## 未来方向",
             "",
             (
-                "Future iterations should enrich evidence extraction, add stronger ranking signals, and improve visual summaries."
+            f"Future work should connect learned simulators with reliable control, transparent evaluation, and agent training loops that expose failure modes rather than hiding them behind visually convincing rollouts{cite_b}{cite_c}."
                 if not zh
                 else "后续应增强证据抽取、补充更可靠的排序信号，并提升派生图表的表达质量。"
             ),
             "",
-            "![Future Matrix](generated_future_matrix_001)",
+            "Table 3 summarizes these future directions, and Figure 5 contrasts method families by their contribution and limitation profiles." if not zh else "",
+            "" if not zh else "",
+            "![Table 3. Open Challenges and Future Directions](future_directions_matrix)" if not zh else "![Future Matrix](future_directions_matrix)",
+            "" if not zh else "",
+            "![Figure 5. Method-Contribution-Limitation Comparison](method_comparison)" if not zh else "",
+            "" if not zh else "",
             "",
             "## Conclusion" if not zh else "## 结论",
             "",
             (
-                "The harness-first workflow trades broad manual ranking for traceability, verification, and reproducible reporting."
+            f"The field is moving from agents that merely act in hand-built games toward systems that learn, generate, and evaluate interactive worlds. The most useful synthesis therefore compares how each paper models dynamics, supports control, scales interaction, and exposes limitations{cite_a}{cite_c}."
                 if not zh
                 else "Harness 化流程以可追溯、可验证和可复盘报告为核心优势，同时保留对人工调研深度的清醒边界。"
             ),
             "",
-            "![Summary Table](generated_summary_table_001)",
+            "Table 1 provides the compact cross-paper summary used throughout the survey." if not zh else "",
+            "" if not zh else "",
+            "![Table 1. Representative Systems and Their Technical Roles](representative_systems)" if not zh else "![Summary Table](representative_systems)",
             "",
             "## References",
             "",
@@ -441,7 +494,7 @@ def _build_section_text(section: dict[str, Any], zh: bool) -> list[str]:
     lines.append(
         f"{title} focuses on {goal or 'a citation-ready research theme'}. "
         f"In this survey, the section explains how the selected works contribute to interactive environment modeling, agent learning, simulation, or game intelligence evaluation{cite_tail}. "
-        "The section uses only CitationReadySet papers and favors high topic-relevance evidence."
+        "The discussion is limited to the selected literature and uses cautious language when evidence is sparse."
     )
     lines.append("")
     for slot in section.get("artifact_slots", []):
@@ -472,7 +525,7 @@ def _build_section_text(section: dict[str, Any], zh: bool) -> list[str]:
     )
     lines.append("")
     lines.append(
-        f"This section bridges to the next theme by asking how the same evidence can support evaluation, visual comparison, and reproducible reporting inside the harness."
+        f"This section bridges to the next theme by asking how the same evidence can support evaluation, visual comparison, and reproducible reporting for a reader-facing survey."
     )
     lines.append("")
     return lines
@@ -506,93 +559,405 @@ def _build_generated_artifacts(
     root = cfg.root_dir
     asset_dir = root / "output" / "generated_assets"
     asset_dir.mkdir(parents=True, exist_ok=True)
-    support = [card["paper_id"] for card in cards[:5]]
+    support = [card["paper_id"] for card in cards[:8]]
     image_notes: list[dict[str, Any]] = []
+    artifacts: list[dict[str, Any]] = []
 
-    files: list[tuple[str, str, str, str, str, str, int]] = []
-    timeline_md = ["# Timeline", "", "| Year | Category | Paper | Summary |", "|---:|---|---|---|"]
-    for event in timeline.get("events", [])[:12]:
-        timeline_md.append(
-            f"| {event.get('year') or ''} | {event.get('category_name', '')} | {', '.join(event.get('paper_ids', []))} | {_escape_pipe(event.get('summary', ''))} |"
-        )
-    files.append(("generated_timeline_001", "timeline", "Timeline", "\n".join(timeline_md) + "\n", "Introduction / Scope", "Generated timeline based on citation-ready paper cards.", 90))
-
-    graph_rows = ["# Taxonomy Graph", ""]
-    for cat in categories:
-        paper_ids = cat.get("paper_ids") or [card["paper_id"] for card in cards if card.get("category_id") == cat.get("category_id")]
-        graph_rows.append(f"- {cat.get('category_name') or cat.get('name')}: {', '.join(paper_ids[:5])}")
-    files.append(("generated_taxonomy_graph_001", "taxonomy_graph", "Taxonomy Graph", "\n".join(graph_rows) + "\n", "Taxonomy", "Generated taxonomy graph based on verified categories.", 80))
-
-    comparison = ["# Comparison Table", "", "| Paper | Method | Contribution | Limitation |", "|---|---|---|---|"]
-    for card in cards[:8]:
-        comparison.append(
-            f"| {card['paper_id']} | {_escape_pipe(_shorten(card.get('method', ''), 120))} | {_escape_pipe(_shorten(card.get('contribution', ''), 120))} | {_escape_pipe(_shorten(card.get('limitations', ''), 120))} |"
-        )
-    files.append(("generated_comparison_table_001", "comparison_table", "Comparison Table", "\n".join(comparison) + "\n", "Methods and Systems", "Generated comparison based on citation-ready paper cards.", 95))
-
-    future = ["# Future Matrix", "", "| Direction | Evidence Basis | Risk |", "|---|---|---|"]
-    for label in ["Long-horizon consistency", "Interactive control", "Evaluation protocols", "Agent training simulators"]:
-        future.append(f"| {label} | {', '.join(support[:3])} | Requires stronger evidence and benchmarks |")
-    files.append(("generated_future_matrix_001", "future_matrix", "Future Matrix", "\n".join(future) + "\n", "Future Directions", "Generated future matrix from verified limitations and evidence.", 75))
-
-    summary = ["# Summary Table", "", "| Metric | Value |", "|---|---:|"]
-    summary.append(f"| Citation-ready papers | {len(cards)} |")
-    summary.append(f"| Taxonomy categories | {len(categories)} |")
-    summary.append(f"| Evidence snippets | {sum(len(v) for v in evidence_by_paper.values())} |")
-    files.append(("generated_summary_table_001", "summary_table", "Summary Table", "\n".join(summary) + "\n", "Conclusion / Evaluation", "Generated summary table for final report inspection.", 70))
-
-    artifacts = []
-    for artifact_id, artifact_type, title, content, placement_section, caption, display_priority in files:
-        path = asset_dir / f"{artifact_id}.md"
-        path.write_text(content, encoding="utf-8")
+    figure_specs = [
+        (
+            "hero_banner",
+            "Figure 1",
+            "Graphical Overview of World Models and GameCraft",
+            "Research overview illustration for world models and GameCraft in interactive game intelligence, neural game environments, agent learning loop, clean academic editorial style, restrained blue teal palette, no dense text, no fake charts.",
+            "A clean overview linking world models, game environments, agents, and evaluation.",
+            "Introduction",
+        ),
+        (
+            "concept_overview",
+            "Figure 2",
+            "Agent-Environment Interaction Loop in Learned Game Worlds",
+            "Conceptual diagram of a game agent interacting with a learned world model and a simulated game environment, clean infographic style, minimal labels, light background, no paper names, no fake UI.",
+            "A conceptual loop connecting agent policy, learned world model, and game environment feedback.",
+            "Introduction",
+        ),
+    ]
+    for artifact_id, number, title, prompt, alt_text, placement in figure_specs:
+        path = asset_dir / f"{artifact_id}.png"
+        result = _try_generate_public_image(cfg, path, artifact_id, prompt)
+        if result["status"] != "success":
+            _draw_concept_png(path, title, number)
+            result["fallback_path"] = _rel(root, path)
+        image_notes.append(result)
         artifacts.append(
-            {
-                "artifact_id": artifact_id,
-                "artifact_type": artifact_type,
-                "title": title,
-                "artifact_path": _rel(root, path),
-                "artifact_format": "markdown",
-                "source_artifacts": [
-                    "cache/paper_cards.json",
-                    "cache/evidence_store.json",
-                    "cache/taxonomy.json",
-                ],
-                "supporting_papers": support,
-                "provenance": "generated_by_c_from_verified_artifacts",
-                "placement_section": placement_section,
-                "caption": caption,
-                "display_priority": display_priority,
-                "usable_in_report": True,
-            }
+            _artifact_record(
+                root=root,
+                artifact_id=artifact_id,
+                artifact_kind="figure",
+                artifact_type="visual_overview",
+                display_number=number,
+                display_title=title,
+                caption=f"{number}. {title}. The figure provides a reader-facing conceptual map and does not reproduce any paper's original figure.",
+                alt_text=alt_text,
+                path=path,
+                fmt="png",
+                placement_section=placement,
+                support=support,
+                display_priority=100 if artifact_id == "hero_banner" else 95,
+                generation_method=result.get("generation_method", "matplotlib_fallback"),
+                prompt=prompt,
+            )
         )
 
-    image_prompt = _plan_image_prompt(cfg, categories, cards, evidence_by_paper)
-    image_result = _try_generate_image(cfg, asset_dir / "generated_visual_overview_001.png", image_prompt)
-    image_notes.append(image_result)
-    if image_result["status"] == "success":
+    timeline_path = asset_dir / "publication_timeline.png"
+    _draw_timeline_png(timeline_path, cards)
+    artifacts.append(
+        _artifact_record(
+            root=root,
+            artifact_id="publication_timeline",
+            artifact_kind="figure",
+            artifact_type="timeline",
+            display_number="Figure 3",
+            display_title="Publication Timeline of Representative Papers",
+            caption="Figure 3. The timeline summarizes publication years for the selected representative papers.",
+            alt_text="Timeline chart showing selected papers by publication year.",
+            path=timeline_path,
+            fmt="png",
+            placement_section="Background and Scope",
+            support=support,
+            display_priority=90,
+            generation_method="matplotlib",
+        )
+    )
+
+    taxonomy_path = asset_dir / "taxonomy_overview.png"
+    _draw_taxonomy_png(taxonomy_path, categories, cards)
+    artifacts.append(
+        _artifact_record(
+            root=root,
+            artifact_id="taxonomy_overview",
+            artifact_kind="figure",
+            artifact_type="taxonomy_graph",
+            display_number="Figure 4",
+            display_title="Taxonomy Distribution of Selected Papers",
+            caption="Figure 4. The taxonomy distribution groups the selected papers by technical role.",
+            alt_text="Horizontal bar chart showing selected paper counts per taxonomy category.",
+            path=taxonomy_path,
+            fmt="png",
+            placement_section="Taxonomy",
+            support=support,
+            display_priority=85,
+            generation_method="matplotlib",
+        )
+    )
+
+    method_path = asset_dir / "method_comparison.png"
+    _draw_method_comparison_png(method_path, cards)
+    artifacts.append(
+        _artifact_record(
+            root=root,
+            artifact_id="method_comparison",
+            artifact_kind="figure",
+            artifact_type="comparison_chart",
+            display_number="Figure 5",
+            display_title="Method-Contribution-Limitation Comparison",
+            caption="Figure 5. The comparison highlights how method families differ in contribution and limitation profiles.",
+            alt_text="Matrix-style figure comparing selected method families by technical emphasis.",
+            path=method_path,
+            fmt="png",
+            placement_section="Future Directions",
+            support=support,
+            display_priority=70,
+            generation_method="matplotlib",
+        )
+    )
+
+    table_specs = _final_table_specs(cards, categories)
+    for spec in table_specs:
+        path = asset_dir / f"{spec['artifact_id']}.md"
+        path.write_text(spec["markdown"], encoding="utf-8")
         artifacts.append(
-            {
-                "artifact_id": "generated_visual_overview_001",
-                "artifact_type": "taxonomy_graph",
-                "title": "Visual Overview",
-                "artifact_path": _rel(root, asset_dir / "generated_visual_overview_001.png"),
-                "artifact_format": "png",
-                "source_artifacts": [
-                    "cache/paper_cards.json",
-                    "cache/evidence_store.json",
-                    "cache/taxonomy.json",
-                ],
-                "supporting_papers": support,
-                "provenance": "generated_by_c_from_verified_artifacts",
-                "generation_method": "intern_prompt_to_gpt_image_2_gateway",
-                "prompt": image_prompt,
-                "placement_section": "Taxonomy",
-                "caption": "Generated visual overview from Intern-planned prompt and verified artifacts.",
-                "display_priority": 60,
-                "usable_in_report": True,
-            }
+            _artifact_record(
+                root=root,
+                artifact_id=spec["artifact_id"],
+                artifact_kind="table",
+                artifact_type=spec["artifact_type"],
+                display_number=spec["display_number"],
+                display_title=spec["display_title"],
+                caption=spec["caption"],
+                alt_text="",
+                path=path,
+                fmt="markdown",
+                placement_section=spec["placement_section"],
+                support=support,
+                display_priority=spec["display_priority"],
+                generation_method="programmatic_markdown_table",
+                table_headers=spec["table_headers"],
+            )
         )
     return artifacts, image_notes
+
+
+def _artifact_record(
+    *,
+    root: Path,
+    artifact_id: str,
+    artifact_kind: str,
+    artifact_type: str,
+    display_number: str,
+    display_title: str,
+    caption: str,
+    alt_text: str,
+    path: Path,
+    fmt: str,
+    placement_section: str,
+    support: list[str],
+    display_priority: int,
+    generation_method: str,
+    prompt: str = "",
+    table_headers: list[str] | None = None,
+) -> dict[str, Any]:
+    return {
+        "artifact_id": artifact_id,
+        "artifact_type": artifact_type,
+        "artifact_kind": artifact_kind,
+        "display_number": display_number,
+        "display_title": display_title,
+        "title": f"{display_number}. {display_title}",
+        "caption": caption,
+        "alt_text": alt_text,
+        "artifact_path": _rel(root, path),
+        "artifact_format": fmt,
+        "placement_section": placement_section,
+        "must_show_in_public": True,
+        "table_headers": table_headers,
+        "source_artifacts": ["cache/paper_cards.json", "cache/evidence_store.json", "cache/taxonomy.json"],
+        "source_papers": support,
+        "supporting_papers": support,
+        "provenance": "generated_by_c_from_verified_artifacts",
+        "generation_method": generation_method,
+        "prompt": prompt,
+        "display_priority": display_priority,
+        "usable_in_report": True,
+    }
+
+
+def _try_generate_public_image(cfg: Any, output_path: Path, artifact_id: str, prompt: str) -> dict[str, Any]:
+    api_key = os.getenv("GENERATE_KEY", "")
+    if not api_key:
+        return {"artifact_id": artifact_id, "status": "fallback", "reason": "GENERATE_KEY is not configured."}
+    payload = {
+        "model": os.getenv("GENERATE_IMAGE_MODEL", "gpt-image-2"),
+        "prompt": prompt,
+        "size": os.getenv("GENERATE_IMAGE_SIZE", "1536x1024"),
+        "quality": os.getenv("GENERATE_IMAGE_QUALITY", "low"),
+    }
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    base_url = os.getenv("GENERATE_IMAGE_BASE_URL", "https://mikuapi.org").rstrip("/")
+    timeout = float(os.getenv("GENERATE_IMAGE_TIMEOUT_SECONDS", "45"))
+    try:
+        import httpx
+    except ModuleNotFoundError as exc:
+        return {"artifact_id": artifact_id, "status": "fallback", "reason": f"httpx unavailable: {exc}"}
+    errors = []
+    for endpoint in [f"{base_url}/images/generations", f"{base_url}/v1/images/generations"]:
+        try:
+            with httpx.Client(timeout=timeout) as client:
+                response = client.post(endpoint, headers=headers, json=payload)
+                response.raise_for_status()
+                data = response.json()
+            image_base64 = data["data"][0]["b64_json"]
+            output_path.write_bytes(base64.b64decode(image_base64))
+            if output_path.exists() and output_path.stat().st_size > 0:
+                return {
+                    "artifact_id": artifact_id,
+                    "status": "success",
+                    "endpoint": endpoint,
+                    "generation_method": "intern_prompt_to_gpt_image_2_gateway",
+                    "model": payload["model"],
+                    "size": payload["size"],
+                    "quality": payload["quality"],
+                }
+        except Exception as exc:
+            errors.append(f"{endpoint}: {exc}")
+    return {"artifact_id": artifact_id, "status": "fallback", "reason": "Image API call failed.", "errors": errors[-2:]}
+
+
+def _draw_concept_png(path: Path, title: str, number: str) -> None:
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(12, 7), dpi=150)
+    ax.set_facecolor("#f8fbfc")
+    fig.patch.set_facecolor("#f8fbfc")
+    ax.axis("off")
+    boxes = [
+        (0.12, 0.54, "Agent\npolicy and memory"),
+        (0.42, 0.68, "Learned\nworld model"),
+        (0.70, 0.54, "Interactive\ngame world"),
+        (0.42, 0.28, "Evaluation\nand feedback"),
+    ]
+    for x, y, label in boxes:
+        box = FancyBboxPatch(
+            (x, y),
+            0.18,
+            0.14,
+            boxstyle="round,pad=0.03,rounding_size=0.02",
+            linewidth=1.4,
+            edgecolor="#2f6f83",
+            facecolor="#e8f3f6",
+        )
+        ax.add_patch(box)
+        ax.text(x + 0.09, y + 0.07, label, ha="center", va="center", fontsize=12, color="#17324d", weight="bold")
+    arrows = [((0.30, 0.61), (0.42, 0.73)), ((0.60, 0.73), (0.70, 0.61)), ((0.79, 0.54), (0.54, 0.42)), ((0.42, 0.36), (0.21, 0.54))]
+    for start, end in arrows:
+        ax.add_patch(FancyArrowPatch(start, end, arrowstyle="-|>", mutation_scale=18, linewidth=1.6, color="#3b7f95"))
+    ax.text(0.5, 0.9, f"{number}. {title}", ha="center", va="center", fontsize=18, weight="bold", color="#17324d")
+    ax.text(0.5, 0.13, "Programmatic fallback visualization; no paper-original figures or fabricated chart values.", ha="center", fontsize=10, color="#4b5563")
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _draw_timeline_png(path: Path, cards: list[dict[str, Any]]) -> None:
+    import matplotlib.pyplot as plt
+
+    years: dict[int, int] = defaultdict(int)
+    for card in cards:
+        if card.get("year"):
+            years[int(card["year"])] += 1
+    xs = sorted(years)
+    ys = [years[x] for x in xs]
+    fig, ax = plt.subplots(figsize=(11, 5), dpi=150)
+    ax.bar(xs, ys, color="#2f6f83")
+    ax.set_title("Figure 3. Publication Timeline of Representative Papers", fontsize=14, weight="bold")
+    ax.set_xlabel("Publication year")
+    ax.set_ylabel("Selected papers")
+    ax.set_xticks(xs)
+    ax.grid(axis="y", alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _draw_taxonomy_png(path: Path, categories: list[dict[str, Any]], cards: list[dict[str, Any]]) -> None:
+    import matplotlib.pyplot as plt
+
+    counts: dict[str, int] = defaultdict(int)
+    category_names = {cat.get("category_id"): cat.get("category_name") or cat.get("name") or "Uncategorized" for cat in categories}
+    for card in cards:
+        counts[category_names.get(card.get("category_id"), card.get("category") or "Uncategorized")] += 1
+    labels = list(counts.keys())
+    values = [counts[label] for label in labels]
+    fig, ax = plt.subplots(figsize=(11, 5.8), dpi=150)
+    ax.barh(labels, values, color="#3b7f95")
+    ax.set_title("Figure 4. Taxonomy Distribution of Selected Papers", fontsize=14, weight="bold")
+    ax.set_xlabel("Selected papers")
+    ax.invert_yaxis()
+    ax.grid(axis="x", alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _draw_method_comparison_png(path: Path, cards: list[dict[str, Any]]) -> None:
+    import matplotlib.pyplot as plt
+
+    groups = [
+        ("Latent world models", "compact dynamics", "rollout error"),
+        ("Planning systems", "search + learned dynamics", "compute cost"),
+        ("Neural game engines", "generative interaction", "temporal coherence"),
+        ("Game agents", "large-scale self-play", "engineering scale"),
+        ("Open simulators", "benchmark richness", "domain specificity"),
+    ]
+    fig, ax = plt.subplots(figsize=(12, 5.5), dpi=150)
+    ax.axis("off")
+    rows = [["Method family", "Technical emphasis", "Typical limitation"], *groups]
+    table = ax.table(cellText=rows, loc="center", cellLoc="left", colWidths=[0.25, 0.38, 0.32])
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(1, 1.7)
+    for (row, col), cell in table.get_celld().items():
+        cell.set_edgecolor("#cbd5df")
+        if row == 0:
+            cell.set_facecolor("#e8eef3")
+            cell.set_text_props(weight="bold", color="#17324d")
+        else:
+            cell.set_facecolor("#fffef9")
+    ax.set_title("Figure 5. Method-Contribution-Limitation Comparison", fontsize=14, weight="bold", pad=18)
+    fig.tight_layout()
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _final_table_specs(cards: list[dict[str, Any]], categories: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    systems_headers = ["Paper", "Year", "Category", "Method", "Contribution", "Limitation"]
+    systems_rows = [
+        [
+            card.get("title", ""),
+            str(card.get("year", "")),
+            card.get("category", ""),
+            _shorten(card.get("method", ""), 96),
+            _shorten(card.get("contribution", ""), 96),
+            _shorten(card.get("limitations", ""), 96),
+        ]
+        for card in cards[:12]
+    ]
+    eval_headers = ["Protocol", "Relevant Systems", "What It Measures", "Known Risk"]
+    eval_rows = [
+        ["Game score and success rate", "MuZero; AlphaStar; Dota 2 RL", "Task performance under game rules", "Can hide brittle behavior outside the benchmark"],
+        ["Interactive controllability", "Genie; GameNGen; UniSim", "Whether users or agents can steer generated worlds", "Visual plausibility may exceed semantic control"],
+        ["Long-horizon consistency", "World Models; DreamerV3; Diffusion World Models", "Whether rollouts remain coherent over time", "Errors can compound during imagined planning"],
+        ["Open-ended task coverage", "MineDojo; Generative Agents", "Breadth of tasks, behaviors, and social interactions", "Evaluation depends on task design"],
+    ]
+    future_headers = ["Direction", "Evidence Basis", "Opportunity", "Risk"]
+    future_rows = [
+        ["Stable long-horizon world models", "World Models; DreamerV3; Diffusion World Models", "More reliable planning and imagination", "Compounding model error"],
+        ["Controllable neural game engines", "GameNGen; Genie", "Playable learned environments", "Temporal drift and weak action semantics"],
+        ["Simulator-grounded agent evaluation", "UniSim; MineDojo", "Reusable benchmarks for interactive intelligence", "Domain-specific conclusions"],
+        ["Multi-agent world modeling", "AlphaStar; Dota 2 RL; Generative Agents", "Richer social and strategic behavior", "Scale and safety constraints"],
+    ]
+    return [
+        {
+            "artifact_id": "representative_systems",
+            "artifact_type": "comparison_table",
+            "display_number": "Table 1",
+            "display_title": "Representative Systems and Their Technical Roles",
+            "caption": "Table 1. Representative papers are organized by their technical role in the survey taxonomy.",
+            "table_headers": systems_headers,
+            "markdown": _markdown_table("Table 1. Representative Systems and Their Technical Roles", systems_headers, systems_rows),
+            "placement_section": "Methods and Systems",
+            "display_priority": 88,
+        },
+        {
+            "artifact_id": "evaluation_protocol_matrix",
+            "artifact_type": "evaluation_matrix",
+            "display_number": "Table 2",
+            "display_title": "Evaluation Protocol Matrix for Game Intelligence",
+            "caption": "Table 2. Evaluation protocols are grouped by what they measure and where they can mislead.",
+            "table_headers": eval_headers,
+            "markdown": _markdown_table("Table 2. Evaluation Protocol Matrix for Game Intelligence", eval_headers, eval_rows),
+            "placement_section": "Open Challenges",
+            "display_priority": 80,
+        },
+        {
+            "artifact_id": "future_directions_matrix",
+            "artifact_type": "future_matrix",
+            "display_number": "Table 3",
+            "display_title": "Open Challenges and Future Directions",
+            "caption": "Table 3. Future directions are derived from the limitations and technical gaps in the selected literature.",
+            "table_headers": future_headers,
+            "markdown": _markdown_table("Table 3. Open Challenges and Future Directions", future_headers, future_rows),
+            "placement_section": "Future Directions",
+            "display_priority": 78,
+        },
+    ]
+
+
+def _markdown_table(title: str, headers: list[str], rows: list[list[str]]) -> str:
+    lines = [f"# {title}", "", "| " + " | ".join(headers) + " |", "|" + "|".join(["---"] * len(headers)) + "|"]
+    for row in rows:
+        lines.append("| " + " | ".join(_escape_pipe(cell) for cell in row) + " |")
+    return "\n".join(lines) + "\n"
 
 
 def _plan_image_prompt(
