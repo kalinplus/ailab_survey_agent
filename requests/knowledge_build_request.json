@@ -1,6 +1,6 @@
 {
-  "task_id": "task_视频世界模型_001",
-  "topic": "视频世界模型",
+  "task_id": "task_世界模型_001",
+  "topic": "世界模型",
   "request_type": "knowledge_build",
   "inputs": {
     "task_request_path": "cache/task_request.json",
@@ -22,8 +22,8 @@
     "use_seed_fallback": true,
     "use_mineru": false,
     "use_mock_mineru_if_failed": false,
-    "max_papers": 40,
-    "max_core_papers": 15,
+    "max_papers": 5,
+    "max_core_papers": 3,
     "download_pdfs": true,
     "extract_figures": true,
     "extract_tables": true,

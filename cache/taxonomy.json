@@ -1,6 +1,6 @@
 {
-  "task_id": "task_游戏世界模型_001",
-  "topic": "游戏世界模型",
+  "task_id": "task_视频世界模型_001",
+  "topic": "视频世界模型",
   "taxonomy_version": "v1",
   "refine_history": [
     "prelimiminary",
@@ -11,65 +11,99 @@
     {
       "category_id": "cat_001",
       "category_name": "Latent Architectures for World Representation",
-      "description": "Research on compact, efficient representations of game worlds using latent spaces, including variational autoencoders, diffusion models, and neural radiance fields tailored for 3D environments.",
+      "description": "Focuses on the design and optimization of latent space models that efficiently encode dynamic visual environments, including discrete vs. continuous representations and hierarchical structures.",
       "related_aspects": [],
       "paper_ids": [
-        "paper:10.48550/arxiv.2402.01118"
+        "paper:10.1109/taslp.2024.3402088",
+        "paper:10.1109/cvpr52729.2023.01770",
+        "paper:10.48550/arxiv.2309.15818",
+        "paper:10.1609/aaai.v38i2.27912",
+        "paper:10.48550/arxiv.2602.10104",
+        "paper:10.48550/arxiv.2510.18114",
+        "paper:10.1145/3664647.3680846",
+        "paper:10.1109/cvpr52688.2022.01043",
+        "paper:10.1017/psy.2026.10105",
+        "paper:10.48550/arxiv.2211.13221",
+        "paper:10.48550/arxiv.2405.20279",
+        "paper:10.1109/cvpr52734.2025.01689",
+        "paper:10.48550/arxiv.2503.00653",
+        "paper:10.48550/arxiv.2406.00519",
+        "paper:10.5555/3666122.3669299",
+        "paper:10.1109/wacv56688.2023.00028",
+        "paper:10.48550/arxiv.2602.17133",
+        "paper:10.1145/3596711.3596796",
+        "paper:10.48550/arxiv.2604.11440",
+        "paper:10.48550/arxiv.2605.13517",
+        "paper:10.1145/3641817",
+        "paper:10.1109/cvpr52729.2023.00990",
+        "paper:10.1145/3658146",
+        "paper:10.1109/cvpr52688.2022.00350",
+        "paper:10.1109/tnnls.2023.3282047",
+        "paper:10.48550/arxiv.2502.11897",
+        "paper:10.48550/arxiv.2412.20404",
+        "paper:10.48550/arxiv.2411.06449",
+        "paper:10.1109/cvpr52729.2023.00244",
+        "paper:10.1109/wacv61042.2026.00206",
+        "paper:10.1093/jrsssb/qkad010",
+        "paper:10.48550/arxiv.2601.17743",
+        "paper:10.1109/tip.2026.3696103",
+        "paper:10.1109/tmm.2025.3544415"
       ],
       "stage_order": 0,
-      "paper_count": 1,
+      "paper_count": 34,
       "adjustment_note": ""
     },
     {
       "category_id": "cat_002",
       "category_name": "Procedural Content Generation Mechanisms",
-      "description": "Methods for algorithmically generating game assets, levels, narratives, and rulesets, ranging from grammar-based systems to deep learning-driven generative models.",
-      "related_aspects": [],
-      "paper_ids": [],
-      "stage_order": 0,
-      "paper_count": 0,
-      "adjustment_note": ""
-    },
-    {
-      "category_id": "cat_003",
-      "category_name": "Internal Simulation and Planning Capabilities",
-      "description": "Techniques enabling agents or systems to simulate future states, reason about consequences, and plan actions within a modeled world, often involving differentiable physics or learned dynamics.",
-      "related_aspects": [],
-      "paper_ids": [],
-      "stage_order": 0,
-      "paper_count": 0,
-      "adjustment_note": ""
-    },
-    {
-      "category_id": "cat_004",
-      "category_name": "Interactive and Controllable Generation Frameworks",
-      "description": "Systems that allow users to guide, edit, or constrain world generation in real-time through natural language, sketches, or other interfaces, emphasizing human-in-the-loop design.",
+      "description": "Explores methods for algorithmically generating diverse, coherent, and scalable video content or world states within the model framework.",
       "related_aspects": [],
       "paper_ids": [
-        "paper:10.48550/arxiv.2402.15391",
-        "paper:10.48550/arxiv.2501.08325",
-        "paper:10.48550/arxiv.2506.17201"
-      ],
-      "stage_order": 0,
-      "paper_count": 3,
-      "adjustment_note": ""
-    },
-    {
-      "category_id": "cat_005",
-      "category_name": "Evaluation Benchmarks and Metrics",
-      "description": "Standardized datasets, tasks, and quantitative/qualitative measures used to assess the quality, diversity, realism, and utility of generated or simulated game worlds.",
-      "related_aspects": [],
-      "paper_ids": [
-        "paper:10.48550/arxiv.2402.12348"
+        "paper:10.1007/s41019-025-00335-5"
       ],
       "stage_order": 0,
       "paper_count": 1,
       "adjustment_note": ""
     },
     {
+      "category_id": "cat_003",
+      "category_name": "Internal Simulation and Planning Capabilities",
+      "description": "Investigates how models simulate future states, reason about physical dynamics, and plan actions or trajectories internally to generate realistic video sequences.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.1109/cvpr52734.2025.02134"
+      ],
+      "stage_order": 0,
+      "paper_count": 1,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_004",
+      "category_name": "Evaluation Benchmarks and Metrics",
+      "description": "Covers standardized datasets, quantitative metrics, and qualitative assessment protocols used to measure the quality, consistency, and generalization of video world models.",
+      "related_aspects": [],
+      "paper_ids": [],
+      "stage_order": 0,
+      "paper_count": 0,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_005",
+      "category_name": "Interactive and Controllable Generation Frameworks",
+      "description": "Examines user interfaces, control signals, and conditioning mechanisms that allow humans to steer, edit, or interact with generated video worlds in real-time.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2503.17359"
+      ],
+      "stage_order": 0,
+      "paper_count": 2,
+      "adjustment_note": ""
+    },
+    {
       "category_id": "cat_006",
-      "category_name": "Game Genre Adaptations",
-      "description": "Specialized world modeling approaches tailored to specific game genres, addressing requirements such as low-latency control in action games, stateful persistence in adventure games, and role fidelity in role-playing games.",
+      "category_name": "Game-Oriented World Models",
+      "description": "Specialized world models designed for gaming environments, focusing on low-latency control, stateful modeling, and role fidelity across different game genres.",
       "related_aspects": [],
       "paper_ids": [],
       "stage_order": 0,
@@ -79,11 +113,23 @@
     {
       "category_id": "cat_007",
       "category_name": "Cross-Domain Extensions",
-      "description": "Applications of game world modeling techniques to external domains such as autonomous driving, robotics, and social simulacra, leveraging shared foundations in video generation and simulation.",
+      "description": "Adaptations and applications of video world models to specific domains such as autonomous driving, robotics, and social simulacra.",
       "related_aspects": [],
       "paper_ids": [],
       "stage_order": 0,
       "paper_count": 0,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_008",
+      "category_name": "Video Generation Foundations",
+      "description": "Fundamental approaches to video generation, including autoregressive and diffusion-based methods, and their integration with action conditioning.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.1109/cvpr52729.2023.01769"
+      ],
+      "stage_order": 0,
+      "paper_count": 1,
       "adjustment_note": ""
     }
   ]

@@ -1,5 +1,6 @@
 from tools.phases.phase1_decompose import run, validate_structure, validate_coverage
 from tools.models.requests import SearchStrategy, KnowledgeBuildRequest
+from tools.clients.llm_fake import FakeLLMClient
 
 
 def _strategy():
@@ -25,8 +26,42 @@ def test_structure_flags_few_aspects():
 def test_coverage_warns_unmatched_seed():
     s = _strategy()
     seeds = [{"title":"Quantum Computing Paper","keywords":["quantum"]}]
-    w = validate_coverage(s, seeds)
+    fake = FakeLLMClient(responses=[("Quantum", {"results": [{"index": 0, "aspects": []}]})])
+    w = validate_coverage(s, seeds, fake)
     assert any("quantum" in x.lower() for x in w) or any("no aspect" in x for x in w)
+
+
+def test_coverage_llm_overrides_substring_match():
+    """LLM judges a seed (that substring would match via 'game') as no-aspect -> warn."""
+    s = _strategy()
+    seeds = [{"title": "A Game Design Paper", "keywords": ["game"]}]
+    fake = FakeLLMClient(responses=[("Game Design Paper", {"results": [{"index": 0, "aspects": []}]})])
+    warnings = validate_coverage(s, seeds, fake)
+    assert any("Game Design Paper" in w and "no aspect" in w for w in warnings)
+    assert fake.calls >= 1
+
+
+def test_coverage_llm_matched_seed_no_warning():
+    """LLM judges seed as matching an aspect -> no seed 'no aspect' warning."""
+    s = _strategy()
+    seeds = [{"title": "Obscure Paper", "keywords": ["nothingmatching"]}]
+    fake = FakeLLMClient(responses=[("Obscure", {"results": [{"index": 0, "aspects": ["a1"]}]})])
+    warnings = validate_coverage(s, seeds, fake)
+    assert not any("no aspect" in w for w in warnings)
+
+
+def test_coverage_llm_failure_records_warning_no_crash():
+    """LLM raises -> a coverage-check failure warning is recorded, no crash, no per-seed warnings."""
+    s = _strategy()
+    seeds = [{"title": "Any Paper", "keywords": []}]
+
+    def boom(*a, **k):
+        raise RuntimeError("llm down")
+    fake = FakeLLMClient()
+    fake.json_chat = boom
+    warnings = validate_coverage(s, seeds, fake)
+    assert any("coverage" in w.lower() and "fail" in w.lower() for w in warnings)
+    assert not any("no aspect" in w for w in warnings)
 
 
 def test_run_returns_demand():
@@ -80,7 +115,8 @@ def test_run_propagates_errors_and_warnings():
     seeds = [{"title": "Quantum Paper", "keywords": ["quantum"]}]
 
     req = KnowledgeBuildRequest(task_id="t", topic="wm", inputs={}, outputs={})
-    d = run(req, s, seeds)
+    fake = FakeLLMClient(responses=[("Quantum", {"results": [{"index": 0, "aspects": []}]})])
+    d = run(req, s, seeds, fake)
 
     # Check aspects equals strategy's search_aspects
     assert d.aspects == s.wide_search.get("search_aspects", [])

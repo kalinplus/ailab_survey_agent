@@ -24,3 +24,5 @@
 - 2026-07-05T12:06:39: For 游戏世界模型, the latest full strategy used memory, did not use probing, and produced aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks.
 
 - 2026-07-05T12:39:09: For 视频世界模型, the latest full strategy used memory, did not use probing, and produced aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks.
+
+- 2026-07-05T13:06:38: For 世界模型, the latest full strategy used memory, did not use probing, and produced aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks.

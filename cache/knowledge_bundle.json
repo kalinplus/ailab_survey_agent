@@ -1,6 +1,6 @@
 {
-  "task_id": "task_游戏世界模型_001",
-  "topic": "游戏世界模型",
+  "task_id": "task_视频世界模型_001",
+  "topic": "视频世界模型",
   "status": "partial_success",
   "artifacts": {
     "retrieved_papers": "cache/retrieved_papers.json",
@@ -13,14 +13,14 @@
     "citation_index": "cache/citation_index.json"
   },
   "summary": {
-    "paper_count": 5,
+    "paper_count": 40,
     "core_paper_count": 0,
     "parsed_paper_count": 0,
     "figure_count": 0,
     "table_count": 0,
-    "evidence_count": 147,
-    "taxonomy_category_count": 7,
-    "citation_count": 5
+    "evidence_count": 1077,
+    "taxonomy_category_count": 8,
+    "citation_count": 39
   },
   "coverage_report": {
     "covered_aspects": [],
@@ -30,7 +30,7 @@
   "quality_report": {
     "search_success": true,
     "parse_success_rate": 0.0,
-    "paper_card_success_rate": 1.0,
+    "paper_card_success_rate": 0.975,
     "evidence_coverage_rate": 0.0,
     "has_multimodal_evidence": false,
     "warnings": [

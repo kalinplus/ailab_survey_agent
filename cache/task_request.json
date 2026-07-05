@@ -1,6 +1,6 @@
 {
-  "task_id": "task_视频世界模型_001",
-  "topic": "视频世界模型",
+  "task_id": "task_世界模型_001",
+  "topic": "世界模型",
   "task_type": "academic_survey",
   "language": "zh",
   "output_formats": [
@@ -28,8 +28,8 @@
     "use_online_search": true,
     "use_seed_fallback": true,
     "use_mineru": false,
-    "max_papers": 40,
-    "max_core_papers": 15,
+    "max_papers": 5,
+    "max_core_papers": 3,
     "mode": "full"
   }
 }

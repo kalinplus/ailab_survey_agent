@@ -1,6 +1,322 @@
 {
-  "task_id": "task_游戏世界模型_001",
+  "task_id": "task_视频世界模型_001",
   "paper_cards": [
+    {
+      "paper_id": "paper:10.1109/taslp.2024.3402088",
+      "title": "InstructTTS: Modelling Expressive TTS in Discrete Latent Space With Natural Language Style Prompt",
+      "authors": [
+        "Dongchao Yang",
+        "Songxiang Liu",
+        "Rongjie Huang",
+        "Chao Weng",
+        "Helen Meng"
+      ],
+      "year": 2024,
+      "venue": "IEEE/ACM Transactions on Audio, Speech, and Language Processing",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "InstructTTS can synthesize high-fidelity and natural speech with style prompts controlling the speaking style.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1109/taslp.2024.3402088_p1_0"
+            ]
+          },
+          {
+            "text": "Extensive objective and subjective evaluation has been conducted to verify the effectiveness and expressiveness of InstructTTS.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1109/taslp.2024.3402088_p1_0"
+            ]
+          }
+        ],
+        "method": [
+          {
+            "text": "Propose a novel three-stage training procedure to obtain a robust sentence embedding model that can effectively capture semantic information from the style prompts and control the speaking style in the generated speech.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1109/taslp.2024.3402088_p1_0"
+            ]
+          },
+          {
+            "text": "Model acoustic features in discrete latent space and train a novel discrete diffusion probabilistic model to generate vector-quantized (VQ) acoustic tokens rather than the commonly-used mel spectrogram.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1109/taslp.2024.3402088_p1_0"
+            ]
+          },
+          {
+            "text": "Jointly apply mutual information (MI) estimation and minimization during acoustic model training to minimize style-speaker and style-content MI, avoiding possible content and speaker information leakage from the style prompt.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1109/taslp.2024.3402088_p1_0"
+            ]
+          }
+        ],
+        "setup": [
+          {
+            "text": "Construct a speech corpus whose speech samples are annotated with not only content transcriptions but also style descriptions in natural language.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.1109/taslp.2024.3402088_p1_0"
+            ]
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No existing TTS corpus is suitable to benchmark this novel task.",
+            "dimension": "limitations",
+            "evidence_ids": [
+              "paper:10.1109/taslp.2024.3402088_p1_0"
+            ]
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52729.2023.01770",
+      "title": "Video Probabilistic Diffusion Models in Projected Latent Space",
+      "authors": [
+        "Sihyun Yu",
+        "Kihyuk Sohn",
+        "Subin Kim",
+        "Jinwoo Shin"
+      ],
+      "year": 2023,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "PVDM obtains an FVD score of 639.7 on the UCF-101 long video (128 frames) generation benchmark, improving upon the prior state-of-the-art by 1773.4 [Abstract].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Experiments demonstrate PVDM's superiority over previous video synthesis methods on popular datasets [Abstract].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "PVDM is a probabilistic diffusion model that learns a video distribution in a low-dimensional latent space to enable efficient training with high-resolution videos under limited resources [Abstract].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "PVDM consists of two components: (a) an autoencoder that projects videos into 2D-shaped latent vectors, factorizing the complex cubic structure of video pixels; and (b) a diffusion model architecture specialized for this factorized latent space, along with a training/sampling procedure to synthesize videos of arbitrary length using a single model [Abstract].",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The model is evaluated on popular video generation datasets, including UCF-101 for long video generation (128 frames) [Abstract].",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are mentioned in the provided text.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52729.2023.01769",
+      "title": "Conditional Image-to-Video Generation with Latent Flow Diffusion Models",
+      "authors": [
+        "Haomiao Ni",
+        "Changhao Shi",
+        "Kai Li",
+        "Xiaolei Huang",
+        "Martin Renqiang Min"
+      ],
+      "year": 2023,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "LFDM consistently outperforms prior arts on multiple datasets for conditional image-to-video generation [P1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "LFDM can be easily adapted to new domains by simply finetuning the image decoder [P1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The proposed approach uses latent flow diffusion models (LFDM) that synthesize an optical flow sequence in the latent space based on the given condition to warp the given image [P1].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The training of LFDM consists of two separate stages: (1) an unsupervised learning stage to train a latent flow auto-encoder for spatial content generation, including a flow predictor to estimate latent flow between pairs of video frames, and (2) a conditional learning stage to train a 3D-UNet-based diffusion model (DM) for temporal latent flow generation [P1].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Unlike previous DMs operating in pixel space or latent feature space that couples spatial and temporal information, the DM in LFDM only needs to learn a low-dimensional latent flow space for motion generation, thus being more computationally efficient [P1].",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Comprehensive experiments are conducted on multiple datasets [P1].",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations mentioned in the provided text.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2309.15818",
+      "title": "Show-1: Marrying Pixel and Latent Diffusion Models for Text-to-Video Generation",
+      "authors": [
+        "David Junhao Zhang",
+        "Jay Zhangjie Wu",
+        "Jiawei Liu",
+        "Rui Zhao",
+        "Lingmin Ran",
+        "Yuchao Gu",
+        "Difei Gao",
+        "Mike Zheng Shou"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Show-1 is the first hybrid model that marries pixel-based and latent-based VDMs for text-to-video generation. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Show-1 produces high-quality videos with precise text-video alignment, outperforming latent VDMs. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Show-1 is more efficient than pixel VDMs, using only 15G GPU memory during inference compared to 72G for pixel VDMs. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Show-1 can be adapted for motion customization and video stylization via simple temporal attention layer finetuning. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Show-1 achieves state-of-the-art performance on standard video generation benchmarks. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Show-1 first uses a pixel-based VDM to generate a low-resolution video with strong text-video correlation. [P1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A novel expert translation method employs latent-based VDMs to upsample the low-resolution video to high resolution while removing artifacts and corruptions. [P1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The hybrid architecture combines the strengths of pixel-based (alignment) and latent-based (efficiency) diffusion models. [P1]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The model is evaluated on standard video generation benchmarks (specific benchmarks not named in excerpt). [P1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Inference requires 15G GPU memory for Show-1 versus 72G for pixel-based VDMs. [P1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Code and model weights are publicly available at https://github.com/showlab/Show-1. [P1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are mentioned in the provided body excerpts. [No page cited]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
     {
       "paper_id": "paper:10.48550/arxiv.2402.15391",
       "title": "Genie: Generative Interactive Environments",
@@ -47,48 +363,36 @@
       "possible_claims": {
         "key_results": [
           {
-            "text": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+            "text": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos. [Page 1]",
             "dimension": "key_results",
-            "evidence_ids": [
-              "paper:10.48550/arxiv.2402.15391_p1_0"
-            ]
+            "evidence_ids": []
           },
           {
-            "text": "The model can generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches.",
+            "text": "The model can generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches. [Page 1]",
             "dimension": "key_results",
-            "evidence_ids": [
-              "paper:10.48550/arxiv.2402.15391_p1_0"
-            ]
+            "evidence_ids": []
           },
           {
-            "text": "At 11B parameters, Genie can be considered a foundation world model.",
+            "text": "At 11B parameters, Genie can be considered a foundation world model. [Page 1]",
             "dimension": "key_results",
-            "evidence_ids": [
-              "paper:10.48550/arxiv.2402.15391_p1_0"
-            ]
+            "evidence_ids": []
           },
           {
-            "text": "Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature.",
+            "text": "Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature. [Page 1]",
             "dimension": "key_results",
-            "evidence_ids": [
-              "paper:10.48550/arxiv.2402.15391_p1_0"
-            ]
+            "evidence_ids": []
           },
           {
-            "text": "The resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+            "text": "The resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future. [Page 1]",
             "dimension": "key_results",
-            "evidence_ids": [
-              "paper:10.48550/arxiv.2402.15391_p1_0"
-            ]
+            "evidence_ids": []
           }
         ],
         "method": [
           {
-            "text": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+            "text": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model. [Page 1]",
             "dimension": "method",
-            "evidence_ids": [
-              "paper:10.48550/arxiv.2402.15391_p1_0"
-            ]
+            "evidence_ids": []
           }
         ],
         "setup": [
@@ -109,11 +413,2591 @@
       "bibtex_key": null
     },
     {
-      "paper_id": "paper:10.48550/arxiv.2501.08325",
-      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+      "paper_id": "paper:10.1007/s41019-025-00335-5",
+      "title": "Retrieval-Augmented Generation for AI-Generated Content: A Survey",
+      "authors": [
+        "Penghao Zhao",
+        "Hailin Zhang",
+        "Qinhan Yu",
+        "Zhengren Wang",
+        "Yunteng Geng",
+        "Fangcheng Fu",
+        "Ling Yang",
+        "Wentao Zhang",
+        "Jie Jiang",
+        "Bin Cui"
+      ],
+      "year": 2026,
+      "venue": "Data Science and Engineering",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Retrieval-augmented generation (RAG) has emerged as a paradigm to address challenges in AI-Generated Content (AIGC), such as updating knowledge, handling long-tail data, mitigating data leakage, and managing high training and inference costs. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "RAG introduces an information retrieval process that enhances the generation process by retrieving relevant objects from available data stores, leading to higher accuracy and better robustness. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper comprehensively reviews existing efforts integrating RAG techniques into AIGC scenarios, classifying RAG foundations according to how the retriever augments the generator. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper summarizes additional enhancement methods for RAG, facilitating effective engineering and implementation of RAG systems. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper surveys practical applications of RAG across different modalities and tasks, offering valuable references for researchers and practitioners. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper introduces benchmarks for RAG, discusses limitations of current RAG systems, and suggests potential directions for future research. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The paper classifies RAG foundations based on how the retriever augments the generator, distilling fundamental abstractions of augmentation methodologies for various retrievers and generators. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper provides a unified perspective encompassing all RAG scenarios, illuminating advancements and pivotal technologies that aid potential future progress. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper summarizes additional enhancement methods for RAG to facilitate effective engineering and implementation of RAG systems. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper surveys practical applications of RAG across different modalities and tasks. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper introduces benchmarks for RAG and discusses limitations of current RAG systems. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper suggests potential directions for future research. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper does not provide specific details on the setup used for the survey. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper discusses the limitations of current RAG systems but does not specify them in the provided abstract. [Abstract]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1609/aaai.v38i2.27912",
+      "title": "LDMVFI: Video Frame Interpolation with Latent Diffusion Models",
+      "authors": [
+        "Duolikun Danier",
+        "Fan Zhang",
+        "David Bull"
+      ],
+      "year": 2023,
+      "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "LDMVFI is able to interpolate video content with favorable perceptual quality compared to the state of the art, even in the high-resolution regime.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1609/aaai.v38i2.27912_p1_0"
+            ]
+          },
+          {
+            "text": "The proposed method approaches the VFI problem from a generative perspective by formulating it as a conditional generation problem.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1609/aaai.v38i2.27912_p1_0"
+            ]
+          }
+        ],
+        "method": [
+          {
+            "text": "The paper proposes latent diffusion model-based VFI, LDMVFI, which treats video frame interpolation as a conditional generation task using latent diffusion models.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1609/aaai.v38i2.27912_p1_0"
+            ]
+          }
+        ],
+        "setup": [
+          {
+            "text": "The method is rigorously benchmarked on common test sets used in existing VFI literature.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.1609/aaai.v38i2.27912_p1_0"
+            ]
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations are mentioned in the provided text.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2602.10104",
+      "title": "Olaf-World: Orienting Latent Actions for Video World Modeling",
+      "authors": [
+        "Yuxin Jiang",
+        "Yuchao Gu",
+        "Ivor W. Tsang",
+        "Mike Zheng Shou"
+      ],
+      "year": 2026,
+      "venue": "Open MIND",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Olaf-World learns a more structured latent action space compared to state-of-the-art baselines. [Page 1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method demonstrates stronger zero-shot action transfer capabilities. [Page 1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "It achieves more data-efficient adaptation to new control interfaces. [Page 1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Introduces Seq$\\Delta$-REPA, a sequence-level control-effect alignment objective. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Anchors integrated latent action to temporal feature differences from a frozen, self-supervised video encoder. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Presents Olaf-World, a pipeline for pretraining action-conditioned video world models from large-scale passive video. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Utilizes large-scale passive video for pretraining action-conditioned video world models. [Page 1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Employs a frozen, self-supervised video encoder for extracting temporal feature differences. [Page 1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "Standard objectives operate only within each clip, providing no mechanism to align action semantics across contexts. [Page 1]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          },
+          {
+            "text": "Learned latents often fail to transfer across contexts due to entanglement of scene-specific cues and lack of a shared coordinate system. [Page 1]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2510.18114",
+      "title": "Latent-Augmented Discrete Diffusion Models",
+      "authors": [
+        "Dario Shariatian",
+        "Alain Durmus",
+        "Simsekli, Umut",
+        "Peluchetti, Stefano"
+      ],
+      "year": 2026,
+      "venue": "ArXiv.org",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "LADD models yield improvements on unconditional generation metrics as compared to state-of-the-art masked discrete diffusion baselines [P]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "LADD models are effective at lower sampling budgets, where unmasking many tokens per step is desirable [P]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Proposes Latent-Augmented Discrete Diffusion (LADD), which introduces a learnable auxiliary latent channel and performs diffusion over the joint (token, latent) space [P]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The latent variables provide an intermediate representation expressing joint structure while preserving tractable parameterizations [P]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Instantiates LADD with continuous latents (Co-LADD) and discrete latents (Di-LADD) [P]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Studies two inference schedules: a joint diffusion that denoises data and latents together, and a sequential diffusion that first resolves latents and then samples tokens conditionally [P]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Derives ELBO-style objectives and analyzes design choices that balance latent expressivity with diffusion compatibility [P]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Discrete diffusion models have emerged as a powerful class of models and a promising route to fast language generation [P]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Practical implementations typically rely on factored reverse transitions ignoring cross-token dependencies and degrading few-step performance [P]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations mentioned in the provided excerpts [P]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1145/3664647.3680846",
+      "title": "Motion-aware Latent Diffusion Models for Video Frame Interpolation",
+      "authors": [
+        "Zhilin Huang",
+        "Yijie Yu",
+        "L. Yang",
+        "Chujun Qin",
+        "Bing Zheng",
+        "Xiawu Zheng",
+        "Zikun Zhou",
+        "Yaowei Wang",
+        "Wenming Yang"
+      ],
+      "year": 2024,
+      "venue": "ACM Multimedia",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "MADiff achieves state-of-the-art performance on benchmark datasets for video frame interpolation [Page 1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method significantly outperforms existing approaches, especially under challenging scenarios involving dynamic textures with complex motion [Page 1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "A novel diffusion framework called Motion-Aware latent Diffusion models (MADiff) is proposed specifically for the VFI task [Page 1].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "MADiff incorporates motion priors between the conditional neighboring frames with the target interpolated frame predicted throughout the diffusion sampling procedure [Page 1].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The framework progressively refines intermediate outcomes to generate visually smooth and realistic results [Page 1].",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Extensive experiments are conducted on benchmark datasets to evaluate the performance of MADiff [Page 1].",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations mentioned in the provided excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52688.2022.01043",
+      "title": "Vector Quantized Diffusion Model for Text-to-Image Synthesis",
+      "authors": [
+        "Shuyang Gu",
+        "Dong Chen",
+        "Jianmin Bao",
+        "Fang Wen",
+        "Bo Zhang",
+        "Dongdong Chen",
+        "Lu Yuan",
+        "Baining Guo"
+      ],
+      "year": 2022,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "The VQ-Diffusion model produces significantly better text-to-image generation results compared to conventional autoregressive (AR) models with similar numbers of parameters. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Compared with previous GAN-based text-to-image methods, the VQ-Diffusion can handle more complex scenes and improve synthesized image quality by a large margin. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The image generation computation in the VQ-Diffusion method can be made highly efficient through reparameterization. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "With traditional AR methods, text-to-image generation time increases linearly with output image resolution, making it time-consuming even for normal-sized images. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The VQ-Diffusion with reparameterization achieves a better trade-off between quality and speed, being fifteen times faster than traditional AR methods while achieving better image quality. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The vector quantized diffusion (VQ-Diffusion) model is based on a vector quantized variational autoencoder (VQ-VAE). [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The latent space of the VQ-VAE is modeled by a conditional variant of the Denoising Diffusion Probabilistic Model (DDPM). [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method incorporates a mask-and-replace diffusion strategy to avoid error accumulation, which is a serious problem with existing methods. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The code and models are available at https://github.com/cientgu/VQ-Diffusion. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations are mentioned in the provided abstract or body excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1017/psy.2026.10105",
+      "title": "Estimating Discrete Latent Variable Models Using Amortized Variational Inference",
+      "authors": [
+        "Karel Veldkamp",
+        "Raoul Grasman",
+        "Dylan Molenaar"
+      ],
+      "year": 2026,
+      "venue": "Psychometrika",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Amortized variational inference (AVI) can be used to estimate simple discrete latent variable models, such as latent class analysis and the generalized deterministic inputs, noisy and gate model, providing accurate parameter estimates.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          },
+          {
+            "text": "AVI is computationally faster than marginal maximum likelihood (MML) estimation and standard variational inference (VI) when applied to mixture IRT models.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          },
+          {
+            "text": "The efficient AVI approach allows for the computation of bootstrapped standard errors for high-dimensional models, such as a seven-dimensional mixture IRT model fitted to a narcissism inventory, which quadrature-based methods cannot feasibly estimate.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          }
+        ],
+        "method": [
+          {
+            "text": "Two approaches are proposed to deal with the challenge of generalizing amortized variational inference (AVI) to discrete latent variable models.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          },
+          {
+            "text": "The proposed AVI approach is applied to estimate mixture IRT models, demonstrating its computational efficiency compared to MML and standard VI.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          }
+        ],
+        "setup": [
+          {
+            "text": "The initial simulation verifies that the proposed approaches can be used to estimate simple discrete latent variable models, including latent class analysis and the generalized deterministic inputs, noisy and gate model.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          },
+          {
+            "text": "The AVI approach is applied to fit a seven-dimensional mixture IRT model to a narcissism inventory, showcasing its practical applicability.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The computational advantage of AVI over marginal maximum likelihood (MML) and standard variational inference (VI) is limited when estimating simple discrete latent variable models.",
+            "dimension": "limitations",
+            "evidence_ids": [
+              "paper:10.1017/psy.2026.10105_p1_0"
+            ]
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2211.13221",
+      "title": "Latent Video Diffusion Models for High-Fidelity Long Video Generation",
+      "authors": [
+        "Yingqing He",
+        "Tianyu Yang",
+        "Yong Zhang",
+        "Ying Shan",
+        "Qifeng Chen"
+      ],
+      "year": 2022,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "The proposed framework generates more realistic and longer videos than previous strong baselines on small domain datasets of different categories. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method extends to large-scale text-to-video generation, demonstrating superiority over existing approaches. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Hierarchical diffusion in the latent space enables generation of videos with more than one thousand frames. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Conditional latent perturbation and unconditional guidance mitigate accumulated errors during long video extension. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Introduces lightweight video diffusion models using a low-dimensional 3D latent space to reduce computational cost while improving visual quality. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Proposes hierarchical diffusion in the latent space for generating long videos (>1000 frames). [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Uses conditional latent perturbation and unconditional guidance to address performance degradation in long video generation. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Evaluated on small domain datasets across multiple categories. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Extended to large-scale text-to-video generation for comparative analysis. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "Performance may degrade for extremely long videos without the proposed error-mitigation techniques. [Inferred from abstract context]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          },
+          {
+            "text": "Computational efficiency gains are relative to pixel-space diffusion models; absolute resource requirements may still be high for very long generations. [Inferred from abstract context]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2405.20279",
+      "title": "CV-VAE: A Compatible Video VAE for Latent Generative Video Models",
+      "authors": [
+        "Sijie Zhao",
+        "Yong Zhang",
+        "Xiaodong Cun",
+        "Shaoshu Yang",
+        "Muyao Niu",
+        "Xiaoyu Li",
+        "Wenbo Hu",
+        "Ying Shan"
+      ],
+      "year": 2024,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "CV-VAE enables video models to generate four times more frames with minimal finetuning. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The proposed method achieves latent space compatibility between video VAE and image VAE (e.g., Stable Diffusion), enabling seamless training of video models from pre-trained T2I or video models in a truly spatio-temporally compressed latent space. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Extensive experiments demonstrate the effectiveness of the proposed video VAE. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Proposes CV-VAE, a compatible video VAE for latent generative video models, whose latent space is designed to be compatible with a given image VAE (e.g., SD’s image VAE). [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Achieves compatibility via a novel latent space regularization technique that formulates a regularization loss using the image VAE. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Enables training of video models in a compressed latent space without relying on uniform frame sampling, thus avoiding unsmooth motion between consecutive frames. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "No specific experimental setup details (e.g., datasets, hardware, hyperparameters) are provided in the body excerpts. [No page number available]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are mentioned in the provided text. [No page number available]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52734.2025.01689",
+      "title": "Improved Video VAE for Latent Video Diffusion Model",
+      "authors": [
+        "Ping Wu",
+        "Kai Zhu",
+        "Yu Liu",
+        "Liming Zhao",
+        "Wei Zhai",
+        "Yang Cao",
+        "Zheng-Jun Zha"
+      ],
+      "year": 2025,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "The proposed IV-VAE achieves state-of-the-art video reconstruction and generation abilities on five benchmarks. [Page 1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The keyframe-based temporal compression (KTC) architecture reduces temporal-spatial conflicts and accelerates the convergence speed of video VAE. [Page 2]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The group causal convolution (GCConv) module ensures inter-frame equivalence and maintains flexibility in processing variable frame videos. [Page 3]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The paper presents two findings: (1) Initialization from a well-trained image VAE with the same latent dimensions is not optimal. (2) Causal reasoning leads to unequal information interactions and unbalanced performance between frames. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The KTC architecture divides the latent space into two branches: one inherits the compression prior of keyframes from a lower-dimension image VAE, and the other involves temporal compression through 3D group causal convolution. [Page 2]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The GC-Conv module uses standard convolution within each frame group and employs causal logical padding between groups. [Page 3]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Extensive experiments were conducted on five benchmarks to evaluate the performance of IV-VAE. [Page 4]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly mention limitations. [No page number available]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2503.00653",
+      "title": "Discrete Codebook World Models for Continuous Control",
+      "authors": [
+        "Scannell, Aidan",
+        "Nakhaei, Mohammadreza",
+        "Kujanpää, Kalle",
+        "Zhao, Yi",
+        "Luck, Kevin Sebastian",
+        "Solin, Arno",
+        "Pajarinen, Joni"
+      ],
+      "year": 2025,
+      "venue": "VU Research Portal",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Discrete codebook encodings are more effective representations for continuous control compared to alternative encodings like one-hot and label-based encodings.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2503.00653_p1_0"
+            ]
+          },
+          {
+            "text": "DC-MPC performs competitively against recent state-of-the-art algorithms, including TD-MPC2 and DreamerV3, on continuous control benchmarks.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2503.00653_p1_0"
+            ]
+          }
+        ],
+        "method": [
+          {
+            "text": "DCWM: Discrete Codebook World Model is introduced as a self-supervised world model with a discrete and stochastic latent space, where latent states are codes from a codebook.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2503.00653_p1_0"
+            ]
+          },
+          {
+            "text": "DC-MPC: Discrete Codebook Model Predictive Control combines DCWM with decision-time planning to form a model-based RL algorithm.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2503.00653_p1_0"
+            ]
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper explores the performance of discrete latent spaces in state-based continuous control settings, contrasting them with methods using continuous latent spaces such as TD-MPC2.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2503.00653_p1_0"
+            ]
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations mentioned in the provided excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2406.00519",
+      "title": "Learning Discrete Concepts in Latent Hierarchical Models",
+      "authors": [
+        "Lingjing Kong",
+        "Guangyi Chen",
+        "Biwei Huang",
+        "Eric P. Xing",
+        "Yuejie Chi",
+        "Kun Zhang"
+      ],
+      "year": 2024,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Concepts are formalized as discrete latent causal variables related via a hierarchical causal model that encodes different abstraction levels of concepts embedded in high-dimensional data (e.g., a dog breed and its eye shapes in natural images) [page 1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Conditions are formulated to facilitate the identification of the proposed causal model, revealing when learning such concepts from unsupervised data is possible [page 1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The conditions permit complex causal hierarchical structures beyond latent trees and multi-level directed acyclic graphs in prior work and can handle high-dimensional, continuous observed variables, which is well-suited for unstructured data modalities such as images [page 1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Theoretical claims are substantiated with synthetic data experiments [page 1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The theory's implications for understanding the underlying mechanisms of latent diffusion models are discussed, with corresponding empirical evidence provided for theoretical insights [page 1].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Concepts are modeled as discrete latent causal variables within a hierarchical causal framework [page 1].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The hierarchical causal model captures different abstraction levels of concepts embedded in high-dimensional data [page 1].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Identification conditions are formulated to enable learning these concepts from unsupervised data [page 1].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method supports complex causal hierarchical structures and handles high-dimensional, continuous observed variables [page 1].",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Synthetic data experiments are used to substantiate theoretical claims [page 1].",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method is applied to understand the underlying mechanisms of latent diffusion models [page 1].",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations are mentioned in the provided excerpts [page 1].",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.5555/3666122.3669299",
+      "title": "HiNeRV: Video Compression with Hierarchical Encoding based Neural Representation",
+      "authors": [
+        "Ho Man Kwan",
+        "Ge Gao",
+        "Fan Zhang",
+        "Andrew Gower",
+        "David R. Bull"
+      ],
+      "year": 2024,
+      "venue": "Neural Information Processing Systems",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "HiNeRV achieves significant improvement over all existing INR baselines and competitive performance when compared to learning-based codecs (72.3% overall bit rate saving over HNeRV and 43.4% over DCVC on the UVG dataset, measured in PSNR). [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The proposed method has been evaluated on both UVG and MCL-JCV datasets for video compression. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "HiNeRV is an INR that combines light weight layers with novel hierarchical positional encodings. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "It employs depth-wise convolutional, MLP and interpolation layers to build the deep and wide network architecture with high capacity. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "HiNeRV is a unified representation encoding videos in both frames and patches at the same time, which offers higher performance and flexibility than existing methods. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A video codec based on HiNeRV and a refined pipeline for training, pruning and quantization that can better preserve HiNeRV's performance during lossy model compression is built. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The proposed method has been evaluated on both UVG and MCL-JCV datasets for video compression. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "Existing INR-based methods have failed to deliver rate quality performance comparable with the state of the art in video compression due to the simplicity of the employed network architectures, which limit their representation capability. [Abstract]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52734.2025.02134",
+      "title": "VidTwin: Video VAE with Decoupled Structure and Dynamics",
+      "authors": [
+        "Yuchi Wang",
+        "Junliang Guo",
+        "Xuejun Xie",
+        "Tianyu He",
+        "Xu Sun",
+        "Jiang Bian"
+      ],
+      "year": 2025,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "VidTwin achieves a high compression rate of 0.20% with high reconstruction quality (PSNR of 28.14 on the MCL-JCV dataset) [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "VidTwin performs efficiently and effectively in downstream generative tasks [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model demonstrates explainability and scalability, paving the way for future research in video latent representation and generation [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "VidTwin decouples video into two distinct latent spaces: Structure latent vectors and Dynamics latent vectors [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Structure latent vectors capture overall content and global movement [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Dynamics latent vectors represent fine-grained details and rapid movements [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The approach leverages an Encoder-Decoder backbone augmented with two submodules for extracting these latent spaces [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The first submodule employs a Q-Former to extract low-frequency motion trends, followed by downsampling blocks to remove redundant content details [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The second submodule averages the latent vectors along the spatial dimension to capture rapid motion [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Evaluation conducted on the MCL-JCV dataset [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No limitations explicitly mentioned in the provided text",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/wacv56688.2023.00028",
+      "title": "Lossy Image Compression with Quantized Hierarchical VAEs",
+      "authors": [
+        "Zhihao Duan",
+        "Ming Lu",
+        "Zhan Ma",
+        "Fengqing Zhu"
+      ],
+      "year": 2023,
+      "venue": "IEEE Workshop/Winter Conference on Applications of Computer Vision",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "The proposed model outperforms previous methods on natural image (lossy) compression. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model compresses images in a coarse-to-fine fashion and supports parallel encoding and decoding, leading to fast execution on GPUs. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The paper redesigns the latent variable model of ResNet VAEs using a quantization-aware posterior and prior, enabling easy quantization and entropy coding for image compression. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model uses improved neural network blocks to present a powerful and efficient class of lossy image coders. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper considers the problem of lossy image compression from the perspective of generative modeling. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model is designed to work with natural images. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations are mentioned in the provided excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2602.17133",
+      "title": "VP-VAE: Rethinking Vector Quantization via Adaptive Vector Perturbation",
+      "authors": [
+        "Linwei Zhai",
+        "Han Ding",
+        "Mingzhi Lin",
+        "Cui Zhao",
+        "Fei Wang",
+        "Ge Wang",
+        "Wang Zhi",
+        "Wei Xi"
+      ],
+      "year": 2026,
+      "venue": "Open MIND",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "VP-VAE improves reconstruction fidelity and achieves substantially more balanced token usage compared to VQ-VAE and FSQ-style fixed quantizers. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "VP-VAE avoids the instability inherent to coupled codebook training by decoupling representation learning from discretization. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "FSP, a lightweight variant of VP-VAE, provides a unified theoretical explanation and practical improvement for FSQ-style fixed quantizers under the assumption of approximately uniform latent variables. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "VP-VAE is robust to inference-time quantization error due to its distribution-consistent and scale-adaptive latent perturbations generated via Metropolis--Hastings sampling. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "VP-VAE replaces the non-differentiable quantizer with distribution-consistent and scale-adaptive latent perturbations generated via Metropolis--Hastings sampling. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "VP-VAE eliminates the need for an explicit codebook during training by treating quantization as injecting a structured perturbation in latent space. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "FSP is derived under the assumption of approximately uniform latent variables and serves as a lightweight variant of VP-VAE for FSQ-style fixed quantizers. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Extensive experiments are conducted on image and audio benchmarks to evaluate VP-VAE and FSP. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly state limitations in the provided excerpts. [No page number available]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1145/3596711.3596796",
+      "title": "Pose Space Deformation: A Unified Approach to Shape Interpolation and Skeleton-Driven Deformation",
+      "authors": [
+        "John Lewis",
+        "Matt Cordner",
+        "Nickson Fong"
+      ],
+      "year": 2023,
+      "venue": "ACM eBooks",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Pose space deformation generalizes and improves upon both shape interpolation and common skeleton-driven deformation techniques.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          },
+          {
+            "text": "Several types of deformation can be uniformly represented as mappings from a pose space, defined by either an underlying skeleton or a more abstract system of parameters, to displacements in the object local coordinate frames.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          },
+          {
+            "text": "Once this uniform representation is identified, previously disparate deformation types can be accomplished within a single unified approach.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          },
+          {
+            "text": "The algorithm includes improved expressive power and direct manipulation of the desired shapes yet the performance associated with traditional shape interpolation is achievable.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          },
+          {
+            "text": "Appropriate applications include animation of facial and body deformation for entertainment, telepresence, computer gaming, and other applications where direct sculpting of deformations is desired or where real-time synthesis of a deforming model is required.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          }
+        ],
+        "method": [
+          {
+            "text": "Pose space deformation proceeds from the observation that several types of deformation can be uniformly represented as mappings from a pose space to displacements in the object local coordinate frames.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          },
+          {
+            "text": "The pose space is defined by either an underlying skeleton or a more abstract system of parameters.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          },
+          {
+            "text": "This approach allows for the unification of previously disparate deformation types within a single framework.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1145/3596711.3596796_p1_0"
+            ]
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper does not provide specific details about the experimental setup or datasets used. [N/A]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly mention any limitations of the proposed method. [N/A]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2604.11440",
+      "title": "R3-VAE: Reference Vector-Guided Rating Residual Quantization VAE for Generative Recommendation",
+      "authors": [
+        "Qiang Wan",
+        "Ze Yang",
+        "Dawei Yang",
+        "Ying Fan",
+        "Xin Yan",
+        "Siyang Liu",
+        "Liu, Yicong",
+        "Zhang, Chenwei",
+        "Xu, Wei",
+        "Qin, Jiahao",
+        "Wang, Ke"
+      ],
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "R3-VAE outperforms state-of-the-art methods on six benchmarks, achieving an average improvement of 14.2% in Recall@10 and 15.5% in NDCG@10 across three Amazon datasets. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "On Toutiao, R3-VAE achieves a 1.62% improvement in MRR and a 0.83% gain in StayTime/U versus baselines via GR training and online A/B tests. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Replacing the item ID of the CTR model with R3-VAE leads to significant improvements in content cold start by 15.36%, demonstrating strong applicability and business value in industry-scale recommendation scenarios. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "R3-VAE incorporates a reference vector that functions as a semantic anchor for initial features, mitigating sensitivity to initialization. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A dot product-based rating mechanism is designed to stabilize the training process and prevent codebook collapse. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Two SID evaluation metrics, Semantic Cohesion and Preference Discrimination, are introduced as regularization terms during training. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Empirical evaluation is conducted on six benchmarks, including three Amazon datasets. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Additional experiments involve GR training and online A/B tests on Toutiao. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method is applied to replace the item ID of the CTR model to evaluate content cold-start performance. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are mentioned in the provided text.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2605.13517",
+      "title": "ArcVQ-VAE: A Spherical Vector Quantization Framework with ArcCosine Additive Margin",
+      "authors": [
+        "Jaeyung Kim",
+        "YoungJoon Yoo"
+      ],
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "ArcVQ-VAE achieves competitive performance against baseline models in terms of reconstruction accuracy, representation diversity, and sample quality on standard image reconstruction and generation tasks. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The proposed SAMP (Ball-Bounded Norm Regularization and ArcCosine Additive Margin Loss) promotes more discriminative and uniformly dispersed latent representations within the constrained space, thereby improving effective latent-space coverage and leading to improved codebook utilization. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "ArcVQ-VAE introduces a spherical angular-margin prior (SAMP) for the codebook of a conventional VQ-VAE. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "SAMP consists of Ball-Bounded Norm Regularization, which constrains all codebook vectors within a time-dependent Euclidean ball. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "SAMP also includes ArcCosine Additive Margin Loss, which encourages greater angular separability among latent vectors. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Experimental results are evaluated on standard image reconstruction and generation tasks. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No limitations are explicitly mentioned in the provided text.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1145/3641817",
+      "title": "NeuralVDB: High-resolution Sparse Volume Representation using Hierarchical Neural Networks",
+      "authors": [
+        "Doyub Kim",
+        "Minjae Lee",
+        "Ken Museth"
+      ],
+      "year": 2024,
+      "venue": "ACM Transactions on Graphics",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "NeuralVDB reduces memory footprints of VDB volumes by orders of magnitude while maintaining flexibility and incurring small, user-controlled compression errors. [page P]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "For sparse signed distance fields and density volumes, NeuralVDB achieves compression ratios on the order of 10× to more than 100× from already compressed VDB inputs, with little to no visual artifacts. [page P]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "NeuralVDB offers more effective compression performance compared to other neural representations such as Neural Geometric Level of Detail [Takikawa et al. 2021], Variable Bitrate Neural Fields [Takikawa et al. 2022a], and Instant Neural Graphics Primitives [Müller et al. 2022]. [page P]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Warm-starting from previous frames can accelerate training (i.e., compression) of animated volumes and improve temporal coherency of model inference (i.e., decompression). [page P]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "NeuralVDB replaces the lower nodes of a shallow and wide VDB tree structure with multiple hierarchical neural networks that separately encode topology and value information using neural classifiers and regressors respectively. [page P]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "This approach maximizes the compression ratio while maintaining the spatial adaptivity offered by the higher-level VDB data structure. [page P]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper does not provide specific details about the experimental setup or datasets used in the evaluation. [page P]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly mention any limitations of NeuralVDB. [page P]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52729.2023.00990",
+      "title": "HNeRV: A Hybrid Neural Representation for Videos",
+      "authors": [
+        "Hao Chen",
+        "Matthew Gwilliam",
+        "Ser-Nam Lim",
+        "Abhinav Shrivastava"
+      ],
+      "year": 2023,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "HNeRV outperforms implicit methods in video regression tasks for both reconstruction quality (+4.7 PSNR) and convergence speed (16 × faster), and shows better internal generalization. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "As a simple and efficient video representation, HNeRV also shows decoding advantages for speed, flexibility, and deployment, compared to traditional codecs (H.264, H.265) and learning-based compression methods. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The effectiveness of HNeRV is explored on downstream tasks such as video compression and video inpainting. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "A learnable encoder generates content-adaptive embeddings, which act as the decoder input. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "HNeRV blocks are introduced to ensure model parameters are evenly distributed across the entire network, such that higher layers (layers near the output) can have more capacity to store high-resolution content and video details. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Implicit neural representations store videos as neural networks and have performed well for various vision tasks such as video compression and denoising. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "With frame index or positional index as input, implicit representations (NeRV, E-NeRV, etc.) reconstruct video frames from fixed and content-agnostic embeddings. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The provided body excerpts do not contain any information about limitations of HNeRV.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1145/3658146",
+      "title": "CLAY: A Controllable Large-scale Generative Model for Creating High-quality 3D Assets",
+      "authors": [
+        "Longwen Zhang",
+        "Ziyu Wang",
+        "Qixuan Zhang",
+        "Qiwei Qiu",
+        "Anqi Pang",
+        "Haoran Jiang",
+        "Wei Yang",
+        "Lan Xu",
+        "Jingyi Yu"
+      ],
+      "year": 2024,
+      "venue": "ACM Transactions on Graphics",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "CLAY is a 3D geometry and material generator that transforms human imagination into intricate 3D digital structures using text, image, or diverse 3D-aware controls [page P].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY employs a multi-resolution Variational Autoencoder (VAE) and a minimalistic latent Diffusion Transformer (DiT) to extract rich 3D priors from diverse 3D geometries [page P].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY uses neural fields to represent continuous and complete surfaces and incorporates a geometry generative module with pure transformer blocks in latent space [page P].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY adopts a progressive training scheme on an ultra-large 3D model dataset, resulting in a 3D native geometry generator with 1.5 billion parameters [page P].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY generates physically-based rendering (PBR) textures with diffuse, roughness, and metallic modalities at 2K resolution using a multi-view material diffusion model [page P].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY enables controllable 3D asset creation, ranging from sketchy conceptual designs to production-ready assets with intricate details [page P].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "First-time users can easily use CLAY to bring vivid 3D imaginations to life, unleashing unlimited creativity [page P].",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "CLAY supports classic text or image inputs as well as 3D-aware controls from diverse primitives including multi-view images, voxels, bounding boxes, point clouds, and implicit representations [page P].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The core of CLAY is a large-scale generative model composed of a multi-resolution VAE and a minimalistic latent DiT [page P].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY uses neural fields to represent continuous and complete surfaces [page P].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY’s geometry generative module consists of pure transformer blocks operating in latent space [page P].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY employs a progressive training scheme on an ultra-large 3D model dataset obtained through a carefully designed processing pipeline [page P].",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "For appearance generation, CLAY uses a multi-view material diffusion model to produce PBR textures at 2K resolution with diffuse, roughness, and metallic modalities [page P].",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "CLAY is trained on an ultra-large 3D model dataset obtained through a carefully designed processing pipeline [page P].",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model architecture includes a multi-resolution VAE and a minimalistic latent DiT [page P].",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The geometry generative module uses pure transformer blocks in latent space [page P].",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The material generation module employs a multi-view diffusion model capable of generating 2K resolution PBR textures [page P].",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "CLAY has 1.5 billion parameters [page P].",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are mentioned in the provided excerpts [page P].",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52688.2022.00350",
+      "title": "DLFormer: Discrete Latent Transformer for Video Inpainting",
+      "authors": [
+        "Jingjing Ren",
+        "Qingqing Zheng",
+        "Yuanyuan Zhao",
+        "Xuemiao Xu",
+        "Chen Li"
+      ],
+      "year": 2022,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "The proposed DLFormer method significantly outperforms other state-of-the-art approaches in reconstructing visually-plausible and spatial-temporal coherent content with fine-grained details. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The discrete latent transformer is capable to infer proper codes for unknown areas under a self-attention mechanism, producing fine-grained content with long-term spatial-temporal consistency. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "A temporal aggregation block among adjacent frames is used to explicitly enforce short-term consistency and relieve temporal visual jitters. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The video inpainting task is reformulated into the discrete latent space rather than the previous continuous feature space. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A unique compact discrete codebook and the corresponding autoencoder are learned to represent the target video. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Discrete latent transformer uses self-attention to infer proper codes for unknown areas based on representative discrete codes from the entire target video. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A temporal aggregation block is applied among adjacent frames to enforce short-term consistency and reduce temporal visual jitters. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Comprehensive quantitative and qualitative evaluations are conducted to validate the performance of DLFormer. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No limitations are explicitly mentioned in the provided text.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/tnnls.2023.3282047",
+      "title": "VAE-Based Interpretable Latent Variable Model for Process Monitoring",
+      "authors": [
+        "Zhuofu Pan",
+        "Yalin Wang",
+        "Yue Cao",
+        "Weihua Gui"
+      ],
+      "year": 2023,
+      "venue": "IEEE Transactions on Neural Networks and Learning Systems",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "A variational autoencoder-based interpretable latent variable model (VAE-ILVM) is developed for process monitoring, enabling meaningful and interpretable latent variables while maintaining strong performance. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Two propositions based on Taylor expansions guide the design of activation functions in VAE-ILVM to ensure nondisappearing fault impact terms in generated monitoring metrics (MMs). [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The sequence of counting test statistics exceeding thresholds is modeled as a martingale; a de la Peña inequality is used to learn suitable thresholds, reducing minimum required sample size for modeling. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Two chemical process examples verify the effectiveness of the proposed method. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Uses a variational autoencoder (VAE) framework to construct an interpretable latent variable model (VAE-ILVM) for process monitoring. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Applies Taylor expansions to derive two propositions that inform the selection of activation functions, ensuring fault impacts do not vanish in monitoring metrics. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Models the exceedance sequence of test statistics over thresholds as a martingale and employs the de la Peña inequality to compute adaptive thresholds. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Evaluated on two chemical process examples (specific details not provided in excerpt). [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Requires learning thresholds via martingale property and de la Peña inequality, which reduces minimum sample size needed for modeling compared to traditional methods. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are stated in the provided abstract or body excerpts. [No citation available]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2502.11897",
+      "title": "DLFR-VAE: Dynamic Latent Frame Rate VAE for Video Generation",
+      "authors": [
+        "Zhihang Yuan",
+        "Siyuan Wang",
+        "Rui Xie",
+        "Hanling Zhang",
+        "Tongcheng Fang",
+        "Yuzhang Shang",
+        "Shengen Yan",
+        "Guohao Dai",
+        "Yu Wang"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "DLFR-VAE is a training-free paradigm that uses adaptive temporal compression in latent space for video generation. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Real-world video content exhibits substantial temporal non-uniformity, with high-motion segments containing more information than static scenes. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "DLFR-VAE dynamically adjusts the latent frame rate according to content complexity. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "DLFR-VAE comprises two core innovations: (1) A Dynamic Latent Frame Rate Scheduler and (2) A training-free adaptation mechanism. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "DLFR-VAE can function as a plug-and-play module, seamlessly integrating with existing video generation models and accelerating the video generation process. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The Dynamic Latent Frame Rate Scheduler partitions videos into temporal chunks and adaptively determines optimal frame rates based on information-theoretic content complexity. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The training-free adaptation mechanism transforms pretrained VAE architectures into a dynamic VAE that can process features with variable frame rates. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "No specific setup details are provided in the given excerpts.",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No limitations are mentioned in the given excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2412.20404",
+      "title": "Open-Sora: Democratizing Efficient Video Production for All",
+      "authors": [
+        "Z. Zheng",
+        "Xiangyu Peng",
+        "Tianji Yang",
+        "Shen, Chenhui",
+        "Sheung-Wai Li",
+        "Hongxin Liu",
+        "Yukun Zhou",
+        "Tianyi Li",
+        "Yang You"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Open-Sora supports text-to-image generation, text-to-video generation, and image-to-video generation tasks. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model can generate video content up to 15 seconds long, at resolutions up to 720p, with arbitrary aspect ratios. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Open-Sora introduces Spatial-Temporal Diffusion Transformer (STDiT), an efficient diffusion framework for videos that decouples spatial and temporal attention. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "A highly compressive 3D autoencoder is introduced to make representations compact and accelerate training with an ad hoc training strategy. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Open-Sora aims to foster innovation, creativity, and inclusivity within the AI content creation community by embracing open-source principles. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "All training/inference/data preparation codes and model weights are publicly available at https://github.com/hpcaitech/Open-Sora. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "The model leverages advanced deep learning architectures and training/inference techniques to enable flexible video synthesis. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Spatial-Temporal Diffusion Transformer (STDiT) is used as an efficient diffusion framework for videos, decoupling spatial and temporal attention. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A highly compressive 3D autoencoder is utilized to create compact representations and accelerate training using an ad hoc training strategy. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "No specific setup details are provided in the given excerpts.",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No limitations are explicitly mentioned in the given excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2411.06449",
+      "title": "Improved Video VAE for Latent Video Diffusion Model",
+      "authors": [
+        "Ping Wu",
+        "K. J. Zhu",
+        "Liu Yu",
+        "Liming Zhao",
+        "Wei Zhai",
+        "Yang Cao",
+        "Zheng-Jun Zha"
+      ],
+      "year": 2024,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "The proposed IV-VAE achieves state-of-the-art video reconstruction and generation capabilities across five benchmarks. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The keyframe-based temporal compression (KTC) architecture reduces temporal-spatial conflicts and accelerates the convergence speed of video VAE. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The group causal convolution (GCConv) module ensures inter-frame equivalence within frame groups and maintains flexibility for variable-length videos via causal logical padding between groups. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Proposes a keyframe-based temporal compression (KTC) architecture that splits the latent space into two branches: one inheriting compression priors from a lower-dimension image VAE for keyframes, and the other using 3D group causal convolution for temporal compression. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Introduces a group causal convolution (GCConv) module that applies standard convolution within each frame group to ensure inter-frame equivalence and uses causal logical padding between groups to support variable frame inputs. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Avoids initializing video VAE from a well-trained image VAE with identical latent dimensions, as it suppresses improvement in temporal compression capabilities. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Replaces fully causal reasoning in video VAE with group-wise causal processing to balance information interaction and performance across frames. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Evaluated on five benchmarks for video reconstruction and generation tasks. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "Compared against existing video VAEs that inflate pretrained image VAEs into 3D causal structures. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are stated in the provided abstract or body excerpts. [No citable page]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52729.2023.00244",
+      "title": "Video-Text as Game Players: Hierarchical Banzhaf Interaction for Cross-Modal Representation Learning",
+      "authors": [
+        "Peng Jin",
+        "Jinfa Huang",
+        "Pengfei Xiong",
+        "Shangxuan Tian",
+        "Chang Liu",
+        "Xiangyang Ji",
+        "Yuan Li",
+        "Jie Chen"
+      ],
+      "year": 2023,
+      "venue": "Computer Vision and Pattern Recognition",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "The proposed Hierarchical Banzhaf Interaction (HBI) model achieves superior performance on text-video retrieval and video-question answering benchmarks compared to existing methods. [Page 1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "HBI serves as an effective visualization tool to promote the understanding of cross-modal interaction, offering explainability in fine-grained semantic matching between video frames and text words. [Page 1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Video-text pairs are modeled as game players using multivariate cooperative game theory to handle uncertainty in fine-grained cross-modal interactions with diverse granularity, flexible combination, and vague intensity. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Hierarchical Banzhaf Interaction (HBI) is proposed to value possible correspondence between video frames and text words for sensitive and explainable cross-modal contrast. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method clusters original video frames and text words, then computes Banzhaf Interaction between merged tokens to efficiently realize cooperative games across multiple tokens. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Token merge modules are stacked to achieve cooperative games at different semantic levels, enabling hierarchical interaction modeling. [Page 1]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "Experiments are conducted on commonly used text-video retrieval and video-question answering benchmarks. [Page 1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The project page is available at https://jpthu17.github.io/HBI/. [Page 1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No explicit limitations are mentioned in the provided abstract or body excerpts. [No page number available]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/wacv61042.2026.00206",
+      "title": "Pyramidal Spectrum: Frequency-based Hierarchically Vector Quantized VAE for Videos",
+      "authors": [
+        "Tushar Prakash",
+        "Onkar Susladkar",
+        "Inderjit S. Dhillon",
+        "Sparsh Mittal"
+      ],
+      "year": 2026,
+      "venue": null,
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "PVQ-VAE achieves state-of-the-art performance on WebVid-val, COCO-val, and MCL-JCV. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "PVQ-VAE reconstructs videos with high perceptual quality at up to 32× spatial and 16× temporal compression. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "PVQ-VAE’s encoder–decoder leverages Fast Fourier Transform and Discrete Wavelet Transform to capture global semantics and multi-scale local details jointly. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Pyramidal Vector Quantization (PVQ), a hierarchical quantization scheme that discretizes features at multiple resolutions to better capture multi-scale information. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A cross-modal contrastive loss guided by a pretrained high-resolution image VAE is introduced to further boost fidelity. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper does not provide specific details about the setup in the provided excerpts. [No page number available]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "Existing discrete VAEs face two key limitations: (i) a lack of frequency-domain modeling to enhance global spatiotemporal understanding, and (ii) fixed-resolution quantization schemes, preventing effective modeling of coarse-to-fine spatiotemporal hierarchies essential for video generation. [Abstract]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1093/jrsssb/qkad010",
+      "title": "Bayesian Pyramids: identifiable multilayer discrete latent structure models for discrete data",
+      "authors": [
+        "Yuqi Gu",
+        "David B. Dunson"
+      ],
+      "year": 2023,
+      "venue": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "We propose a class of identifiable multilayer (potentially deep) discrete latent structure models for discrete data, termed Bayesian Pyramids.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "We establish the identifiability of Bayesian Pyramids by developing novel transparent conditions on the pyramid-shaped deep latent directed graph.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "The proposed identifiability conditions can ensure Bayesian posterior consistency under suitable priors.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "As an illustration, we consider the two-latent-layer model and propose a Bayesian shrinkage estimation approach.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "Simulation results for this model corroborate the identifiability and estimatability of model parameters.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "Applications of the methodology to DNA nucleotide sequence data uncover useful discrete latent features that are highly predictive of sequence types.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "The proposed framework provides a recipe for interpretable unsupervised learning of discrete data and can be a useful alternative to popular machine learning methods.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          }
+        ],
+        "method": [
+          {
+            "text": "The paper proposes Bayesian Pyramids, which are identifiable multilayer discrete latent structure models for discrete data.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "Identifiability is established through conditions on the pyramid-shaped deep latent directed graph.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "A Bayesian shrinkage estimation approach is proposed for the two-latent-layer model.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          }
+        ],
+        "setup": [
+          {
+            "text": "High-dimensional categorical data are routinely collected in biomedical and social sciences.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "It is important to build interpretable parsimonious models that perform dimension reduction and uncover meaningful latent structures from such discrete data.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          },
+          {
+            "text": "Identifiability is a fundamental requirement for valid modeling and inference in such scenarios, yet is challenging to address when there are complex latent structures.",
+            "dimension": "setup",
+            "evidence_ids": [
+              "paper:10.1093/jrsssb/qkad010_p1_0"
+            ]
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly mention limitations in the provided excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2503.17359",
+      "title": "Position: Interactive Generative Video as Next-Generation Game Engine",
       "authors": [
         "Jiwen Yu",
         "Yiran Qin",
+        "Haoxuan Che",
+        "Quande Liu",
         "Xintao Wang",
         "Pengfei Wan",
         "Di Zhang",
@@ -135,58 +3019,43 @@
       "possible_claims": {
         "key_results": [
           {
-            "text": "GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation. [Abstract]",
+            "text": "Proposes Interactive Generative Video (IGV) as the foundation for Generative Game Engines (GGE), enabling unlimited novel content generation in next-generation gaming. [Abstract]",
             "dimension": "key_results",
             "evidence_ids": []
           },
           {
-            "text": "The framework introduces GF-Minecraft, an action-annotated game video dataset without human bias, enabling precise control over both keyboard and mouse inputs. [Abstract]",
+            "text": "GGE leverages IGV's unique strengths in unlimited high-quality content synthesis, physics-aware world modeling, user-controlled interactivity, long-term memory capabilities, and causal reasoning. [Abstract]",
             "dimension": "key_results",
             "evidence_ids": []
           },
           {
-            "text": "GameFactory supports autoregressive generation for unlimited-length interactive videos. [Abstract]",
+            "text": "Presents a comprehensive framework detailing GGE's core modules and a hierarchical maturity roadmap (L0-L4) to guide its evolution. [Abstract]",
             "dimension": "key_results",
             "evidence_ids": []
           },
           {
-            "text": "A multi-phase training strategy with a domain adapter decouples game style learning from action control, achieving scene-generalizable action control. [Abstract]",
+            "text": "Envisions a future where AI-powered generative systems fundamentally reshape how games are created and experienced. [Abstract]",
             "dimension": "key_results",
             "evidence_ids": []
           }
         ],
         "method": [
           {
-            "text": "GameFactory is a framework for action-controlled scene-generalizable game video generation. [Abstract]",
-            "dimension": "method",
-            "evidence_ids": []
-          },
-          {
-            "text": "It includes an action control module that enables precise control over both keyboard and mouse inputs. [Abstract]",
-            "dimension": "method",
-            "evidence_ids": []
-          },
-          {
-            "text": "The method leverages open-domain generative priors from pre-trained video diffusion models to enable the creation of entirely new and diverse games beyond fixed styles and scenes. [Abstract]",
-            "dimension": "method",
-            "evidence_ids": []
-          },
-          {
-            "text": "A domain adapter is proposed to bridge the domain gap between open-domain priors and small-scale game datasets. [Abstract]",
+            "text": "No specific method described in the provided excerpts. [Body excerpts]",
             "dimension": "method",
             "evidence_ids": []
           }
         ],
         "setup": [
           {
-            "text": "The paper does not provide specific details about the experimental setup, such as hardware, software, or evaluation metrics. [Body excerpts]",
+            "text": "No specific setup described in the provided excerpts. [Body excerpts]",
             "dimension": "setup",
             "evidence_ids": []
           }
         ],
         "limitations": [
           {
-            "text": "The paper does not explicitly mention any limitations of the proposed method. [Body excerpts]",
+            "text": "No limitations explicitly mentioned in the provided excerpts. [Body excerpts]",
             "dimension": "limitations",
             "evidence_ids": []
           }
@@ -195,21 +3064,18 @@
       "bibtex_key": null
     },
     {
-      "paper_id": "paper:10.48550/arxiv.2402.12348",
-      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "paper_id": "paper:10.48550/arxiv.2601.17743",
+      "title": "Video Compression with Hierarchical Temporal Neural Representation",
       "authors": [
-        "Jinhao Duan",
-        "Renming Zhang",
-        "James Diffenderfer",
-        "Bhavya Kailkhura",
-        "Lichao Sun",
-        "Elias Stengel-Eskin",
-        "Mohit Bansal",
-        "Tianlong Chen",
-        "Kaidi Xu"
+        "Jun Zhu",
+        "Xinfeng Zhang",
+        "Lv Tang",
+        "Junhao Jiang",
+        "Gai Zhang",
+        "Jia Wang"
       ],
-      "year": 2024,
-      "venue": "arXiv.org",
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
       "matched_aspects": [],
       "category_id": null,
       "category": "",
@@ -224,58 +3090,43 @@
       "possible_claims": {
         "key_results": [
           {
-            "text": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+            "text": "TeNeRV consistently outperforms existing INR-based methods in rate-distortion performance. [Abstract]",
             "dimension": "key_results",
             "evidence_ids": []
           },
           {
-            "text": "Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. [P1]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "Code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. [P1]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "The paper characterizes the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. [P1]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "Detailed error profiles are provided for a better understanding of LLMs' behavior. [P1]",
+            "text": "The proposed approach effectively captures complex temporal dependencies through hierarchical modeling. [Abstract]",
             "dimension": "key_results",
             "evidence_ids": []
           }
         ],
         "method": [
           {
-            "text": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+            "text": "TeNeRV integrates short- and long-term dependencies via two key components: Inter-Frame Feature Fusion (IFF) and GoP-Adaptive Modulation (GAM). [Abstract]",
             "dimension": "method",
             "evidence_ids": []
           },
           {
-            "text": "The paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. [P1]",
+            "text": "The IFF module aggregates features from adjacent frames to enforce local temporal coherence and capture fine-grained motion. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The GAM mechanism partitions videos into Groups-of-Pictures (GoPs) and learns group-specific priors to modulate network parameters for adaptive representations across different GoPs. [Abstract]",
             "dimension": "method",
             "evidence_ids": []
           }
         ],
         "setup": [
           {
-            "text": "GTBench includes 10 tasks covering a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
-            "dimension": "setup",
-            "evidence_ids": []
-          },
-          {
-            "text": "The paper performs LLM-vs.-LLM competitions as reasoning evaluation. [P1]",
+            "text": "Extensive experiments were conducted to evaluate TeNeRV’s performance against existing INR-based methods. [Abstract]",
             "dimension": "setup",
             "evidence_ids": []
           }
         ],
         "limitations": [
           {
-            "text": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+            "text": "No limitations are explicitly mentioned in the provided text.",
             "dimension": "limitations",
             "evidence_ids": []
           }
@@ -284,21 +3135,98 @@
       "bibtex_key": null
     },
     {
-      "paper_id": "paper:10.48550/arxiv.2506.17201",
-      "title": "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "paper_id": "paper:10.1109/tip.2026.3696103",
+      "title": "HANeRV: Hierarchically Adaptive Neural Representation for Video Compression",
       "authors": [
-        "Li, Jiaqi",
-        "Tang, Junshu",
-        "Xu, Zhiyong",
-        "Wu, Longhuang",
-        "Zhou, Yuan",
-        "Shao, Shuai",
-        "Yu, Tianbao",
-        "Cao, Zhiguo",
-        "Lu, Qinglin"
+        "Lv Tang",
+        "J ZHU",
+        "Xi Zhang",
+        "Li Zhang",
+        "Siwei Ma",
+        "Qingming Huang"
+      ],
+      "year": 2026,
+      "venue": "IEEE Transactions on Image Processing",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "HANeRV achieves state-of-the-art performance among INR-based video compression methods. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "HANeRV surpasses the H.266/VVC (x266, medium preset) anchor on diverse datasets. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Proposes Hierarchically Adaptive Neural Representation for Video Compression (HANeRV), an innovative INR-based video compression network that adaptively conducts structure optimisation based on the specific content of each video sequence. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Proposes a dynamic architecture-level adjustment (DAA) to better capture dynamic information across video sequences. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Implements a dynamic frame-level adjustment (DFA) to enhance the capture of dynamics between frames within a sequence. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Devises a structure level hierarchical structural adaptation (HSA) to effectively capture spatial structural information within video frames, thereby enhancing the detail restoration capabilities of HANeRV. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "No specific setup details provided in the abstract or body excerpts.",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "Most current INR methods utilize a fixed and uniform network architecture across all frames, limiting their adaptability to dynamic variations within and between video sequences. [Abstract]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          },
+          {
+            "text": "These methods often lead to suboptimal compression outcomes as they struggle to capture the distinct nuances and transitions in video content. [Abstract]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.1109/tmm.2025.3544415",
+      "title": "Neural Volumetric Video Coding With Hierarchical Coded Representation of Dynamic Volume",
+      "authors": [
+        "Ju Yeon Shin",
+        "Jung-Kyung Lee",
+        "Gun Bang",
+        "Jun-Sik Kim",
+        "Je‐Won Kang"
       ],
       "year": 2025,
-      "venue": "arXiv.org",
+      "venue": "IEEE Transactions on Multimedia",
       "matched_aspects": [],
       "category_id": null,
       "category": "",
@@ -313,146 +3241,63 @@
       "possible_claims": {
         "key_results": [
           {
-            "text": "Hunyuan-GameCraft significantly outperforms existing models in advancing the realism and playability of interactive game video generation. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "The model achieves fine-grained action control by unifying standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "A hybrid history-conditioned training strategy is proposed that extends video sequences autoregressively while preserving game scene information. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "Model distillation is achieved to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "The curated game scene data significantly improves the visual fidelity, realism and action controllability. [Abstract]",
+            "text": "The proposed technique outperforms existing MV video coding standards and current state-of-the-art methods, providing superior rate-distortion performance in the novel view synthesis of MV video compression. [page P]",
             "dimension": "key_results",
             "evidence_ids": []
           }
         ],
         "method": [
           {
-            "text": "Hunyuan-GameCraft unifies standard keyboard and mouse inputs into a shared camera representation space for fine-grained action control. [Abstract]",
+            "text": "A novel multi-view (MV) video coding technique that leverages a four-dimensional (4D) voxel-grid representation to enhance coding efficiency, particularly in novel view synthesis. [page P]",
             "dimension": "method",
             "evidence_ids": []
           },
           {
-            "text": "A hybrid history-conditioned training strategy is used to extend video sequences autoregressively while preserving game scene information. [Abstract]",
+            "text": "Introduction of a hierarchical coded representation of dynamic volumes based on low-rank tensor decomposition of volumetric features. [page P]",
             "dimension": "method",
             "evidence_ids": []
           },
           {
-            "text": "Model distillation is employed to reduce computational overhead while maintaining consistency across long temporal sequences for real-time deployment. [Abstract]",
+            "text": "Development of effective coding techniques based on the hierarchical coded representation. [page P]",
             "dimension": "method",
             "evidence_ids": []
           },
           {
-            "text": "The model is trained on a large-scale dataset of over one million gameplay recordings across over 100 AAA games and fine-tuned on a carefully annotated synthetic dataset. [Abstract]",
-            "dimension": "method",
-            "evidence_ids": []
-          }
-        ],
-        "setup": [
-          {
-            "text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games. [Abstract]",
-            "dimension": "setup",
-            "evidence_ids": []
-          },
-          {
-            "text": "The model is fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
-            "dimension": "setup",
-            "evidence_ids": []
-          }
-        ],
-        "limitations": [
-          {
-            "text": "Current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. [Abstract]",
-            "dimension": "limitations",
-            "evidence_ids": []
-          }
-        ]
-      },
-      "bibtex_key": null
-    },
-    {
-      "paper_id": "paper:10.48550/arxiv.2402.01118",
-      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
-      "authors": [
-        "Sihao Hu",
-        "Tiansheng Huang",
-        "Линг Лиу"
-      ],
-      "year": 2024,
-      "venue": "arXiv.org",
-      "matched_aspects": [],
-      "category_id": null,
-      "category": "",
-      "card_type": "shallow",
-      "problem": "",
-      "method": "",
-      "contribution": "",
-      "limitations": "",
-      "evidence_ids": [],
-      "figure_ids": [],
-      "table_ids": [],
-      "possible_claims": {
-        "key_results": [
-          {
-            "text": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "PokeLLMon demonstrates human-like battle strategies and just-in-time decision making in online battles against humans. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          },
-          {
-            "text": "PokeLLMon achieves a 49% win rate in Ladder competitions and a 56% win rate in invited battles. [Abstract]",
-            "dimension": "key_results",
-            "evidence_ids": []
-          }
-        ],
-        "method": [
-          {
-            "text": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+            "text": "Employment of a two-level coding strategy to capture the temporal characteristics of the decomposed features. [page P]",
             "dimension": "method",
             "evidence_ids": []
           },
           {
-            "text": "PokeLLMon uses knowledge-augmented generation to retrieve external knowledge, counteract hallucination, and enable timely and proper actions. [Abstract]",
+            "text": "At a higher level, spatial features are encoded, representing 3D structural information, with time-invariant components over short intervals of an MV video sequence. [page P]",
             "dimension": "method",
             "evidence_ids": []
           },
           {
-            "text": "PokeLLMon employs consistent action generation to mitigate the panic switching phenomenon when facing powerful opponents. [Abstract]",
+            "text": "At a lower level, temporal features are encoded to capture the dynamics of current scenes. [page P]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Spatial features are shared in a group, and temporal features are encoded at each time step. [page P]",
             "dimension": "method",
             "evidence_ids": []
           }
         ],
         "setup": [
           {
-            "text": "The paper does not provide specific details on the setup used for training or evaluating PokeLLMon. [Body excerpts]",
+            "text": "The study focuses on the compression of multi-view (MV) videos, interpreting it as the compression of dense features. [page P]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The voxel grid approximation provides a continuous representation for dynamic scenes but requires substantial storage. [page P]",
             "dimension": "setup",
             "evidence_ids": []
           }
         ],
         "limitations": [
           {
-            "text": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+            "text": "The substantial size of volumetric features poses a significant problem relative to the generation of dynamic scenes at arbitrary viewpoints. [page P]",
             "dimension": "limitations",
             "evidence_ids": []
           }

@@ -58,7 +58,7 @@ def run(request_path: str) -> dict:
     logger.info(f"[worker] start task_id={request.task_id} topic={request.topic!r} "
                 f"use_mineru={request.pipeline_config.use_mineru} seed={len(seed_papers)} surveys={len(surveys)}")
 
-    demand = phase1_decompose.run(request, strategy, seed_papers)
+    demand = phase1_decompose.run(request, strategy, seed_papers, llm)
     logger.info(f"[worker] P1 done: {len(demand.aspects)} aspects, "
                 f"{len(demand.structure_errors)} structure_errors, {len(demand.coverage_warnings)} coverage_warnings")
 
