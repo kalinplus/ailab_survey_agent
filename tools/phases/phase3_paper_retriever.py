@@ -149,6 +149,27 @@ def run(
                 f"use_influence_score={pipeline_config.use_influence_score}")
     retrieved = []
     first_seen_rank = {}
+    if not getattr(pipeline_config, "use_online_search", True):
+        if pipeline_config.use_seed_fallback:
+            retrieved = [_to_retrieved(s, source="seed") for s in seed_papers]
+            first_seen_rank = {p.paper_id: i for i, p in enumerate(retrieved)}
+        retrieved = dedup(retrieved)[:pipeline_config_extra(pipeline_config, "max_papers", 40)]
+        parsed = []
+        for p in retrieved:
+            p.parse_status = "abstract_only"
+            if p.abstract:
+                parsed.append(ParsedPaper(
+                    paper_id=p.paper_id,
+                    title=p.title,
+                    abstract=p.abstract,
+                    sections=[],
+                    paragraphs=[],
+                    figures=[],
+                    tables=[],
+                    parse_status="abstract_only",
+                ))
+        return (RetrievedPapers(task_id=task_id, papers=retrieved),
+                ParsedPapers(task_id=task_id, papers=parsed))
     # 1. expansion refs via meta-paper-relations (skip if sciverse offline -> caught upstream)
     # 2. meta-search per aspect (verified SciVerse filter/response contract)
     filter_sets = (

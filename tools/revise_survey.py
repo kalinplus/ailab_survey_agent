@@ -1,0 +1,190 @@
+"""C tool: conservative survey revision after verification failure."""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+from typing import Any
+
+from config import load_config
+from harness.json_io import read_json
+from harness.logger import now_iso
+
+
+def run(request_path: str) -> dict[str, Any]:
+    cfg = load_config()
+    root = cfg.root_dir
+    request_file = _resolve(root, request_path)
+    req = read_json(request_file)
+    task_id = req.get("task_id", "unknown_task")
+    inputs = req.get("inputs", {})
+    outputs = req.get("outputs", {})
+
+    survey_path = _resolve(root, inputs.get("survey_markdown_path", "output/survey.md"))
+    citation_result = _read_optional(root, inputs.get("citation_result_path"), {"entries": []})
+    claim_map = _read_optional(root, inputs.get("claim_map_path"), {"entries": []})
+    ready_set = _read_optional(root, inputs.get("citation_ready_set_path"), {"allowed_paper_ids": [], "items": []})
+    gen_bank = _read_optional(root, inputs.get("generated_artifact_bank_path"), {"artifacts": []})
+
+    allowed_ids = set(ready_set.get("allowed_paper_ids", []))
+    allowed_artifacts = {item.get("artifact_id") for item in _as_list(gen_bank, "artifacts") if item.get("artifact_id")}
+    card_by_id = {item.get("paper_id"): item for item in ready_set.get("items", []) if item.get("paper_id")}
+
+    markdown = survey_path.read_text(encoding="utf-8")
+    notes: list[str] = []
+    revised = _remove_invalid_entries(markdown, citation_result, allowed_ids, allowed_artifacts, notes)
+    revised = _revise_unsupported_claims(revised, claim_map, allowed_ids, notes)
+    revised = _replace_references(revised, card_by_id)
+    revised = _append_revision_notes(revised, notes)
+
+    revised_path = _resolve(root, outputs.get("revised_survey_markdown_path", "output/survey_revised.md"))
+    revised_path.parent.mkdir(parents=True, exist_ok=True)
+    revised_path.write_text(revised, encoding="utf-8")
+
+    return {
+        "task_id": task_id,
+        "tool": "revise_survey",
+        "owner": "C",
+        "status": "success",
+        "input_request": request_path,
+        "outputs": [_rel(root, revised_path)],
+        "metrics": {
+            "revision_notes": len(notes),
+            "remaining_citations": len(_extract_citations(revised)),
+            "remaining_artifact_refs": len(_extract_figure_refs(revised)),
+        },
+        "message": "Survey revised conservatively without adding references.",
+        "timestamp": now_iso(),
+    }
+
+
+def _remove_invalid_entries(
+    markdown: str,
+    citation_result: dict[str, Any],
+    allowed_ids: set[str],
+    allowed_artifacts: set[str],
+    notes: list[str],
+) -> str:
+    invalid_entries = [
+        entry.get("citation_id")
+        for entry in citation_result.get("entries", [])
+        if isinstance(entry, dict) and entry.get("valid") is False and entry.get("citation_id")
+    ]
+    for item_id in invalid_entries:
+        if item_id in allowed_ids or item_id in allowed_artifacts:
+            continue
+        before = markdown
+        markdown = re.sub(rf"^.*!\[[^\]]*\]\({re.escape(item_id)}\).*$\n?", "", markdown, flags=re.MULTILINE)
+        markdown = markdown.replace(f"[{item_id}]", "")
+        if markdown != before:
+            notes.append(f"Removed invalid citation or artifact reference: {item_id}.")
+
+    for cite in sorted(_extract_citations(markdown) - allowed_ids):
+        markdown = markdown.replace(f"[{cite}]", "")
+        notes.append(f"Removed non-whitelisted citation: {cite}.")
+
+    for artifact_id in sorted(_extract_figure_refs(markdown) - allowed_artifacts):
+        markdown = re.sub(rf"^.*!\[[^\]]*\]\({re.escape(artifact_id)}\).*$\n?", "", markdown, flags=re.MULTILINE)
+        notes.append(f"Removed undeclared generated artifact reference: {artifact_id}.")
+    return markdown
+
+
+def _revise_unsupported_claims(
+    markdown: str,
+    claim_map: dict[str, Any],
+    allowed_ids: set[str],
+    notes: list[str],
+) -> str:
+    entries = claim_map.get("entries")
+    if entries is None:
+        entries = claim_map.get("claims", [])
+    for entry in entries if isinstance(entries, list) else []:
+        if not isinstance(entry, dict):
+            continue
+        status = entry.get("status") or entry.get("evidence_status")
+        cited_id = entry.get("cited_paper_id")
+        if status != "unsupported" or cited_id not in allowed_ids:
+            continue
+        claim_text = str(entry.get("claim_text") or entry.get("claim") or "").strip()
+        before = markdown
+        markdown = _remove_sentence_containing(markdown, claim_text, cited_id)
+        if markdown != before:
+            notes.append(f"Removed unsupported claim citing {cited_id}.")
+    return markdown
+
+
+def _replace_references(markdown: str, card_by_id: dict[str, dict[str, Any]]) -> str:
+    body = re.split(r"\n## References\b", markdown, maxsplit=1)[0].rstrip()
+    used = sorted(_extract_citations(body))
+    refs = ["", "## References", ""]
+    for paper_id in used:
+        card = card_by_id.get(paper_id, {})
+        title = card.get("title") or paper_id
+        year = card.get("year") or "n.d."
+        refs.append(f"- {paper_id}: {title} ({year}).")
+    return body + "\n" + "\n".join(refs).rstrip() + "\n"
+
+
+def _append_revision_notes(markdown: str, notes: list[str]) -> str:
+    if not notes:
+        notes = ["No illegal citations or artifacts were found; references were normalized to actually cited allowed papers."]
+    lines = [markdown.rstrip(), "", "## Revision Notes", ""]
+    for note in notes:
+        lines.append(f"- {note}")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _remove_sentence_containing(markdown: str, claim_text: str, cited_id: str) -> str:
+    if not claim_text:
+        return markdown
+    fragments = re.split(r"(?<=[.。])\s+", markdown)
+    kept = []
+    normalized = _compact(claim_text)
+    for fragment in fragments:
+        if f"[{cited_id}]" in fragment and normalized and normalized[:60] in _compact(fragment):
+            continue
+        kept.append(fragment)
+    return " ".join(kept)
+
+
+def _read_optional(root: Path, raw_path: str | None, default: Any) -> Any:
+    if not raw_path:
+        return default
+    path = _resolve(root, raw_path)
+    if not path.exists():
+        return default
+    return read_json(path)
+
+
+def _resolve(root: Path, raw_path: str | Path) -> Path:
+    path = Path(raw_path)
+    return path if path.is_absolute() else root / path
+
+
+def _rel(root: Path, path: Path) -> str:
+    try:
+        return str(path.relative_to(root)).replace("\\", "/")
+    except ValueError:
+        return str(path)
+
+
+def _as_list(data: Any, key: str) -> list[dict[str, Any]]:
+    if isinstance(data, dict):
+        data = data.get(key, [])
+    if not isinstance(data, list):
+        return []
+    return [item for item in data if isinstance(item, dict)]
+
+
+def _extract_citations(markdown: str) -> set[str]:
+    text_only = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", markdown)
+    return {match.strip() for match in re.findall(r"\[([^\]]+)\]", text_only) if not match.startswith("http")}
+
+
+def _extract_figure_refs(markdown: str) -> set[str]:
+    return {match.strip() for match in re.findall(r"!\[[^\]]*\]\(([^)]+)\)", markdown)}
+
+
+def _compact(text: str) -> str:
+    return " ".join(text.split())
+

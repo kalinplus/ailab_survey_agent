@@ -96,7 +96,7 @@ class Planner:
             probe_limit=self.config.strategy_probe_limit,
             cluster_count=self.config.strategy_cluster_count,
             memory_context=memory_context,
-            llm_json_chat=self._strategy_json_chat if self.llm_client.is_configured() else None,
+            llm_json_chat=self._strategy_json_chat if mode == "full" and self.llm_client.is_configured() else None,
         )
         strategy["strategy_generation"] = {
             "mode": mode,

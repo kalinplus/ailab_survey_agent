@@ -54,14 +54,31 @@ def run(
     logger.info(f"[P2] survey_analyzer: {len(surveys)} surveys, {len(aspects)} aspects")
     analyzed = analyze_surveys(surveys, mineru, cleaner)
     # Step 1: independent preliminary taxonomy
-    prelim_raw = llm.json_chat([{"role": "user", "content": PRELIM_PROMPT.format(
-        topic=topic, sub_domains=sub_domains, aspects=[a["aspect_name"] for a in aspects])}], max_tokens=2000)
+    aspect_names = [a["aspect_name"] for a in aspects]
+    if getattr(llm, "_evisurvey_taxonomy_fallback", False):
+        prelim_raw = {"categories": _fallback_categories(sub_domains, aspect_names)}
+    else:
+        try:
+            prelim_raw = llm.json_chat([{"role": "user", "content": PRELIM_PROMPT.format(
+                topic=topic, sub_domains=sub_domains, aspects=aspect_names)}], max_tokens=2000)
+        except Exception:
+            setattr(llm, "_evisurvey_taxonomy_fallback", True)
+            setattr(llm, "_evisurvey_card_fallback", True)
+            prelim_raw = {"categories": _fallback_categories(sub_domains, aspect_names)}
     prelim = prelim_raw.get("categories", [])
     logger.info(f"[P2] prelim taxonomy -> {len(prelim)} categories")
     # Step 2: refine with survey skeletons
     survey_skels = [a["taxonomy_skeleton"] for a in analyzed]
-    refined_raw = llm.json_chat([{"role": "user", "content": REFINE_PROMPT.format(
-        prelim=prelim, survey_skels=survey_skels)}], max_tokens=2000)
+    if getattr(llm, "_evisurvey_taxonomy_fallback", False):
+        refined_raw = {"categories": prelim or _fallback_categories(sub_domains, aspect_names)}
+    else:
+        try:
+            refined_raw = llm.json_chat([{"role": "user", "content": REFINE_PROMPT.format(
+                prelim=prelim, survey_skels=survey_skels)}], max_tokens=2000)
+        except Exception:
+            setattr(llm, "_evisurvey_taxonomy_fallback", True)
+            setattr(llm, "_evisurvey_card_fallback", True)
+            refined_raw = {"categories": prelim or _fallback_categories(sub_domains, aspect_names)}
     refined = refined_raw.get("categories", [])
     # expansion candidates from referenced papers
     expansion = [{"paper_id_hint": pid, "source_survey": a["paper_id"], "priority": "high"}
@@ -74,3 +91,14 @@ def run(
         refined_taxonomy=refined,
         expansion_candidates=expansion,
     )
+
+
+def _fallback_categories(sub_domains: list[str], aspect_names: list[str]) -> list[dict]:
+    names = [name for name in [*sub_domains, *aspect_names] if name]
+    deduped = []
+    for name in names:
+        if name not in deduped:
+            deduped.append(name)
+    if not deduped:
+        deduped = ["Foundational Methods", "Modeling and Simulation", "Evaluation and Benchmarks"]
+    return [{"name": name, "description": f"Rule-based taxonomy fallback for {name}."} for name in deduped[:6]]

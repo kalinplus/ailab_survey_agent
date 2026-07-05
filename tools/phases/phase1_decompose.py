@@ -53,7 +53,7 @@ def run(request, strategy: SearchStrategy, seed_papers: list[dict]) -> Decompose
                 f"{len(strategy.sub_domains)} sub_domains, {len(seed_papers)} seed_papers")
     demand = DecomposedDemand(
         aspects=aspects,
-        constraints=request.pipeline_config.model_dump(),
+        constraints=_model_to_dict(request.pipeline_config),
         pipeline_config=request.pipeline_config,
         structure_errors=validate_structure(strategy),
         coverage_warnings=validate_coverage(strategy, seed_papers),
@@ -63,3 +63,9 @@ def run(request, strategy: SearchStrategy, seed_papers: list[dict]) -> Decompose
     if demand.coverage_warnings:
         logger.warning(f"[P1] {len(demand.coverage_warnings)} coverage_warnings (first: {demand.coverage_warnings[0]})")
     return demand
+
+
+def _model_to_dict(model) -> dict:
+    if hasattr(model, "model_dump"):
+        return model.model_dump()
+    return model.dict()

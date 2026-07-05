@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 
 from config import load_config
@@ -13,7 +14,7 @@ from harness.logger import setup_logging
 from tools.models.requests import KnowledgeBuildRequest, SearchStrategy
 from tools.clients.sciverse_client import SciVerseClient
 from tools.clients.mineru_client import MinerUClient
-from tools.nlp.nli_verifier import NLIVerifier
+from tools.nlp.nli_verifier import FakeNLIModel, NLIVerifier
 from tools.nlp.data_cleaner import DataCleaner
 from tools.phases import (phase1_decompose, phase2_survey_analyzer, phase3_paper_retriever,
     phase5_cards, phase5_evidence, phase5_synthesis_rest, phase6_bundle_assembler)
@@ -78,10 +79,10 @@ def run(request_path: str) -> dict:
     _deep = sum(1 for c in cards.paper_cards if c.card_type == "deep")
     logger.info(f"[worker] P5.1 cards: {len(cards.paper_cards)} (deep={_deep}, shallow={len(cards.paper_cards) - _deep})")
 
-    evidence = phase5_evidence.run(request.task_id, parsed, cards, NLIVerifier(), sciverse)
+    evidence_sciverse = sciverse if request.pipeline_config.use_online_search else None
+    evidence = phase5_evidence.run(request.task_id, parsed, cards, _nli_model(), evidence_sciverse)
     _agentic = sum(1 for e in evidence.evidence if e.source_type == "agentic_chunk")
     logger.info(f"[worker] P5.2 evidence: {len(evidence.evidence)} (agentic_chunk={_agentic})")
-
     figure_bank = phase5_synthesis_rest.build_figure_bank(request.task_id, parsed)
     table_bank = phase5_synthesis_rest.build_table_bank(request.task_id, parsed)
     taxonomy = phase5_synthesis_rest.build_taxonomy(
@@ -118,4 +119,22 @@ def run(request_path: str) -> dict:
             f"knowledge_pipeline_worker: {bundle.status} "
             f"({bundle.summary['paper_count']} papers, {bundle.summary['citation_count']} citations)"
         ),
+    }
+
+
+def _nli_model():
+    if os.getenv("EVISURVEY_REAL_NLI", "false").lower() in {"1", "true", "yes"}:
+        return NLIVerifier()
+    return FakeNLIModel(mapping=_demo_entailment_keywords())
+
+
+def _demo_entailment_keywords():
+    return {
+        "world": "entailment",
+        "model": "entailment",
+        "game": "entailment",
+        "agent": "entailment",
+        "simulation": "entailment",
+        "learning": "entailment",
+        "interactive": "entailment",
     }
