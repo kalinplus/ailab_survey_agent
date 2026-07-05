@@ -123,15 +123,27 @@ def main() -> None:
 
     # [5/8] Visual assets
     step_header(5, "Rendering visual assets")
-    asset_dir = output_dir / "generated_assets"
-    figures = sorted(asset_dir.glob("*.png")) if asset_dir.exists() else []
-    tables = sorted(asset_dir.glob("*.md")) if asset_dir.exists() else []
-    real_pngs = sum(1 for f in figures if f.stat().st_size > 100)
-    status("figures", str(len(figures)))
-    status("tables (md)", str(len(tables)))
-    status("real PNG (> 100B)", f"{real_pngs}/{len(figures)}")
-    for f in figures:
-        status(f"  {f.name}", f"{f.stat().st_size:,}B")
+    import json
+    bank_path = root / "cache" / "generated_artifact_bank.json"
+    artifacts = []
+    if bank_path.exists():
+        bank = json.loads(bank_path.read_text(encoding="utf-8"))
+        artifacts = [a for a in bank.get("artifacts", []) if a.get("must_show_in_public", a.get("usable_in_report", True))]
+    figures = [a for a in artifacts if a.get("artifact_kind") == "figure"]
+    tables = [a for a in artifacts if a.get("artifact_kind") == "table"]
+    png_figures = [a for a in figures if str(a.get("artifact_format", "")).lower() == "png"]
+    real_pngs = 0
+    for artifact in png_figures:
+        path = root / str(artifact.get("artifact_path", ""))
+        if path.exists() and path.stat().st_size > 100:
+            real_pngs += 1
+    status("public figures", str(len(figures)))
+    status("public tables", str(len(tables)))
+    status("real public PNG (> 100B)", f"{real_pngs}/{len(png_figures)}")
+    for artifact in sorted(artifacts, key=lambda a: a.get("display_priority", 0), reverse=True):
+        path = root / str(artifact.get("artifact_path", ""))
+        size = f"{path.stat().st_size:,}B" if path.exists() else "missing"
+        status(f"  {artifact.get('display_number')} {artifact.get('artifact_id')}", size, path.exists())
 
     # [6/8] ReviewBoard
     step_header(6, "Running ReviewBoard")

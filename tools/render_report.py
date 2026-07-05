@@ -518,6 +518,7 @@ def _caption_without_repeated_title(caption: str, display_number: str, display_t
         f"{display_number}. {display_title}.",
         f"{display_number}.{display_title}.",
         f"{display_title}.",
+        f"{display_number}.",
     ):
         if caption.startswith(prefix):
             caption = caption[len(prefix):].strip()
