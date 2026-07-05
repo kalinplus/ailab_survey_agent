@@ -83,7 +83,7 @@ def load_config() -> AppConfig:
         strategy_memory_max_chars=int(os.getenv("STRATEGY_MEMORY_MAX_CHARS", "4000")),
         request_timeout_seconds=float(os.getenv("REQUEST_TIMEOUT_SECONDS", "60")),
         max_llm_retries=int(os.getenv("MAX_LLM_RETRIES", "1")),
-        tool_timeout_seconds=float(os.getenv("TOOL_TIMEOUT_SECONDS", "300")),
+        tool_timeout_seconds=float(os.getenv("TOOL_TIMEOUT_SECONDS", "900")),
         tool_result_max_chars=int(os.getenv("TOOL_RESULT_MAX_CHARS", "6000")),
         default_language=os.getenv("EVISURVEY_LANGUAGE", "zh"),
         default_mode=os.getenv("EVISURVEY_MODE", "demo"),
