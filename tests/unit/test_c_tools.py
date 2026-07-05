@@ -215,6 +215,24 @@ def test_render_report_inlines_artifact_and_writes_review_outputs(tmp_path):
     review = json.loads((output / "review_report.json").read_text(encoding="utf-8"))
     for gate in ["topic_relevance", "section_depth", "citation_diversity", "artifact_integration"]:
         assert gate in review["hard_gates"]
+    assert "public_readiness" in review["hard_gates"]
     assert (output / "baseline_review_report.json").exists()
     assert (output / "baseline_comparison_report.md").exists()
     assert (output / "final_report.pdf").exists()
+    assert (output / "citation_display_map.json").exists()
+    assert (output / "survey_public.md").exists()
+    assert (output / "survey.html").exists()
+    assert (output / "survey.pdf").exists()
+    assert (output / "harness_audit_report.html").exists()
+    public_md = (output / "survey_public.md").read_text(encoding="utf-8")
+    public_html = (output / "final_report.html").read_text(encoding="utf-8")
+    assert "[1]" in public_md
+    assert "[p1]" not in public_md
+    assert "generated_summary_table_001" not in public_md
+    assert "seed:" not in public_md
+    assert "CitationReadySet" not in public_md
+    assert "ReviewBoard" not in public_html
+    assert (output / "survey.pdf").stat().st_size > 5000
+    assert (output / "final_report.pdf").stat().st_size > 5000
+    audit_html = (output / "harness_audit_report.html").read_text(encoding="utf-8")
+    assert "artifact_id" in audit_html
