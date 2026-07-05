@@ -1,4 +1,7 @@
+import logging
 from tools.models.bundle import KnowledgeBundle
+
+logger = logging.getLogger(__name__)
 
 
 def run(task_id, topic, artifacts_paths, retrieved, parsed, paper_cards, evidence_store,
@@ -17,6 +20,12 @@ def run(task_id, topic, artifacts_paths, retrieved, parsed, paper_cards, evidenc
         status = "success" if not warnings else "partial_success"
     else:
         status = "partial_success" if paper_count else "failed"
+
+    logger.info(f"[P6] bundle status={status} papers={paper_count} core={core_count} "
+                f"parsed={len(parsed.papers)} evidence={len(evidence_store.evidence)} "
+                f"figures={len(figure_bank.figures)} citations={len(citation_index.citations)}")
+    if status == "failed":
+        logger.error(f"[P6] bundle FAILED (paper_count={paper_count})")
 
     return KnowledgeBundle(
         task_id=task_id, topic=topic, status=status, artifacts=artifacts_paths,

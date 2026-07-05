@@ -1,5 +1,8 @@
+import logging
 from pydantic import BaseModel
 from tools.models.common import paper_id_from_seed
+
+logger = logging.getLogger(__name__)
 
 
 class SurveyStructure(BaseModel):
@@ -48,11 +51,13 @@ def run(
     cleaner=None,
     sciverse=None,
 ) -> SurveyStructure:
+    logger.info(f"[P2] survey_analyzer: {len(surveys)} surveys, {len(aspects)} aspects")
     analyzed = analyze_surveys(surveys, mineru, cleaner)
     # Step 1: independent preliminary taxonomy
     prelim_raw = llm.json_chat([{"role": "user", "content": PRELIM_PROMPT.format(
         topic=topic, sub_domains=sub_domains, aspects=[a["aspect_name"] for a in aspects])}])
     prelim = prelim_raw.get("categories", [])
+    logger.info(f"[P2] prelim taxonomy -> {len(prelim)} categories")
     # Step 2: refine with survey skeletons
     survey_skels = [a["taxonomy_skeleton"] for a in analyzed]
     refined_raw = llm.json_chat([{"role": "user", "content": REFINE_PROMPT.format(
@@ -61,6 +66,7 @@ def run(
     # expansion candidates from referenced papers
     expansion = [{"paper_id_hint": pid, "source_survey": a["paper_id"], "priority": "high"}
                  for a in analyzed for pid in a["referenced_paper_ids"]]
+    logger.info(f"[P2] refined taxonomy -> {len(refined)} categories, {len(expansion)} expansion_candidates")
     return SurveyStructure(
         task_id=task_id,
         analyzed_surveys=analyzed,

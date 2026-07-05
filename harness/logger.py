@@ -3,9 +3,20 @@
 from __future__ import annotations
 
 import json
+import logging
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+
+def setup_logging() -> None:
+    """Configure root logging once (idempotent). Level via LOG_LEVEL env, default INFO."""
+    logging.basicConfig(
+        level=os.getenv("LOG_LEVEL", "INFO").upper(),
+        format="%(asctime)s %(levelname)s %(name)s | %(message)s",
+        datefmt="%H:%M:%S",
+    )
 
 
 def now_iso() -> str:

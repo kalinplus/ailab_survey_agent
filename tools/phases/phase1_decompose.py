@@ -1,5 +1,8 @@
+import logging
 from dataclasses import dataclass
 from tools.models.requests import SearchStrategy, PipelineConfig
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -45,10 +48,18 @@ def validate_coverage(strategy: SearchStrategy, seed_papers: list[dict]) -> list
 
 
 def run(request, strategy: SearchStrategy, seed_papers: list[dict]) -> DecomposedDemand:
-    return DecomposedDemand(
-        aspects=strategy.wide_search.get("search_aspects", []),
+    aspects = strategy.wide_search.get("search_aspects", [])
+    logger.info(f"[P1] decompose: {len(aspects)} aspects, "
+                f"{len(strategy.sub_domains)} sub_domains, {len(seed_papers)} seed_papers")
+    demand = DecomposedDemand(
+        aspects=aspects,
         constraints=request.pipeline_config.model_dump(),
         pipeline_config=request.pipeline_config,
         structure_errors=validate_structure(strategy),
         coverage_warnings=validate_coverage(strategy, seed_papers),
     )
+    if demand.structure_errors:
+        logger.warning(f"[P1] {len(demand.structure_errors)} structure_errors: {demand.structure_errors}")
+    if demand.coverage_warnings:
+        logger.warning(f"[P1] {len(demand.coverage_warnings)} coverage_warnings (first: {demand.coverage_warnings[0]})")
+    return demand

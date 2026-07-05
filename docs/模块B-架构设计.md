@@ -10,7 +10,7 @@
 | **交付形式** | `tool_registry.run(name, request_path) -> dict` | 确定性 agent loop 编排，无 tool_calls 往返延迟 |
 | 对外接口 | 2 个 tool（`knowledge_pipeline_worker` + `verify_citations`） | 粗粒度、单请求进单结果出，harness 可复现 |
 | 文献结构 | 两层（Layer 1 综述 + Layer 2 方法论文） | Layer 1 提供"地图"，Layer 2 填充"肉" |
-| 向量检索 | ~~Phase 4 ChromaDB~~ → **SciVerse agentic-search** | 本地 RAG 为死代码（建索引但从未被下游查询），agentic-search 直接返回可引用 chunk |
+| 向量检索（Phase 4 RAG） | **不采用**（用 SciVerse agentic-search 替代） | 本地 ChromaDB RAG 为死代码：建索引但下游 Phase 5 从未查询；agentic-search 直接返回带 page_no/doc_id 的可引用 chunk，无需自建向量库即可完成 claim grounding |
 | MinerU 策略 | **默认关闭**（`use_mineru: false`） | arxiv PDF 防爬 → 100% 空壳；abstract + agentic-search chunk 已足够 |
 | SciVerse 策略 | meta-search 主检索 + agentic-search evidence backfill | 前者给论文列表，后者补 claim grounding |
 | 关键词翻译 | Phase 3 LLM 翻译（中→英学术查询） | SciVerse 对英文查询效果远优于中文 |
@@ -75,7 +75,6 @@ knowledge_pipeline_worker.run(request_path)
 │   → seed fallback（API 不可用时）
 │   输出：retrieved_papers + parsed_papers
 │
-├─ [Phase 4: 已移除] ← 原 RAG 索引，被 agentic-search 替代
 │
 ├─ Phase 5: Knowledge Synthesis（知识整合）
 │   ├─ 5.1 Paper Cards（deep + shallow）

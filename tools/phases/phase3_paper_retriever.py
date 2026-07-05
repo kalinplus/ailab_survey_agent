@@ -1,5 +1,8 @@
+import logging
 from tools.models.artifacts import RetrievedPaper, RetrievedPapers, ParsedPaper, ParsedPapers
 from tools.models.common import paper_id_from_seed
+
+logger = logging.getLogger(__name__)
 
 
 def _is_pdf_url(url: str) -> bool:
@@ -92,6 +95,8 @@ def run(
     pipeline_config,
     llm=None,
 ):
+    logger.info(f"[P3] retrieve: {len(aspects)} aspects, use_mineru={pipeline_config.use_mineru}, "
+                f"use_seed_fallback={pipeline_config.use_seed_fallback}")
     retrieved = []
     # 1. expansion refs via meta-paper-relations (skip if sciverse offline -> caught upstream)
     # 2. meta-search per aspect (verified SciVerse filter/response contract)
@@ -104,6 +109,7 @@ def run(
         # If keywords contain non-ASCII (Chinese topic) and LLM available, generate English queries
         if llm and any(_has_non_ascii(kw) for kw in keywords):
             queries = _generate_search_queries(keywords, llm)
+            logger.info(f"[P3] aspect {a.get('aspect_id', '?')} translate -> {queries}")
         else:
             queries = [" ".join(keywords)]
         for query in queries:
@@ -114,14 +120,18 @@ def run(
                     impact_boost="MILD",
                     page_size=25,
                 )
-                for hit in res.get("results", []):
+                hits = res.get("results", [])
+                logger.info(f"[P3] meta_search q={query!r} -> {len(hits)} hits")
+                for hit in hits:
                     retrieved.append(_to_retrieved(hit))
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(f"[P3] meta_search failed q={query!r}: {e}")
     # 3. seed fallback if empty
     if not retrieved and pipeline_config.use_seed_fallback:
+        logger.warning(f"[P3] empty retrieval -> seed fallback ({len(seed_papers)} papers)")
         retrieved = [_to_retrieved(s, source="seed") for s in seed_papers]
     retrieved = dedup(retrieved)[:pipeline_config_extra(pipeline_config, "max_papers", 40)]
+    logger.info(f"[P3] after dedup/cap: {len(retrieved)} papers")
     # 4. parse via real MinerU; only feed actual PDF URLs; degrade per-paper on failure or empty result
     parsed = []
     for p in retrieved:
@@ -137,8 +147,12 @@ def run(
             else:
                 p.parse_status = "light"
                 parsed.append(paper)
-        except Exception:
+        except Exception as e:
+            logger.warning(f"[P3] mineru parse failed {p.paper_id}: {e}")
             p.parse_status = "abstract_only"
+    light_count = sum(1 for p in retrieved if p.parse_status == "light")
+    logger.info(f"[P3] parse: {light_count} light / {len(retrieved) - light_count} abstract_only, "
+                f"parsed_papers={len(parsed)}")
     return (RetrievedPapers(task_id=task_id, papers=retrieved),
             ParsedPapers(task_id=task_id, papers=parsed))
 
