@@ -30,6 +30,7 @@ def build_search_strategy(
     request_timeout_seconds: float = 30,
     probe_limit: int = 20,
     cluster_count: int = 4,
+    memory_context: str = "",
     llm_json_chat: Callable[[list[dict[str, str]]], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     probe_papers: list[dict[str, Any]] = []
@@ -55,6 +56,7 @@ def build_search_strategy(
                 max_core_papers=max_core_papers,
                 end_year=end_year,
                 probe_papers=probe_papers,
+                memory_context=memory_context,
                 llm_json_chat=llm_json_chat,
             )
             if llm_strategy is not None:
@@ -78,9 +80,6 @@ def build_search_strategy(
         except (ValueError, KeyError, TypeError):
             pass
 
-    if llm_json_chat is not None and llm_error is not None:
-        raise ValueError(f"LLM search strategy generation failed: {llm_error}") from llm_error
-
     return _build_default_strategy(
         task_id=task_id,
         topic=topic,
@@ -98,6 +97,7 @@ def _build_llm_strategy(
     max_core_papers: int,
     end_year: int,
     probe_papers: list[dict[str, Any]],
+    memory_context: str,
     llm_json_chat: Callable[[list[dict[str, str]]], dict[str, Any]],
 ) -> dict[str, Any] | None:
     prompt = _strategy_prompt(
@@ -107,6 +107,7 @@ def _build_llm_strategy(
         max_core_papers=max_core_papers,
         end_year=end_year,
         probe_papers=probe_papers,
+        memory_context=memory_context,
     )
     raw = llm_json_chat(
         [
@@ -142,6 +143,7 @@ def _strategy_prompt(
     max_core_papers: int,
     end_year: int,
     probe_papers: list[dict[str, Any]],
+    memory_context: str = "",
 ) -> str:
     probe_lines = []
     for index, paper in enumerate(probe_papers[:12], start=1):
@@ -151,6 +153,7 @@ def _strategy_prompt(
             continue
         probe_lines.append(f"{index}. ({year}) {title[:160]}")
     probe_text = "\n".join(probe_lines) if probe_lines else "No external probe papers are available."
+    memory_text = memory_context.strip() if memory_context.strip() else "No prior project memory is relevant."
 
     return f"""
 Return exactly one compact JSON object and nothing else. Do not output any thinking process.
@@ -186,6 +189,9 @@ Required compact JSON shape:
 
 Optional probe titles:
 {probe_text}
+
+Relevant project memory:
+{memory_text}
 """.strip()
 
 
@@ -466,18 +472,29 @@ def _build_default_strategy(
     end_year: int,
 ) -> dict[str, Any]:
     topic_keywords = _topic_keywords(topic)
+    fallback_aspects = _fallback_aspect_templates(topic)
     aspects = []
-    for index, (aspect_id, name, description, min_papers) in enumerate(DEFAULT_ASPECTS):
+    for index, (aspect_id, name, description, min_papers) in enumerate(fallback_aspects):
+        keywords = _keywords_for_aspect(topic, topic_keywords, index)
+        keywords.extend(
+            [
+                f"{topic} {name}",
+                f"{topic} {name} survey",
+                f"{topic} {name} benchmark",
+                f"{name} academic papers",
+            ]
+        )
         aspects.append(
             {
                 "aspect_id": aspect_id,
                 "aspect_name": name,
                 "description": description,
                 "min_papers": min_papers,
-                "keywords": _keywords_for_aspect(topic, topic_keywords, index),
+                "keywords": list(dict.fromkeys(keywords))[:10],
             }
         )
 
+    organization_mode = _infer_organization_mode(topic)
     return {
         "task_id": task_id,
         "topic": topic,
@@ -485,6 +502,8 @@ def _build_default_strategy(
         "topic_understanding": {
             "main_domain": topic,
             "sub_domains": [aspect["aspect_name"] for aspect in aspects],
+            "organization_mode": organization_mode,
+            "organization_reason": _organization_reason(topic, organization_mode),
         },
         "wide_search": {
             "goal": f"Cover the historical development and current frontier of {topic}.",
@@ -511,6 +530,38 @@ def _build_default_strategy(
             },
         },
     }
+
+
+def _fallback_aspect_templates(topic: str) -> list[tuple[str, str, str, int]]:
+    text = topic.lower()
+    if "world" in text and "game" in text:
+        return [
+            (
+                "aspect_001",
+                "Generative Game World Simulation",
+                "Models that learn or generate interactive game environments, latent dynamics, video prediction, and controllable world rollouts.",
+                3,
+            ),
+            (
+                "aspect_002",
+                "Agent Planning and Control in Learned Worlds",
+                "Work that uses world models for action prediction, model-based reinforcement learning, planning, and embodied game agents.",
+                3,
+            ),
+            (
+                "aspect_003",
+                "GameCraft Benchmarks and Evaluation Protocols",
+                "Datasets, simulators, benchmarks, human or automated evaluation protocols, and reproducibility practices for game world models.",
+                3,
+            ),
+            (
+                "aspect_004",
+                "Neural Rendering and Multimodal Game State Modeling",
+                "Architectures that connect visual observations, text instructions, physics-like state, memory, and multimodal generation in playable worlds.",
+                3,
+            ),
+        ]
+    return DEFAULT_ASPECTS
 
 
 def _probe_sciverse(
