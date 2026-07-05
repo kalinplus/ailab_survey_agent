@@ -13,7 +13,7 @@ class FakeLLMClient:
                 return m.get("content", "")
         return ""
 
-    def chat(self, messages, temperature=0.2, response_format=None):
+    def chat(self, messages, temperature=0.2, response_format=None, max_tokens=None, thinking_mode=False):
         self.calls += 1
         text = self._last_user(messages)
         for tag, resp in self.responses:
@@ -21,7 +21,7 @@ class FakeLLMClient:
                 return resp
         return self.default_text
 
-    def json_chat(self, messages, temperature=0.1):
+    def json_chat(self, messages, temperature=0.1, max_tokens=None, thinking_mode=False):
         self.calls += 1
         text = self._last_user(messages)
         for tag, resp in self.responses:

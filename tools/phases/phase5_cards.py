@@ -1,6 +1,10 @@
+import json
 import logging
 import re
+import time
+from pathlib import Path
 from tools.models.artifacts import PaperCard, PaperCards, Claim
+from tools.models.artifacts import ParsedPapers, RetrievedPaper, RetrievedPapers
 from tools.models.common import evidence_id
 
 logger = logging.getLogger(__name__)
@@ -18,6 +22,11 @@ Return EXACTLY these sections with numbered lists. ONLY points you are CERTAIN o
 Each line: "<claim text> [page P]" if a page number is citable."""
 
 BUCKETS = {"KEY RESULTS": "key_results", "METHOD": "method", "SETUP": "setup", "LIMITATIONS": "limitations"}
+CARD_MAX_TOKENS = 1024
+CARD_THINKING_MODE = False
+DEBUG_RETRIEVED_PAPERS_PATH = "cache/retrieved_papers.json"
+DEBUG_TASK_ID = "debug_phase5_cards"
+DEBUG_PAPER_TITLE_CONTAINS = ""
 
 
 def parse_card_response(text, paper_id):
@@ -42,7 +51,8 @@ def build_card(parsed, retrieved_map, llm, aspects, threshold=0.6):
     meta = retrieved_map.get(parsed.paper_id)
     body = " ".join(p.text for p in parsed.paragraphs[:20])
     raw = llm.chat([{"role": "user", "content": CARD_PROMPT.format(
-        title=parsed.title, abstract=parsed.abstract, body=body)}])
+        title=parsed.title, abstract=parsed.abstract, body=body)}],
+        max_tokens=CARD_MAX_TOKENS, thinking_mode=CARD_THINKING_MODE)
     claims = parse_card_response(raw, parsed.paper_id)
     return PaperCard(
         paper_id=parsed.paper_id, title=parsed.title,
@@ -56,7 +66,8 @@ def build_card(parsed, retrieved_map, llm, aspects, threshold=0.6):
 def build_shallow_card(retrieved, llm, aspects, threshold=0.6):
     """Card from abstract only (no parsed body). Used when MinerU is off."""
     raw = llm.chat([{"role": "user", "content": CARD_PROMPT.format(
-        title=retrieved.title, abstract=retrieved.abstract, body="")}])
+        title=retrieved.title, abstract=retrieved.abstract, body="")}],
+        max_tokens=CARD_MAX_TOKENS, thinking_mode=CARD_THINKING_MODE)
     claims = parse_card_response(raw, retrieved.paper_id)
     return PaperCard(
         paper_id=retrieved.paper_id, title=retrieved.title,
@@ -80,3 +91,70 @@ def run(task_id, parsed_papers, retrieved_papers, llm, aspects, threshold=0.6):
             shallow += 1
     logger.info(f"[P5.1] built {len(cards)} cards (deep={len(parsed_papers.papers)}, shallow={shallow})")
     return PaperCards(task_id=task_id, paper_cards=cards)
+
+
+if __name__ == "__main__":
+    from config import load_config
+    from llm_client import InternS2Client
+
+    cfg = load_config()
+    data = json.loads(Path(DEBUG_RETRIEVED_PAPERS_PATH).read_text(encoding="utf-8"))
+    candidates = [paper for paper in data["papers"] if paper.get("abstract")]
+    if DEBUG_PAPER_TITLE_CONTAINS:
+        candidates = [
+            paper for paper in candidates
+            if DEBUG_PAPER_TITLE_CONTAINS.lower() in paper.get("title", "").lower()
+        ]
+    paper = RetrievedPaper(**candidates[0])
+
+    prompt = CARD_PROMPT.format(title=paper.title, abstract=paper.abstract, body="")
+    print("=== selected paper ===")
+    print("paper_id:", paper.paper_id)
+    print("title:", paper.title)
+    print("year:", paper.year)
+    print("abstract_chars:", len(paper.abstract or ""))
+    print("abstract_preview:", (paper.abstract or "")[:500].replace("\n", " "))
+    print("thinking_mode:", CARD_THINKING_MODE)
+
+    print("\n=== prompt sent to intern ===")
+    print("prompt_chars:", len(prompt))
+    print(prompt)
+
+    llm = InternS2Client(cfg)
+    print("\n=== raw llm.chat output ===")
+    start = time.monotonic()
+    raw = llm.chat(
+        [{"role": "user", "content": prompt}],
+        temperature=0.2,
+        max_tokens=CARD_MAX_TOKENS,
+        thinking_mode=CARD_THINKING_MODE,
+    )
+    elapsed = time.monotonic() - start
+    print("elapsed_seconds:", round(elapsed, 2))
+    print("raw_chars:", len(raw))
+    print(raw)
+
+    claims = parse_card_response(raw, paper.paper_id)
+    print("\n=== parsed claims from raw output ===")
+    for bucket, items in claims.items():
+        print(bucket, "count=", len(items))
+        for item in items:
+            print("-", item.text, "evidence_ids=", item.evidence_ids)
+
+    print("\n=== phase5_cards.run one-paper result ===")
+    start = time.monotonic()
+    cards = run(
+        DEBUG_TASK_ID,
+        ParsedPapers(task_id=DEBUG_TASK_ID, papers=[]),
+        RetrievedPapers(task_id=DEBUG_TASK_ID, papers=[paper]),
+        InternS2Client(cfg),
+        [],
+    )
+    elapsed = time.monotonic() - start
+    card = cards.paper_cards[0]
+    print("elapsed_seconds:", round(elapsed, 2))
+    print("cards_count:", len(cards.paper_cards))
+    print("card_type:", card.card_type)
+    print("possible_claim_counts:", {key: len(value) for key, value in card.possible_claims.items()})
+    print("model_dump:")
+    print(json.dumps(card.model_dump(), ensure_ascii=False, indent=2))

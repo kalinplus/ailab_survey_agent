@@ -54,6 +54,7 @@ def load_config() -> AppConfig:
     """Load environment-backed configuration."""
 
     _load_env_file(ROOT_DIR / ".env")
+    _disable_all_proxy()
 
     return AppConfig(
         root_dir=ROOT_DIR,
@@ -108,6 +109,11 @@ def _normalize_intern_base_url(base_url: str) -> str:
     if normalized == "https://chat.intern-ai.org.cn/api":
         return "https://chat.intern-ai.org.cn/api/v1"
     return normalized
+
+
+def _disable_all_proxy() -> None:
+    os.environ.pop("all_proxy", None)
+    os.environ.pop("ALL_PROXY", None)
 
 
 def ensure_project_dirs(config: AppConfig) -> None:

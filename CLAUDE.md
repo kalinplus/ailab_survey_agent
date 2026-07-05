@@ -91,6 +91,46 @@ Output: HTML survey with figures
   every integration change against the real APIs (stronger than mock-based unit
   tests, which can match a wrong contract and give false confidence). Test
   doubles are fine for fast unit tests but must mirror the real contract shape.
+- **Test logging**: when running `pytest`, always pass `--log-cli-level=WARNING`
+  by default — it surfaces process problems (MinerU degradation → mock,
+  SciVerse / Intern-S2 failures, timeouts) without flooding the INFO progress
+  logs. Add `-s` and bump to `--log-cli-level=INFO` only when you need the full
+  pipeline trace (`[worker] P1/P2/P3 done`, per-call summaries). Why a flag is
+  needed: stdlib root logger defaults to WARNING and `setup_logging()` (which
+  raises it to INFO) only runs inside `worker.run()` / `verify_citations.run()`,
+  so most tests stay silent without `--log-cli-level`.
+
+## Test & Run Commands
+
+Unit tests (fake LLM, no network): fast contract checks. Default log level surfaces
+degradation/failures without flooding progress logs.
+
+```
+pytest tests/unit/ --log-cli-level=WARNING
+```
+
+Integration / e2e (real SciVerse + fake LLM + real MinerU degrading per-paper):
+exercises A→B phases 1–6 end-to-end. Needs `SCIVERSE_API_KEY` (or a `.env`).
+
+```
+pytest tests/integration/ -v
+```
+
+Full real API (adds real Intern-S2, all three APIs live): opt-in marker, expensive.
+
+```
+pytest tests/integration/ -v -m real_api
+```
+
+CLI full flow (A planner → B/C tools): real run of the harness.
+
+```
+python main.py --topic "世界模型综述"            # full run
+python main.py --topic "..." --max-papers 5 --max-core-papers 3   # fast smoke (caps P3 retrieval + parse)
+python main.py --topic "..." --prepare-only      # A-owned requests only, no B/C
+```
+
+Add `-s --log-cli-level=INFO` when you need the full pipeline trace (`[worker] P1/P2/P3 done`, per-call summaries).
 
 ## External API Contracts (verified against live APIs 2026-07-05)
 
