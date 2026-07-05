@@ -77,7 +77,8 @@ def test_raises_on_error(client):
 @respx.mock
 def test_retries_on_429_then_succeeds(monkeypatch):
     monkeypatch.setenv("SCIVERSE_API_KEY", "k")
-    c = SciVerseClient(base_url="https://sv.test", min_interval=0, max_retries=1, backoff_base=0)
+    c = SciVerseClient(base_url="https://sv.test", min_interval=0, max_retries=1,
+                       backoff_base=0, rate_limit_backoff_base=0)
     route = respx.post("https://sv.test/agentic-search").mock(
         side_effect=[
             httpx.Response(429),
@@ -92,7 +93,8 @@ def test_retries_on_429_then_succeeds(monkeypatch):
 @respx.mock
 def test_raises_after_exhausting_retries(monkeypatch):
     monkeypatch.setenv("SCIVERSE_API_KEY", "k")
-    c = SciVerseClient(base_url="https://sv.test", min_interval=0, max_retries=1, backoff_base=0)
+    c = SciVerseClient(base_url="https://sv.test", min_interval=0, max_retries=1,
+                       backoff_base=0, rate_limit_backoff_base=0)
     route = respx.post("https://sv.test/agentic-search").respond(status_code=429)
     with pytest.raises(httpx.HTTPStatusError):
         c.agentic_search("wm")

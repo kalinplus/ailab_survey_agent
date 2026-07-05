@@ -1,4 +1,11 @@
-from tools.phases.phase3_paper_retriever import run, dedup, _to_retrieved, pipeline_config_extra
+from tools.phases.phase3_paper_retriever import (
+    run,
+    dedup,
+    _influence_filter_sets,
+    _rank_by_influence,
+    _to_retrieved,
+    pipeline_config_extra,
+)
 from tools.models.artifacts import RetrievedPaper
 
 
@@ -149,6 +156,7 @@ def test_pipeline_config_keeps_request_limits():
     cfg = PipelineConfig(max_papers=5, max_core_papers=3)
     assert cfg.max_papers == 5
     assert cfg.max_core_papers == 3
+    assert cfg.use_influence_score is True
 
 
 def test_max_papers_truncation():
@@ -168,6 +176,78 @@ def test_max_papers_truncation():
         [], PipelineConfig(use_mineru=False, max_papers=1),
     )
     assert len(rp.papers) == 1
+
+
+# --- influence score ---
+
+
+def test_influence_filter_sets_use_year_bands_with_citation_thresholds():
+    filters = _influence_filter_sets()
+    assert filters[0] == [
+        {"field": "publication_published_year", "operator": "FILTER_OP_GTE", "value": 2024},
+        {"field": "publication_published_year", "operator": "FILTER_OP_LTE", "value": 2026},
+    ]
+    assert filters[1][-1] == {"field": "citation_count", "operator": "FILTER_OP_GTE", "value": 5}
+    assert filters[2][-1] == {"field": "citation_count", "operator": "FILTER_OP_GTE", "value": 20}
+
+
+def test_influence_search_uses_banded_filters_and_freshness_boost():
+    from tools.models.requests import PipelineConfig
+
+    calls = []
+
+    class RecordingSV:
+        def meta_search(self, query, **kw):
+            calls.append(kw)
+            return {"results": []}
+
+    run(
+        "t", [{"keywords": ["wm"]}], [], RecordingSV(), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False, use_influence_score=True),
+    )
+    assert len(calls) == 3
+    assert calls[0]["page_size"] == 15
+    assert calls[0]["impact_boost"] == "MILD"
+    assert calls[0]["freshness_boost"] == "MILD"
+    assert calls[1]["filters"][-1] == {"field": "citation_count", "operator": "FILTER_OP_GTE", "value": 5}
+    assert calls[2]["filters"][-1] == {"field": "citation_count", "operator": "FILTER_OP_GTE", "value": 20}
+
+
+def test_influence_disabled_keeps_single_broad_search_without_freshness_boost():
+    from tools.models.requests import PipelineConfig
+
+    calls = []
+
+    class RecordingSV:
+        def meta_search(self, query, **kw):
+            calls.append(kw)
+            return {"results": []}
+
+    run(
+        "t", [{"keywords": ["wm"]}], [], RecordingSV(), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False, use_influence_score=False),
+    )
+    assert len(calls) == 1
+    assert calls[0]["page_size"] == 25
+    assert "freshness_boost" not in calls[0]
+    assert calls[0]["filters"] == [
+        {"field": "publication_published_year", "operator": "FILTER_OP_GTE", "value": 2018},
+        {"field": "publication_published_year", "operator": "FILTER_OP_LTE", "value": 2026},
+    ]
+
+
+def test_rank_by_influence_balances_source_rank_citations_and_recency():
+    low_quality_first = RetrievedPaper(
+        paper_id="paper:old-low", title="Old Low", year=2018, citation_count=0)
+    stronger_second = RetrievedPaper(
+        paper_id="paper:new-cited", title="New Cited", year=2025, citation_count=80,
+        abstract="abs", venue="ICML", url="https://x/p.pdf")
+
+    ranked = _rank_by_influence(
+        [low_quality_first, stronger_second],
+        {"paper:old-low": 0, "paper:new-cited": 1},
+    )
+    assert [p.paper_id for p in ranked] == ["paper:new-cited", "paper:old-low"]
 
 
 # --- per-aspect resilience ---

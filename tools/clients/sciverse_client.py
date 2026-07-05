@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class SciVerseClient:
     def __init__(self, base_url: str | None = None, api_key: str | None = None,
                  min_interval: float | None = None, max_retries: int | None = None,
-                 backoff_base: float | None = None):
+                 backoff_base: float | None = None, rate_limit_backoff_base: float | None = None):
         self.base_url = (base_url or os.getenv("SCIVERSE_API_BASE_URL", "https://api.sciverse.space")).rstrip("/")
         self.headers = {"Authorization": f"Bearer {api_key or os.getenv('SCIVERSE_API_KEY', '')}"}
         # Rate limit + retry backoff at the external API boundary. Env-tunable so the
@@ -19,9 +19,15 @@ class SciVerseClient:
         self.min_interval = float(min_interval if min_interval is not None
                                   else os.getenv("SCIVERSE_MIN_INTERVAL", "1.0"))
         self.max_retries = int(max_retries if max_retries is not None
-                               else os.getenv("SCIVERSE_MAX_RETRIES", "1"))
+                               else os.getenv("SCIVERSE_MAX_RETRIES", "3"))
         self.backoff_base = float(backoff_base if backoff_base is not None
                                   else os.getenv("SCIVERSE_BACKOFF_BASE", "1.0"))
+        # 429 gets a longer base than 5xx: a rate-limit window takes seconds-to-tens
+        # to clear, and with max_retries=3 the series (5s,10s,20s) gives it time to
+        # recover before we give up. Env-tunable like the other knobs.
+        self.rate_limit_backoff_base = float(
+            rate_limit_backoff_base if rate_limit_backoff_base is not None
+            else os.getenv("SCIVERSE_RATE_LIMIT_BACKOFF_BASE", "5.0"))
 
     def _request(self, method, path, *, params=None, json=None, timeout=60):
         url = f"{self.base_url}{path}"
@@ -67,7 +73,8 @@ class SciVerseClient:
                 return min(float(retry_after), 30.0)
             except ValueError:
                 pass
-        return self.backoff_base * (2 ** attempt)
+        base = self.rate_limit_backoff_base if response.status_code == 429 else self.backoff_base
+        return base * (2 ** attempt)
 
     def _post(self, path, payload):
         return self._request("POST", path, json=payload).json()
