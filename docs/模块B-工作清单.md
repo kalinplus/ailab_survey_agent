@@ -28,7 +28,7 @@
 ### 基础设施
 
 - [x] InternS2Client（2.1s rate limit，120s timeout）
-- [x] NLI Verifier（FakeNLI for tests + 接口准备 DeBERTa）
+- [x] NLI Verifier（生产路径使用 DeBERTa；FakeNLI 仅用于默认测试）
 - [x] Data Cleaner（SurveyX 容错正则）
 - [x] 合约修复：SciVerse base URL、Intern-S2 API path、native field mapping
 - [x] Real-API-first 偏好写入 CLAUDE.md
@@ -52,7 +52,7 @@
 ### 高优先（影响全链路）
 
 - [ ] 全真实 API 测试通过（当前 timeout，已调到 120s 待验证）
-- [ ] NLI 本地模型接入（cross-encoder/nli-deberta-v3-base 替代 FakeNLI）
+- [x] NLI 本地模型接入（cross-encoder/nli-deberta-v3-base 已用于生产路径；FakeNLI 仅用于默认测试）
 - [ ] 配合 Module C 联调 write_survey → verify_citations 闭环
 
 ### 中优先（质量提升）

@@ -297,6 +297,6 @@ verify_citations → 综述引用 ∈ citation_ready_set
 
 - [ ] MinerU：找到绕过 arxiv 防爬的 PDF 源后开启（`use_mineru: true`）
 - [ ] 并行化：多 aspect 并发调用 SciVerse（当前串行）；调用 Intern-s2-preview 可以尝试并行
-- [ ] NLI 本地模型：cross-encoder/nli-deberta-v3-base 替代 FakeNLI
+- [x] NLI 本地模型：生产路径已用 `cross-encoder/nli-deberta-v3-base`；`FakeNLI` 仅保留给默认测试；真实模型 smoke test 通过 `RUN_NLI_REAL=1 pytest -m nli_real` 手动触发
 - [x] Paper Influence Score：分年份/引用门槛召回 + 本地 rerank（相关性、引用、时效、元数据质量）
 - [x] SciVerse 429 退避：429 用独立长退避 base（5s/10s/20s）+ `max_retries` 默认 1→3，节流 `SCIVERSE_MIN_INTERVAL=2`

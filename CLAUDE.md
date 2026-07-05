@@ -145,6 +145,12 @@ HF_ENDPOINT=https://hf-mirror.com
 
 Unset = direct HF access (default).
 
+Real NLI smoke test is opt-in to avoid model downloads during default tests:
+
+```
+RUN_NLI_REAL=1 pytest -m nli_real tests/unit/test_nli_verifier.py -v
+```
+
 ## External API Contracts (verified against live APIs 2026-07-05)
 
 - **Intern-S2-Preview** (core LLM, OpenAI-compatible): base `INTERN_API_BASE_URL`,
