@@ -1,5 +1,8 @@
+import logging
 from tools.models.artifacts import Figure, FigureBank, Table, TableBank, Category, Taxonomy, CitationIndex
 from tools.models.common import figure_id, table_id, category_id
+
+logger = logging.getLogger(__name__)
 
 
 def build_figure_bank(task_id, parsed_papers):
@@ -56,4 +59,6 @@ def run(task_id, topic, parsed_papers, refined_taxonomy, paper_cards, llm):
     tb = build_table_bank(task_id, parsed_papers)
     tax = build_taxonomy(task_id, topic, refined_taxonomy, paper_cards, llm)
     ci = build_citation_index(task_id, paper_cards)
+    logger.info(f"[P5.3-5] synthesis: figures={len(fb.figures)} tables={len(tb.tables)} "
+                f"taxonomy={len(tax.categories)} citations={len(ci.citations)}")
     return (fb, tb, tax, ci)

@@ -1,6 +1,10 @@
+import logging
 import os
+import time
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 
 class SciVerseClient:
@@ -9,14 +13,22 @@ class SciVerseClient:
         self.headers = {"Authorization": f"Bearer {api_key or os.getenv('SCIVERSE_API_KEY', '')}"}
 
     def _post(self, path, payload):
+        t0 = time.monotonic()
         r = httpx.post(f"{self.base_url}{path}", json=payload, headers=self.headers, timeout=60)
         r.raise_for_status()
-        return r.json()
+        data = r.json()
+        logger.info(f"[sciverse] POST {path} {r.status_code} {len(r.content)}B "
+                    f"{1000 * (time.monotonic() - t0):.0f}ms")
+        return data
 
     def _get(self, path, params=None):
+        t0 = time.monotonic()
         r = httpx.get(f"{self.base_url}{path}", params=params, headers=self.headers, timeout=60)
         r.raise_for_status()
-        return r.json()
+        data = r.json()
+        logger.info(f"[sciverse] GET {path} {r.status_code} {len(r.content)}B "
+                    f"{1000 * (time.monotonic() - t0):.0f}ms")
+        return data
 
     def meta_search(self, query, filters=None, sort=None, fields=None, page=1,
                     page_size=25, freshness_boost=None, impact_boost=None):

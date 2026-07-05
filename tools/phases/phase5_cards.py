@@ -1,6 +1,9 @@
+import logging
 import re
 from tools.models.artifacts import PaperCard, PaperCards, Claim
 from tools.models.common import evidence_id
+
+logger = logging.getLogger(__name__)
 
 CARD_PROMPT = """Extract a structured paper card from this paper.
 Title: {title}
@@ -65,11 +68,15 @@ def build_shallow_card(retrieved, llm, aspects, threshold=0.6):
 
 
 def run(task_id, parsed_papers, retrieved_papers, llm, aspects, threshold=0.6):
+    logger.info(f"[P5.1] cards: {len(parsed_papers.papers)} parsed, {len(retrieved_papers.papers)} retrieved")
     rmap = {p.paper_id: p for p in retrieved_papers.papers}
     parsed_ids = {p.paper_id for p in parsed_papers.papers}
     cards = [build_card(p, rmap, llm, aspects, threshold) for p in parsed_papers.papers]
     # Shallow cards for abstract-only papers (not parsed by MinerU)
+    shallow = 0
     for rp in retrieved_papers.papers:
         if rp.paper_id not in parsed_ids and rp.abstract:
             cards.append(build_shallow_card(rp, llm, aspects, threshold))
+            shallow += 1
+    logger.info(f"[P5.1] built {len(cards)} cards (deep={len(parsed_papers.papers)}, shallow={shallow})")
     return PaperCards(task_id=task_id, paper_cards=cards)

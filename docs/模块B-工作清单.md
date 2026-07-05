@@ -32,7 +32,6 @@
 - [x] Data Cleaner（SurveyX 容错正则）
 - [x] 合约修复：SciVerse base URL、Intern-S2 API path、native field mapping
 - [x] Real-API-first 偏好写入 CLAUDE.md
-- [x] 移除 Phase 4 RAG（死代码 + chromadb/openai 依赖）
 
 ### 测试
 
