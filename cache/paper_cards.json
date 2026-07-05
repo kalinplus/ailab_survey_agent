@@ -1,0 +1,464 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "paper_cards": [
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "title": "Genie: Generative Interactive Environments",
+      "authors": [
+        "Jake Bruce",
+        "Michael J. Dennis",
+        "Ashley Edwards",
+        "Jack Parker-Holder",
+        "Yuge Shi",
+        "Edward Hughes",
+        "Matthew Lai",
+        "Aditi Mavalankar",
+        "Richie Steigerwald",
+        "Chris Apps",
+        "Yusuf Aytar",
+        "Sarah Bechtle",
+        "Feryal Behbahani",
+        "Stephanie Chan",
+        "Nicolas Heess",
+        "Lucy González",
+        "Simon Osindero",
+        "Sherjil Ozair",
+        "Scott Reed",
+        "Jingwei Zhang",
+        "Konrad Żołna",
+        "Jeff Clune",
+        "Nando de Freitas",
+        "Satinder Singh",
+        "Tim Rocktäschel"
+      ],
+      "year": 2024,
+      "venue": "arXiv (Cornell University)",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2402.15391_p1_0"
+            ]
+          },
+          {
+            "text": "The model can generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2402.15391_p1_0"
+            ]
+          },
+          {
+            "text": "At 11B parameters, Genie can be considered a foundation world model.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2402.15391_p1_0"
+            ]
+          },
+          {
+            "text": "Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2402.15391_p1_0"
+            ]
+          },
+          {
+            "text": "The resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+            "dimension": "key_results",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2402.15391_p1_0"
+            ]
+          }
+        ],
+        "method": [
+          {
+            "text": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+            "dimension": "method",
+            "evidence_ids": [
+              "paper:10.48550/arxiv.2402.15391_p1_0"
+            ]
+          }
+        ],
+        "setup": [
+          {
+            "text": "No specific setup details provided in the given excerpts.",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "No specific limitations mentioned in the given excerpts.",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+      "authors": [
+        "Jiwen Yu",
+        "Yiran Qin",
+        "Xintao Wang",
+        "Pengfei Wan",
+        "Di Zhang",
+        "Xihui Liu"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The framework introduces GF-Minecraft, an action-annotated game video dataset without human bias, enabling precise control over both keyboard and mouse inputs. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "GameFactory supports autoregressive generation for unlimited-length interactive videos. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "A multi-phase training strategy with a domain adapter decouples game style learning from action control, achieving scene-generalizable action control. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "GameFactory is a framework for action-controlled scene-generalizable game video generation. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "It includes an action control module that enables precise control over both keyboard and mouse inputs. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The method leverages open-domain generative priors from pre-trained video diffusion models to enable the creation of entirely new and diverse games beyond fixed styles and scenes. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A domain adapter is proposed to bridge the domain gap between open-domain priors and small-scale game datasets. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper does not provide specific details about the experimental setup, such as hardware, software, or evaluation metrics. [Body excerpts]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly mention any limitations of the proposed method. [Body excerpts]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "authors": [
+        "Jinhao Duan",
+        "Renming Zhang",
+        "James Diffenderfer",
+        "Bhavya Kailkhura",
+        "Lichao Sun",
+        "Elias Stengel-Eskin",
+        "Mohit Bansal",
+        "Tianlong Chen",
+        "Kaidi Xu"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper characterizes the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Detailed error profiles are provided for a better understanding of LLMs' behavior. [P1]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. [P1]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "GTBench includes 10 tasks covering a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The paper performs LLM-vs.-LLM competitions as reasoning evaluation. [P1]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "title": "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "authors": [
+        "Li, Jiaqi",
+        "Tang, Junshu",
+        "Xu, Zhiyong",
+        "Wu, Longhuang",
+        "Zhou, Yuan",
+        "Shao, Shuai",
+        "Yu, Tianbao",
+        "Cao, Zhiguo",
+        "Lu, Qinglin"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "Hunyuan-GameCraft significantly outperforms existing models in advancing the realism and playability of interactive game video generation. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model achieves fine-grained action control by unifying standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "A hybrid history-conditioned training strategy is proposed that extends video sequences autoregressively while preserving game scene information. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "Model distillation is achieved to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "The curated game scene data significantly improves the visual fidelity, realism and action controllability. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "Hunyuan-GameCraft unifies standard keyboard and mouse inputs into a shared camera representation space for fine-grained action control. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "A hybrid history-conditioned training strategy is used to extend video sequences autoregressively while preserving game scene information. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "Model distillation is employed to reduce computational overhead while maintaining consistency across long temporal sequences for real-time deployment. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model is trained on a large-scale dataset of over one million gameplay recordings across over 100 AAA games and fine-tuned on a carefully annotated synthetic dataset. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          },
+          {
+            "text": "The model is fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "Current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. [Abstract]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+      "authors": [
+        "Sihao Hu",
+        "Tiansheng Huang",
+        "Линг Лиу"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "matched_aspects": [],
+      "category_id": null,
+      "category": "",
+      "card_type": "shallow",
+      "problem": "",
+      "method": "",
+      "contribution": "",
+      "limitations": "",
+      "evidence_ids": [],
+      "figure_ids": [],
+      "table_ids": [],
+      "possible_claims": {
+        "key_results": [
+          {
+            "text": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "PokeLLMon demonstrates human-like battle strategies and just-in-time decision making in online battles against humans. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          },
+          {
+            "text": "PokeLLMon achieves a 49% win rate in Ladder competitions and a 56% win rate in invited battles. [Abstract]",
+            "dimension": "key_results",
+            "evidence_ids": []
+          }
+        ],
+        "method": [
+          {
+            "text": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "PokeLLMon uses knowledge-augmented generation to retrieve external knowledge, counteract hallucination, and enable timely and proper actions. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          },
+          {
+            "text": "PokeLLMon employs consistent action generation to mitigate the panic switching phenomenon when facing powerful opponents. [Abstract]",
+            "dimension": "method",
+            "evidence_ids": []
+          }
+        ],
+        "setup": [
+          {
+            "text": "The paper does not provide specific details on the setup used for training or evaluating PokeLLMon. [Body excerpts]",
+            "dimension": "setup",
+            "evidence_ids": []
+          }
+        ],
+        "limitations": [
+          {
+            "text": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+            "dimension": "limitations",
+            "evidence_ids": []
+          }
+        ]
+      },
+      "bibtex_key": null
+    }
+  ]
+}

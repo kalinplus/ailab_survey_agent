@@ -33,7 +33,7 @@ output/
 ref
 
 # Module B generated dirs
-cache/*
+# cache/*
 !cache/.gitkeep
 !cache/seed_papers.json
 output/*

@@ -1,0 +1,90 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "topic": "游戏世界模型",
+  "taxonomy_version": "v1",
+  "refine_history": [
+    "prelimiminary",
+    "refined",
+    "final"
+  ],
+  "categories": [
+    {
+      "category_id": "cat_001",
+      "category_name": "Latent Architectures for World Representation",
+      "description": "Research on compact, efficient representations of game worlds using latent spaces, including variational autoencoders, diffusion models, and neural radiance fields tailored for 3D environments.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.01118"
+      ],
+      "stage_order": 0,
+      "paper_count": 1,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_002",
+      "category_name": "Procedural Content Generation Mechanisms",
+      "description": "Methods for algorithmically generating game assets, levels, narratives, and rulesets, ranging from grammar-based systems to deep learning-driven generative models.",
+      "related_aspects": [],
+      "paper_ids": [],
+      "stage_order": 0,
+      "paper_count": 0,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_003",
+      "category_name": "Internal Simulation and Planning Capabilities",
+      "description": "Techniques enabling agents or systems to simulate future states, reason about consequences, and plan actions within a modeled world, often involving differentiable physics or learned dynamics.",
+      "related_aspects": [],
+      "paper_ids": [],
+      "stage_order": 0,
+      "paper_count": 0,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_004",
+      "category_name": "Interactive and Controllable Generation Frameworks",
+      "description": "Systems that allow users to guide, edit, or constrain world generation in real-time through natural language, sketches, or other interfaces, emphasizing human-in-the-loop design.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.48550/arxiv.2506.17201"
+      ],
+      "stage_order": 0,
+      "paper_count": 3,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_005",
+      "category_name": "Evaluation Benchmarks and Metrics",
+      "description": "Standardized datasets, tasks, and quantitative/qualitative measures used to assess the quality, diversity, realism, and utility of generated or simulated game worlds.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.12348"
+      ],
+      "stage_order": 0,
+      "paper_count": 1,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_006",
+      "category_name": "Game Genre Adaptations",
+      "description": "Specialized world modeling approaches tailored to specific game genres, addressing requirements such as low-latency control in action games, stateful persistence in adventure games, and role fidelity in role-playing games.",
+      "related_aspects": [],
+      "paper_ids": [],
+      "stage_order": 0,
+      "paper_count": 0,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_007",
+      "category_name": "Cross-Domain Extensions",
+      "description": "Applications of game world modeling techniques to external domains such as autonomous driving, robotics, and social simulacra, leveraging shared foundations in video generation and simulation.",
+      "related_aspects": [],
+      "paper_ids": [],
+      "stage_order": 0,
+      "paper_count": 0,
+      "adjustment_note": ""
+    }
+  ]
+}

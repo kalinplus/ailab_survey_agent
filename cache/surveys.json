@@ -1,0 +1,315 @@
+[
+  {
+    "paper_id": "survey_world_models_understanding_2024",
+    "title": "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
+    "authors": [
+      "Jingtao Ding",
+      "Yunke Zhang",
+      "Yu Shang",
+      "Yuheng Zhang",
+      "Zefang Zong",
+      "Jie Feng",
+      "Yuan Yuan",
+      "Hongyuan Su",
+      "Nian Li",
+      "et al."
+    ],
+    "year": 2024,
+    "venue": "ACM Computing Surveys (2025)",
+    "url": "https://arxiv.org/abs/2411.14499",
+    "category": "survey_resource",
+    "priority": "core",
+    "priority_reason": "被引用235次（Google Scholar），是目前唯一给出跨子领域统一分类法的综述，几乎所有后续子领域综述都引用它作为前置工作，直接作为六分类的顶层骨架。",
+    "abstract": "This survey formally defines and categorizes world models into Internal Representation and Future Prediction, reviewing technical progress and applications across autonomous driving, robotics, and social simulacra.",
+    "keywords": [
+      "World Models",
+      "Internal Representation",
+      "Future Prediction",
+      "AGI",
+      "Sora"
+    ],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Internal Representation (implicit world understanding)",
+        "Future Prediction (generative future simulation)",
+        "Applications: Autonomous Driving, Robotics, Social Simulacra"
+      ],
+      "key_sections": [
+        "Definition & Categorization",
+        "Internal Representation",
+        "Future Prediction",
+        "Applications",
+        "Challenges"
+      ],
+      "top_referenced_papers": [
+        "world_models_2018",
+        "dreamerv3_2023",
+        "muzero_2020",
+        "genie_2024",
+        "sora_2024"
+      ]
+    },
+    "github_resource": "https://github.com/tsinghua-fib-lab/World-Model",
+    "bibtex": "@article{ding2024understanding, title={Understanding World or Predicting Future? A Comprehensive Survey of World Models}, author={Ding, Jingtao and others}, journal={ACM Computing Surveys}, year={2025}}"
+  },
+  {
+    "paper_id": "survey_sora_world_simulator_2024",
+    "title": "Is Sora a World Simulator? A Comprehensive Survey on General World Models and Beyond",
+    "authors": [
+      "Zheng Zhu",
+      "Xiaofeng Wang",
+      "Wangbo Zhao",
+      "Chen Min",
+      "et al."
+    ],
+    "year": 2024,
+    "venue": "arXiv (2405.03520)",
+    "url": "https://arxiv.org/abs/2405.03520",
+    "category": "survey_resource",
+    "priority": "core",
+    "priority_reason": "Sora 发布后最早系统讨论'视频生成模型是否等价于世界模型'的综述，是 Neural Game Engine 与 Foundation Interactive World Model 两条子线的思想源头。",
+    "abstract": "A comprehensive survey examining whether large-scale video generation models like Sora can be considered general world simulators, covering architectures and evaluation.",
+    "keywords": [
+      "Sora",
+      "General World Model",
+      "Video Generation",
+      "World Simulator"
+    ],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Video generation as simulation",
+        "General world model definition",
+        "Evaluation of simulator quality"
+      ],
+      "key_sections": [
+        "Introduction",
+        "Sora Analysis",
+        "General World Models",
+        "Future Directions"
+      ],
+      "top_referenced_papers": [
+        "sora_2024",
+        "genie_2024",
+        "gamenegen_2024"
+      ]
+    },
+    "bibtex": "@article{zhu2024sora, title={Is Sora a World Simulator? A Comprehensive Survey on General World Models and Beyond}, author={Zhu, Zheng and others}, journal={arXiv preprint arXiv:2405.03520}, year={2024}}"
+  },
+  {
+    "paper_id": "survey_rl_atari_deepmind_2025",
+    "title": "Reinforcement Learning in Strategy-Based and Atari Games: A Review of Google DeepMind's Innovations",
+    "authors": [
+      "Unknown (arXiv 2502.10303 authors)"
+    ],
+    "year": 2025,
+    "venue": "arXiv (2502.10303)",
+    "url": "https://arxiv.org/html/2502.10303v2",
+    "category": "game_benchmark",
+    "priority": "core",
+    "priority_reason": "系统梳理 DQN → AlphaGo → AlphaGo Zero → MuZero 的技术演进，直接对应 Game as AI Benchmark 分面的骨架，且明确综述了此前同类综述的分类差异（value-based/policy gradient/model-based）。",
+    "abstract": "A review organized around DeepMind's sequential contributions—DQN, AlphaGo, AlphaGo Zero, MuZero—examining deep reinforcement learning applications in Atari and strategy games.",
+    "keywords": [
+      "DQN",
+      "AlphaGo",
+      "AlphaZero",
+      "MuZero",
+      "Atari",
+      "Deep Reinforcement Learning"
+    ],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Value-based methods",
+        "Policy gradient methods",
+        "Model-based methods"
+      ],
+      "key_sections": [
+        "Related Work",
+        "AlphaGo",
+        "AlphaGo Zero",
+        "MuZero",
+        "Future Directions"
+      ],
+      "top_referenced_papers": [
+        "dqn_2015",
+        "alphago_2016",
+        "alphazero_2017",
+        "muzero_2020",
+        "alphastar_2019"
+      ]
+    },
+    "bibtex": "@article{deepmindreview2025, title={Reinforcement Learning in Strategy-Based and Atari Games: A Review of Google DeepMind's Innovations}, journal={arXiv preprint arXiv:2502.10303}, year={2025}}"
+  },
+  {
+    "paper_id": "survey_visual_world_roadmap_2025",
+    "title": "Simulating the Visual World with Artificial Intelligence: A Roadmap",
+    "authors": [
+      "Jingtong Yue",
+      "Ziqi Huang",
+      "Zhaoxi Chen",
+      "Xintao Wang",
+      "Pengfei Wan",
+      "Ziwei Liu"
+    ],
+    "year": 2025,
+    "venue": "arXiv (2511.08585)",
+    "url": "https://world-model-roadmap.github.io",
+    "category": "foundation_interactive_world_model",
+    "priority": "core",
+    "priority_reason": "目前时效性最强的综述（2025年11月），系统覆盖 Genie 2/3、Oasis、The Matrix、Hunyuan-GameCraft 等你 seed_papers.json 清单中直接列出的核心论文，是 Neural Game Engine 和 GameCraft 两个分面最新的骨架来源。",
+    "abstract": "A roadmap-style survey tracing the technical trajectory from video generation base models to interactive world models capable of gameplay-level control, covering Genie 2/3, Oasis, GameCraft, and driving/robotics extensions.",
+    "keywords": [
+      "Interactive World Model",
+      "GameCraft",
+      "Genie",
+      "Video Generation",
+      "Roadmap"
+    ],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Video generation foundations",
+        "Interactive control mechanisms",
+        "Game-oriented world models",
+        "Cross-domain extensions (driving, robotics)"
+      ],
+      "key_sections": [
+        "Video Generation Roadmap",
+        "Interactive World Models",
+        "GameCraft Applications",
+        "Open Challenges"
+      ],
+      "top_referenced_papers": [
+        "hunyuan_gamecraft_2025",
+        "genie2_2024",
+        "genie3_2025",
+        "oasis_2024",
+        "matrix_game_2024"
+      ]
+    },
+    "bibtex": "@article{yue2025roadmap, title={Simulating the World Model with Artificial Intelligence: A Roadmap}, author={Yue, Jingtong and Huang, Ziqi and Chen, Zhaoxi and Wang, Xintao and Wan, Pengfei and Liu, Ziwei}, journal={arXiv preprint arXiv:2511.08585}, year={2025}}"
+  },
+  {
+    "paper_id": "survey_interactive_generative_video_2025",
+    "title": "A Survey of Interactive Generative Video",
+    "authors": [
+      "Unknown (2025-04-30 listing)"
+    ],
+    "year": 2025,
+    "venue": "arXiv",
+    "url": "https://github.com/ziqihuangg/Awesome-From-Video-Generation-to-World-Model",
+    "category": "neural_game_engine",
+    "priority": "core",
+    "priority_reason": "专门聚焦'交互式生成视频'这一细分技术分支，与 GameNGen、Genie、Oasis 等 Neural Game Engine 核心论文直接对应，比通用视频生成综述更贴合该分面。",
+    "abstract": "Focused survey on interactive generative video techniques that enable real-time controllable video generation, bridging video diffusion models and game-like interactive environments.",
+    "keywords": [
+      "Interactive Video Generation",
+      "Diffusion Models",
+      "Real-time Control"
+    ],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Autoregressive video generation",
+        "Diffusion-based interactive control",
+        "Action-conditioned generation"
+      ],
+      "key_sections": [
+        "Foundations",
+        "Interactive Mechanisms",
+        "Applications in Gaming"
+      ],
+      "top_referenced_papers": [
+        "gamenegen_2024",
+        "genie_2024",
+        "oasis_2024",
+        "gamefactory_2025"
+      ]
+    },
+    "bibtex": "@misc{survey_interactive_video_2025, title={A Survey of Interactive Generative Video}, year={2025}}"
+  },
+  {
+    "paper_id": "survey_llm_game_agents_2024",
+    "title": "A Survey on Large Language Model-Based Game Agents",
+    "authors": [
+      "Unknown (arXiv 2404.02039 authors)"
+    ],
+    "year": 2024,
+    "venue": "arXiv (2404.02039)",
+    "url": "https://arxiv.org/html/2404.02039v5",
+    "category": "llm_mllm_game_agent",
+    "priority": "core",
+    "priority_reason": "方法论最透明——明确写出检索的四个数据库来源（ACM DL、IEEE Xplore、Google Scholar、arXiv）、时间范围（2018.1–2025.7）和布尔检索式，并说明用引用雪球补充，可直接作为你 B1 检索方法论的复用范本。",
+    "abstract": "The first comprehensive survey exclusively on LLM-based agents in game environments, covering action games, adventure games, and role-playing games with a systematic taxonomy by genre and core challenge.",
+    "keywords": [
+      "LLM Game Agent",
+      "MLLM",
+      "Theory of Mind",
+      "Game Genres"
+    ],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Action games (low-latency control)",
+        "Adventure games (stateful world modeling)",
+        "Role-playing games (role fidelity)"
+      ],
+      "key_sections": [
+        "Search Methodology",
+        "Game Genre Taxonomy",
+        "Representative Agents",
+        "Benchmarks Table",
+        "Future Directions"
+      ],
+      "top_referenced_papers": [
+        "voyager_2023",
+        "pokellmon_2024",
+        "minedojo_2022",
+        "avalonbench_2023",
+        "cradle_2024"
+      ]
+    },
+    "search_methodology_note": "Boolean query: (large language model OR LLM) AND (game OR environment); sources: ACM DL, IEEE Xplore, Google Scholar, arXiv; supplemented by citation snowballing.",
+    "bibtex": "@article{survey_llm_game_2024, title={A Survey on Large Language Model-Based Game Agents}, journal={arXiv preprint arXiv:2404.02039}, year={2024}}"
+  },
+  {
+    "paper_id": "survey_evaluation_llm_agents_2025",
+    "title": "A Survey on Evaluation of LLM-based Agents",
+    "authors": [
+      "Asaf Yehudai",
+      "et al."
+    ],
+    "year": 2025,
+    "venue": "arXiv (2503.16416)",
+    "url": "https://arxiv.org/html/2503.16416v2",
+    "category": "benchmark_evaluation_toolkit",
+    "priority": "core",
+    "priority_reason": "首篇系统性覆盖 LLM Agent 评测方法的综述，五个分析视角（核心能力、应用特定基准、通用 Agent 评测、基准维度、评测框架/工具）直接对应 Benchmark/Evaluation/Toolkit 分面的结构需求。",
+    "abstract": "The first comprehensive survey of evaluation methods for LLM-based agents, analyzing the field across five perspectives: core capabilities, application-specific benchmarks, generalist agent evaluation, benchmark dimensions, and evaluation frameworks.",
+    "keywords": [
+      "Agent Evaluation",
+      "Benchmark",
+      "AgentBench",
+      "Planning",
+      "Tool Use"
+    ],
+    "meta_data": {
+      "taxonomy_skeleton": [
+        "Core LLM capabilities",
+        "Application-specific benchmarks (Web/Game/Embodied)",
+        "Generalist agent evaluation",
+        "Benchmark dimensions",
+        "Evaluation frameworks/tools"
+      ],
+      "key_sections": [
+        "Core Capabilities",
+        "Application-Specific Agents",
+        "Generalist Evaluation",
+        "Benchmark Analysis",
+        "Tools for Developers"
+      ],
+      "top_referenced_papers": [
+        "agentbench_2023",
+        "gtbench_2024",
+        "avalonbench_2023"
+      ]
+    },
+    "bibtex": "@article{yehudai2025evaluation, title={A Survey on Evaluation of LLM-based Agents}, author={Yehudai, Asaf and others}, journal={arXiv preprint arXiv:2503.16416}, year={2025}}"
+  }
+]

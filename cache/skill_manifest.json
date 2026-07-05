@@ -1,0 +1,83 @@
+[
+  {
+    "name": "knowledge_build",
+    "description": "Build KnowledgeBundle artifacts from task and search strategy with fallback rules.",
+    "path": "skills/knowledge_build/SKILL.md",
+    "applies_to": [
+      "knowledge_build"
+    ],
+    "owner": "B",
+    "load_mode": "stage_scoped"
+  },
+  {
+    "name": "paper_card",
+    "description": "Normalize papers into PaperCards and bind every core claim to evidence.",
+    "path": "skills/paper_card/SKILL.md",
+    "applies_to": [
+      "knowledge_build"
+    ],
+    "owner": "B",
+    "load_mode": "stage_scoped"
+  },
+  {
+    "name": "survey_writing",
+    "description": "Write grounded survey sections using CitationReadySet and EvidenceStore only.",
+    "path": "skills/survey_writing/SKILL.md",
+    "applies_to": [
+      "survey_generation"
+    ],
+    "owner": "C",
+    "load_mode": "stage_scoped"
+  },
+  {
+    "name": "artifact_generation",
+    "description": "Generate timeline, taxonomy graph, tables, and matrices with declared provenance.",
+    "path": "skills/artifact_generation/SKILL.md",
+    "applies_to": [
+      "survey_generation",
+      "evaluation_render"
+    ],
+    "owner": "C",
+    "load_mode": "stage_scoped"
+  },
+  {
+    "name": "citation_verification",
+    "description": "Verify citations, paper artifacts, generated artifacts, and claim grounding.",
+    "path": "skills/citation_verification/SKILL.md",
+    "applies_to": [
+      "verification"
+    ],
+    "owner": "B",
+    "load_mode": "stage_scoped"
+  },
+  {
+    "name": "survey_revision",
+    "description": "Revise invalid citations, illegal artifacts, and unsupported claims without new references.",
+    "path": "skills/survey_revision/SKILL.md",
+    "applies_to": [
+      "revision"
+    ],
+    "owner": "C",
+    "load_mode": "stage_scoped"
+  },
+  {
+    "name": "evaluation",
+    "description": "Score coverage, citation validity, evidence grounding, structure, and visualization.",
+    "path": "skills/evaluation/SKILL.md",
+    "applies_to": [
+      "evaluation_render"
+    ],
+    "owner": "C",
+    "load_mode": "stage_scoped"
+  },
+  {
+    "name": "report_rendering",
+    "description": "Render final HTML/PDF with citation summary, evidence panel, and artifact provenance.",
+    "path": "skills/report_rendering/SKILL.md",
+    "applies_to": [
+      "evaluation_render"
+    ],
+    "owner": "C",
+    "load_mode": "stage_scoped"
+  }
+]

@@ -1,0 +1,182 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "papers": [
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "title": "Genie: Generative Interactive Environments",
+      "authors": [
+        "Jake Bruce",
+        "Michael J. Dennis",
+        "Ashley Edwards",
+        "Jack Parker-Holder",
+        "Yuge Shi",
+        "Edward Hughes",
+        "Matthew Lai",
+        "Aditi Mavalankar",
+        "Richie Steigerwald",
+        "Chris Apps",
+        "Yusuf Aytar",
+        "Sarah Bechtle",
+        "Feryal Behbahani",
+        "Stephanie Chan",
+        "Nicolas Heess",
+        "Lucy González",
+        "Simon Osindero",
+        "Sherjil Ozair",
+        "Scott Reed",
+        "Jingwei Zhang",
+        "Konrad Żołna",
+        "Jeff Clune",
+        "Nando de Freitas",
+        "Satinder Singh",
+        "Tim Rocktäschel"
+      ],
+      "year": 2024,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2402.15391",
+      "abstract": "We introduce Genie, the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos. The model can be prompted to generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches. At 11B parameters, Genie can be considered a foundation world model. It is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model. Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature. Further the resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+      "keywords": [
+        "Generative grammar",
+        "Computer science",
+        "Human–computer interaction",
+        "Generative Design",
+        "Artificial intelligence",
+        "Engineering"
+      ],
+      "citation_count": 210,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 3,
+      "survey_ref_hints": [
+        "genie_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+      "authors": [
+        "Jiwen Yu",
+        "Yiran Qin",
+        "Xintao Wang",
+        "Pengfei Wan",
+        "Di Zhang",
+        "Xihui Liu"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2501.08325v4",
+      "abstract": "Generative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental results demonstrate that GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation.",
+      "keywords": [
+        "Generative grammar",
+        "Computer science",
+        "Human–computer interaction",
+        "Generative model",
+        "Artificial intelligence",
+        "Multimedia"
+      ],
+      "citation_count": 30,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "gamefactory_2025"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "authors": [
+        "Jinhao Duan",
+        "Renming Zhang",
+        "James Diffenderfer",
+        "Bhavya Kailkhura",
+        "Lichao Sun",
+        "Elias Stengel-Eskin",
+        "Mohit Bansal",
+        "Tianlong Chen",
+        "Kaidi Xu"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2402.12348v2",
+      "abstract": "As Large Language Models (LLMs) are integrated into critical real-world applications, their strategic and logical reasoning abilities are increasingly crucial. This paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. We first propose GTBench, a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. Then, we (1) Characterize the game-theoretic reasoning of LLMs; and (2) Perform LLM-vs.-LLM competitions as reasoning evaluation. We observe that (1) LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios; (2) Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. In addition, code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. We further characterize the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. Detailed error profiles are provided for a better understanding of LLMs' behavior. We hope our research provides standardized protocols and serves as a foundation to spur further explorations in the strategic reasoning of LLMs.",
+      "keywords": [
+        "Management science",
+        "Game theory",
+        "Computer science",
+        "Economics",
+        "Mathematical economics"
+      ],
+      "citation_count": 74,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "gtbench_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "title": "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "authors": [
+        "Li, Jiaqi",
+        "Tang, Junshu",
+        "Xu, Zhiyong",
+        "Wu, Longhuang",
+        "Zhou, Yuan",
+        "Shao, Shuai",
+        "Yu, Tianbao",
+        "Cao, Zhiguo",
+        "Lu, Qinglin"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2506.17201v1",
+      "abstract": "Recent advances in diffusion-based and controllable video generation have enabled high-quality and temporally coherent video synthesis, laying the groundwork for immersive interactive gaming experiences. However, current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. To address these gaps, we introduce Hunyuan-GameCraft, a novel framework for high-dynamic interactive video generation in game environments. To achieve fine-grained action control, we unify standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. Then we propose a hybrid history-conditioned training strategy that extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments. The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "keywords": [
+        "Video game",
+        "Inference",
+        "Interpolation (computer graphics)",
+        "Video game development",
+        "Representation (politics)",
+        "Interactive video",
+        "Overhead (engineering)",
+        "Face (sociological concept)",
+        "Video capture"
+      ],
+      "citation_count": 1,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "hunyuan_gamecraft_2025"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+      "authors": [
+        "Sihao Hu",
+        "Tiansheng Huang",
+        "Линг Лиу"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2402.01118",
+      "abstract": "We introduce PokeLLMon, the first LLM-embodied agent that achieves human-parity performance in tactical battle games, as demonstrated in Pokemon battles. The design of PokeLLMon incorporates three key strategies: (i) In-context reinforcement learning that instantly consumes text-based feedback derived from battles to iteratively refine the policy; (ii) Knowledge-augmented generation that retrieves external knowledge to counteract hallucination and enables the agent to act timely and properly; (iii) Consistent action generation to mitigate the panic switching phenomenon when the agent faces a powerful opponent and wants to elude the battle. We show that online battles against human demonstrates PokeLLMon's human-like battle strategies and just-in-time decision making, achieving 49% of win rate in the Ladder competitions and 56% of win rate in the invited battles. Our implementation and playable battle logs are available at: https://github.com/git-disl/PokeLLMon.",
+      "keywords": [
+        "Parity (physics)",
+        "Computer science",
+        "Physics",
+        "Particle physics"
+      ],
+      "citation_count": 8,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "pokellmon_2024"
+      ]
+    }
+  ]
+}

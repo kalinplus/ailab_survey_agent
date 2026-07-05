@@ -1,0 +1,115 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "artifacts": [
+    {
+      "artifact_id": "generated_timeline_001",
+      "artifact_type": "timeline",
+      "title": "Timeline",
+      "artifact_path": "output/generated_assets/generated_timeline_001.md",
+      "artifact_format": "markdown",
+      "source_artifacts": [
+        "cache/paper_cards.json",
+        "cache/evidence_store.json",
+        "cache/taxonomy.json"
+      ],
+      "supporting_papers": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.01118"
+      ],
+      "provenance": "generated_by_c_from_verified_artifacts",
+      "placement_section": "Introduction / Scope",
+      "caption": "Generated timeline based on citation-ready paper cards.",
+      "display_priority": 90,
+      "usable_in_report": true
+    },
+    {
+      "artifact_id": "generated_taxonomy_graph_001",
+      "artifact_type": "taxonomy_graph",
+      "title": "Taxonomy Graph",
+      "artifact_path": "output/generated_assets/generated_taxonomy_graph_001.md",
+      "artifact_format": "markdown",
+      "source_artifacts": [
+        "cache/paper_cards.json",
+        "cache/evidence_store.json",
+        "cache/taxonomy.json"
+      ],
+      "supporting_papers": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.01118"
+      ],
+      "provenance": "generated_by_c_from_verified_artifacts",
+      "placement_section": "Taxonomy",
+      "caption": "Generated taxonomy graph based on verified categories.",
+      "display_priority": 80,
+      "usable_in_report": true
+    },
+    {
+      "artifact_id": "generated_comparison_table_001",
+      "artifact_type": "comparison_table",
+      "title": "Comparison Table",
+      "artifact_path": "output/generated_assets/generated_comparison_table_001.md",
+      "artifact_format": "markdown",
+      "source_artifacts": [
+        "cache/paper_cards.json",
+        "cache/evidence_store.json",
+        "cache/taxonomy.json"
+      ],
+      "supporting_papers": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.01118"
+      ],
+      "provenance": "generated_by_c_from_verified_artifacts",
+      "placement_section": "Methods and Systems",
+      "caption": "Generated comparison based on citation-ready paper cards.",
+      "display_priority": 95,
+      "usable_in_report": true
+    },
+    {
+      "artifact_id": "generated_future_matrix_001",
+      "artifact_type": "future_matrix",
+      "title": "Future Matrix",
+      "artifact_path": "output/generated_assets/generated_future_matrix_001.md",
+      "artifact_format": "markdown",
+      "source_artifacts": [
+        "cache/paper_cards.json",
+        "cache/evidence_store.json",
+        "cache/taxonomy.json"
+      ],
+      "supporting_papers": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.01118"
+      ],
+      "provenance": "generated_by_c_from_verified_artifacts",
+      "placement_section": "Future Directions",
+      "caption": "Generated future matrix from verified limitations and evidence.",
+      "display_priority": 75,
+      "usable_in_report": true
+    },
+    {
+      "artifact_id": "generated_summary_table_001",
+      "artifact_type": "summary_table",
+      "title": "Summary Table",
+      "artifact_path": "output/generated_assets/generated_summary_table_001.md",
+      "artifact_format": "markdown",
+      "source_artifacts": [
+        "cache/paper_cards.json",
+        "cache/evidence_store.json",
+        "cache/taxonomy.json"
+      ],
+      "supporting_papers": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.01118"
+      ],
+      "provenance": "generated_by_c_from_verified_artifacts",
+      "placement_section": "Conclusion / Evaluation",
+      "caption": "Generated summary table for final report inspection.",
+      "display_priority": 70,
+      "usable_in_report": true
+    }
+  ]
+}

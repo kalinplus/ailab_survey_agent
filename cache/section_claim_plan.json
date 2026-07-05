@@ -1,0 +1,660 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "sections": [
+    {
+      "section_id": "sec_01",
+      "section_title": "Latent Architectures for World Representation",
+      "section_goal": "Research on compact, efficient representations of game worlds using latent spaces, including variational autoencoders, diffusion models, and neural radiance fields tailored for 3D environments.",
+      "target_length_words": 450,
+      "allowed_paper_ids": [
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "selected_papers": [
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.01118",
+          "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+          "year": 2024,
+          "problem": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "method": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "contribution": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "limitations": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "topic_relevance_score": 0.72,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+          "year": 2024,
+          "problem": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "method": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus de...",
+          "contribution": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "limitations": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.15391",
+          "title": "Genie: Generative Interactive Environments",
+          "year": 2024,
+          "problem": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "method": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "contribution": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "limitations": "No specific limitations mentioned in the given excerpts.",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        }
+      ],
+      "artifact_slots": [
+        {
+          "artifact_id": "generated_timeline_001",
+          "placement": "after_topic_paragraph",
+          "caption": "Generated timeline based on citation-ready paper cards."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "claim_sec1_001",
+          "claim": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.01118"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+            "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+            "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec1_002",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.12348"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+            "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+            "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec1_003",
+          "claim": "Genie: Generative Interactive Environments is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.15391"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+            "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+            "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        }
+      ]
+    },
+    {
+      "section_id": "sec_02",
+      "section_title": "Procedural Content Generation Mechanisms",
+      "section_goal": "Methods for algorithmically generating game assets, levels, narratives, and rulesets, ranging from grammar-based systems to deep learning-driven generative models.",
+      "target_length_words": 450,
+      "allowed_paper_ids": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.48550/arxiv.2402.12348"
+      ],
+      "selected_papers": [
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.15391",
+          "title": "Genie: Generative Interactive Environments",
+          "year": 2024,
+          "problem": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "method": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "contribution": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "limitations": "No specific limitations mentioned in the given excerpts.",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.01118",
+          "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+          "year": 2024,
+          "problem": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "method": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "contribution": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "limitations": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "topic_relevance_score": 0.72,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+          "year": 2024,
+          "problem": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "method": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus de...",
+          "contribution": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "limitations": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        }
+      ],
+      "artifact_slots": [
+        {
+          "artifact_id": "generated_taxonomy_graph_001",
+          "placement": "after_topic_paragraph",
+          "caption": "Generated taxonomy graph based on verified categories."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "claim_sec2_001",
+          "claim": "Genie: Generative Interactive Environments is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.15391"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+            "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+            "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec2_002",
+          "claim": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.01118"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+            "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+            "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec2_003",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.12348"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+            "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+            "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        }
+      ]
+    },
+    {
+      "section_id": "sec_03",
+      "section_title": "Internal Simulation and Planning Capabilities",
+      "section_goal": "Techniques enabling agents or systems to simulate future states, reason about consequences, and plan actions within a modeled world, often involving differentiable physics or learned dynamics.",
+      "target_length_words": 450,
+      "allowed_paper_ids": [
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "selected_papers": [
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.01118",
+          "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+          "year": 2024,
+          "problem": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "method": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "contribution": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "limitations": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "topic_relevance_score": 0.72,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+          "year": 2024,
+          "problem": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "method": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus de...",
+          "contribution": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "limitations": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.15391",
+          "title": "Genie: Generative Interactive Environments",
+          "year": 2024,
+          "problem": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "method": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "contribution": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "limitations": "No specific limitations mentioned in the given excerpts.",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        }
+      ],
+      "artifact_slots": [
+        {
+          "artifact_id": "generated_comparison_table_001",
+          "placement": "after_comparison_paragraph",
+          "caption": "Generated comparison based on citation-ready paper cards."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "claim_sec3_001",
+          "claim": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.01118"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+            "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+            "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec3_002",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.12348"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+            "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+            "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec3_003",
+          "claim": "Genie: Generative Interactive Environments is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.15391"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+            "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+            "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        }
+      ]
+    },
+    {
+      "section_id": "sec_04",
+      "section_title": "Interactive and Controllable Generation Frameworks",
+      "section_goal": "Systems that allow users to guide, edit, or constrain world generation in real-time through natural language, sketches, or other interfaces, emphasizing human-in-the-loop design.",
+      "target_length_words": 450,
+      "allowed_paper_ids": [
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "selected_papers": [
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.01118",
+          "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+          "year": 2024,
+          "problem": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "method": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "contribution": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "limitations": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "topic_relevance_score": 0.72,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+          "year": 2024,
+          "problem": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "method": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus de...",
+          "contribution": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "limitations": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.15391",
+          "title": "Genie: Generative Interactive Environments",
+          "year": 2024,
+          "problem": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "method": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "contribution": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "limitations": "No specific limitations mentioned in the given excerpts.",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        }
+      ],
+      "artifact_slots": [],
+      "claims": [
+        {
+          "claim_id": "claim_sec4_001",
+          "claim": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.01118"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+            "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+            "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec4_002",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.12348"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+            "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+            "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec4_003",
+          "claim": "Genie: Generative Interactive Environments is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.15391"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+            "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+            "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        }
+      ]
+    },
+    {
+      "section_id": "sec_05",
+      "section_title": "Evaluation Benchmarks and Metrics",
+      "section_goal": "Standardized datasets, tasks, and quantitative/qualitative measures used to assess the quality, diversity, realism, and utility of generated or simulated game worlds.",
+      "target_length_words": 450,
+      "allowed_paper_ids": [
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "selected_papers": [
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.01118",
+          "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+          "year": 2024,
+          "problem": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "method": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "contribution": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "limitations": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "topic_relevance_score": 0.72,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+          "year": 2024,
+          "problem": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "method": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus de...",
+          "contribution": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "limitations": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.15391",
+          "title": "Genie: Generative Interactive Environments",
+          "year": 2024,
+          "problem": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "method": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "contribution": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "limitations": "No specific limitations mentioned in the given excerpts.",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        }
+      ],
+      "artifact_slots": [],
+      "claims": [
+        {
+          "claim_id": "claim_sec5_001",
+          "claim": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.01118"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+            "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+            "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec5_002",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.12348"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+            "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+            "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec5_003",
+          "claim": "Genie: Generative Interactive Environments is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.15391"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+            "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+            "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        }
+      ]
+    },
+    {
+      "section_id": "sec_06",
+      "section_title": "Game Genre Adaptations",
+      "section_goal": "Specialized world modeling approaches tailored to specific game genres, addressing requirements such as low-latency control in action games, stateful persistence in adventure games, and role fidelity in role-playing games.",
+      "target_length_words": 450,
+      "allowed_paper_ids": [
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "selected_papers": [
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.01118",
+          "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+          "year": 2024,
+          "problem": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "method": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "contribution": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "limitations": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "topic_relevance_score": 0.72,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+          "year": 2024,
+          "problem": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "method": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus de...",
+          "contribution": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "limitations": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.15391",
+          "title": "Genie: Generative Interactive Environments",
+          "year": 2024,
+          "problem": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "method": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "contribution": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "limitations": "No specific limitations mentioned in the given excerpts.",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        }
+      ],
+      "artifact_slots": [],
+      "claims": [
+        {
+          "claim_id": "claim_sec6_001",
+          "claim": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.01118"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+            "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+            "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec6_002",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.12348"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+            "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+            "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec6_003",
+          "claim": "Genie: Generative Interactive Environments is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.15391"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+            "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+            "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        }
+      ]
+    },
+    {
+      "section_id": "sec_07",
+      "section_title": "Cross-Domain Extensions",
+      "section_goal": "Applications of game world modeling techniques to external domains such as autonomous driving, robotics, and social simulacra, leveraging shared foundations in video generation and simulation.",
+      "target_length_words": 450,
+      "allowed_paper_ids": [
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "selected_papers": [
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.01118",
+          "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+          "year": 2024,
+          "problem": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "method": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "contribution": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "limitations": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "topic_relevance_score": 0.72,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+          "year": 2024,
+          "problem": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "method": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus de...",
+          "contribution": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "limitations": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        },
+        {
+          "paper_id": "paper:10.48550/arxiv.2402.15391",
+          "title": "Genie: Generative Interactive Environments",
+          "year": 2024,
+          "problem": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "method": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "contribution": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "limitations": "No specific limitations mentioned in the given excerpts.",
+          "topic_relevance_score": 0.7,
+          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+        }
+      ],
+      "artifact_slots": [],
+      "claims": [
+        {
+          "claim_id": "claim_sec7_001",
+          "claim": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.01118"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+            "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+            "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec7_002",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.12348"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+            "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+            "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        },
+        {
+          "claim_id": "claim_sec7_003",
+          "claim": "Genie: Generative Interactive Environments is part of the citation-ready evidence base for this topic",
+          "supporting_papers": [
+            "paper:10.48550/arxiv.2402.15391"
+          ],
+          "supporting_evidence": [
+            "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+            "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+            "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004"
+          ],
+          "allowed_figures": [],
+          "risk_level": "low"
+        }
+      ]
+    }
+  ]
+}

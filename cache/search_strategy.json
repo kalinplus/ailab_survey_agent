@@ -1,0 +1,124 @@
+{
+  "task_id": "task_视频世界模型_001",
+  "topic": "视频世界模型",
+  "strategy": "wide_then_deep",
+  "topic_understanding": {
+    "main_domain": "Computer Science / Artificial Intelligence",
+    "sub_domains": [
+      "Latent Architectures for World Representation",
+      "Procedural Content Generation Mechanisms",
+      "Internal Simulation and Planning Capabilities",
+      "Evaluation Benchmarks and Metrics",
+      "Interactive and Controllable Generation Frameworks"
+    ],
+    "organization_mode": "thematic",
+    "organization_reason": "The topic focuses on technical architectures, methods, and evaluation benchmarks for video world models rather than historical evolution."
+  },
+  "wide_search": {
+    "goal": "Cover the historical development and current frontier of 视频世界模型.",
+    "max_papers": 40,
+    "time_range": {
+      "start_year": 1990,
+      "end_year": 2026
+    },
+    "search_aspects": [
+      {
+        "aspect_id": "aspect_001",
+        "aspect_name": "Latent Architectures for World Representation",
+        "description": "Examines discrete and continuous latent variable models used to encode video dynamics and spatial structures.",
+        "min_papers": 3,
+        "keywords": [
+          "discrete latent video world model",
+          "continuous latent dynamics model",
+          "vector quantized variational autoencoder video",
+          "neural game engine latent space",
+          "hierarchical latent video representation",
+          "视频世界模型 Latent Architectures for World Representation"
+        ]
+      },
+      {
+        "aspect_id": "aspect_002",
+        "aspect_name": "Procedural Content Generation Mechanisms",
+        "description": "Investigates world models that synthesize game levels, assets, and environments through generative processes.",
+        "min_papers": 3,
+        "keywords": [
+          "procedural level generation world model",
+          "generative world model asset synthesis",
+          "neural procedural content generation",
+          "world model for game level design",
+          "latent space interpolation game environments",
+          "视频世界模型 Procedural Content Generation Mechanisms"
+        ]
+      },
+      {
+        "aspect_id": "aspect_003",
+        "aspect_name": "Internal Simulation and Planning Capabilities",
+        "description": "Focuses on the use of learned world models for internal rollouts, trajectory planning, and reinforcement learning.",
+        "min_papers": 3,
+        "keywords": [
+          "dreamer world model reinforcement learning",
+          "model-based planning with video world models",
+          "internal simulation for agent control",
+          "world model rollout planning",
+          "latent space trajectory optimization",
+          "视频世界模型 Internal Simulation and Planning Capabilities"
+        ]
+      },
+      {
+        "aspect_id": "aspect_004",
+        "aspect_name": "Evaluation Benchmarks and Metrics",
+        "description": "Surveys standardized datasets, metrics, and protocols for assessing video world model fidelity and utility.",
+        "min_papers": 3,
+        "keywords": [
+          "video world model benchmark dataset",
+          "perceptual fidelity metrics world model",
+          "downstream task performance evaluation",
+          "video prediction accuracy metrics",
+          "world model generalization benchmarks",
+          "视频世界模型 Evaluation Benchmarks and Metrics"
+        ]
+      },
+      {
+        "aspect_id": "aspect_005",
+        "aspect_name": "Interactive and Controllable Generation Frameworks",
+        "description": "Explores methods for conditioning world model generation on user actions, prompts, or control signals.",
+        "min_papers": 3,
+        "keywords": [
+          "conditional video world model generation",
+          "interactive world model control",
+          "prompt-based video world model",
+          "action-conditioned world model simulation",
+          "controllable video synthesis framework",
+          "视频世界模型 Interactive and Controllable Generation Frameworks"
+        ]
+      }
+    ],
+    "include_types": [
+      "classic_papers",
+      "recent_papers",
+      "surveys",
+      "benchmarks",
+      "datasets",
+      "toolkits"
+    ]
+  },
+  "deep_search": {
+    "goal": "Select representative core papers for a grounded survey on 视频世界模型.",
+    "max_core_papers": 15,
+    "selection_rules": {
+      "include_classic_foundational_works": true,
+      "include_recent_representative_works": true,
+      "balance_search_aspects": true,
+      "do_not_rank_only_by_citation": true
+    }
+  },
+  "strategy_generation": {
+    "mode": "full",
+    "memory_enabled": true,
+    "memory_used": true,
+    "memory_chars": 3822,
+    "probing_requested": false,
+    "probing_effective": false,
+    "probe_limit": 0
+  }
+}

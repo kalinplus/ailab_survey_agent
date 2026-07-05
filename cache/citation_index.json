@@ -1,0 +1,35 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "citations": [
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "bibtex_key": null,
+      "title": "Genie: Generative Interactive Environments",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "bibtex_key": null,
+      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "bibtex_key": null,
+      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "bibtex_key": null,
+      "title": "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "bibtex_key": null,
+      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+      "year": 2024
+    }
+  ]
+}

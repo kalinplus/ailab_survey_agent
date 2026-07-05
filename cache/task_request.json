@@ -1,0 +1,35 @@
+{
+  "task_id": "task_视频世界模型_001",
+  "topic": "视频世界模型",
+  "task_type": "academic_survey",
+  "language": "zh",
+  "output_formats": [
+    "html",
+    "pdf"
+  ],
+  "requirements": {
+    "must_include": [
+      "search_strategy",
+      "paper_cards",
+      "multimodal_evidence",
+      "citation_pre_lock",
+      "citation_verification",
+      "claim_to_evidence_map",
+      "timeline",
+      "interactive_report"
+    ],
+    "avoid": [
+      "hallucinated_citations",
+      "unsupported_claims",
+      "figures_without_source"
+    ]
+  },
+  "run_config": {
+    "use_online_search": true,
+    "use_seed_fallback": true,
+    "use_mineru": false,
+    "max_papers": 40,
+    "max_core_papers": 15,
+    "mode": "full"
+  }
+}

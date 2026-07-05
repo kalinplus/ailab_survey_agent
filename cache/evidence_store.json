@@ -1,0 +1,2210 @@
+{
+  "task_id": "task_游戏世界模型_001",
+  "evidence": [
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_0_p18_94003",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 18,
+      "source_paragraph_index": 94003,
+      "text": "Notably, Google's Genie series [328, 336] marks a significant advancement in this area. Genie [328] is the first generative interactive environment trained in an unsupervised manner using unlabelled Internet videos. It can synthesize videos frame by frame from diverse inputs, including text-to-image prompts, hand-drawn sketches, text descriptions, or even real-world photos, all of which can be modulated via real-time action inputs. Its successor, Genie 2 [336], serves as a large-scale foundation world model.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_1_p23_66522",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 23,
+      "source_paragraph_index": 66522,
+      "text": "Imagination. Hypothetical reasoning in training, using traversable latent spaces, allows for sim-to-real transfer of video World Models conditioned on actions, to Genie [177] was among the first models that moved towards an interactive environment rather than just a video generation. Genie is an 11-billion-parameter foundation World Model trained entirely via unsupervised learning on unlabeled internet videos.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_2_p40_157004",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 40,
+      "source_paragraph_index": 157004,
+      "text": "Genie [26] learns generative interactive environments from unlabeled video, inferring a latent action space that enables controllable simulation without explicit action annotation. Its successor, Genie 2 [73], scales the approach to generate consistent navigable 3D environments from single image prompts, demonstrating object permanence, viewpoint-dependent occlusion, and interactive elements (doors, buttons, graspable objects) that emerge from training on gameplay video.\n\nA further iteration, Genie 3 [74], reported improvements in visual fidelity and interactive frame rates through a hybrid diffusion-autoregressive architecture, though independent evaluation of its generalization and physical accuracy remains limited at the time of writing.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie is the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_3_p20_72349",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 20,
+      "source_paragraph_index": 72349,
+      "text": "Beyond pure video generation, interactive world models like Genie (232) and its successor Genie 2 (233) extend generative simulation into embodied, action-controllable 3D environments. These systems can generate playable, open-ended virtual worlds conditioned on text, sketches, or other multimodal prompts, enabling autonomous agents to learn and act within dynamic visual environments.\n\nVideo generation as world simulation thus represents a paradigm shift from explicit physics-based modeling to observation-driven synthesis. By learning the visual and temporal structure of reality, such models offer controllable, scalable, and photorealistic environments for training, testing, and reasoning. Within digital twin systems, they bridge simulation and perception, allowing virtual agents to both observe and interact with realistic representations of the physical world.",
+      "supports_claims": [
+        {
+          "claim_text": "The model can generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_4_p4_16066",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 16066,
+      "text": "More recent approaches have focused directly on generating interactive environments and controllable long-duration video sequences. For instance, Genie Bruce et al. (2024) introduced a foundation model capable of generating an endless variety of action-controllable 2D worlds from image prompts, trained on unlabeled internet videos. Efforts to generate navigable driving scenes, such as GAIA-1 Wayve Technologies (2023) by Wayve, have demonstrated the potential for creating realistic, controllable driving experiences from text and action inputs.",
+      "supports_claims": [
+        {
+          "claim_text": "The model can generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_5_p1_5766",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 5766,
+      "text": "Video Generation as World Models. Video generative models can act as controllable world models that roll out egocentric futures conditioned on past observations and actions. Recent systems show that such models can steer planning or augment downstream reasoning, either by playing out imagined trajectories or by ranking candidate plans using synthesized evidence [37-41]. Notable examples include large, action-conditioned controllable world models like Genie [42], which could generate interactive environments from both image or text prompts and allow agent control via input actions.",
+      "supports_claims": [
+        {
+          "claim_text": "The model can generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_6_p1_5003",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 5003,
+      "text": "Toward these goals, we draw inspiration from the foundation world model like Genie [2], which is capable of generating interactive environments from unstructured video data without action annotations. Genie's latent action model and autoregressive dynamics models enable it to predict future states and infer latent actions purely from visual inputs, making it a promising framework for surgical applications where obtaining action annotations is prohibitively expensive.",
+      "supports_claims": [
+        {
+          "claim_text": "At 11B parameters, Genie can be considered a foundation world model.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_7_p2_9337",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 9337,
+      "text": "Its primary application is robotic planning, where the model imagines future states in a latent space to evaluate action sequences that achieve a specified visual goal. Google Genie (Bruce et al. (2024)) is a world model that generates interactive environments from a single image and a text prompt. The model allows users to navigate and interact with the generated world in real time, simulating complex physical transitions without relying on an explicit physics engine. NVIDIA Cosmos (Agarwal et al.",
+      "supports_claims": [
+        {
+          "claim_text": "At 11B parameters, Genie can be considered a foundation world model.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_8_p1_7375",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 7375,
+      "text": "For robotics, Genie Envisioner [21] builds a unified world foundation platform that bridges world modeling and policy learning through a video-generative diffusion framework, offering an integrated solution for instruction-driven robotic manipulation. Together, these lines motivate adapting generalist WFMs into action-conditioned, control-ready specialists for manipulation while preserving broad priors.",
+      "supports_claims": [
+        {
+          "claim_text": "At 11B parameters, Genie can be considered a foundation world model.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_9_p4_24708",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 24708,
+      "text": "Pure autoregressive modeling is also highly relevant to interactive world modeling. Genie [41] introduces a generative interactive environment model composed of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a latent action model. This design enables frame-by-frame controllable generation and shows that autoregressive world models can support interactive environment simulation. Along a similar direction, iVideoGPT [50] formulates world modeling as next-token prediction over a unified sequence of visual observations, actions, and rewards.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_10_p2_8681",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 8681,
+      "text": "In addition, world models are increasingly employed not only for prediction but as generative, interactive environments. Interactive world models condition on actions, language, or goal images to generate controllable, step-by-step futures, showcasing strong capabilities in environment simulation. Genie series Bruce et al. (2024); Parker-Holder et al. (2024) show that internet-scale video plus latent-action Transformers can yield a single, prompt-controllable world model for 2D/3D games and robotics, enabling zero-shot policy imagination without real-world rewards or labels.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_11_p16_63878",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 16,
+      "source_paragraph_index": 63878,
+      "text": "Genie 2 [9] is a basic world model with video generation capabilities that can generate infinitely diverse and controllable 3D environments for training and evaluating embodied agents. It consists of an autoregressive dynamics model and a simple and scalable latent action model, allowing users to create frame by frame in the generated environment. In the field of games, GameGen-X [12] introduces multimodal control, which enables rich and flexible game content generation through text-to-character, sketch-to-environment, and brings a new gaming experience.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_12_p14_75243",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 14,
+      "source_paragraph_index": 75243,
+      "text": "observation suggests that the latent action prediction pretraining task enhances the model's capability to recognize fine-grained actions in videos while simultaneously constructing a unified latent action space that bridges the embodiment gap between experts and agents, thereby improving the efficiency of novel skill learning from the expert video. Compared to baseline methods that employ Genie [49] for latent action learning, a widely adopted approach, our method achieves substantial performance improvements.",
+      "supports_claims": [
+        {
+          "claim_text": "The resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_13_p11_43788",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 11,
+      "source_paragraph_index": 43788,
+      "text": "Qualitatively, the learned latent actions can capture complex actions, such as a person entering a scene, and can even transfer motion between different objects, such as from a human to a ball. Most critically, we demonstrated the practical utility of this approach. By training a simple controller to map state and known actions to the learned latent actions, our world model—trained exclusively on in-the-wild, natural videos—can be controlled to solve robotic manipulation tasks. It achieves planning performance comparable to baselines trained on in-domain, action-labeled data.",
+      "supports_claims": [
+        {
+          "claim_text": "The resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_14_p0_2463",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 2463,
+      "text": "els (LAM) infer latent actions between successive observations, effectively compressing observed changes. Under certain conditions, latent actions can even rediscover the ground truth action space (Schmidt & Jiang, 2023; Bruce et al., 2024). After training, LAM can be utilized for imitation learning on latent actions to obtain useful behavioral priors. For example, LAPA (Ye et al., 2024) showed that latent action learning can be used to pre-train large model on only human manipulation videos, and despite the huge cross-embodiment gap, still outperform OpenVLA (Kim et al., 2024b), which was pre-trained on expert in-domain data with available action labels.",
+      "supports_claims": [
+        {
+          "claim_text": "The resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_15_p1_4394",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 4394,
+      "text": "Jasmine implements the Genie (Bruce et al., 2024) architecture, enabling training of interactive environments from unlabeled videos. The architecture includes a video tokenizer, which encodes videos into tokens, a latent action model (LAM) that extracts latent actions between video frames, and a dynamics model that predicts the tokens of the next frame based on the previous tokens and corresponding latent actions. At sampling time, the LAM is discarded and replaced by input from the user. All modules use an ST-Transformer (Ho et al.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_16_p4_24708",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 24708,
+      "text": "Pure autoregressive modeling is also highly relevant to interactive world modeling. Genie [41] introduces a generative interactive environment model composed of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a latent action model. This design enables frame-by-frame controllable generation and shows that autoregressive world models can support interactive environment simulation. Along a similar direction, iVideoGPT [50] formulates world modeling as next-token prediction over a unified sequence of visual observations, actions, and rewards.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_17_p1_6664",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6664,
+      "text": "GenieRedux. The video tokenizer is an ST-ViViT autoencoder, while the Latent Action Model (LAM) is an ST-ViViT encoder-decoder predicting the next frame by generating a token for the action between the last two frames (with a linear layer at the encoder). We offer two dynamics model variants: GenieRedux, which follows Genie by summing LAM encoded actions with tokenized frames, and GenieRedux-G, which uses the concatenation of frame tokens with one-hot agent actions, which are readily available and eliminate LAM prediction uncertainty evaluations of the trained agent exploration evaluation. The architectures are shown on Fig. 1.",
+      "supports_claims": [
+        {
+          "claim_text": "Genie is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model.",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_18_p4_24527",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 24527,
+      "text": "The author does not inform her readers concerning the design and actual elements of construction, the mode of operation, and the logical controls of these machines; nor does she show how a particular problem (or class of problems) was analyzed, programmed, and fed into the machine for solution.Further, there is no full statement of the actual problems these machines were designed to solve or were actually programmed to solve.",
+      "supports_claims": [
+        {
+          "claim_text": "No specific setup details provided in the given excerpts.",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_19_p12_67541",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 12,
+      "source_paragraph_index": 67541,
+      "text": "The author does not inform her readers concerning the design and actual elements of construction, the mode of operation, and the logical controls of these machines; nor does she show how a particular problem (or class of problems) was analyzed, programmed, and fed into the machine for solution. Further, there is no full statement of the actual problems these machines were designed to solve or were actually programmed to solve.",
+      "supports_claims": [
+        {
+          "claim_text": "No specific setup details provided in the given excerpts.",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_20_p6_20865",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 6,
+      "source_paragraph_index": 20865,
+      "text": "T.K. and F.A designed experimental setup, performed and designed experiments and wrote the manuscript. F.M., S.T., P.L., J.G. and I.S. performed specific experiments. E.A. and R.v.B. designed experimental setup, supervised and edited the manuscript.\n\n# Competing interests\n\nThe authors declare no competing interests.\n\n# Additional information\n\nSupplementary information is available for this paper at https://doi.org/10.1038/s41598-019-52186-6.\n\nCorrespondence and requests for materials should be addressed to R.v.B.\n\nReprints and permissions information is available at www.nature.com/reprints.",
+      "supports_claims": [
+        {
+          "claim_text": "No specific setup details provided in the given excerpts.",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_21_p6_30977",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 6,
+      "source_paragraph_index": 30977,
+      "text": "The author has no affiliations with or involvement in any organization or entity with any financial interest (such as honoraria; educational grants; participation in speakers' bureaus; membership, employment, consultancies, stock ownership, or other equity interest; and expert testimony or patent-licensing arrangements), or non-financial interest (such as personal or professional relationships, affiliations, knowledge or beliefs) in the subject matter or materials discussed in this manuscript. All borrowed ideas have been well acknowledged by means of references and quotations and this manuscript has not been presented in any form for publication in any other journal.",
+      "supports_claims": [
+        {
+          "claim_text": "No specific limitations mentioned in the given excerpts.",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_22_p2_10692",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 10692,
+      "text": "The authors have no relevant affiliations or financial involvement with any organization or entity with a financial interest in or financial conflict with the subject matter or materials discussed in the manuscript. This includes employment, consultancies, honoraria, stock ownership or options, expert testimony, grants or patents received or pending, or royalties. No writing assistance was utilized in the production of this manuscript.\n\n# References",
+      "supports_claims": [
+        {
+          "claim_text": "No specific limitations mentioned in the given excerpts.",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.15391_agentic_23_p0_2508",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 2508,
+      "text": "This manuscript has not been submitted to, nor is under review at,\n\nanother journal or other publishing venue.\n\nThe authors whose names are listed immediately below certify that they have NO affiliations with or involvement in any organization or entity with any financial interest (such as honoraria; educational grants; participation in speakers' bureaus; membership, employment, consultancies, stock ownership, or other equity interest; and expert testimony or patent-licensing arrangements), or non-financial interest (such as personal or professional relationships, affiliations, knowledge or beliefs) in the subject matter or materials discussed in this manuscript.\n\n# References",
+      "supports_claims": [
+        {
+          "claim_text": "No specific limitations mentioned in the given excerpts.",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_24_p0_8620",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 8620,
+      "text": "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg)\n\n# Abstract\n\nGenerative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_25_p0_9327",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 9327,
+      "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_26_p2_9072",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 9072,
+      "text": "IGV, as a potential realization of GGE, offers four key advantages: (1) powerful generalizable generative capabilities, (2) physics-aware world modeling, (3) user-controlled generation for interactive experiences, and (4) leveraging vast video data for training. In the following subsections, we elaborate on these advantages in detail.\n\n# 3.1 Generalizable Generation for Unlimited Games\n\nVideo generation models excel at creating not just high-quality content, but novel and diverse game content. Pre-trained on vast real-world video collections, these models develop comprehensive understanding of visual elements and relationships. Their novelty manifests in two aspects: (1) generalization ability to transfer skills to unprecedented scenarios, as shown by GameFactory [121] generating action-controllable videos in open-domain settings (Fig. 1), and (2) compositional creativity to combine learned elements innovatively, demonstrated by Sora [77]'s \"origami undersea\" scenes†. This compositional capability has become a key research focus, with dedicated evaluation benchmarks [43, 92] measuring such abilities.",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_27_p1_12959",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 12959,
+      "text": "In this work, we present GameFactory, a framework for action-controlled and scene-generalizable game video generation. To achieve action-controlled video generation, we firstly collect an action-annotated game video dataset GF-Minecraft. This dataset, sourced from the Minecraft platform [13], features an unbiased action distribution, diverse scenes, and text annotations (Sec. 4.1). Secondly, we design action control mechanisms for continuous mouse movements and discrete keyboard inputs, respectively.",
+      "supports_claims": [
+        {
+          "claim_text": "The framework introduces GF-Minecraft, an action-annotated game video dataset without human bias, enabling precise control over both keyboard and mouse inputs. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_28_p0_8620",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 8620,
+      "text": "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg)\n\n# Abstract\n\nGenerative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support",
+      "supports_claims": [
+        {
+          "claim_text": "The framework introduces GF-Minecraft, an action-annotated game video dataset without human bias, enabling precise control over both keyboard and mouse inputs. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_29_p7_37974",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 7,
+      "source_paragraph_index": 37974,
+      "text": "In Sec. 4.1, we introduced our GF-Minecraft dataset, which eliminates human bias by ensuring uniform distribution of atomic actions. This design enables models trained on GF-Minecraft to effectively respond to actions that human players rarely perform. We compare our dataset with the VPT [3] dataset, which contains recordings of human gameplay and inherent human biases. Specifically, we selected video clips from VPT's Find Cave dataset, as it closely matches our setting by primarily excluding inventory management and block modification operations. Tab. 5 compares the usage proportions of keyboard inputs across both datasets. The VPT dataset shows highly skewed distributions. For instance, the forward movement key (W) ap",
+      "supports_claims": [
+        {
+          "claim_text": "The framework introduces GF-Minecraft, an action-annotated game video dataset without human bias, enabling precise control over both keyboard and mouse inputs. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_30_p0_9327",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 9327,
+      "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory supports autoregressive generation for unlimited-length interactive videos. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_31_p12_67404",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 12,
+      "source_paragraph_index": 67404,
+      "text": "Efficient video generation provides critical support for interactive world simulation, and games have become a common deployment setting because of their well-defined interaction interfaces and controllable closed-loop evaluation.\n\nAmong representative works, GameGen-X [221] targets open-world game videos, injecting keyboard actions and multimodal instructions into the generation process to improve interactive responsiveness over long sequences. GameFactory [222] models action control independently of the game genre to enable action-conditioned interactive video generation for diverse open-world scenarios. Focusing on Minecraft, MineWorld [223] increases interactive frame rates by alleviating the throughput bottleneck of autoregressive tokens via",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory supports autoregressive generation for unlimited-length interactive videos. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_32_p17_39696",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 17,
+      "source_paragraph_index": 39696,
+      "text": "Autoregressive Video Generation Models. Since game videos require variable-length or even infinite-length generation to enable interactive game experience, autoregressive mechanism is necessary. Autoregressive video generation refers to a process where new frames are generated based on previously generated frames, which can be expressed as $p(x_{1},x_{2},\\dots,x_{n}) = \\prod_{i = 1}^{n}p(x_{i}|x_{1},x_{2},\\dots,x_{i - 1})$ , where $x_{i}$ indicates the $i$ -th frame.",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory supports autoregressive generation for unlimited-length interactive videos. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_33_p0_9327",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 9327,
+      "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental",
+      "supports_claims": [
+        {
+          "claim_text": "A multi-phase training strategy with a domain adapter decouples game style learning from action control, achieving scene-generalizable action control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_34_p2_10380",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 10380,
+      "text": "For the optimization of action-conditioned controlled generation, GameFactory [47] proposes a multi-stage training strategy integrated with domain adapters, which decouples game style learning from action control to realize scene-generalizable action control and AdaWorld [11] embeds action information into the pre-training process and extracts implicit actions from\n\nvideos via self-supervision, thus enabling novel action learning under limited conditions. Real-time interaction is a core characteristic of this field, and relevant training paradigms lay a foundation for real-time streaming generation of diffusion-based world models. For instance, Diffusion-Forcing [5] trains diffusion models to denoise token sets with independent per-token noise levels and Self-Forcing [17] performs autoregressive inference with KV caching during training, conditioning the generation of each frame on the model's own prior outputs. Together, these advances mark a shift from static video synthesis to interactive, temporally consistent world models.",
+      "supports_claims": [
+        {
+          "claim_text": "A multi-phase training strategy with a domain adapter decouples game style learning from action control, achieving scene-generalizable action control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_35_p1_13875",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 13875,
+      "text": "However, directly fine-tuning the pretrained model on Minecraft data not only imparts action control capabilities, but also risks embedding a distinct Minecraft style into the generated games, thereby compromising the model's open-domain generalization. To address this challenge, our key idea is to disentangle the learning of game style and action control with different modules and parameters, so that we can remove the game style without affecting the action controllability for generating open-domain videos with action control (Sec. 5.1). Specifically, we propose a domain adapter to fit Minecraft style, combined with a multiphase decoupled training strategy (Sec. 5.2).",
+      "supports_claims": [
+        {
+          "claim_text": "A multi-phase training strategy with a domain adapter decouples game style learning from action control, achieving scene-generalizable action control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_36_p1_12959",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 12959,
+      "text": "In this work, we present GameFactory, a framework for action-controlled and scene-generalizable game video generation. To achieve action-controlled video generation, we firstly collect an action-annotated game video dataset GF-Minecraft. This dataset, sourced from the Minecraft platform [13], features an unbiased action distribution, diverse scenes, and text annotations (Sec. 4.1). Secondly, we design action control mechanisms for continuous mouse movements and discrete keyboard inputs, respectively.",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory is a framework for action-controlled scene-generalizable game video generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_37_p0_8620",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 8620,
+      "text": "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg)\n\n# Abstract\n\nGenerative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory is a framework for action-controlled scene-generalizable game video generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_38_p0_9327",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 9327,
+      "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental",
+      "supports_claims": [
+        {
+          "claim_text": "GameFactory is a framework for action-controlled scene-generalizable game video generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_39_p5_18315",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 5,
+      "source_paragraph_index": 18315,
+      "text": "![](dt=2026-06-05/ht=21/c5e3e07e05279961a79191e34e419b75243fdf1378db915c8f56baaaba399f0a.jpg)\n\nTo enable precise action control, we follow the design of Matrix-Game 2.0 [15] and GameFactory [52], explicitly incorporating user actions into the model. Specifically, discrete keyboard actions are introduced through a dedicated Cross-Attention module, enabling accurate control over interactive behaviors. In contrast, continuous mouse-control signals are injected through Self-Attention, directly influencing the generation of the current visual state. This design enables stable and controllable interactive responses without sacrificing generation quality.",
+      "supports_claims": [
+        {
+          "claim_text": "It includes an action control module that enables precise control over both keyboard and mouse inputs. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_40_p0_8620",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 8620,
+      "text": "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg)\n\n# Abstract\n\nGenerative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support",
+      "supports_claims": [
+        {
+          "claim_text": "It includes an action control module that enables precise control over both keyboard and mouse inputs. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_41_p3_13592",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 3,
+      "source_paragraph_index": 13592,
+      "text": "Existing methods use keyboard and mouse inputs as action signals and inject the action control via MLP [9, 67] or attention blocks [17, 74]. This enables the model to learn physically plausible movements across scenes with diverse scales (e.g. very large and small scenes). However, they struggle to provide precise previous locations for spatial memory retrieval. In contrast, camera poses (rotation matrix and translation vector) provide accurate spatial locations that facilitate precise control and memory retrieval, but",
+      "supports_claims": [
+        {
+          "claim_text": "It includes an action control module that enables precise control over both keyboard and mouse inputs. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_42_p0_9327",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 9327,
+      "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental",
+      "supports_claims": [
+        {
+          "claim_text": "The method leverages open-domain generative priors from pre-trained video diffusion models to enable the creation of entirely new and diverse games beyond fixed styles and scenes. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_43_p18_74184",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 18,
+      "source_paragraph_index": 74184,
+      "text": "Generalization Across Diverse Environments. The ability to adapt across varied gaming scenarios and environments represents perhaps the most challenging dimension. GameFactory addresses this through scene-generalizable action control, leveraging open-domain generative priors from pre-trained video diffusion models to create entirely new games beyond fixed styles and scenes [306]. Recent work further creates a \"generative infinite game\" that transcends traditional finite, hard-coded systems [144].",
+      "supports_claims": [
+        {
+          "claim_text": "The method leverages open-domain generative priors from pre-trained video diffusion models to enable the creation of entirely new and diverse games beyond fixed styles and scenes. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_44_p1_11845",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 11845,
+      "text": "To achieve scene generalization in game videos, collecting large-scale action-annotated video datasets would be the most direct approach. With sufficient data covering all possible scenarios, it could enable arbitrary game scene generation. However, such action annotations are prohibitively expensive and impractical for open-domain videos. In contrast, open-domain videos are abundant on the Internet, and video generation models trained on these videos contain rich generative priors. Leveraging these",
+      "supports_claims": [
+        {
+          "claim_text": "The method leverages open-domain generative priors from pre-trained video diffusion models to enable the creation of entirely new and diverse games beyond fixed styles and scenes. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_45_p0_9327",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 9327,
+      "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental",
+      "supports_claims": [
+        {
+          "claim_text": "A domain adapter is proposed to bridge the domain gap between open-domain priors and small-scale game datasets. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_46_p4_25673",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 25673,
+      "text": "To prevent action control capabilities from being bound to specific game styles, our key insight is to disentangle the learning of game style and action control through different modules and parameters. Specifically, while using the proposed action control module to learn action controllability, we employ an independent domain adapter to capture game-specific visual styles. The domain adapter is implemented using LoRA [21], which efficiently learns specific styles and can be plugged in and out without affecting the open-domain generation priors of the original model.",
+      "supports_claims": [
+        {
+          "claim_text": "A domain adapter is proposed to bridge the domain gap between open-domain priors and small-scale game datasets. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_47_p3_18246",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 3,
+      "source_paragraph_index": 18246,
+      "text": "To ensure that each domain retains its unique spatio-temporal characteristics while sharing these fundamental properties within a broader interconnected system, we introduce Domain Adapters tailored to each individual domain dataset. These adapters are randomly initialized as learnable embeddings that capture intra-domain underlying patterns. Furthermore, they are interconnected to serve as domain-specific proxies that communicate with one another, facilitating information exchange and bridging previously disconnected domain data.",
+      "supports_claims": [
+        {
+          "claim_text": "A domain adapter is proposed to bridge the domain gap between open-domain priors and small-scale game datasets. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_48_p9_43228",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 9,
+      "source_paragraph_index": 43228,
+      "text": "such that $H_{k + 1} = \\mathrm{term}1 + \\mathrm{term}2 + \\mathrm{term}3$ , which directly corresponds to our derived formula.\n\n# B Complete Experimental Setup\n\n# B.1 Hardware and Software Configuration\n\nAll experiments were conducted on the following setup:\n\n# B.2 Evaluation Metrics Details\n\n# MAUVE Computation:\n\n# Diversity Metrics:\n\n# Semantic Coherence Computation:\n\n# C Generated Text Examples\n\n# C.1 CommonsenseQA Examples\n\nWe present examples from CommonsenseQA to demonstrate the quality differences between sampling methods. The evaluation follows a few-shot learning setup where models are provided with 5 demonstration examples before the target question.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not provide specific details about the experimental setup, such as hardware, software, or evaluation metrics. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_49_p8_33970",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 8,
+      "source_paragraph_index": 33970,
+      "text": "# 6 Experimental setup\n\nThis Section describes the evaluation metrics that have been used during the experiments. Technical details about the hardware/software setup and the configurations of bilevel thresholding are also given.\n\nExperiments have been conducted in a PC with a 4.00 GHz AMD FX-8350 eight-core processor CPU and 16 GB RAM. The code has been implemented by using MATLAB 2016a and it has been executed on a Windows 10 64-bits operating system.\n\n# 6.1 Evaluation metrics\n\nIn our experiments, each image has been processed and the predicted mask has been compared with the ground truth data.\n\nIn particular, we define:",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not provide specific details about the experimental setup, such as hardware, software, or evaluation metrics. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_50_p33_106418",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 33,
+      "source_paragraph_index": 106418,
+      "text": "Question: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?\n\nAnswer: [Yes]\n\nJustification: The paper details the experimental setup (Section 3.1, Appendix E), including datasets, baselines, hyperparameters, hardware, and evaluation metrics.\n\n# Guidelines:\n\n# 7. Experiment statistical significance\n\nQuestion: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?\n\nAnswer: [Yes]\n\n34",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not provide specific details about the experimental setup, such as hardware, software, or evaluation metrics. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_51_p20_64356",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 20,
+      "source_paragraph_index": 64356,
+      "text": "The limitation [14] of is that the proposed mechanism has not been tested in a real-world scenario, and the evaluation has been done only through simulations. Another limitation is that the paper does not provide a detailed analysis of the computational overhead of the proposed mechanism. Additionally, the paper does not consider the impact of mobility on the performance of the proposed mechanism. Finally, the paper does not discuss the scalability of the proposed mechanism for large-scale VANETs.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly mention any limitations of the proposed method. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_52_p15_47673",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 15,
+      "source_paragraph_index": 47673,
+      "text": "Guidelines:\n\n# 2. Limitations\n\nQuestion: Does the paper discuss the limitations of the work performed by the authors?\n\nAnswer: [Yes]\n\nJustification: The paper explicitly discusses the limitations of the proposed method, acknowledging its constraints and outlining areas for future improvement in section of Discussion.\n\nGuidelines:\n\n# 3. Theory assumptions and proofs\n\nQuestion: For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?\n\n16\n\n# Answer: [NA]\n\nJustification: The paper does not include theoretical results.\n\n# Guidelines:\n\n# 4. Experimental result reproducibility",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly mention any limitations of the proposed method. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2501.08325_agentic_53_p18_65329",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "source_type": "agentic_chunk",
+      "source_page": 18,
+      "source_paragraph_index": 65329,
+      "text": "We identified whether papers explicitly stated the scope and limitations of the proposed specification or improvement method. We consider that a paper explicitly discusses the scope and limitations of the proposed specification measure or optimization strategy if it describes the cases for which the method applies or for which ones it does not. This can be done, for example, by discussing the assumptions underlying the proposed method, by contrasting it with alternative formulations, or by discussing in which context the method should be used. If the paper does not include such discussions, we consider that the scope and limitations were not made explicit.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly mention any limitations of the proposed method. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_54_p32_114525",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 32,
+      "source_paragraph_index": 114525,
+      "text": "Recent systematic benchmarking has corroborated these results. GTBench (Game Theory benchmark) [Duan et al., 2024] covers Tic-Tac-Toe, Connect-4, Kuhn Poker, Breakthrough, Liar's Dice, Blind Auction, Negotiation, Nim, Pig, and the Iterated Prisoner's Dilemma. They find that LLMs fail in complete and deterministic games yet are competitive in probabilistic gaming scenarios; most open-source LLMs (such as LLaMa) are less competitive than commercial LLMs (GPT-4) in complex games (except for LLaMa-3-70b-Instruct, which does perform well). In addition, code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain of Thought and Tree of Thoughts do not always help.",
+      "supports_claims": [
+        {
+          "claim_text": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_55_p4_12486",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 12486,
+      "text": "At the same time, LLMs often deviate from optimality, especially in tasks demanding probabilistic reasoning or adaptive play. For example, in zero-sum games like Rock-Paper-Scissors, many models fail to approximate mixed-strategy Nash equilibria [38, 58, 59]. Repeated games like the Battle of the Sexes further reveal prompt sensitivity and coordination fragility [12, 60–62]. In adversarial contexts, LLMs often revert to risk-averse or heuristic strategies [51, 63] and display bounded rationality that favors symmetric or fair outcomes over payoff maximization [37, 55]. Beyond specific games, systematic benchmarks such as FAIRGAME [64] and SmartPlay [58] also highlight the sensitivity of LLM behavior to prompt framing and contextual cues.",
+      "supports_claims": [
+        {
+          "claim_text": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_56_p1_6102",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6102,
+      "text": "These studies collectively identify a consistent performance dichotomy - LLMs exhibit particular difficulty with deterministic, complete-information games compared to probabilistic scenarios, a finding especially relevant for complex strategy games like Gomoku and central to our investigation of reinforcement learning approaches for decision-making enhancement.\n\nTheoretical examinations from game-theoretic perspectives have established foundational insights into LLMs' strategic rationality (Fan et al., 2023). Complementary empirical work has systematically documented the critical role of prompt engineering in shaping LLMs' game strategy processing and spatial reasoning capabilities (Liga and Pasetto, 2023), directly influencing our Gomoku prompt design methodology. Despite demonstrable progress in recent multi-game evaluations, a persistent performance gap remains between LLMs and human-level strategic reasoning (Costarelli et al., 2024). This limitation, highlighted in broader surveys of LLM-based gaming agents, points to the",
+      "supports_claims": [
+        {
+          "claim_text": "LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_57_p32_114525",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 32,
+      "source_paragraph_index": 114525,
+      "text": "Recent systematic benchmarking has corroborated these results. GTBench (Game Theory benchmark) [Duan et al., 2024] covers Tic-Tac-Toe, Connect-4, Kuhn Poker, Breakthrough, Liar's Dice, Blind Auction, Negotiation, Nim, Pig, and the Iterated Prisoner's Dilemma. They find that LLMs fail in complete and deterministic games yet are competitive in probabilistic gaming scenarios; most open-source LLMs (such as LLaMa) are less competitive than commercial LLMs (GPT-4) in complex games (except for LLaMa-3-70b-Instruct, which does perform well). In addition, code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain of Thought and Tree of Thoughts do not always help.",
+      "supports_claims": [
+        {
+          "claim_text": "Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_58_p6_29006",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 6,
+      "source_paragraph_index": 29006,
+      "text": "As a freely available model, GPT-3.5 demonstrates good reasoning performance under our framework, and the more advanced GPT-4 shows improved performance in line with other benchmarks. Notably, Llama3-70B-Instruct, as a representative of open-source models, exhibits competitive capabilities compared to GPT-4-Turbo-0125 under different perceptual conditions. This suggests that open-source models could be valuable for further exploration in visual reasoning.",
+      "supports_claims": [
+        {
+          "claim_text": "Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_59_p10_65065",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 10,
+      "source_paragraph_index": 65065,
+      "text": "A rather unexpected result is that Llama 3.3 is worse than Llama 3.1, although Meta advertises that it achieves a performance comparable to the Llama 3.1 405B model. In general, the open-source Llama models cannot keep up with the closed-source models of the LLM providers. However, the reasons for this are difficult to analyse as we do not know the parameter size of the paid models and there are also differences in the training pipeline and dataset. The 70B-Llama models are probably larger than the small closed-source models, but much smaller than the large models. With\n\n11",
+      "supports_claims": [
+        {
+          "claim_text": "Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_60_p2_12997",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 12997,
+      "text": "The study \"Can Large Language Models Serve as Rational Players in Game Theory?\" evaluates LLMs' potential in game theory, identifying gaps in mimicking human rationality [37]. Another study explores models like Claude 2, GPT-3.5, and GPT-4 in processing game strategy and spatial information through Tic-Tac-Toe, finding that prompt design significantly impacts performance [38].\n\nGTBENCH evaluates LLMs' strategic reasoning in competitive game-theoretic tasks [39]. It features 10 tasks covering complete vs. incomplete information, dynamic vs. static, and probabilistic vs. deterministic scenarios. Results show LLMs struggle in complete, deterministic games but perform better in probabilistic ones. Commercial LLMs like GPT-4 outperform open-source models such as CodeLlama-34b-Instruct. Code-pretraining aids strategic reasoning, but advanced methods like Chain-of-Thought (CoT) and Tree-of-Thought do not consistently help. Detailed error profiles are provided to understand LLM behaviors [39].",
+      "supports_claims": [
+        {
+          "claim_text": "Code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_61_p32_114525",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 32,
+      "source_paragraph_index": 114525,
+      "text": "Recent systematic benchmarking has corroborated these results. GTBench (Game Theory benchmark) [Duan et al., 2024] covers Tic-Tac-Toe, Connect-4, Kuhn Poker, Breakthrough, Liar's Dice, Blind Auction, Negotiation, Nim, Pig, and the Iterated Prisoner's Dilemma. They find that LLMs fail in complete and deterministic games yet are competitive in probabilistic gaming scenarios; most open-source LLMs (such as LLaMa) are less competitive than commercial LLMs (GPT-4) in complex games (except for LLaMa-3-70b-Instruct, which does perform well). In addition, code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain of Thought and Tree of Thoughts do not always help.",
+      "supports_claims": [
+        {
+          "claim_text": "Code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_62_p10_54707",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 10,
+      "source_paragraph_index": 54707,
+      "text": "al. [23] distinguish between code-enhanced reasoning, where code supports general reasoning (e.g., PaL [24], PoT [2]), and reasoning-enhanced code intelligence, where structured reasoning improves code generation.\n\nOur work falls into the latter. Structured prompting methods like Chain-of-Thought (CoT) [1] enhance code synthesis via explicit reasoning steps [3], [4], [25]. Self-consistency sampling improves CoT by selecting the most consistent path [26]. More advanced methods, such as Tree-of-Thought [27] and Graph-of-Thought [28], explore reasoning as structured search. Other extensions include uncertainty-aware CoT [29], curriculum-guided reasoning via CRPE [30], and steering between textual and executable reasoning [31]. Symbolic planning approaches like Self-Planning [32], CodeChain [5], and CodePlan [33] introduce multi-step decomposition but often suffer from morbidity and inefficiency.",
+      "supports_claims": [
+        {
+          "claim_text": "Code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_63_p3_7008",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 3,
+      "source_paragraph_index": 7008,
+      "text": "LLMs in game-theoretic environments Understanding strategic behaviors of LLMs entails important societal ramifications, as online users increasingly rely on intelligent assistants to interact with other agents, potentially also LLMs. To characterize LLM's behaviors, prior studies [23, 24, 19, 18, 25, 26, 27, 28] often adopt game theory, a mathematical framework that models cooperative behaviors of humans. These analyses involve comparing qualitative behaviors of LLM interactions against stylized entities, such as pareto optimal solutions and subgame-perfect equilibria [29].",
+      "supports_claims": [
+        {
+          "claim_text": "The paper characterizes the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_64_p2_7926",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 7926,
+      "text": "My main task in the paper is to analyze the restrictions on repeated-game behavior implied by NEWT. I begin by characterizing equilibrium outcomes in a number of restricted domains of stage games. Consider a stage game with a unique NE. Suppose further that the NE also Pareto-dominates any other stage-game outcome. I show that in such a game, only infinite repetition of the stage-game NE is consistent with NEWT. (In contrast, SPE sustains non-myopic play patterns in this class of games.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper characterizes the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_65_p1_4806",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 4806,
+      "text": "Games for LLM evaluation constitute a new research frontier, examining whether probed behavior aligns with game-theoretic predictions. So far, LLMs have demonstrated their ability to approach optimal strategies and equilibrium concepts when employed as rational players in games such as Matching Pennies, RPS, the Ring-Network Game, and the Dictator Game (Silva, 2024; Fan et al., 2024; Kader and Lee, 2025), although they pose systematic deviations in the course of strategic execution, particularly in randomized setups.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper characterizes the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_66_p12_29995",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 12,
+      "source_paragraph_index": 29995,
+      "text": "These results validate that error profiles contain sufficient information to predict lesion location. The trained models can therefore be meaningfully applied to error profiles, including those generated by LLMs, establishing the foundation for BLUM cross-system mapping. Comprehensive lesion–symptom mapping results showing the neural correlates of each error type, along with additional validation analyses including complementary multivariate analyses, are provided in Supplementary Results S2.\n\n![](dt=2026-03-24/ht=06/ca738cd8a3de1fe84aa51f9e9e811e3d5a8917516ea296810a10147f59b5f908.jpg)",
+      "supports_claims": [
+        {
+          "claim_text": "Detailed error profiles are provided for a better understanding of LLMs' behavior. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_67_p7_33926",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 7,
+      "source_paragraph_index": 33926,
+      "text": "First, we reveal systematic inconsistencies in LLM behavior across questionnaires that would remain hidden in isolated testing. These comprehensive assessments may serve multiple purposes: verifying whether prompted agents consistently maintain assigned personas across extended interactions (critical for simulations, roleplaying, and user customization); detecting potential emergence of self-perception or self-modeling in future iterations; and providing complete behavioral profiles that highlight inconsistencies or intrinsic biases invisible in task-based evaluations alone.",
+      "supports_claims": [
+        {
+          "claim_text": "Detailed error profiles are provided for a better understanding of LLMs' behavior. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_68_p1_6304",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6304,
+      "text": "We next find evidence that LLMs encode not only error detection signals but also more nuanced information about error types. Delving deeper into errors within a single task, we taxonomize its errors based on responses across repeated samples (Section 5). For example, the same error being consistently generated is different from an error that is generated occasionally among many other distinct errors. Using a different set of probing classifiers, we find that error types are predictable from the LLM representations, drawing a connection between the models's internal representations and its external behavior. This classification offers a more nuanced understanding of errors, enabling developers to predict error patterns and implement more targeted mitigation strategies.",
+      "supports_claims": [
+        {
+          "claim_text": "Detailed error profiles are provided for a better understanding of LLMs' behavior. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_69_p0_4352",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 4352,
+      "text": "The second category of benchmarks primarily draws upon classical game-theoretic scenarios to evaluate strategic reasoning capabilities. While these settings are relatively simplified, they inherently possess the capacity to validate the strategic reasoning proficiency of large language models. Duan et al. proposed GTBench [15], a language-driven environment including 10 widely-recognized tasks\n\nJOURNAL OF LATEX CLASS FILES\n\n1\n\nQiyue Yin, Pei Xu, Qiaozhe Li and Shengda Liu contribute equally (qyvin@nlpr.ia.ac.cn, (pei.xu, liqiaozhe2015, shengda.liu)@ia.ac.cn).",
+      "supports_claims": [
+        {
+          "claim_text": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_70_p2_12997",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 12997,
+      "text": "The study \"Can Large Language Models Serve as Rational Players in Game Theory?\" evaluates LLMs' potential in game theory, identifying gaps in mimicking human rationality [37]. Another study explores models like Claude 2, GPT-3.5, and GPT-4 in processing game strategy and spatial information through Tic-Tac-Toe, finding that prompt design significantly impacts performance [38].\n\nGTBENCH evaluates LLMs' strategic reasoning in competitive game-theoretic tasks [39]. It features 10 tasks covering complete vs. incomplete information, dynamic vs. static, and probabilistic vs. deterministic scenarios. Results show LLMs struggle in complete, deterministic games but perform better in probabilistic ones. Commercial LLMs like GPT-4 outperform open-source models such as CodeLlama-34b-Instruct. Code-pretraining aids strategic reasoning, but advanced methods like Chain-of-Thought (CoT) and Tree-of-Thought do not consistently help. Detailed error profiles are provided to understand LLM behaviors [39].",
+      "supports_claims": [
+        {
+          "claim_text": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_71_p8_24406",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 8,
+      "source_paragraph_index": 24406,
+      "text": "environment to evaluate reasoning, strategy, and decision-making capabilities. Additionally, compared to static benchmarks, interactive game-based evaluations more closely resemble real-world reasoning, where models must adapt, plan, and respond dynamically during the interaction. Notable game-based benchmarks are the following:\n\nGTBench [79] includes classic games such as Tic-Tac-Toe, Connect Four, Negotiation, and Nim, used to evaluate the mathematical, algorithmic, and logical reasoning of AI models; and modern competitive games like Diplomacy, Werewolf, and Avalon, which assess capabilities such as deception detection, role inference, coalition formation, and negotiation. Both classes of game require multi-hop, interactive, and strategic reasoning.",
+      "supports_claims": [
+        {
+          "claim_text": "GTBench is proposed as a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_72_p3_16260",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 3,
+      "source_paragraph_index": 16260,
+      "text": "$$\n\\max  _ {\\sigma_ {1}} \\min  _ {\\sigma_ {2}} U _ {1} (\\sigma_ {1}, \\sigma_ {2}) = \\min  _ {\\sigma_ {2}} \\max  _ {\\sigma_ {1}} U _ {1} (\\sigma_ {1}, \\sigma_ {2}).\n$$\n\nLLM agents have been evaluated in adversarial benchmarks and games. For example, GTBench [Duan et al., 2024] is a game-theoretic benchmark with ten classic games (board, card, negotiation, auctions) probing pure strategic reasoning. Another testbed, GameBench [Costarelli et al., 2024], covers nine diverse game environments, revealing that GPT-4 still struggles to match human-level performance in zero-sum games. Specialized competitive frameworks, such as multi-agent debate systems [Cheng et al., 2024], facilitate agents arguing opposing viewpoints, thereby refining their answers. Empirical studies report that, though limitations in multi-step strategy anticipation remain, such competitive exercises help LLMs exhibit long-term planning and opponent modeling.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_73_p0_2259",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 2259,
+      "text": "Game theory [13, 22, 23, 31] is a field of research that studies strategic reasoning and interactions among rational decision-makers. The mathematical framework of game theory helps to model key aspects in intelligent decision-making, such as modeling opponent behaviors and long-term planning under uncertain and competitive environments. Thus, the ability to play games could serve as a measure for evaluating the strategic reasoning capability of LLMs. Indeed, many existing studies focus on game-theoretic reasoning abilities of LLMs, especially in the setting of normal-form games or repeated games due to their relatively simple representations and the connection to classic game theory [2, 8, 20, 21, 25].",
+      "supports_claims": [
+        {
+          "claim_text": "The paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_74_p2_8237",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 8237,
+      "text": "Beyond social deduction, LLMs have been applied to negotiation and coalition-formation games, most notably in Diplomacy. Meta's CICERO System (FAIR) combined an LLM with a strategic reasoning module and achieved human-level performance in online Diplomacy, highlighting the potential for hybrid architectures that pair language models with explicit planning or game-theory components. Other work has explored LLM performance in games that require complex strategic or probabilistic reasoning—for example, poker, where models must reason about risk, uncertainty, and incomplete information Zhuang et al. (2025), as well as a broader suite of board and video games designed to probe multi-step reasoning skills Lin et al. (2025).",
+      "supports_claims": [
+        {
+          "claim_text": "The paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_75_p2_12997",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 12997,
+      "text": "The study \"Can Large Language Models Serve as Rational Players in Game Theory?\" evaluates LLMs' potential in game theory, identifying gaps in mimicking human rationality [37]. Another study explores models like Claude 2, GPT-3.5, and GPT-4 in processing game strategy and spatial information through Tic-Tac-Toe, finding that prompt design significantly impacts performance [38].\n\nGTBENCH evaluates LLMs' strategic reasoning in competitive game-theoretic tasks [39]. It features 10 tasks covering complete vs. incomplete information, dynamic vs. static, and probabilistic vs. deterministic scenarios. Results show LLMs struggle in complete, deterministic games but perform better in probabilistic ones. Commercial LLMs like GPT-4 outperform open-source models such as CodeLlama-34b-Instruct. Code-pretraining aids strategic reasoning, but advanced methods like Chain-of-Thought (CoT) and Tree-of-Thought do not consistently help. Detailed error profiles are provided to understand LLM behaviors [39].",
+      "supports_claims": [
+        {
+          "claim_text": "GTBench includes 10 tasks covering a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_76_p1_6625",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6625,
+      "text": "Static games with complete information are known as strategic form games. In turn, a static game with incomplete information is known as a Bayesian game. A dynamic game with complete information is named a multistage game. Finally, a dynamic game with incomplete information is referred to as multistage game of incomplete information. Multistage games of incomplete information will be the focus through this work.",
+      "supports_claims": [
+        {
+          "claim_text": "GTBench includes 10 tasks covering a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_77_p2_7522",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 7522,
+      "text": "(2015) stated that the information elements that players need to make decisions in the game can be divided into complete information and incomplete information game models, and each of these models can be divided into complete information static, complete information dynamic, incomplete information static, and incomplete information dynamic [8]. Many other criteria and corresponding different division methods are available for game division.",
+      "supports_claims": [
+        {
+          "claim_text": "GTBench includes 10 tasks covering a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. [P1]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_78_p1_5304",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 5304,
+      "text": "- Reasoning-enhanced paper evaluation. Evaluating research papers requires a deep understanding of complex motivations and nuanced methodologies. This challenge is further intensified by the need to compare concurrently retrieved work. This motivates us to stimulate the reasoning mechanism of LLMs to support deep comprehension, precise comparison, and fair evaluation. While chain-of-thought reasoning (Wei et al. 2022) offers interpretable intermediate steps, it typically requires annotated reasoning paths for supervision (Weng et al. 2023), which are scarce in paper evaluation scenarios.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper performs LLM-vs.-LLM competitions as reasoning evaluation. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_79_p1_7745",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 7745,
+      "text": "Published as a conference paper at ICLR 2024\n\n<sup>1</sup>We choose reasoning tasks mainly due to (1) the intrinsic connection between reasoning proficiency and intelligence; (2) the notable progress LLMs have achieved in reasoning-centric tasks (Sawada et al., 2023). Note that DYVAL could also be applied to existing benchmarks to create new and harder evaluation data.\n\n2\n\nTo sum up, this paper makes the following contributions:\n\n# 2 RELATED WORK",
+      "supports_claims": [
+        {
+          "claim_text": "The paper performs LLM-vs.-LLM competitions as reasoning evaluation. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_80_p0_2828",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 2828,
+      "text": "In each round, stronger responses advance to compete against each other in later rounds, allowing us to refine the scores progressively throughout the tournament. This approach allows the judge LLMs to develop a global perspective on responses without requiring all replies to be included in a single prompt, which would otherwise result in an impractically long context length.\n\nTo summarize, our contributions are as follows:\n\n# 2 Related Work\n\nIndividual Assessment One approach to LLM-as-a-Judge is individual assessment, where the\n\narXiv:2506.03785v3 [cs.CL] 9 Jul 2025",
+      "supports_claims": [
+        {
+          "claim_text": "The paper performs LLM-vs.-LLM competitions as reasoning evaluation. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_81_p13_24450",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 13,
+      "source_paragraph_index": 24450,
+      "text": "![](dt=2026-06-05/ht=06/da09215522b6a5559c2d4aba55acd280e6d65bc5614f7ecf024159e854ce2010.jpg)\n\n# 2. Learner-Learner Interactions:\n\n# Challenges:\n\n- Communication Barriers:\n\nPhysical Separation:\n\n# 3. Learner-Content Interactions:\n\n# Challenges:\n\n- Technological Limitations:\n\n- Engagement with Content:\n\nNot explicitly discussed in the provided excerpts.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_82_p21_83085",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 21,
+      "source_paragraph_index": 83085,
+      "text": "Question: Does the paper discuss the limitations of the work performed by the authors?\n\nAnswer: [Yes]\n\nJustification: The limitations of the work are discussed in Appendix E.1.\n\nGuidelines:\n\n- The answer NA means that the paper has no limitation while the answer No means that the paper has limitations, but those are not discussed in the paper.- The authors are encouraged to create a separate \"Limitations\" section in their paper.- The paper should point out any strong assumptions and how robust the results are to violations of these assumptions (e.g., independence assumptions, noiseless settings, model well-specification, asymptotic approximations only holding locally).",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.12348_agentic_83_p98_261468",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "source_type": "agentic_chunk",
+      "source_page": 98,
+      "source_paragraph_index": 261468,
+      "text": "Limitations. The following limitations bound both the current specification and the planned experimental evaluation:\n\n- No comprehensive empirical results [First-order limitation]. This paper contains no empirical measurements from the two planned experiments. All quantitative safety and performance claims in Appendix D—attack success rate reductions, failure propagation containment rates, governance overhead figures, scalability bounds—are architectural hypotheses. The experimental program specified in Appendix D has been designed with pre-committed methodological safeguards (Bonferroni correction, inter-rater reliability requirements, blinding protocol) but has not yet been executed. The companion empirical paper will report measured results; this submission reports only the architectural specification and experimental design.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly state limitations in the provided excerpts. [P1]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_84_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "Hunyuan-GameCraft significantly outperforms existing models in advancing the realism and playability of interactive game video generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_85_p7_30138",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 7,
+      "source_paragraph_index": 30138,
+      "text": "Implementation Details. Hunyuan-GameCraft builds upon text-to-video foundation model HunyuanVideo [18], implementing a latent mask mechanism and hybrid history conditioning to achieve image-to-video generation and long video extension. The experiments employ full-parameter training on 192 NVIDIA H20 GPUs, conducted in two phases with a batch size of 48. The first phase trains the model for $30\\mathrm{k}$ iterations at a learning rate of $3\\times 10^{-5}$ using all collected game data and synthetic data at their original proportions.",
+      "supports_claims": [
+        {
+          "claim_text": "Hunyuan-GameCraft significantly outperforms existing models in advancing the realism and playability of interactive game video generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_86_p4_13407",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 13407,
+      "text": "# 4. Method\n\nIn this paper, we propose Hunyuan-GameCraft, a high-dynamic interactive game video generation model based on a previously open-sourced MM-DiT [9] based text-to-video model, HunyuanVideo [18]. The overall framework is shown in Fig 4. To achieve fine-grained controllable game video synthesis with temporal coherence, we first unify diverse common keyboard/mouse options in games (W, A, S, D, $\\uparrow$ , $\\leftarrow$ , $\\downarrow$ , $\\rightarrow$ , Space, etc.) into a shared camera representation space (Sec. 4.1) and design a light-weight action encoder to encode the camera trajectory(Sec. 4.1).",
+      "supports_claims": [
+        {
+          "claim_text": "Hunyuan-GameCraft significantly outperforms existing models in advancing the realism and playability of interactive game video generation. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_87_p2_4477",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 4477,
+      "text": "To address these challenges, we introduce HunyuanGameCraft, a novel framework designed for high-dynamic, action-controllable video synthesis in game environments. Built upon a text-to-video foundation model, HunyuanVideo [18], our method enables the generation of temporally coherent and visually rich gameplay footage conditioned on discrete user actions. We unify a broad set of standard keyboard and mouse inputs (e.g., W, A, S, D, arrow keys, Space) into a shared camera representation space, which unified embedding supports smooth interpolation between various camera and movement operations, ensuring physical plausibility while enabling cinematic flexibility in user-driven interactions, for example, speeding up.",
+      "supports_claims": [
+        {
+          "claim_text": "The model achieves fine-grained action control by unifying standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_88_p0_565",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 565,
+      "text": "![](dt=2026-06-04/ht=09/a41629148ce3234d9cdea2832dd1dabb55ed03a2452c23d1c154c5812369a2cd.jpg)\n\n![](dt=2026-06-04/ht=09/9fbcbb4921280a49daf04da9c98becb8a32ed7ea72da56027841bdb767ea2154.jpg)\n\n# Abstract\n\nRecent advances in diffusion-based and controllable video generation have enabled high-quality and temporally coherent video synthesis, laying the groundwork for immersive interactive gaming experiences. However, current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. To address these gaps, we introduce Hunyuan-GameCraft, a novel framework for high-dynamic interactive video generation in game environments. To achieve fine-grained action control, we unify standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. Then we propose a hybrid history-conditioned training strategy that",
+      "supports_claims": [
+        {
+          "claim_text": "The model achieves fine-grained action control by unifying standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_89_p4_13407",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 13407,
+      "text": "# 4. Method\n\nIn this paper, we propose Hunyuan-GameCraft, a high-dynamic interactive game video generation model based on a previously open-sourced MM-DiT [9] based text-to-video model, HunyuanVideo [18]. The overall framework is shown in Fig 4. To achieve fine-grained controllable game video synthesis with temporal coherence, we first unify diverse common keyboard/mouse options in games (W, A, S, D, $\\uparrow$ , $\\leftarrow$ , $\\downarrow$ , $\\rightarrow$ , Space, etc.) into a shared camera representation space (Sec. 4.1) and design a light-weight action encoder to encode the camera trajectory(Sec. 4.1).",
+      "supports_claims": [
+        {
+          "claim_text": "The model achieves fine-grained action control by unifying standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_90_p2_5200",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 5200,
+      "text": "To maintain long-term consistency in interactive game video generation, prior works [6, 15, 20] have primarily focused on training-free extensions, streaming denoising or last-frame conditioning. However, these approaches often suffer from quality degradation and temporal inconsistency with causal VAEs [33]. We propose a novel hybrid history-conditioned training strategy that autoregressively extends sequences while preserving scene information, using historical context integration and a mask indicator to address error accumulation in autoregressive generation. Moreover, to improve inference efficiency and playability, we imple",
+      "supports_claims": [
+        {
+          "claim_text": "A hybrid history-conditioned training strategy is proposed that extends video sequences autoregressively while preserving game scene information. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_91_p3_9779",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 3,
+      "source_paragraph_index": 9779,
+      "text": "In addition, some methods also explore different paradigms, such as next frame prediction [11, 12], combining next-token and full-sequence diffusion (DiffusionForcing) [6] and test-time training [7]. Compared with previous methods, we propose a novel hybrid history-conditioned training strategy that extends video sequences in an autoregressive way while effectively preserving game scene information, under a diffusion paradigm.\n\n# 3. Dataset Construction\n\n# 3.1. Game Scene Data Curation",
+      "supports_claims": [
+        {
+          "claim_text": "A hybrid history-conditioned training strategy is proposed that extends video sequences autoregressively while preserving game scene information. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_92_p1_4749",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 4749,
+      "text": "To mitigate error accumulation during long-horizon interactive generation, we design a history cache retrieval strategy and an enhanced interactive training strategy. The former preserves historical scene information across autoregressive steps by storing generated frame latents in a cache and retrieving recent historical representations. The retrieved representations are incorporated into subsequent generation steps,",
+      "supports_claims": [
+        {
+          "claim_text": "A hybrid history-conditioned training strategy is proposed that extends video sequences autoregressively while preserving game scene information. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_93_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "Model distillation is achieved to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_94_p2_5837",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 5837,
+      "text": "ment the model distillation acceleration strategy [28], which reduces computational overhead while maintaining consistency across long temporal sequences, making our framework suitable for real-time deployment in complex interactive environments.\n\nWe evaluate our Hunyuan-GameCraft on both curated game scenes and general styles, obtaining a significant lead over current models. In summary, our contributions are:\n\n# 2. Related Work\n\n# 2.1. Interactive Game Scene World Model",
+      "supports_claims": [
+        {
+          "claim_text": "Model distillation is achieved to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_95_p5_17627",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 5,
+      "source_paragraph_index": 17627,
+      "text": "In this paper, we presented FlowAct-R1, an interactive humanoid video generation framework aimed at synthesizing lifelike agents that can engage with humans through continuous and responsive video. Our framework enables streaming, arbitrary-duration video generation while maintaining superior temporal consistency and visual fidelity. Through synergistic model-level distillation and system-level optimizations, our method achieves stable real-time performance with low-latency responsiveness. Notably, the model delivers exceptional behavioral vividness and perceptual realism, capturing subtle human nuances for natural transitions across complex interactive states, while maintaining high-quality synthesis across diverse character styles from a single reference image.",
+      "supports_claims": [
+        {
+          "claim_text": "Model distillation is achieved to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_96_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_97_p4_16251",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 16251,
+      "text": "We use the Homogeneous and Varied datasets to pre-train models. We pretrain the model on the full Varied dataset of roughly one million samples, as it shows continued improvement as more data is used. For the Homogenous data, we tested the performance for the 100k and one million versions of the dataset, where the model trained on the 100k variant performed slightly better. Therefore, this dataset was used to further fine-tune on the real data. Further details are provided in the Appendix D.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_98_p1_4528",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 4528,
+      "text": "We collect a large-scale, high-quality dataset of human gameplay spanning a diverse set of popular 3D video games. The complete list of games is provided in Appendix A.1. Gameplay is recorded by experienced players who are instructed to capture only active gameplay segments (e.g., excluding lobby or waiting periods). Annotators use a variety of hardware, monitor sizes and resolutions, mouse sensitivities, and gameplay styles, which provide a diverse set of gameplay videos. We do not enforce balanced data distribution across games.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_99_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "The curated game scene data significantly improves the visual fidelity, realism and action controllability. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_100_p1_9127",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 9127,
+      "text": "Similarly, HugSim [29] leverages 3D Gaussian Splating for visual simulation, achieving controllable scene rendering by decoupling foreground vehicles and replacing them with pretrained 3D car models to enhance visual fidelity and visibility. A rule-based behavior model handles action decision-making and trajectory planning, closing the simulation loop. While these pioneering efforts have significantly advanced high-fidelity closed-loop simulation, their visual realism is still constrained.",
+      "supports_claims": [
+        {
+          "claim_text": "The curated game scene data significantly improves the visual fidelity, realism and action controllability. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_101_p0_3993",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 3993,
+      "text": "era controllability from diverse raw videos and refines fine-grained visual quality on curated high-fidelity data. Extensive experiments across multiple benchmarks demonstrate state-of-the-art geometric consistency, temporal stability, and visual realism. Moreover, CETCAM exhibits strong adaptability to additional control modalities (e.g., inpainting or layout), highlighting its flexibility beyond camera control. The project page is available at https://sjtuytc.github.io/CETCam_project_page.github.io/.\n\n# 1. Introduction\n\nRecent advances in video diffusion models (VDMs) have greatly improved visual quality and temporal coherence\n\narXiv:2512.19020v1 [cs.CV] 22 Dec 2025\n\n1",
+      "supports_claims": [
+        {
+          "claim_text": "The curated game scene data significantly improves the visual fidelity, realism and action controllability. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_102_p0_565",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 565,
+      "text": "![](dt=2026-06-04/ht=09/a41629148ce3234d9cdea2832dd1dabb55ed03a2452c23d1c154c5812369a2cd.jpg)\n\n![](dt=2026-06-04/ht=09/9fbcbb4921280a49daf04da9c98becb8a32ed7ea72da56027841bdb767ea2154.jpg)\n\n# Abstract\n\nRecent advances in diffusion-based and controllable video generation have enabled high-quality and temporally coherent video synthesis, laying the groundwork for immersive interactive gaming experiences. However, current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. To address these gaps, we introduce Hunyuan-GameCraft, a novel framework for high-dynamic interactive video generation in game environments. To achieve fine-grained action control, we unify standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. Then we propose a hybrid history-conditioned training strategy that",
+      "supports_claims": [
+        {
+          "claim_text": "Hunyuan-GameCraft unifies standard keyboard and mouse inputs into a shared camera representation space for fine-grained action control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_103_p4_13407",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 13407,
+      "text": "# 4. Method\n\nIn this paper, we propose Hunyuan-GameCraft, a high-dynamic interactive game video generation model based on a previously open-sourced MM-DiT [9] based text-to-video model, HunyuanVideo [18]. The overall framework is shown in Fig 4. To achieve fine-grained controllable game video synthesis with temporal coherence, we first unify diverse common keyboard/mouse options in games (W, A, S, D, $\\uparrow$ , $\\leftarrow$ , $\\downarrow$ , $\\rightarrow$ , Space, etc.) into a shared camera representation space (Sec. 4.1) and design a light-weight action encoder to encode the camera trajectory(Sec. 4.1).",
+      "supports_claims": [
+        {
+          "claim_text": "Hunyuan-GameCraft unifies standard keyboard and mouse inputs into a shared camera representation space for fine-grained action control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_104_p2_9849",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 9849,
+      "text": ", 2025a) improves action control by linearly approximating user inputs into camera poses, but ignores the underlying $SE(3)$ geometry by decoupling translation and rotation. This makes it struggle to capture coupled dynamics such as screw motion arising from entangled keyboard and mouse inputs. Moreover, camera motion in GameCraft is used only for immediate control, lacking a persistent geometric anchor for 3D consistency.\n\nIn contrast to prior works that fail to simultaneously satisfy precise action control, long-horizon inference, and 3D consistency, we propose a camera-grounded framework that uses camera pose as a unified geometric representation to achieve all three (Table 1).",
+      "supports_claims": [
+        {
+          "claim_text": "Hunyuan-GameCraft unifies standard keyboard and mouse inputs into a shared camera representation space for fine-grained action control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_105_p2_5200",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 5200,
+      "text": "To maintain long-term consistency in interactive game video generation, prior works [6, 15, 20] have primarily focused on training-free extensions, streaming denoising or last-frame conditioning. However, these approaches often suffer from quality degradation and temporal inconsistency with causal VAEs [33]. We propose a novel hybrid history-conditioned training strategy that autoregressively extends sequences while preserving scene information, using historical context integration and a mask indicator to address error accumulation in autoregressive generation. Moreover, to improve inference efficiency and playability, we imple",
+      "supports_claims": [
+        {
+          "claim_text": "A hybrid history-conditioned training strategy is used to extend video sequences autoregressively while preserving game scene information. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_106_p3_9779",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 3,
+      "source_paragraph_index": 9779,
+      "text": "In addition, some methods also explore different paradigms, such as next frame prediction [11, 12], combining next-token and full-sequence diffusion (DiffusionForcing) [6] and test-time training [7]. Compared with previous methods, we propose a novel hybrid history-conditioned training strategy that extends video sequences in an autoregressive way while effectively preserving game scene information, under a diffusion paradigm.\n\n# 3. Dataset Construction\n\n# 3.1. Game Scene Data Curation",
+      "supports_claims": [
+        {
+          "claim_text": "A hybrid history-conditioned training strategy is used to extend video sequences autoregressively while preserving game scene information. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_107_p1_4749",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 4749,
+      "text": "To mitigate error accumulation during long-horizon interactive generation, we design a history cache retrieval strategy and an enhanced interactive training strategy. The former preserves historical scene information across autoregressive steps by storing generated frame latents in a cache and retrieving recent historical representations. The retrieved representations are incorporated into subsequent generation steps,",
+      "supports_claims": [
+        {
+          "claim_text": "A hybrid history-conditioned training strategy is used to extend video sequences autoregressively while preserving game scene information. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_108_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "Model distillation is employed to reduce computational overhead while maintaining consistency across long temporal sequences for real-time deployment. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_109_p2_5837",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 5837,
+      "text": "ment the model distillation acceleration strategy [28], which reduces computational overhead while maintaining consistency across long temporal sequences, making our framework suitable for real-time deployment in complex interactive environments.\n\nWe evaluate our Hunyuan-GameCraft on both curated game scenes and general styles, obtaining a significant lead over current models. In summary, our contributions are:\n\n# 2. Related Work\n\n# 2.1. Interactive Game Scene World Model",
+      "supports_claims": [
+        {
+          "claim_text": "Model distillation is employed to reduce computational overhead while maintaining consistency across long temporal sequences for real-time deployment. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_110_p14_32850",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 14,
+      "source_paragraph_index": 32850,
+      "text": "For practitioners operating under computational constraints, this trade-off is paramount. The dual benefits of distillation—drastically reduced training compute and the creation of smaller, more performant models—directly address the primary challenges of real-world deployment. Crucially, the efficiency gains extend beyond the training phase. Since inference latency is fundamentally linked to the size of a model and its active parameters, the smaller student models produced through distillation are inherently faster and cheaper to run.",
+      "supports_claims": [
+        {
+          "claim_text": "Model distillation is employed to reduce computational overhead while maintaining consistency across long temporal sequences for real-time deployment. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_111_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset of over one million gameplay recordings across over 100 AAA games and fine-tuned on a carefully annotated synthetic dataset. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_112_p1_3916",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 3916,
+      "text": "Large-Scale Synthetic Dataset: We present a large-scale synthetic dataset of over 1 million images, with each head in an image annotated with a detailed 3D head mesh. The detailed representation enables a wide range of downstream tasks, from face detection to 3D alignment, while the unprecedented scale ensures robust model training across diverse scenarios. Our experiments validate the quality, accuracy, and real-world generalization of our synthetic dataset.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset of over one million gameplay recordings across over 100 AAA games and fine-tuned on a carefully annotated synthetic dataset. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_113_p4_16251",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 16251,
+      "text": "We use the Homogeneous and Varied datasets to pre-train models. We pretrain the model on the full Varied dataset of roughly one million samples, as it shows continued improvement as more data is used. For the Homogenous data, we tested the performance for the 100k and one million versions of the dataset, where the model trained on the 100k variant performed slightly better. Therefore, this dataset was used to further fine-tune on the real data. Further details are provided in the Appendix D.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset of over one million gameplay recordings across over 100 AAA games and fine-tuned on a carefully annotated synthetic dataset. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_114_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_115_p0_410",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 410,
+      "text": "Abstract—To which degree can abstract gameplay metrics capture the player experience in a general fashion within a game genre? In this comprehensive study we address this question across three different videogame genres: racing, shooter, and platformer games. Using high-level gameplay features that feed preference learning models we are able to predict arousal accurately across different games of the same genre in a large-scale dataset of over 1,000 arousal-annotated play sessions.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_116_p0_471",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 471,
+      "text": "We introduce NitroGen, a vision-action foundation model for generalist gaming agents that is trained on 40,000 hours of gameplay videos across more than 1,000 games. We incorporate three key ingredients: 1) an internet-scale video-action dataset constructed by automatically extracting player actions from publicly available gameplay videos, 2) a multi-game benchmark environment that can measure cross-game generalization, and 3) a unified vision-action model trained with large-scale behavior cloning.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_117_p0_1719",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 1719,
+      "text": "extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments.\n\nThe model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_118_p10_61597",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 10,
+      "source_paragraph_index": 61597,
+      "text": "5) MRCNN-DR-P-R: This model was fine-tuned using synthetic samples from the OE synthetic dataset (both photorealistic and domain randomized) and real samples. 6) MRCNN-FTRG: This model was fine-tuned using the FTRG dataset, which combines the real dataset with the domain-randomized synthetic dataset using the FTRG method.\n\nFor the test data, we collected real images using a variety of scenes (different backgrounds and arrangements of objects), clutter (level of clutter as well as types of clutter objects), and illumination conditions. This test set was also annotated with our automated real data annotation method. In Table IV, we report the mean average precision (mAP) at IoU greater than or equal to 0.5 for all five models over five randomly selected subsets of the test dataset.",
+      "supports_claims": [
+        {
+          "claim_text": "The model is fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_119_p6_14991",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 6,
+      "source_paragraph_index": 14991,
+      "text": "We finetune the fundamental frame model on this synthetic dataset for a limited number of steps. The controlled exposure to synthetic data is intentional — excessive finetuning on synthetic distributions would compromise the model's ability to generate realistic appearances on natural images. Empirically, we find that even a small amount of synthetic finetuning yields a significant improvement in the stability of camera-controlled viewpoint transitions, suggesting that the model effectively leverages the geometric precision of synthetic data to refine its spatial reasoning without losing its natural appearance priors.\n\n# 2.5 Post-Training",
+      "supports_claims": [
+        {
+          "claim_text": "The model is fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_120_p0_565",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 565,
+      "text": "![](dt=2026-06-04/ht=09/a41629148ce3234d9cdea2832dd1dabb55ed03a2452c23d1c154c5812369a2cd.jpg)\n\n![](dt=2026-06-04/ht=09/9fbcbb4921280a49daf04da9c98becb8a32ed7ea72da56027841bdb767ea2154.jpg)\n\n# Abstract\n\nRecent advances in diffusion-based and controllable video generation have enabled high-quality and temporally coherent video synthesis, laying the groundwork for immersive interactive gaming experiences. However, current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. To address these gaps, we introduce Hunyuan-GameCraft, a novel framework for high-dynamic interactive video generation in game environments. To achieve fine-grained action control, we unify standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. Then we propose a hybrid history-conditioned training strategy that",
+      "supports_claims": [
+        {
+          "claim_text": "Current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_121_p1_5254",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 5254,
+      "text": "Despite recent progress in noise optimization for video generation, existing methods still face several significant limitations. First, they usually depend on iterative refinement, which leads to significant inference overhead, particularly problematic for lengthy video sequences. Second, their designs for specific tasks often limit the ability to generalize across various models and datasets. Third, many approaches require modifications to the backbone model, limiting their practical deployment in real-world applications.",
+      "supports_claims": [
+        {
+          "claim_text": "Current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2506.17201_agentic_122_p1_4590",
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 4590,
+      "text": "However, these models still face challenges, particularly with videos that require an understanding of extended temporal contexts spanning large video durations [10]. These methods typically process segmented video clips rather than entire sequences, limiting their ability to capture long-term dependencies. They also require substantial computational resources and may struggle to fully capture intricate relationships in dynamic",
+      "supports_claims": [
+        {
+          "claim_text": "Current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_123_p1_6179",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6179,
+      "text": "Parallel community projects have applied RL to other Pokémon titles, such as Pokémon Gold, and constructed tools like poke-env [7], which interfaces RL algorithms with the Pokémon Showdown battle simulator. These battle-only settings provide cleaner reward signals (win or loss) and smaller action spaces, and have been pushed to near human-parity using offline RL and large language model policies.\n\nFor example, PokeLLMon (2024) [3] integrated a large language model as the decision-making policy and reached human-parity in Pokémon Showdown battles by leveraging prior knowledge of move effectiveness and strategy. These battle-focused studies, while not addressing the exploration aspect, contribute insights on reward design (win/loss or HP-based rewards) and action masking (disabling illegal moves) that ensure the RL agent learns valid battle strategies.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_124_p14_53130",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 14,
+      "source_paragraph_index": 53130,
+      "text": "Tstarbot-x: An open-sourced and comprehensive study for efficient league training in starcraft ii full game. arXiv preprint arXiv:2011.13729, 2020.Hu, J., Wu, X., Zhu, Z., Xianyu, Wang, W., Zhang, D., and Cao, Y. Openrlhf: An easy-to-use, scalable and high-performance rlhf framework. arXiv preprint arXiv:2405.11143, 2024a.Hu, S., Huang, T., and Liu, L. Pokellmon: A human-parity agent for pokemon battles with large language models, 2024b. URL https://arxiv.org/abs/2402.01118.Huang, R., Wu, X., Yu, H., Fan, Z., Fu, H., FU, Q., and Wei, Y.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_125_p9_35933",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 9,
+      "source_paragraph_index": 35933,
+      "text": "Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. Lora: Low-rank adaptation of large language models. In The Tenth International Conference on Learning Representations, ICLR 2022, Virtual Event, April 25-29, 2022. OpenReview.net, 2022. URL https://openreview.net/forum?id=nZeVKeeFYf9.\n\nSihao Hu, Tiansheng Huang, and Ling Liu. Pokellmon: A human-parity agent for pokemon battles with large language models. CoRR, abs/2402.01118, 2024. doi: 10.48550/ARXIV.2402.01118. URL https://doi.org/10.48550/arxiv.2402.01118.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon achieves human-parity performance in tactical battle games, specifically in Pokemon battles. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_126_p1_6179",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6179,
+      "text": "Parallel community projects have applied RL to other Pokémon titles, such as Pokémon Gold, and constructed tools like poke-env [7], which interfaces RL algorithms with the Pokémon Showdown battle simulator. These battle-only settings provide cleaner reward signals (win or loss) and smaller action spaces, and have been pushed to near human-parity using offline RL and large language model policies.\n\nFor example, PokeLLMon (2024) [3] integrated a large language model as the decision-making policy and reached human-parity in Pokémon Showdown battles by leveraging prior knowledge of move effectiveness and strategy. These battle-focused studies, while not addressing the exploration aspect, contribute insights on reward design (win/loss or HP-based rewards) and action masking (disabling illegal moves) that ensure the RL agent learns valid battle strategies.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon demonstrates human-like battle strategies and just-in-time decision making in online battles against humans. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_127_p2_9131",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 9131,
+      "text": "Historically, Pokémon games have relied on rigid, predictable scripts that fail to account for complex human-like \"meta-gaming,\" such as predicted switches or high-risk/high-reward tactical plays. This research examines whether LLMs can move beyond the limitations of traditional use of AI in Pokémon games to provide a more dynamic, human-like challenge.\n\n# 2.5 Reasoning and Acting with Language Models in Pokémon Battles\n\nThe ReAct framework (Yao et al., 2023) highlights the importance of interleaving reasoning and action for effective decision-making in interactive environments. This paradigm is particularly relevant to Pokémon battles, where each turn requires reasoning over complex game state followed by a single, irreversible action.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon demonstrates human-like battle strategies and just-in-time decision making in online battles against humans. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_128_p0_404",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 0,
+      "source_paragraph_index": 404,
+      "text": "Strategic decision-making in Pokémon battles presents a unique testbed for evaluating large language models. Pokémon battles demand reasoning about type matchups, statistical trade-offs, and risk assessment, skills that mirror human strategic thinking. This work examines whether Large Language Models (LLMs) can serve as competent battle agents, capable of both making tactically sound decisions and generating novel, balanced game content. We developed a turn-based Pokémon battle system where LLMs select moves based on battle state rather than pre-programmed logic.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon demonstrates human-like battle strategies and just-in-time decision making in online battles against humans. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_129_p1_6179",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6179,
+      "text": "Parallel community projects have applied RL to other Pokémon titles, such as Pokémon Gold, and constructed tools like poke-env [7], which interfaces RL algorithms with the Pokémon Showdown battle simulator. These battle-only settings provide cleaner reward signals (win or loss) and smaller action spaces, and have been pushed to near human-parity using offline RL and large language model policies.\n\nFor example, PokeLLMon (2024) [3] integrated a large language model as the decision-making policy and reached human-parity in Pokémon Showdown battles by leveraging prior knowledge of move effectiveness and strategy. These battle-focused studies, while not addressing the exploration aspect, contribute insights on reward design (win/loss or HP-based rewards) and action masking (disabling illegal moves) that ensure the RL agent learns valid battle strategies.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon achieves a 49% win rate in Ladder competitions and a 56% win rate in invited battles. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_130_p2_7110",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 7110,
+      "text": "it is reported that this approach achieved a winning rate of $56\\%$ against Pubeval after playing 400, 000 games. Nevertheless, an independent test recently carried out in [1] showed that the high performance reported in [7] was apparently due to measurements taken in too short tournaments (50 games). According to [1], experimental results show that the winning rate of $G M A R L B$ reduces to just $51.2\\%$ when confronted against Pubeval on 1000-game tournaments.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon achieves a 49% win rate in Ladder competitions and a 56% win rate in invited battles. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_131_p1_8286",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 8286,
+      "text": "The experiment is repeated 10 times, and the results are averaged. Our battle agent wins an average of 40.4 out of 50 battles, yielding an $80.8\\%$ win rate. For comparison, we asked an experienced Pokémon enthusiast to play the same scenario. They managed to defeat 43 wild Pokémon before both Charmander and Pidgey fainted, corresponding to an $86\\%$ win rate.\n\nThese results suggest that our system achieves performance comparable to that of an experienced human player in simple PvE (player-versus-environment) battles. Note that this evaluation uses DeepSeek-V3 as the backend LLM. As we will show in the following sections, different models produce varying results, although none have yet outperformed an experienced human player.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon achieves a 49% win rate in Ladder competitions and a 56% win rate in invited battles. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_132_p2_9042",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 2,
+      "source_paragraph_index": 9042,
+      "text": "# 2.2 In-Context Reinforcement Learning\n\nIn-context reinforcement learning (ICRL) encompasses algorithms that dynamically adapt to decision-making tasks by synthesizing self-generated trajectories and incorporating external feedback in the context [12, 13]. Unlike one-off ICL adaptation, ICRL stresses continual policy improvement driven by accumulated experience, echoing the \"third system\" forged through ongoing interaction and experience accumulation, as articulated by Barabasi et al. [38].",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_133_p1_4113",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 4113,
+      "text": "Reinforcement learning is of great use in text-based games in that it facilitates learning of strategies of agents in a process of playing a game environment. The problem of text-based games is that they use text to deliver information, making their state spaces high in dimensionality, high in level, and requiring high reasoning and decision making capability of their agents. Reinforcement learning, in a trial-and-error process in a dynamic process of receiving a response, facilitates learning of optimal strategies in complex game tasks in a process of forming efficient behavioral patterns.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_134_p10_30926",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 10,
+      "source_paragraph_index": 30926,
+      "text": "Large language models have demonstrated a remarkable capacity to adapt to new tasks via in-context learning (ICL) [6]. Subsequent studies refined example selection [40] and questioned its marginal benefit under detailed prompting [63]. Recent efforts extend ICL to sequential decision making: PokeChamp shows that context engineering for opponent modeling and a minimax planning scaffolding can leverage test-time compute in competitive games [31], while BALROG provides a benchmark suite for evaluating LLM agents in reinforcement-learning environments [56]. Feng et al. [20] further demonstrate that natural-language policy descriptions can be executed directly, foreshadowing fully language-driven control.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon incorporates in-context reinforcement learning to iteratively refine its policy by consuming text-based feedback derived from battles. [Abstract]",
+          "support_type": "direct",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_135_p1_7861",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 7861,
+      "text": "# 2 RELATED WORK\n\nRetrieval-augmented Generation augments downstream generation by retrieving external knowledge [12]. When paired with LLMs, RAG mitigates hallucinations [32], supports dynamic knowledge updating [11], enhances domain specialization [33], and facilitates personalization [? ]. Recently, RAG has become a core memory management component in agentic AI systems, enabling agents to retrieve, update, and reason over external knowledge during multi-step decision making [9, 10].",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon uses knowledge-augmented generation to retrieve external knowledge, counteract hallucination, and enable timely and proper actions. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_136_p8_33041",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 8,
+      "source_paragraph_index": 33041,
+      "text": "Retrieval-Augmented Generation (RAG), introduced by [35], established the dominant paradigm for supplying LLMs with external knowledge at inference time. By retrieving relevant passages from a document corpus and prepending them to the prompt, RAG reduces hallucination and enables knowledge-intensive tasks without retraining. Standard RAG systems retrieve passages—fragments of text selected by semantic similarity to the query. Section 4 examines the structural differences between passage-level retrieval and the action-oriented knowledge delivery proposed in this paper.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon uses knowledge-augmented generation to retrieve external knowledge, counteract hallucination, and enable timely and proper actions. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_137_p3_8510",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 3,
+      "source_paragraph_index": 8510,
+      "text": "Retrieval Augmented Generation (RAG) [15] is feasible to enhance LLMs in knowledge-intensive tasks [7] to mitigate hallucination [28]. These methods retrieve external knowledge as context, which combines with the original query to formulate a coherent prompt, and finally leads to the response. The source of knowledge acquisition can be diverse, such as relevant examples [5], web documents [40], and knowledge graphs [27]. Some efforts attempt to improve the RAG system from different aspects.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon uses knowledge-augmented generation to retrieve external knowledge, counteract hallucination, and enable timely and proper actions. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_138_p1_7215",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 7215,
+      "text": "Lv and Qihang [7] introduced an LLM-powered Pokémon agent trained using supervised fine-tuning and knowledge augmentation. While their approach improved move selection accuracy, it did not investigate cross-agent interactions or emergent tournament dynamics. In contrast, Pokémon League offers a competitive setting to study such dynamics among diverse models.\n\nHu et al. [8] proposed PokéLLMon, a benchmark for adversarial Pokémon battles. They found that LLMs often lack domain grounding and exhibit inconsistency in sequential decisions. Pokémon League addresses these issues by analyzing consistency across full matches and emphasizing interpretable, model-generated rationales.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon employs consistent action generation to mitigate the panic switching phenomenon when facing powerful opponents. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_139_p1_6179",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 1,
+      "source_paragraph_index": 6179,
+      "text": "Parallel community projects have applied RL to other Pokémon titles, such as Pokémon Gold, and constructed tools like poke-env [7], which interfaces RL algorithms with the Pokémon Showdown battle simulator. These battle-only settings provide cleaner reward signals (win or loss) and smaller action spaces, and have been pushed to near human-parity using offline RL and large language model policies.\n\nFor example, PokeLLMon (2024) [3] integrated a large language model as the decision-making policy and reached human-parity in Pokémon Showdown battles by leveraging prior knowledge of move effectiveness and strategy. These battle-focused studies, while not addressing the exploration aspect, contribute insights on reward design (win/loss or HP-based rewards) and action masking (disabling illegal moves) that ensure the RL agent learns valid battle strategies.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon employs consistent action generation to mitigate the panic switching phenomenon when facing powerful opponents. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_140_p13_35835",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 13,
+      "source_paragraph_index": 35835,
+      "text": "![](dt=2026-05-14/ht=21/38321044b8e35007be13e93d649e2efecc7b4cbc1f5f924c9822a933a62c31e3.jpg)\n\nsalience for ReloadOnDark is reinforced by the persistence signal which therefore increases the duration of the bout.\n\nOne of the advantages of having a persistence effect is to prevent \"dithering\", that is, switching frequently between different actions. As mentioned before, avoiding this oscillation is an issue for most of the engineering-designed architectures for action selection. Dithering may be particularly deleterious where there are significant costs associated with unnecessary switching between one action and another. However, in other situations, frequent interruptions of a selected action may actually be appropriate.",
+      "supports_claims": [
+        {
+          "claim_text": "PokeLLMon employs consistent action generation to mitigate the panic switching phenomenon when facing powerful opponents. [Abstract]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_141_p34_139846",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 34,
+      "source_paragraph_index": 139846,
+      "text": "# 6. Experimental setting/details\n\nQuestion: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer) necessary to understand the results?\n\nAnswer: [Yes]\n\nJustification: Section 6 gives the main training/evaluation setup, and Appendices B-Q record family-specific instantiations, metrics, comparator protocols, and regime details.\n\nGuidelines:\n\n# 7. Experiment statistical significance\n\nQuestion: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?\n\nAnswer: [No]",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not provide specific details on the setup used for training or evaluating PokeLLMon. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_142_p68_158512",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 68,
+      "source_paragraph_index": 158512,
+      "text": "Question: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?\n\nAnswer: [Yes]\n\nJustification: The main paper and appendix contain, for each experiment, detailed descriptions of the environment setup, the specific configuration that was used, training evolution, and test results. To further support clarity and reproducibility, the accompanying code contains all remaining implementation details.\n\nGuidelines:\n\n- The answer NA means that the paper does not include experiments.\n\n69\n\n# 7. Experiment statistical significance",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not provide specific details on the setup used for training or evaluating PokeLLMon. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_143_p188_600512",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 188,
+      "source_paragraph_index": 600512,
+      "text": "Justification: We provide open access to the code here: https://github.com/joebaumann/recsys-collectiveaction. The data used for the experiments is publicly available and referenced in the paper. Furthermore, the hardware setup and the detailed experimental setup are described in Section B.\n\nGuidelines:\n\n# 6. Experimental Setting/Details\n\nQuestion: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?\n\nAnswer: [Yes]",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not provide specific details on the setup used for training or evaluating PokeLLMon. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_144_p4_9250",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 4,
+      "source_paragraph_index": 9250,
+      "text": "However, as expected, when the percentage of influential variants is low ( $<35\\%$ ) and the core variant odds ratio is small ( $<1.8$ ), POKEMON did not reach $80\\%$ power. A small core odds ratio and a low percentage of influential variants are more challenging for POKEMON to assess because more control subjects will carry variants located within the cluster region, making POKEMON less likely to identify associated patterns.\n\nbioRxiv preprint doi: https://doi.org/10.1101/2021.08.09.455695; this version posted August 10, 2021. The copyright holder for this preprint (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made available under aCC-BY-NC-ND 4.0 International license.",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_145_p31_107690",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 31,
+      "source_paragraph_index": 107690,
+      "text": "# Acknowledgments\n\nI thank Leif Andersen for fruitful discussions and Alex Skabelin for useful comments. I am also grateful to an anonymous referee for their helpful feedback.\n\nThe use of LLMs in this paper has been limited to minimal proofreading. Both the mathematical content and the drafting of this research have been produced without any kind of reliance on generative AI.\n\n# Conflict of interest\n\nThe author has no competing interests to declare that are relevant to the content of this article.\n\n# Funding\n\nThe author has no relevant financial or non-financial interests to disclose.\n\n# Compliance with Ethical Standards",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    },
+    {
+      "evidence_id": "paper:10.48550/arxiv.2402.01118_agentic_146_p47_224068",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "source_type": "agentic_chunk",
+      "source_page": 47,
+      "source_paragraph_index": 224068,
+      "text": "Question: Does the paper discuss the limitations of the work performed by the authors?\n\nAnswer: [Yes]\n\nJustification: We mention limitations multiple times in the main body of our work: after introducing the assumptions in Section 3.1, we mention that spectral gaps may not be verified for heavy tail distributions, or act numerically unfavorably for multimodal distributions, and that constants may be large in practice. In the discussion (Section 6), we reflect back on these limitations, and we mention the limitations of our considered model class (unnormized exponential families).\n\nGuidelines:\n\n48",
+      "supports_claims": [
+        {
+          "claim_text": "The paper does not explicitly mention any limitations of PokeLLMon. [Body excerpts]",
+          "support_type": "indirect",
+          "confidence": 0.5
+        }
+      ]
+    }
+  ]
+}
