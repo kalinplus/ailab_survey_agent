@@ -6,7 +6,17 @@ import math
 import re
 from typing import Any, Callable
 
-import httpx
+try:
+    import httpx
+except ModuleNotFoundError:
+    class _MissingHttpx:
+        HTTPError = Exception
+
+        class Client:
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                raise ModuleNotFoundError("httpx is required for strategy probing")
+
+    httpx = _MissingHttpx()  # type: ignore[assignment]
 
 
 DEFAULT_ASPECTS = [
