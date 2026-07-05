@@ -257,28 +257,36 @@ def _selected_paper_entry(card: dict[str, Any]) -> dict[str, Any]:
 def _artifact_slots_for_section(index: int, title: str) -> list[dict[str, str]]:
     text = title.lower()
     slots = []
-    if index == 1 or "intro" in text or "scope" in text or "foundational" in text:
+    # Index-based assignment avoids keyword-matching artifacts appearing in multiple sections.
+    if index == 1:
         slots.append(
             {
                 "artifact_id": "publication_timeline",
                 "placement": "after_topic_paragraph",
-                "caption": "Figure 3 summarizes the publication timeline for the selected literature.",
+                "caption": "Publication years of the selected representative papers.",
             }
         )
-    if "taxonomy" in text or "category" in text or index == 2:
+    if index == 2:
         slots.append(
             {
                 "artifact_id": "taxonomy_overview",
                 "placement": "after_topic_paragraph",
-                "caption": "Figure 4 groups the selected papers by technical role.",
+                "caption": "Distribution of selected papers across the survey taxonomy.",
             }
         )
-    if "method" in text or "system" in text or "model" in text or index == 3:
         slots.append(
             {
                 "artifact_id": "representative_systems",
                 "placement": "after_comparison_paragraph",
-                "caption": "Table 1 compares representative systems by method, contribution, and limitation.",
+                "caption": "Representative papers organized by method, contribution, and limitation.",
+            }
+        )
+    if index == 4:
+        slots.append(
+            {
+                "artifact_id": "evaluation_protocol_matrix",
+                "placement": "after_comparison_paragraph",
+                "caption": "Evaluation protocols grouped by what they measure and where they can mislead.",
             }
         )
     if "future" in text or "challenge" in text:
@@ -286,7 +294,7 @@ def _artifact_slots_for_section(index: int, title: str) -> list[dict[str, str]]:
             {
                 "artifact_id": "future_directions_matrix",
                 "placement": "after_limitation_paragraph",
-                "caption": "Table 3 summarizes open challenges and future directions.",
+                "caption": "Future directions derived from limitations in the selected literature.",
             }
         )
     return slots
@@ -357,9 +365,11 @@ def _render_survey(
     if not zh:
         lines.extend(
             [
-                "Figure 1 gives a reader-facing overview of the survey scope, while Figure 2 frames the agent-environment loop that connects learned world models to GameCraft-style interaction.",
+                "The survey first presents a graphical overview to orient readers before the technical taxonomy. Figure 1 shows the relationship among world models, game environments, agents, and evaluation.",
                 "",
                 "![Figure 1. Graphical Overview of World Models and GameCraft](hero_banner)",
+                "",
+                "Figure 2 then reframes the same topic as an interaction loop: an agent observes, a world model predicts, the environment responds, and evaluation closes the cycle.",
                 "",
                 "![Figure 2. Agent-Environment Interaction Loop in Learned Game Worlds](concept_overview)",
                 "",
@@ -406,10 +416,6 @@ def _render_survey(
                 if not zh
                 else "Harness 化流程以可追溯、可验证和可复盘报告为核心优势，同时保留对人工调研深度的清醒边界。"
             ),
-            "",
-            "Table 1 provides the compact cross-paper summary used throughout the survey." if not zh else "",
-            "" if not zh else "",
-            "![Table 1. Representative Systems and Their Technical Roles](representative_systems)" if not zh else "![Summary Table](representative_systems)",
             "",
             "## References",
             "",
@@ -508,9 +514,26 @@ def _build_section_text(section: dict[str, Any], zh: bool) -> list[str]:
             f"and its contribution is {paper.get('contribution') or 'citation-ready evidence for this theme'} [{pid}]."
         )
     lines.append("")
+    # Per-section differentiated transitions
+    _transition_map = {
+        "generative game world simulation": "push beyond static game engines toward reusable learned dynamics",
+        "planning and control": "show how learned models can support both search-based planning and policy learning",
+        "neural game engine": "move from hand-authored simulation toward generated interactive environments",
+        "game agent": "show how large-scale training changes what agents can do in complex games",
+        "open-ended simulator": "provide shared environments where interactive intelligence can be compared",
+    }
+    _bridge_map = {
+        "generative game world simulation": "The next section asks how such learned dynamics support planning and control.",
+        "planning and control": "The following section shifts from using learned models for action selection to generating interactive environments themselves.",
+        "neural game engine": "These neural environments lead naturally to the question of how agents are trained and evaluated inside complex games.",
+        "game agent": "The next step is to examine benchmarks and simulators that make these systems comparable.",
+        "open-ended simulator": "The final sections use this evidence base to summarize evaluation protocols and future directions.",
+    }
+    section_key = next((k for k in _transition_map if k in title.lower()), "")
+    transition = _transition_map.get(section_key, "share a common trajectory toward learnable, reusable, or generative environment models")
+    bridge = _bridge_map.get(section_key, "The next theme explores how the same evidence base supports evaluation and structured reporting.")
     lines.append(
-        f"Taken together, these works share a move from fixed game environments toward learnable, reusable, or generative environment models. "
-        f"They differ in whether they emphasize planning, simulation, benchmark construction, or environment generation{second_tail}."
+        f"Taken together, this group {transition}{second_tail}."
     )
     lines.append("")
     for slot in section.get("artifact_slots", []):
@@ -524,9 +547,7 @@ def _build_section_text(section: dict[str, Any], zh: bool) -> list[str]:
         )
     )
     lines.append("")
-    lines.append(
-        f"This section bridges to the next theme by asking how the same evidence can support evaluation, visual comparison, and reproducible reporting for a reader-facing survey."
-    )
+    lines.append(bridge)
     lines.append("")
     return lines
 

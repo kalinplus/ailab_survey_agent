@@ -103,3 +103,21 @@
 - used_probing: false
 - organization_mode: thematic
 - aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks
+
+## 2026-07-05T14:36:39 - World Models and GameCraft for Interactive Game Intelligence
+
+- event: search_strategy_generated
+- mode: demo
+- used_memory: true
+- used_probing: false
+- organization_mode: hybrid
+- aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling
+
+## 2026-07-05T14:50:12 - World Models and GameCraft for Interactive Game Intelligence
+
+- event: search_strategy_generated
+- mode: demo
+- used_memory: true
+- used_probing: false
+- organization_mode: hybrid
+- aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling

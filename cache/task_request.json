@@ -1,8 +1,8 @@
 {
-  "task_id": "task_世界模型_001",
-  "topic": "世界模型",
+  "task_id": "task_world_models_and_gamecraft_for_i_001",
+  "topic": "World Models and GameCraft for Interactive Game Intelligence",
   "task_type": "academic_survey",
-  "language": "zh",
+  "language": "en",
   "output_formats": [
     "html",
     "pdf"
@@ -25,11 +25,11 @@
     ]
   },
   "run_config": {
-    "use_online_search": true,
+    "use_online_search": false,
     "use_seed_fallback": true,
     "use_mineru": false,
-    "max_papers": 5,
-    "max_core_papers": 3,
-    "mode": "full"
+    "max_papers": 12,
+    "max_core_papers": 8,
+    "mode": "demo"
   }
 }

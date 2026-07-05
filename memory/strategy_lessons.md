@@ -26,3 +26,7 @@
 - 2026-07-05T12:39:09: For 视频世界模型, the latest full strategy used memory, did not use probing, and produced aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks.
 
 - 2026-07-05T13:06:38: For 世界模型, the latest full strategy used memory, did not use probing, and produced aspects: Latent Architectures for World Representation, Procedural Content Generation Mechanisms, Internal Simulation and Planning Capabilities, Evaluation Benchmarks and Metrics, Interactive and Controllable Generation Frameworks.
+
+- 2026-07-05T14:36:39: For World Models and GameCraft for Interactive Game Intelligence, the latest demo strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.
+
+- 2026-07-05T14:50:12: For World Models and GameCraft for Interactive Game Intelligence, the latest demo strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.

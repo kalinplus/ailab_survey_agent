@@ -1,152 +1,406 @@
 {
-  "task_id": "task_世界模型_001",
+  "task_id": "task_world_models_and_gamecraft_for_i_001",
   "papers": [
     {
-      "paper_id": "paper:10.1038/s41467-024-54712-1",
-      "title": "Conditional neural field latent diffusion model for generating spatiotemporal turbulence",
+      "paper_id": "paper:10.48550/arxiv.2402.15391",
+      "title": "Genie: Generative Interactive Environments",
       "authors": [
-        "Pan Du",
-        "Meet Hemant Parikh",
-        "Xiantao Fan",
-        "Xin‐Yang Liu",
-        "Jianxun Wang"
+        "Jake Bruce",
+        "Michael J. Dennis",
+        "Ashley Edwards",
+        "Jack Parker-Holder",
+        "Yuge Shi",
+        "Edward Hughes",
+        "Matthew Lai",
+        "Aditi Mavalankar",
+        "Richie Steigerwald",
+        "Chris Apps",
+        "Yusuf Aytar",
+        "Sarah Bechtle",
+        "Feryal Behbahani",
+        "Stephanie Chan",
+        "Nicolas Heess",
+        "Lucy González",
+        "Simon Osindero",
+        "Sherjil Ozair",
+        "Scott Reed",
+        "Jingwei Zhang",
+        "Konrad Żołna",
+        "Jeff Clune",
+        "Nando de Freitas",
+        "Satinder Singh",
+        "Tim Rocktäschel"
       ],
       "year": 2024,
-      "venue": "Nature Communications, 2024, Vol 15, Issue 1, p1",
-      "url": "https://www.nature.com/articles/s41467-024-54712-1.pdf",
-      "abstract": "Eddy-resolving turbulence simulations are essential for understanding and controlling complex unsteady fluid dynamics, with significant implications for engineering and scientific applications. Traditional numerical methods, such as direct numerical simulations (DNS) and large eddy simulations (LES), provide high accuracy but face severe computational limitations, restricting their use in high-Reynolds number or real-time scenarios. Recent advances in deep learning-based surrogate models offer a promising alternative by providing efficient, data-driven approximations. However, these models often rely on deterministic frameworks, which struggle to capture the chaotic and stochastic nature of turbulence, especially under varying physical conditions and complex, irregular geometries. Here, we introduce the Conditional Neural Field Latent Diffusion (CoNFiLD) model, a generative learning framework for efficient high-fidelity stochastic generation of spatiotemporal turbulent flows in complex, three-dimensional domains. CoNFiLD synergistically integrates conditional neural field encoding with latent diffusion processes, enabling memory-efficient and robust generation of turbulence under diverse conditions. Leveraging Bayesian conditional sampling, CoNFiLD flexibly adapts to various turbulence generation scenarios without retraining. This capability supports applications such as zero-shot full-field flow reconstruction from sparse sensor data, super-resolution generation, and spatiotemporal data restoration. Extensive numerical experiments demonstrate CoNFiLD's capability to accurately generate inhomogeneous, anisotropic turbulent flows within complex domains. These findings underscore CoNFiLD's potential as a versatile, computationally efficient tool for real-time unsteady turbulence simulation, paving the way for advancements in digital twin technology for fluid dynamics. By enabling rapid, adaptive high-fidelity simulations, CoNFiLD can bridge the gap between physical and virtual systems, allowing real-time monitoring, predictive analysis, and optimization of complex fluid processes.",
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2402.15391",
+      "abstract": "We introduce Genie, the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos. The model can be prompted to generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches. At 11B parameters, Genie can be considered a foundation world model. It is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model. Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature. Further the resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+      "keywords": [
+        "Generative grammar",
+        "Computer science",
+        "Human–computer interaction",
+        "Generative Design",
+        "Artificial intelligence",
+        "Engineering"
+      ],
+      "citation_count": 210,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 3,
+      "survey_ref_hints": [
+        "genie_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2412.20404",
+      "title": "Open-Sora: Democratizing Efficient Video Production for All",
+      "authors": [
+        "Z. Zheng",
+        "Xiangyu Peng",
+        "Tianji Yang",
+        "Shen, Chenhui",
+        "Sheung-Wai Li",
+        "Hongxin Liu",
+        "Yukun Zhou",
+        "Tianyi Li",
+        "Yang You"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2412.20404",
+      "abstract": "Vision and language are the two foundational senses for humans, and they build up our cognitive ability and intelligence. While significant breakthroughs have been made in AI language ability, artificial visual intelligence, especially the ability to generate and simulate the world we see, is far lagging behind. To facilitate the development and accessibility of artificial visual intelligence, we created Open-Sora, an open-source video generation model designed to produce high-fidelity video content. Open-Sora supports a wide spectrum of visual generation tasks, including text-to-image generation, text-to-video generation, and image-to-video generation. The model leverages advanced deep learning architectures and training/inference techniques to enable flexible video synthesis, which could generate video content of up to 15 seconds, up to 720p resolution, and arbitrary aspect ratios. Specifically, we introduce Spatial-Temporal Diffusion Transformer (STDiT), an efficient diffusion framework for videos that decouples spatial and temporal attention. We also introduce a highly compressive 3D autoencoder to make representations compact and further accelerate training with an ad hoc training strategy. Through this initiative, we aim to foster innovation, creativity, and inclusivity within the community of AI content creation. By embracing the open-source principle, Open-Sora democratizes full access to all the training/inference/data preparation codes as well as model weights. All resources are publicly available at: https://github.com/hpcaitech/Open-Sora.",
+      "keywords": [
+        "Production (economics)",
+        "Computer science",
+        "Business",
+        "Economics",
+        "Microeconomics"
+      ],
+      "citation_count": 289,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 2,
+      "survey_ref_hints": [
+        "sora_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "title": "AvalonBench: Evaluating LLMs Playing the Game of Avalon",
+      "authors": [
+        "Jonathan Light",
+        "Min Cai",
+        "Sheng Shen",
+        "Ziniu Hu"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2310.05036",
+      "abstract": "In this paper, we explore the potential of Large Language Models (LLMs) Agents in playing the strategic social deduction game, Resistance Avalon. Players in Avalon are challenged not only to make informed decisions based on dynamically evolving game phases, but also to engage in discussions where they must deceive, deduce, and negotiate with other players. These characteristics make Avalon a compelling test-bed to study the decision-making and language-processing capabilities of LLM Agents. To facilitate research in this line, we introduce AvalonBench - a comprehensive game environment tailored for evaluating multi-agent LLM Agents. This benchmark incorporates: (1) a game environment for Avalon, (2) rule-based bots as baseline opponents, and (3) ReAct-style LLM agents with tailored prompts for each role. Notably, our evaluations based on AvalonBench highlight a clear capability gap. For instance, models like ChatGPT playing good-role got a win rate of 22.2% against rule-based bots playing evil, while good-role bot achieves 38.2% win rate in the same setting. We envision AvalonBench could be a good test-bed for developing more advanced LLMs (with self-playing) and agent frameworks that can effectively model the layered complexities of such game environments.",
+      "keywords": [
+        "Negotiation",
+        "Test (biology)",
+        "Style (visual arts)",
+        "Computer science",
+        "Benchmark (surveying)",
+        "Computer security",
+        "Video game",
+        "Political science",
+        "Law",
+        "Multimedia",
+        "Ecology"
+      ],
+      "citation_count": 16,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 2,
+      "survey_ref_hints": [
+        "avalonbench_2023"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+      "authors": [
+        "Jiwen Yu",
+        "Yiran Qin",
+        "Xintao Wang",
+        "Pengfei Wan",
+        "Di Zhang",
+        "Xihui Liu"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2501.08325v4",
+      "abstract": "Generative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental results demonstrate that GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation.",
+      "keywords": [
+        "Generative grammar",
+        "Computer science",
+        "Human–computer interaction",
+        "Generative model",
+        "Artificial intelligence",
+        "Multimedia"
+      ],
+      "citation_count": 30,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "gamefactory_2025"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "authors": [
+        "Jinhao Duan",
+        "Renming Zhang",
+        "James Diffenderfer",
+        "Bhavya Kailkhura",
+        "Lichao Sun",
+        "Elias Stengel-Eskin",
+        "Mohit Bansal",
+        "Tianlong Chen",
+        "Kaidi Xu"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2402.12348v2",
+      "abstract": "As Large Language Models (LLMs) are integrated into critical real-world applications, their strategic and logical reasoning abilities are increasingly crucial. This paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. We first propose GTBench, a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. Then, we (1) Characterize the game-theoretic reasoning of LLMs; and (2) Perform LLM-vs.-LLM competitions as reasoning evaluation. We observe that (1) LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios; (2) Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. In addition, code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. We further characterize the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. Detailed error profiles are provided for a better understanding of LLMs' behavior. We hope our research provides standardized protocols and serves as a foundation to spur further explorations in the strategic reasoning of LLMs.",
+      "keywords": [
+        "Management science",
+        "Game theory",
+        "Computer science",
+        "Economics",
+        "Mathematical economics"
+      ],
+      "citation_count": 74,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "gtbench_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.1016/j.jclepro.2024.142949",
+      "title": "Cradle-to-cradle business model tool: Innovating circular business models for startups",
+      "authors": [
+        "Kim-Mai Hoang",
+        "Alexa Böckel"
+      ],
+      "year": 2024,
+      "venue": "Journal of Cleaner Production",
+      "url": "https://epub.wupperinst.org/files/8652/8652_Hoang.pdf",
+      "abstract": "Born circular startups play a pivotal role in implementing high-level circularity to fight resource depletion and address climate change. In developing circular business model innovation, circular startups face the challenge of lacking legitimacy, which can be approached by certifications provided by concepts like Cradle-to-Cradle. As there is currently no supporting tool to develop such business models, this paper employs a design science research approach and proposes a Cradle-to-Cradle (C2C) Business Model Tool. The tool is developed based on a literature review, feedback from 42 users in six demonstration workshops and is finally tested with eight startups. It succeeds in aiding born circular startups in navigating the venturing process with a focus on high-level circularity. In this paper, C2C principles developed for the product level are theoretically linked to the business model level. The tool addresses elements such as partnerships, communication, and action-taking, thereby contributing to the literature on circular business model innovation and serving as a practical resource for born circular startups.",
+      "keywords": [
+        "Business model",
+        "Circular economy",
+        "Business",
+        "Process management",
+        "Industrial organization",
+        "Engineering",
+        "Marketing",
+        "Ecology"
+      ],
+      "citation_count": 24,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "cradle_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "title": "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "authors": [
+        "Li, Jiaqi",
+        "Tang, Junshu",
+        "Xu, Zhiyong",
+        "Wu, Longhuang",
+        "Zhou, Yuan",
+        "Shao, Shuai",
+        "Yu, Tianbao",
+        "Cao, Zhiguo",
+        "Lu, Qinglin"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2506.17201v1",
+      "abstract": "Recent advances in diffusion-based and controllable video generation have enabled high-quality and temporally coherent video synthesis, laying the groundwork for immersive interactive gaming experiences. However, current methods face limitations in dynamics, generality, long-term consistency, and efficiency, which limit the ability to create various gameplay videos. To address these gaps, we introduce Hunyuan-GameCraft, a novel framework for high-dynamic interactive video generation in game environments. To achieve fine-grained action control, we unify standard keyboard and mouse inputs into a shared camera representation space, facilitating smooth interpolation between various camera and movement operations. Then we propose a hybrid history-conditioned training strategy that extends video sequences autoregressively while preserving game scene information. Additionally, to enhance inference efficiency and playability, we achieve model distillation to reduce computational overhead while maintaining consistency across long temporal sequences, making it suitable for real-time deployment in complex interactive environments. The model is trained on a large-scale dataset comprising over one million gameplay recordings across over 100 AAA games, ensuring broad coverage and diversity, then fine-tuned on a carefully annotated synthetic dataset to enhance precision and control. The curated game scene data significantly improves the visual fidelity, realism and action controllability. Extensive experiments demonstrate that Hunyuan-GameCraft significantly outperforms existing models, advancing the realism and playability of interactive game video generation.",
+      "keywords": [
+        "Video game",
+        "Inference",
+        "Interpolation (computer graphics)",
+        "Video game development",
+        "Representation (politics)",
+        "Interactive video",
+        "Overhead (engineering)",
+        "Face (sociological concept)",
+        "Video capture"
+      ],
+      "citation_count": 1,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "hunyuan_gamecraft_2025"
+      ]
+    },
+    {
+      "paper_id": "paper:10.1109/comst.2025.3527641",
+      "title": "Mobile Edge Intelligence for Large Language Models: A Contemporary Survey",
+      "authors": [
+        "Guanqiao Qu",
+        "Qiyuan Chen",
+        "Wei Wei",
+        "Zheng Lin",
+        "Xianhao Chen",
+        "Kaibin Huang"
+      ],
+      "year": 2025,
+      "venue": "IEEE Communications Surveys & Tutorials",
+      "url": "https://doi.org/10.1109/comst.2025.3527641",
+      "abstract": "On-device large language models (LLMs), referring to running LLMs on edge devices, have raised considerable interest since they are more cost-effective, latency-efficient, and privacy-preserving compared with the cloud paradigm. Nonetheless, the performance of on-device LLMs is intrinsically constrained by resource limitations on edge devices. Sitting between cloud and on-device AI, mobile edge intelligence (MEI) presents a viable solution by provisioning AI capabilities at the edge of mobile networks. This article provides a contemporary survey on harnessing MEI for LLMs. We begin by illustrating several killer applications to demonstrate the urgent need for deploying LLMs at the network edge. Next, we present the preliminaries of LLMs and MEI, followed by resource-efficient LLM techniques. We then present an architectural overview of MEI for LLMs (MEI4LLM), outlining its core components and how it supports the deployment of LLMs. Subsequently, we delve into various aspects of MEI4LLM, extensively covering edge LLM caching and delivery, edge LLM training, and edge LLM inference. Finally, we identify future research opportunities. We hope this article inspires researchers in the field to leverage mobile edge computing to facilitate LLM deployment, thereby unleashing the potential of LLMs across various privacy-and delay-sensitive applications.",
       "keywords": [
         "Computer science",
-        "Turbulence",
-        "Field (mathematics)",
-        "Generative model",
-        "Large eddy simulation",
-        "Artificial intelligence",
-        "Algorithm",
-        "Generative grammar",
+        "Enhanced Data Rates for GSM Evolution",
+        "Data science",
+        "Artificial intelligence"
+      ],
+      "citation_count": 115,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+      "authors": [
+        "Sihao Hu",
+        "Tiansheng Huang",
+        "Линг Лиу"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2402.01118",
+      "abstract": "We introduce PokeLLMon, the first LLM-embodied agent that achieves human-parity performance in tactical battle games, as demonstrated in Pokemon battles. The design of PokeLLMon incorporates three key strategies: (i) In-context reinforcement learning that instantly consumes text-based feedback derived from battles to iteratively refine the policy; (ii) Knowledge-augmented generation that retrieves external knowledge to counteract hallucination and enables the agent to act timely and properly; (iii) Consistent action generation to mitigate the panic switching phenomenon when the agent faces a powerful opponent and wants to elude the battle. We show that online battles against human demonstrates PokeLLMon's human-like battle strategies and just-in-time decision making, achieving 49% of win rate in the Ladder competitions and 56% of win rate in the invited battles. Our implementation and playable battle logs are available at: https://github.com/git-disl/PokeLLMon.",
+      "keywords": [
+        "Parity (physics)",
+        "Computer science",
         "Physics",
-        "Mathematics"
+        "Particle physics"
       ],
-      "citation_count": 81,
+      "citation_count": 8,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "pokellmon_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.1136/bmjebm-2025-113825",
+      "title": "Reporting guideline for the use of Generative Artificial intelligence tools in MEdical Research: the GAMER Statement",
+      "authors": [
+        "Xufei Luo",
+        "Yih Chung Tham",
+        "Mauro Giuffrè",
+        "Robert Ranisch",
+        "Mohammad Daher",
+        "Kyle Lam",
+        "Alexander Viktor Eriksen",
+        "Che-Wei Hsu",
+        "Akihiko Ozaki",
+        "Fábio Ynoe de Moraes",
+        "Sahil Khanna",
+        "Kuan‐Pin Su",
+        "Emir Begagić",
+        "Zhaoxiang Bian",
+        "Yaolong Chen",
+        "Janne Estill"
+      ],
+      "year": 2025,
+      "venue": "BMJ evidence-based medicine",
+      "url": "https://findresearcher.sdu.dk/ws/files/300004273/390.full.pdf",
+      "abstract": "Objectives Generative artificial intelligence (GAI) tools can enhance the quality and efficiency of medical research, but their improper use may result in plagiarism, academic fraud and unreliable findings. Transparent reporting of GAI use is essential, yet existing guidelines from journals and institutions are inconsistent, with no standardised principles. Design and setting International online Delphi study. Participants International experts in medicine and artificial intelligence. Main outcome measures The primary outcome measure is the consensus level of the Delphi expert panel on the items of inclusion criteria for GAMER (Rreporting guideline for the use of Generative Artificial intelligence tools in MEdical Research). Results The development process included a scoping review, two Delphi rounds and virtual meetings. 51 experts from 26 countries participated in the process (44 in the Delphi survey). The final checklist comprises nine reporting items: general declaration, GAI tool specifications, prompting techniques, tool’s role in the study, declaration of new GAI model(s) developed, artificial intelligence-assisted sections in the manuscript, content verification, data privacy and impact on conclusions. Conclusion GAMER provides universal and standardised guideline for GAI use in medical research, ensuring transparency, integrity and quality.",
+      "keywords": [
+        "Declaration",
+        "Delphi method",
+        "Checklist",
+        "Transparency (behavior)",
+        "Delphi",
+        "Computer science",
+        "Guideline",
+        "Artificial intelligence",
+        "Medical education",
+        "Psychology",
+        "Data science",
+        "Medicine",
+        "Computer security"
+      ],
+      "citation_count": 49,
       "source": "sciverse",
       "parse_status": "abstract_only",
       "survey_ref_count": 0,
       "survey_ref_hints": []
     },
     {
-      "paper_id": "paper:10.2312/eged.20261000",
-      "title": "A Project-Based Approach to Teaching Game Engine Architecture Course",
+      "paper_id": "paper:10.56726/irjmets42512",
+      "title": "ARTIFICIAL INTELLIGENCE FOR THE REAL WORLD",
       "authors": [
-        "Prashant Goswami",
-        "Nan Huang"
+        "Rajeev Ronanki",
+        "Andrew Nguyen"
       ],
-      "year": 2026,
-      "venue": "DiVA (Blekinge Institute of Technology)",
-      "url": "http://urn.kb.se/resolve?urn=urn:nbn:se:bth-29679",
-      "abstract": "Game engine architecture (GEA) underpins the design of complex, performance-critical interactive systems in modern game development. This paper presents the design and evolution of a fourth-year elective course on Game Engine Architecture taught within a five-year integrated Master’s engineering program in Game Technology at Blekinge Institute of Technology, Sweden. The course combines lectures, programming assignments, and a final project to support architectural analysis, subsystem implementation, and system-level integration. The paper outlines how the course has been iteratively refined across multiple offerings, including changes to assignments, lecture content, and assessment. It summarizes student evaluation data and discusses instructor reflections on learning patterns, challenges, and course adaptations, providing a grounded account of teaching GEA as an advanced software architecture subject.",
+      "year": 2023,
+      "venue": "International Research Journal of Modernization in Engineering Technology and Science",
+      "url": "https://doi.org/10.56726/irjmets42512",
+      "abstract": "Artificial intelligence (A.I.) is a multidisciplinary field aimed at automating tasks that currently need human intelligence.Despite its lack of general familiarity, artificial intelligence (AI) is a technology that is revolutionizing every aspect of life.This article aims to educate laypeople about AI and encourage them to utilize it as a tool in many disciplines to rethink how we combine data, analyze it, and make choices.We quickly covered what artificial intelligence (AI) is, how it works, and how it may be applied in our daily lives in this article.",
       "keywords": [
-        "Course (navigation)",
-        "Game engine",
-        "Architecture",
-        "Video game development",
-        "Game based learning",
-        "Systems architecture"
+        "Computer science",
+        "Artificial intelligence"
       ],
-      "citation_count": 0,
+      "citation_count": 1694,
       "source": "sciverse",
       "parse_status": "abstract_only",
       "survey_ref_count": 0,
       "survey_ref_hints": []
     },
     {
-      "paper_id": "paper:10.4271/2026-01-0423",
-      "title": "A Latent Space Framework for Modeling Transient Engine Emissions Using Joint Embedding Predictive Architectures",
+      "paper_id": "paper:10.48550/arxiv.2310.17805",
+      "title": "Reward Scale Robustness for Proximal Policy Optimization via DreamerV3 Tricks",
       "authors": [
-        "Ganesh Sundaram",
-        "Tobias Gehra",
-        "Jonas Ulmen",
-        "Mirjan Heubaum",
-        "Daniel Görges",
-        "Michael Günthner"
+        "Ryan Sullivan",
+        "Akarsh Kumar",
+        "Shengyi Huang",
+        "John P. Dickerson",
+        "Joseph Suárez"
       ],
-      "year": 2026,
-      "venue": "SAE technical papers on CD-ROM/SAE technical paper series",
-      "url": "https://doi.org/10.4271/2026-01-0423",
-      "abstract": "&lt;div class=\"section abstract\"&gt;&lt;div class=\"htmlview paragraph\"&gt;Accurately modeling and controlling vehicle exhaust emissions, particularly during highly transient events such as rapid acceleration, is crucial for meeting stringent environmental regulations and optimizing modern powertrain systems. While conventional data-driven modeling methods, such as Multilayer Perceptrons (MLPs) and Long Short-Term Memory (LSTM) networks, have improved upon earlier phenomenological or physics-based models, they often struggle to capture the complex nonlinear dynamics of emission formation. These monolithic architectures attempt to learn from all available data, which increases their sensitivity to dataset variability. They often require increasingly deep and complex architectures to improve performance, thereby limiting their practical utility. This paper introduces a novel approach that overcomes these limitations by modeling emission dynamics in a structured latent space. Using a rich dataset combining real-world driving data from a Portable Emission Measurement System (PEMS) with high-frequency hardware-in-the-loop test bench measurements, a Joint Embedding Predictive Architecture (JEPA) is leveraged. This framework learns to abstract away irrelevant information and encode only the key factors governing emission behavior into a compact, robust latent representation. The resulting model demonstrates superior data efficiency and predictive accuracy across diverse transient regimes, exhibiting stronger generalization than the high-performing LSTM baseline. Structured pruning and post-training quantization are applied to the JEPA framework to enhance the model’s suitability for real-world deployment. This combined strategy significantly reduces the model’s computational footprint, minimizing inference time and memory demand, with only a marginal impact on accuracy. This yields a highly accurate model well suited to on-board implementation of advanced control strategies, such as model predictive control or model-based reinforcement learning, in both conventional and hybrid electric powertrains. The results indicate a clear pathway toward more efficient and robust emission control systems for next-generation vehicles.&lt;/div&gt;&lt;/div&gt;",
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2310.17805v1",
+      "abstract": "Most reinforcement learning methods rely heavily on dense, well-normalized environment rewards. DreamerV3 recently introduced a model-based method with a number of tricks that mitigate these limitations, achieving state-of-the-art on a wide range of benchmarks with a single set of hyperparameters. This result sparked discussion about the generality of the tricks, since they appear to be applicable to other reinforcement learning algorithms. Our work applies DreamerV3's tricks to PPO and is the first such empirical study outside of the original work. Surprisingly, we find that the tricks presented do not transfer as general improvements to PPO. We use a high quality PPO reference implementation and present extensive ablation studies totaling over 10,000 A100 hours on the Arcade Learning Environment and the DeepMind Control Suite. Though our experiments demonstrate that these tricks do not generally outperform PPO, we identify cases where they succeed and offer insight into the relationship between the implementation tricks. In particular, PPO with these tricks performs comparably to PPO on Atari games with reward clipping and significantly outperforms PPO without reward clipping.",
       "keywords": [
-        "Embedding",
-        "Inference",
-        "Model predictive control",
-        "Generalization",
-        "Key (lock)",
-        "Perceptron",
-        "Test bench",
-        "Transient (computer programming)",
-        "Nonlinear system"
+        "Reinforcement learning",
+        "Generality",
+        "Computer science",
+        "Suite",
+        "Robustness (evolution)",
+        "Artificial intelligence",
+        "Hyperparameter",
+        "Clipping (morphology)",
+        "Machine learning",
+        "Transfer of learning"
       ],
-      "citation_count": 0,
-      "source": "sciverse",
+      "citation_count": 4,
+      "source": "survey_expansion",
       "parse_status": "abstract_only",
-      "survey_ref_count": 0,
-      "survey_ref_hints": []
-    },
-    {
-      "paper_id": "paper:10.5281/zenodo.19024113",
-      "title": "Hybrid Server–AI Architecture for Persistent Generative Game Worlds: Achieving Scalable, Consistent, and Low-Latency Interactive Environments",
-      "authors": [
-        "Jeremiah Ratican*",
-        "James Hutson"
-      ],
-      "year": 2026,
-      "venue": "Zenodo (CERN European Organization for Nuclear Research)",
-      "url": "https://doi.org/10.5281/zenodo.19024113",
-      "abstract": "Abstract: Generative artificial intelligence has demonstrated remarkable capabilities in real-time content creation for interactive entertainment, yet current implementations struggle with the persistence, consistency, and scalability demanded by modern multiplayer and long-form gaming environments. This paper presents a hybrid server–AI architecture that fuses the deterministic reliability of authoritative multiplayer server frameworks with the creative flexibility of state-aware generative systems. The proposed three-tier design consists of (1) a deterministic server backend leveraging technologies such as Unity Netcode for GameObjects, Unreal Engine 5’s dedicated servers, and Amazon GameLift to maintain authoritative and persistent world state; (2) a state-aware generative layer responsible for producing real-time environmental, character, and interactive assets informed by canonical game state; and (3) an AI-driven post-processing enhancement system that applies neural rendering, upscaling, and detail synthesis to lightweight base scenes, reducing computational overhead by 60–80% relative to full generative rendering while maintaining high visual fidelity. The architecture introduces novel synchronization mechanisms, including a content-addressable generation ledger and a generative determinism envelope, to ensure causal coherence, fairness, and identity continuity across sessions. Performance modeling indicates the system can sustain thousands of concurrent users with sub-100 ms end-to-end latency, supported by predictive asset prefetching, hierarchical level-of-detail strategies, and progressive enhancement pipelines. This framework provides a practical and scalable pathway for deploying persistent generative game worlds, bridging a critical gap between cutting-edge AI content generation and the proven stability of modern multiplayer infrastructures. The approach has direct applicability to both entertainment and serious games, enabling new genres that combine emergent creativity with persistent, socially complex, and economically rich virtual environments.",
-      "keywords": [
-        "Scalability",
-        "Generative grammar",
-        "Implementation",
-        "Rendering (computer graphics)",
-        "Architecture",
-        "Metaverse",
-        "Flexibility (engineering)",
-        "Generative Design"
-      ],
-      "citation_count": 0,
-      "source": "sciverse",
-      "parse_status": "abstract_only",
-      "survey_ref_count": 0,
-      "survey_ref_hints": []
-    },
-    {
-      "paper_id": "paper:10.48550/arxiv.2601.19822",
-      "title": "A Latent Space Framework for Modeling Transient Engine Emissions Using Joint Embedding Predictive Architectures",
-      "authors": [
-        "G. Bala Sundaram",
-        "Tobias Gehra",
-        "Jonas Ulmen",
-        "Mirjan Heubaum",
-        "Daniel Görges",
-        "Michael Günthner"
-      ],
-      "year": 2026,
-      "venue": "Open MIND",
-      "url": "https://arxiv.org/pdf/2601.19822v1",
-      "abstract": "Accurately modeling and controlling vehicle exhaust emissions during transient events, such as rapid acceleration, is critical for meeting environmental regulations and optimizing powertrains. Conventional data-driven methods, such as Multilayer Perceptrons (MLPs) and Long Short-Term Memory (LSTM) networks, improve upon phenomenological models but often struggle with the complex nonlinear dynamics of emission formation. These monolithic architectures are sensitive to dataset variability and typically require deep, computationally expensive structures to perform well, limiting their practical utility. This paper introduces a novel approach that overcomes these limitations by modeling emission dynamics within a structured latent space. Leveraging a Joint Embedding Predictive Architecture (JEPA), the proposed framework learns from a rich dataset that combines real-world Portable Emission Measurement System (PEMS) data with high-frequency hardware-in-the-loop measurements. The model abstracts away irrelevant noise, encoding only the key factors governing emission behavior into a compact, robust representation. This results in superior data efficiency and predictive accuracy across diverse transient regimes, significantly outperforming high-performing LSTM baselines in generalization. To ensure suitability for real-world deployment, the JEPA framework is structured to support pruning and post-training quantization. This strategy drastically reduces the computational footprint, minimizing inference time and memory demand with negligible accuracy loss. The result is a highly efficient model ideal for on-board implementation of advanced strategies, such as model predictive control or model-based reinforcement learning, in conventional and hybrid powertrains. These findings offer a clear pathway toward more robust emission control systems for next-generation vehicles.",
-      "keywords": [
-        "Embedding",
-        "Model predictive control",
-        "Inference",
-        "Key (lock)",
-        "Transient (computer programming)",
-        "Pruning",
-        "Perceptron",
-        "Nonlinear system"
-      ],
-      "citation_count": 0,
-      "source": "sciverse",
-      "parse_status": "abstract_only",
-      "survey_ref_count": 0,
-      "survey_ref_hints": []
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "dreamerv3_2023"
+      ]
     }
   ]
 }

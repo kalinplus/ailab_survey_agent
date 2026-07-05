@@ -1,6 +1,6 @@
 {
-  "task_id": "task_游戏世界模型_001",
-  "topic": "游戏世界模型",
+  "task_id": "task_world_models_and_gamecraft_for_i_001",
+  "topic": "World Models and GameCraft for Interactive Game Intelligence",
   "inputs": {
     "survey_markdown_path": "output/survey.md",
     "knowledge_bundle_path": "cache/knowledge_bundle.json",

@@ -483,6 +483,7 @@ def _render_public_survey(
     body = _replace_citations_with_display(body, citation_display_map)
     body = _inline_public_artifacts(body, artifact_bank, root, public_md_path)
     body = _sanitize_public_terms(body)
+    body = _dedupe_public_artifacts(body)
     refs = _public_references(citation_display_map)
     return body.rstrip() + "\n\n## References\n\n" + "\n".join(refs) + "\n"
 
@@ -512,6 +513,18 @@ def _replace_citations_with_display(text: str, citation_display_map: dict[str, A
     return text
 
 
+def _caption_without_repeated_title(caption: str, display_number: str, display_title: str) -> str:
+    for prefix in (
+        f"{display_number}. {display_title}.",
+        f"{display_number}.{display_title}.",
+        f"{display_title}.",
+    ):
+        if caption.startswith(prefix):
+            caption = caption[len(prefix):].strip()
+            break
+    return caption.strip()
+
+
 def _inline_public_artifacts(
     markdown: str,
     artifact_bank: dict[str, Any],
@@ -527,7 +540,8 @@ def _inline_public_artifacts(
             return ""
         display_number = str(artifact.get("display_number") or "")
         display_title = str(artifact.get("display_title") or artifact.get("title") or match.group(1))
-        caption = str(artifact.get("caption") or f"{display_number}. {display_title}".strip())
+        raw_caption = str(artifact.get("caption") or f"{display_number}. {display_title}".strip())
+        caption = _caption_without_repeated_title(raw_caption, display_number, display_title)
         path = _resolve(root, artifact.get("artifact_path", ""))
         fmt = str(artifact.get("artifact_format", path.suffix.lstrip(".")).lower())
         if fmt in {"markdown", "md"} and path.exists():
@@ -541,6 +555,27 @@ def _inline_public_artifacts(
         return f"\n\n**{display_number}. {display_title}**\n\nArtifact content is unavailable in this public build.\n"
 
     return re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace, markdown)
+
+
+def _dedupe_public_artifacts(markdown: str) -> str:
+    """Remove duplicate figure/table blocks: same display_number or artifact keeps only first occurrence."""
+    seen_numbers: set[str] = set()
+    # Match a full artifact block: **Table/Figure N. Title** ... content ... *caption*
+    def dedupe(match: re.Match[str]) -> str:
+        block = match.group(0)
+        num_match = re.search(r"\*\*(Table|Figure)\s+(\d+)", block)
+        if num_match:
+            key = f"{num_match.group(1)}{num_match.group(2)}"
+            if key in seen_numbers:
+                return ""
+            seen_numbers.add(key)
+        return block
+    return re.sub(
+        r"\n\n\*\*(Table|Figure)\s+\d+\.\s+[^*]+\*\*\n\n(?:.*?\n)*?\*[^*]+\*\n?",
+        dedupe,
+        markdown,
+        flags=re.DOTALL,
+    )
 
 
 def _render_submission_markdown(public_md: str, artifact_bank: dict[str, Any], root: Path, submission_md_path: Path) -> str:
