@@ -2,6 +2,7 @@ from tools.phases.phase3_paper_retriever import (
     run,
     dedup,
     _influence_filter_sets,
+    _filter_relevant_candidates,
     _rank_by_influence,
     _to_retrieved,
     pipeline_config_extra,
@@ -53,6 +54,17 @@ def test_dedup_no_dups():
         _to_retrieved({"unique_id": "p2", "title": "B"}),
     ]
     assert len(dedup(ps)) == 2
+
+
+def test_dedup_merges_survey_ref_signal():
+    ps = [
+        RetrievedPaper(paper_id="p1", title="A"),
+        RetrievedPaper(paper_id="p1", title="A", survey_ref_count=2, survey_ref_hints=["genie_2024"]),
+    ]
+    result = dedup(ps)
+    assert len(result) == 1
+    assert result[0].survey_ref_count == 2
+    assert result[0].survey_ref_hints == ["genie_2024"]
 
 
 def test_dedup_seed_id_stable():
@@ -248,6 +260,91 @@ def test_rank_by_influence_balances_source_rank_citations_and_recency():
         {"paper:old-low": 0, "paper:new-cited": 1},
     )
     assert [p.paper_id for p in ranked] == ["paper:new-cited", "paper:old-low"]
+
+
+def test_rank_by_influence_uses_survey_ref_as_light_boost():
+    first = RetrievedPaper(
+        paper_id="paper:first", title="First", year=2024, citation_count=10,
+        abstract="abs", venue="arXiv", url="https://x/first.pdf")
+    survey_backed = RetrievedPaper(
+        paper_id="paper:survey", title="Survey Backed", year=2024, citation_count=10,
+        abstract="abs", venue="arXiv", url="https://x/survey.pdf", survey_ref_count=1)
+
+    ranked = _rank_by_influence(
+        [first, survey_backed],
+        {"paper:first": 0, "paper:survey": 1, "paper:tail": 10},
+    )
+    assert [p.paper_id for p in ranked] == ["paper:survey", "paper:first"]
+
+
+def test_relevance_prefilter_removes_highly_cited_off_topic_paper():
+    cancer = RetrievedPaper(
+        paper_id="paper:cancer", title="Cancer statistics 2024", year=2024,
+        citation_count=10_000, abstract="Annual cancer incidence and mortality statistics.",
+        venue="CA Cancer J Clin", url="https://x/cancer")
+    world_model = RetrievedPaper(
+        paper_id="paper:wm", title="Learning World Models for Game Agents", year=2024,
+        citation_count=2, abstract="Latent dynamics and world models for interactive environments.",
+        venue="arXiv", url="https://x/wm.pdf")
+
+    filtered = _filter_relevant_candidates(
+        [cancer, world_model],
+        [{"keywords": ["world model", "dreamer", "latent dynamics"]}],
+    )
+    ranked = _rank_by_influence(
+        filtered,
+        {"paper:cancer": 0, "paper:wm": 1},
+        [{"keywords": ["world model", "dreamer", "latent dynamics"]}],
+    )
+    assert [p.paper_id for p in ranked] == ["paper:wm"]
+
+
+def test_relevance_prefilter_fails_open_when_nothing_matches():
+    off_topic = RetrievedPaper(
+        paper_id="paper:only", title="Cancer statistics 2024", year=2024,
+        citation_count=10_000, abstract="Annual cancer incidence and mortality statistics.",
+        venue="CA Cancer J Clin", url="https://x/cancer")
+
+    filtered = _filter_relevant_candidates(
+        [off_topic],
+        [{"keywords": ["world model", "dreamer"]}],
+    )
+    assert [p.paper_id for p in filtered] == ["paper:only"]
+
+
+# --- expansion candidates ---
+
+
+def test_expansion_candidates_are_searched_and_marked():
+    from tools.models.requests import PipelineConfig
+
+    calls = []
+
+    class ExpansionSV:
+        def meta_search(self, query, **kw):
+            calls.append({"query": query, **kw})
+            return {"results": [{
+                "unique_id": "paper:genie",
+                "title": "Genie: Generative Interactive Environments",
+                "publication_published_year": 2024,
+                "url": "https://arxiv.org/pdf/2402.15391",
+            }]}
+
+    rp, pp = run(
+        "t", [], [{"paper_id_hint": "genie_2024", "survey_ref_count": 2}],
+        ExpansionSV(), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False, use_mineru=False),
+    )
+    assert calls[0]["query"] == "genie 2024"
+    assert calls[0]["filters"] == [
+        {"field": "publication_published_year", "operator": "FILTER_OP_GTE", "value": 2024},
+        {"field": "publication_published_year", "operator": "FILTER_OP_LTE", "value": 2024},
+    ]
+    assert calls[0]["page_size"] == 3
+    assert rp.papers[0].source == "survey_expansion"
+    assert rp.papers[0].survey_ref_count == 2
+    assert rp.papers[0].survey_ref_hints == ["genie_2024"]
+    assert len(pp.papers) == 0
 
 
 # --- per-aspect resilience ---

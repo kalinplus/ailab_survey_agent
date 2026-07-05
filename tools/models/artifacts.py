@@ -13,6 +13,8 @@ class RetrievedPaper(BaseModel):
     citation_count: int = 0
     source: str = "sciverse"
     parse_status: str = "pending"
+    survey_ref_count: int = 0
+    survey_ref_hints: list[str] = []
 
 
 class RetrievedPapers(BaseModel):

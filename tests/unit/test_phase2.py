@@ -2,6 +2,7 @@ from tools.clients.llm_fake import FakeLLMClient
 from tools.phases.phase2_survey_analyzer import (
     SurveyStructure,
     analyze_surveys,
+    build_expansion_candidates,
     run,
 )
 from tools.models.common import paper_id_from_seed
@@ -35,7 +36,28 @@ def test_expansion_candidates_from_referenced_papers():
     assert len(s.expansion_candidates) == 1
     assert s.expansion_candidates[0]["paper_id_hint"] == "genie_2024"
     assert s.expansion_candidates[0]["source_survey"] == "sv1"
+    assert s.expansion_candidates[0]["source_surveys"] == ["sv1"]
+    assert s.expansion_candidates[0]["survey_ref_count"] == 1
     assert s.expansion_candidates[0]["priority"] == "high"
+
+
+def test_analyze_surveys_dedups_by_paper_id():
+    surveys = _surveys("sv1") + _surveys("sv1")
+    result = analyze_surveys(surveys)
+    assert len(result) == 1
+    assert result[0]["paper_id"] == "sv1"
+
+
+def test_build_expansion_candidates_aggregates_survey_refs():
+    analyzed = [
+        {"paper_id": "sv1", "referenced_paper_ids": ["genie_2024", "muzero_2020"]},
+        {"paper_id": "sv2", "referenced_paper_ids": ["genie_2024", "genie_2024"]},
+    ]
+    expansion = build_expansion_candidates(analyzed)
+    genie = expansion[0]
+    assert genie["paper_id_hint"] == "genie_2024"
+    assert genie["source_surveys"] == ["sv1", "sv2"]
+    assert genie["survey_ref_count"] == 2
 
 
 def test_paper_id_fallback():

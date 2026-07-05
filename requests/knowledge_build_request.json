@@ -20,7 +20,7 @@
   "pipeline_config": {
     "use_online_search": true,
     "use_seed_fallback": true,
-    "use_mineru": true,
+    "use_mineru": false,
     "use_mock_mineru_if_failed": false,
     "max_papers": 10,
     "max_core_papers": 5,

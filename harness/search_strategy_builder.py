@@ -169,6 +169,13 @@ Generate 3-6 topic-specific aspects. Do NOT use generic names:
 Foundational Concepts; Methods and Systems; Benchmarks and Evaluation; Recent and Emerging Directions.
 For "World Models for GameCraft", prefer technical AI/game-world-model themes over social gaming culture.
 
+Each aspect's keywords must stay inside the topic's own technical field and read like concrete academic
+search queries that a paper in THIS field would match. Anchor every keyword on the topic's core concept,
+and exclude directions that only overlap lexically: a "world model" survey must not surface pure LLMs,
+cognitive-science education, pathology, or any area that merely shares a word like "model"/"world"/"cognitive".
+Prefer specific methods/systems (e.g. "dreamer world model reinforcement learning") over broad neighbors
+(e.g. "cognitive architecture").
+
 Required compact JSON shape:
 {{
   "main_domain": "short academic field name",

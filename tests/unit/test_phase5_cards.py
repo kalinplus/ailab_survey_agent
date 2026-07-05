@@ -65,6 +65,26 @@ Junk line
     assert claims["key_results"][0].text == "Valid claim"
 
 
+def test_parse_accepts_bullet_list():
+    """Intern-S2 returns '-'/'*' bullets, not '1.' numbers — both must parse.
+
+    Regression for the empty-possible_claims bug: the old regex only accepted
+    '\\d+\\.' so real-LLM bullet output parsed to zero claims -> evidence_count=0.
+    """
+    text = """## KEY RESULTS
+- LLaMA-13B outperforms GPT-3 on most benchmarks [page 1]
+* asterisk bullets also work
+## METHOD
+- We train on trillions of tokens"""
+    claims = parse_card_response(text, "paper:X")
+    assert len(claims["key_results"]) == 2
+    assert claims["key_results"][0].text.startswith("LLaMA-13B")
+    assert claims["key_results"][0].evidence_ids == ["paper:X_p1_0"]
+    assert claims["key_results"][1].text == "asterisk bullets also work"
+    assert len(claims["method"]) == 1
+    assert claims["method"][0].text.startswith("We train")
+
+
 def test_parse_non_numbered_ignored():
     text = """## KEY RESULTS
 Not a numbered line

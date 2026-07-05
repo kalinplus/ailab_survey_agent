@@ -26,18 +26,43 @@ Merge, dedupe, fix gaps. Return ONLY JSON: {{"categories":[{{"name":str,"descrip
 
 def analyze_surveys(surveys: list[dict], mineru=None, cleaner=None) -> list[dict]:
     out = []
+    seen = set()
     for s in surveys:
+        paper_id = s.get("paper_id") or paper_id_from_seed(s["title"], s.get("year", 0))
+        if paper_id in seen:
+            continue
+        seen.add(paper_id)
         meta = s.get("meta_data", {})
         skel = meta.get("taxonomy_skeleton", [])
         refs = meta.get("top_referenced_papers", [])
         out.append({
-            "paper_id": s.get("paper_id") or paper_id_from_seed(s["title"], s.get("year", 0)),
+            "paper_id": paper_id,
             "taxonomy_skeleton": skel,
             "key_sections": meta.get("key_sections", []),
             "referenced_paper_ids": refs,
             "key_claims": [],
         })
     return out
+
+
+def build_expansion_candidates(analyzed_surveys: list[dict]) -> list[dict]:
+    candidates = {}
+    for survey in analyzed_surveys:
+        survey_id = survey["paper_id"]
+        for paper_id_hint in dict.fromkeys(survey["referenced_paper_ids"]):
+            item = candidates.setdefault(paper_id_hint, {
+                "paper_id_hint": paper_id_hint,
+                "source_survey": survey_id,
+                "source_surveys": [],
+                "survey_ref_count": 0,
+                "priority": "high",
+            })
+            item["source_surveys"].append(survey_id)
+            item["survey_ref_count"] += 1
+    return sorted(
+        candidates.values(),
+        key=lambda item: (-item["survey_ref_count"], item["paper_id_hint"]),
+    )
 
 
 def run(
@@ -63,9 +88,7 @@ def run(
     refined_raw = llm.json_chat([{"role": "user", "content": REFINE_PROMPT.format(
         prelim=prelim, survey_skels=survey_skels)}], max_tokens=2000)
     refined = refined_raw.get("categories", [])
-    # expansion candidates from referenced papers
-    expansion = [{"paper_id_hint": pid, "source_survey": a["paper_id"], "priority": "high"}
-                 for a in analyzed for pid in a["referenced_paper_ids"]]
+    expansion = build_expansion_candidates(analyzed)
     logger.info(f"[P2] refined taxonomy -> {len(refined)} categories, {len(expansion)} expansion_candidates")
     return SurveyStructure(
         task_id=task_id,

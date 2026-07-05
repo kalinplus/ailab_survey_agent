@@ -1,5 +1,6 @@
 import logging
 import math
+import re
 from tools.models.artifacts import RetrievedPaper, RetrievedPapers, ParsedPaper, ParsedPapers
 from tools.models.common import paper_id_from_seed
 
@@ -10,6 +11,15 @@ INFLUENCE_YEAR_BANDS = [
     (2021, 2023, 5),
     (2018, 2020, 20),
 ]
+SURVEY_REF_WEIGHT = 0.07
+RELEVANCE_MIN_SCORE = 0.45
+GENERIC_RELEVANCE_TERMS = {
+    "a", "an", "and", "ai", "agent", "agents", "analysis", "approach", "based",
+    "data", "deep", "generation", "generative", "learning", "machine", "method",
+    "model", "models", "neural", "paper", "research", "study", "system", "systems",
+    "the", "training", "using", "video", "world",
+}
+SHORT_RELEVANCE_TERMS = {"rl", "vae"}
 
 
 def _is_pdf_url(url: str) -> bool:
@@ -81,12 +91,17 @@ def _generate_search_queries(keywords: list[str], llm) -> list[str]:
 
 
 def dedup(papers: list[RetrievedPaper]) -> list[RetrievedPaper]:
-    seen, out = set(), []
+    seen, out = {}, []
     for p in papers:
         key = p.paper_id
         if key in seen:
+            existing = seen[key]
+            existing.survey_ref_count = max(existing.survey_ref_count, p.survey_ref_count)
+            for hint in p.survey_ref_hints:
+                if hint not in existing.survey_ref_hints:
+                    existing.survey_ref_hints.append(hint)
             continue
-        seen.add(key)
+        seen[key] = p
         out.append(p)
     return out
 
@@ -105,11 +120,88 @@ def _influence_filter_sets() -> list[list[dict]]:
     return [_year_filters(start, end, min_citations) for start, end, min_citations in INFLUENCE_YEAR_BANDS]
 
 
-def _rank_by_influence(papers: list[RetrievedPaper], first_seen_rank: dict[str, int]) -> list[RetrievedPaper]:
+def _normalize_relevance_text(text: str) -> str:
+    return " ".join(re.sub(r"[^a-z0-9]+", " ", text.lower()).split())
+
+
+def _aspect_relevance_terms(aspects: list[dict]) -> list[str]:
+    seen, terms = set(), []
+    for aspect in aspects:
+        for raw_keyword in aspect.get("keywords", []):
+            for raw_part in re.split(r"[,;/|()]+", str(raw_keyword)):
+                term = _normalize_relevance_text(raw_part)
+                if not term or term in seen:
+                    continue
+                tokens = term.split()
+                if len(tokens) == 1:
+                    token = tokens[0]
+                    if token in GENERIC_RELEVANCE_TERMS:
+                        continue
+                    if len(token) < 3 and token not in SHORT_RELEVANCE_TERMS:
+                        continue
+                seen.add(term)
+                terms.append(term)
+    return terms
+
+
+def _paper_relevance_score(paper: RetrievedPaper, aspects: list[dict]) -> float:
+    terms = _aspect_relevance_terms(aspects)
+    if not terms:
+        return 1.0
+    title = _normalize_relevance_text(paper.title)
+    body = _normalize_relevance_text(
+        " ".join([paper.abstract, " ".join(str(k) for k in paper.keywords)])
+    )
+    title_tokens = set(title.split())
+    body_tokens = set(body.split())
+    best_score = 0.0
+    match_count = 0
+    for term in terms:
+        tokens = term.split()
+        if len(tokens) == 1:
+            term_score = 0.0
+            if term in title_tokens or any(token.startswith(term) for token in title_tokens):
+                term_score = 0.85
+            elif term in body_tokens or any(token.startswith(term) for token in body_tokens):
+                term_score = 0.55
+        else:
+            term_score = 0.0
+            if term in title:
+                term_score = 1.0
+            elif term in body:
+                term_score = 0.7
+        if term_score > 0:
+            match_count += 1
+            best_score = max(best_score, term_score)
+    coverage_score = min(match_count / min(len(terms), 4), 1.0)
+    return min(1.0, 0.75 * best_score + 0.25 * coverage_score)
+
+
+def _filter_relevant_candidates(papers: list[RetrievedPaper], aspects: list[dict]) -> list[RetrievedPaper]:
+    if not papers or not _aspect_relevance_terms(aspects):
+        return papers
+    filtered = [
+        paper for paper in papers
+        if paper.source == "survey_expansion"
+        or _paper_relevance_score(paper, aspects) >= RELEVANCE_MIN_SCORE
+    ]
+    if not filtered:
+        logger.info("[P3] relevance prefilter kept 0/%d papers -> fail-open", len(papers))
+        return papers
+    logger.info("[P3] relevance prefilter kept %d/%d papers", len(filtered), len(papers))
+    return filtered
+
+
+def _rank_by_influence(
+    papers: list[RetrievedPaper],
+    first_seen_rank: dict[str, int],
+    aspects: list[dict] | None = None,
+) -> list[RetrievedPaper]:
     if not papers:
         return []
     max_rank = max(first_seen_rank.values()) if first_seen_rank else 0
     max_citations = max(math.log1p(max(p.citation_count, 0)) for p in papers)
+    max_survey_refs = max(p.survey_ref_count for p in papers)
 
     def score(paper: RetrievedPaper) -> float:
         rank = first_seen_rank.get(paper.paper_id, max_rank)
@@ -120,17 +212,55 @@ def _rank_by_influence(papers: list[RetrievedPaper], first_seen_rank: dict[str, 
         recency_score = 0.0
         if paper.year is not None:
             recency_score = min(max((paper.year - 2018) / (2026 - 2018), 0.0), 1.0)
+        survey_score = 0.0
+        if max_survey_refs > 0:
+            survey_score = paper.survey_ref_count / max_survey_refs
         metadata_quality_score = (
             int(bool(paper.abstract)) + int(bool(paper.venue)) + int(bool(paper.url))
         ) / 3
+        relevance_score = _paper_relevance_score(paper, aspects or [])
         return (
-            0.45 * source_rank_score
-            + 0.30 * citation_score
-            + 0.20 * recency_score
-            + 0.05 * metadata_quality_score
+            0.35 * relevance_score
+            + 0.25 * source_rank_score
+            + 0.18 * citation_score
+            + 0.12 * recency_score
+            + SURVEY_REF_WEIGHT * survey_score
+            + 0.03 * metadata_quality_score
         )
 
     return sorted(papers, key=lambda paper: score(paper), reverse=True)
+
+
+def _candidate_query(candidate: dict) -> str:
+    return str(candidate.get("paper_id_hint", "")).replace("_", " ").strip()
+
+
+def _candidate_year(candidate: dict) -> int | None:
+    parts = str(candidate.get("paper_id_hint", "")).split("_")
+    if parts and len(parts[-1]) == 4 and parts[-1].isdigit():
+        return int(parts[-1])
+    return None
+
+
+def _search_expansion_candidates(expansion_candidates, sciverse, retrieved, first_seen_rank):
+    for candidate in expansion_candidates:
+        query = _candidate_query(candidate)
+        if not query:
+            continue
+        year = _candidate_year(candidate)
+        filters = _year_filters(year, year) if year else _year_filters(2018, 2026)
+        try:
+            res = sciverse.meta_search(query=query, filters=filters, impact_boost="MILD", page_size=3)
+            hits = res.get("results", [])
+            logger.info(f"[P3] expansion_search q={query!r} filters={filters} -> {len(hits)} hits")
+            for hit in hits:
+                paper = _to_retrieved(hit, source="survey_expansion")
+                paper.survey_ref_count = int(candidate.get("survey_ref_count") or 1)
+                paper.survey_ref_hints = [candidate["paper_id_hint"]]
+                first_seen_rank.setdefault(paper.paper_id, len(retrieved))
+                retrieved.append(paper)
+        except Exception as e:
+            logger.warning(f"[P3] expansion_search failed q={query!r}: {e}")
 
 
 def run(
@@ -149,7 +279,9 @@ def run(
                 f"use_influence_score={pipeline_config.use_influence_score}")
     retrieved = []
     first_seen_rank = {}
-    # 1. expansion refs via meta-paper-relations (skip if sciverse offline -> caught upstream)
+    # 1. expansion candidates from curated surveys: exact, small-page searches.
+    _search_expansion_candidates(expansion_candidates, sciverse, retrieved, first_seen_rank)
+
     # 2. meta-search per aspect (verified SciVerse filter/response contract)
     filter_sets = (
         _influence_filter_sets()
@@ -191,7 +323,8 @@ def run(
         first_seen_rank = {p.paper_id: i for i, p in enumerate(retrieved)}
     retrieved = dedup(retrieved)
     if pipeline_config.use_influence_score:
-        retrieved = _rank_by_influence(retrieved, first_seen_rank)
+        retrieved = _filter_relevant_candidates(retrieved, aspects)
+        retrieved = _rank_by_influence(retrieved, first_seen_rank, aspects)
     retrieved = retrieved[:pipeline_config_extra(pipeline_config, "max_papers", 40)]
     logger.info(f"[P3] after dedup/cap: {len(retrieved)} papers")
     # 4. parse via real MinerU; only feed actual PDF URLs; degrade per-paper on failure or empty result

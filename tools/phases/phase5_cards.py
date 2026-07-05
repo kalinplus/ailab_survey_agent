@@ -37,7 +37,7 @@ def parse_card_response(text, paper_id):
         if h and h.group(1).strip() in BUCKETS:
             current = BUCKETS[h.group(1).strip()]
             continue
-        m = re.match(r"^\s*\d+\.\s+(.+?)(?:\s*\[page (\d+)\])?$", line)
+        m = re.match(r"^\s*(?:\d+[.)]|[-*•])\s+(.+?)(?:\s*\[page (\d+)\])?$", line)
         if m and current:
             claim_text = m.group(1).strip()
             evid = []
