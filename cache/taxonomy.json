@@ -1,6 +1,6 @@
 {
-  "task_id": "task_视频世界模型_001",
-  "topic": "视频世界模型",
+  "task_id": "task_世界模型_001",
+  "topic": "世界模型",
   "taxonomy_version": "v1",
   "refine_history": [
     "prelimiminary",
@@ -11,76 +11,43 @@
     {
       "category_id": "cat_001",
       "category_name": "Latent Architectures for World Representation",
-      "description": "Focuses on the design and optimization of latent space models that efficiently encode dynamic visual environments, including discrete vs. continuous representations and hierarchical structures.",
+      "description": "Covers methods and models that learn compressed, abstract representations of environments or dynamics, including VAEs, diffusion models, and discrete token-based latent spaces.",
       "related_aspects": [],
       "paper_ids": [
-        "paper:10.1109/taslp.2024.3402088",
-        "paper:10.1109/cvpr52729.2023.01770",
-        "paper:10.48550/arxiv.2309.15818",
-        "paper:10.1609/aaai.v38i2.27912",
-        "paper:10.48550/arxiv.2602.10104",
-        "paper:10.48550/arxiv.2510.18114",
-        "paper:10.1145/3664647.3680846",
-        "paper:10.1109/cvpr52688.2022.01043",
-        "paper:10.1017/psy.2026.10105",
-        "paper:10.48550/arxiv.2211.13221",
-        "paper:10.48550/arxiv.2405.20279",
-        "paper:10.1109/cvpr52734.2025.01689",
-        "paper:10.48550/arxiv.2503.00653",
-        "paper:10.48550/arxiv.2406.00519",
-        "paper:10.5555/3666122.3669299",
-        "paper:10.1109/wacv56688.2023.00028",
-        "paper:10.48550/arxiv.2602.17133",
-        "paper:10.1145/3596711.3596796",
-        "paper:10.48550/arxiv.2604.11440",
-        "paper:10.48550/arxiv.2605.13517",
-        "paper:10.1145/3641817",
-        "paper:10.1109/cvpr52729.2023.00990",
-        "paper:10.1145/3658146",
-        "paper:10.1109/cvpr52688.2022.00350",
-        "paper:10.1109/tnnls.2023.3282047",
-        "paper:10.48550/arxiv.2502.11897",
-        "paper:10.48550/arxiv.2412.20404",
-        "paper:10.48550/arxiv.2411.06449",
-        "paper:10.1109/cvpr52729.2023.00244",
-        "paper:10.1109/wacv61042.2026.00206",
-        "paper:10.1093/jrsssb/qkad010",
-        "paper:10.48550/arxiv.2601.17743",
-        "paper:10.1109/tip.2026.3696103",
-        "paper:10.1109/tmm.2025.3544415"
+        "paper:10.1038/s41467-024-54712-1",
+        "paper:10.2312/eged.20261000",
+        "paper:10.4271/2026-01-0423",
+        "paper:10.5281/zenodo.19024113",
+        "paper:10.48550/arxiv.2601.19822"
       ],
       "stage_order": 0,
-      "paper_count": 34,
+      "paper_count": 5,
       "adjustment_note": ""
     },
     {
       "category_id": "cat_002",
       "category_name": "Procedural Content Generation Mechanisms",
-      "description": "Explores methods for algorithmically generating diverse, coherent, and scalable video content or world states within the model framework.",
+      "description": "Focuses on techniques for generating diverse, structured, or infinite content (e.g., levels, scenes, narratives) within world models, often using generative priors or rule-based systems.",
       "related_aspects": [],
-      "paper_ids": [
-        "paper:10.1007/s41019-025-00335-5"
-      ],
+      "paper_ids": [],
       "stage_order": 0,
-      "paper_count": 1,
+      "paper_count": 0,
       "adjustment_note": ""
     },
     {
       "category_id": "cat_003",
       "category_name": "Internal Simulation and Planning Capabilities",
-      "description": "Investigates how models simulate future states, reason about physical dynamics, and plan actions or trajectories internally to generate realistic video sequences.",
+      "description": "Encompasses internal dynamics models that simulate future states, enable trajectory prediction, support decision-making, and facilitate planning under uncertainty.",
       "related_aspects": [],
-      "paper_ids": [
-        "paper:10.1109/cvpr52734.2025.02134"
-      ],
+      "paper_ids": [],
       "stage_order": 0,
-      "paper_count": 1,
+      "paper_count": 0,
       "adjustment_note": ""
     },
     {
       "category_id": "cat_004",
       "category_name": "Evaluation Benchmarks and Metrics",
-      "description": "Covers standardized datasets, quantitative metrics, and qualitative assessment protocols used to measure the quality, consistency, and generalization of video world models.",
+      "description": "Includes standardized datasets, tasks, and quantitative/qualitative metrics used to assess the fidelity, generalization, and utility of world models.",
       "related_aspects": [],
       "paper_ids": [],
       "stage_order": 0,
@@ -90,20 +57,17 @@
     {
       "category_id": "cat_005",
       "category_name": "Interactive and Controllable Generation Frameworks",
-      "description": "Examines user interfaces, control signals, and conditioning mechanisms that allow humans to steer, edit, or interact with generated video worlds in real-time.",
+      "description": "Addresses frameworks allowing user intervention, steering, or conditioning during generation, enabling real-time interaction and control over simulated worlds.",
       "related_aspects": [],
-      "paper_ids": [
-        "paper:10.48550/arxiv.2402.15391",
-        "paper:10.48550/arxiv.2503.17359"
-      ],
+      "paper_ids": [],
       "stage_order": 0,
-      "paper_count": 2,
+      "paper_count": 0,
       "adjustment_note": ""
     },
     {
       "category_id": "cat_006",
-      "category_name": "Game-Oriented World Models",
-      "description": "Specialized world models designed for gaming environments, focusing on low-latency control, stateful modeling, and role fidelity across different game genres.",
+      "category_name": "Core LLM Capabilities and Agent Integration",
+      "description": "Integrates large language models into world models for reasoning, instruction following, and high-level decision-making, bridging symbolic and neural approaches.",
       "related_aspects": [],
       "paper_ids": [],
       "stage_order": 0,
@@ -112,24 +76,12 @@
     },
     {
       "category_id": "cat_007",
-      "category_name": "Cross-Domain Extensions",
-      "description": "Adaptations and applications of video world models to specific domains such as autonomous driving, robotics, and social simulacra.",
+      "category_name": "Applications: Autonomous Driving, Robotics, Social Simulacra",
+      "description": "Real-world deployment scenarios where world models are applied to simulate physical environments, human behavior, or complex systems for training and validation.",
       "related_aspects": [],
       "paper_ids": [],
       "stage_order": 0,
       "paper_count": 0,
-      "adjustment_note": ""
-    },
-    {
-      "category_id": "cat_008",
-      "category_name": "Video Generation Foundations",
-      "description": "Fundamental approaches to video generation, including autoregressive and diffusion-based methods, and their integration with action conditioning.",
-      "related_aspects": [],
-      "paper_ids": [
-        "paper:10.1109/cvpr52729.2023.01769"
-      ],
-      "stage_order": 0,
-      "paper_count": 1,
       "adjustment_note": ""
     }
   ]

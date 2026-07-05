@@ -38,3 +38,12 @@ ref
 !cache/seed_papers.json
 output/*
 logs/*
+cache/citation_index.json
+cache/evidence_store.json
+cache/figure_bank.json
+cache/knowledge_bundle.json
+cache/paper_cards.json
+cache/parsed_papers.json
+cache/retrieval_papers.json
+cache/table_bank.json
+cache/taxonomy.json
