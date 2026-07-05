@@ -33,6 +33,7 @@ class InternS2Client:
         temperature: float = 0.2,
         response_format: dict[str, str] | None = None,
         max_tokens: int | None = None,
+        thinking_mode: bool = False,
     ) -> str:
         if not self.is_configured():
             raise LLMClientError("INTERN_API_KEY is empty; cannot call Intern-S2-Preview.")
@@ -41,6 +42,7 @@ class InternS2Client:
             "model": self.config.intern_model_name,
             "messages": messages,
             "temperature": temperature,
+            "thinking_mode": thinking_mode,
         }
         if response_format:
             payload["response_format"] = response_format
@@ -77,14 +79,36 @@ class InternS2Client:
         *,
         temperature: float = 0.1,
         max_tokens: int | None = None,
+        thinking_mode: bool = False,
     ) -> dict[str, Any]:
         content = self.chat(
             messages,
             temperature=temperature,
             response_format={"type": "json_object"},
             max_tokens=max_tokens,
+            thinking_mode=thinking_mode,
         )
         try:
             return json.loads(content)
         except json.JSONDecodeError as exc:
+            extracted = _extract_json_object(content)
+            if extracted is not None:
+                return extracted
             raise LLMClientError(f"Model did not return valid JSON: {content[:500]}") from exc
+
+
+def _extract_json_object(content: str) -> dict[str, Any] | None:
+    decoder = json.JSONDecoder()
+    parsed_objects: list[tuple[int, int, dict[str, Any]]] = []
+    for start, char in enumerate(content):
+        if char != "{":
+            continue
+        try:
+            parsed, end = decoder.raw_decode(content[start:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            parsed_objects.append((end, start, parsed))
+    if not parsed_objects:
+        return None
+    return max(parsed_objects, key=lambda item: (item[0], item[1]))[2]

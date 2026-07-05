@@ -10,7 +10,7 @@ from tools.clients.sciverse_client import SciVerseClient
 @pytest.fixture
 def client(monkeypatch):
     monkeypatch.setenv("SCIVERSE_API_KEY", "k")
-    return SciVerseClient(base_url="https://sv.test")
+    return SciVerseClient(base_url="https://sv.test", min_interval=0, max_retries=0)
 
 
 @respx.mock
@@ -72,3 +72,28 @@ def test_raises_on_error(client):
     respx.post("https://sv.test/meta-search").respond(status_code=500)
     with pytest.raises(httpx.HTTPStatusError):
         client.meta_search("x")
+
+
+@respx.mock
+def test_retries_on_429_then_succeeds(monkeypatch):
+    monkeypatch.setenv("SCIVERSE_API_KEY", "k")
+    c = SciVerseClient(base_url="https://sv.test", min_interval=0, max_retries=1, backoff_base=0)
+    route = respx.post("https://sv.test/agentic-search").mock(
+        side_effect=[
+            httpx.Response(429),
+            httpx.Response(200, json={"hits": [{"chunk": "x"}]}),
+        ]
+    )
+    out = c.agentic_search("wm")
+    assert route.calls.call_count == 2
+    assert out["hits"][0]["chunk"] == "x"
+
+
+@respx.mock
+def test_raises_after_exhausting_retries(monkeypatch):
+    monkeypatch.setenv("SCIVERSE_API_KEY", "k")
+    c = SciVerseClient(base_url="https://sv.test", min_interval=0, max_retries=1, backoff_base=0)
+    route = respx.post("https://sv.test/agentic-search").respond(status_code=429)
+    with pytest.raises(httpx.HTTPStatusError):
+        c.agentic_search("wm")
+    assert route.calls.call_count == 2

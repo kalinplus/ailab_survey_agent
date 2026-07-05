@@ -55,13 +55,13 @@ def run(
     analyzed = analyze_surveys(surveys, mineru, cleaner)
     # Step 1: independent preliminary taxonomy
     prelim_raw = llm.json_chat([{"role": "user", "content": PRELIM_PROMPT.format(
-        topic=topic, sub_domains=sub_domains, aspects=[a["aspect_name"] for a in aspects])}])
+        topic=topic, sub_domains=sub_domains, aspects=[a["aspect_name"] for a in aspects])}], max_tokens=2000)
     prelim = prelim_raw.get("categories", [])
     logger.info(f"[P2] prelim taxonomy -> {len(prelim)} categories")
     # Step 2: refine with survey skeletons
     survey_skels = [a["taxonomy_skeleton"] for a in analyzed]
     refined_raw = llm.json_chat([{"role": "user", "content": REFINE_PROMPT.format(
-        prelim=prelim, survey_skels=survey_skels)}])
+        prelim=prelim, survey_skels=survey_skels)}], max_tokens=2000)
     refined = refined_raw.get("categories", [])
     # expansion candidates from referenced papers
     expansion = [{"paper_id_hint": pid, "source_survey": a["paper_id"], "priority": "high"}

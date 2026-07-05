@@ -1,0 +1,76 @@
+{
+  "task_id": "task_world_model_for_auto_drive_001",
+  "topic": "world model for auto drive",
+  "request_type": "survey_generation",
+  "language": "zh",
+  "inputs": {
+    "knowledge_bundle_path": "cache/knowledge_bundle.json",
+    "paper_cards_path": "cache/paper_cards.json",
+    "evidence_store_path": "cache/evidence_store.json",
+    "figure_bank_path": "cache/figure_bank.json",
+    "table_bank_path": "cache/table_bank.json",
+    "taxonomy_path": "cache/taxonomy.json",
+    "citation_ready_set_path": "cache/citation_ready_set.json"
+  },
+  "outputs": {
+    "survey_markdown_path": "output/survey.md",
+    "timeline_path": "cache/timeline.json",
+    "generated_artifact_bank_path": "cache/generated_artifact_bank.json"
+  },
+  "writing_rules": {
+    "citation_format": "[paper_id]",
+    "only_use_citation_ready_set": true,
+    "paper_figures_must_come_from_figure_bank": true,
+    "paper_tables_must_come_from_table_bank": true,
+    "generated_artifacts_allowed": true,
+    "generated_artifacts_must_be_declared": true,
+    "do_not_introduce_new_references": true
+  },
+  "generated_artifact_policy": {
+    "allowed_types": [
+      "timeline",
+      "taxonomy_graph",
+      "comparison_chart",
+      "comparison_table",
+      "future_matrix",
+      "evaluation_chart",
+      "summary_table"
+    ],
+    "output_dir": "output/generated_assets",
+    "provenance_required": true,
+    "must_not_be_claimed_as_paper_extracted_artifact": true
+  },
+  "active_skills": [
+    {
+      "name": "survey_writing",
+      "description": "Write grounded survey sections using CitationReadySet and EvidenceStore only.",
+      "path": "skills/survey_writing/SKILL.md",
+      "applies_to": [
+        "survey_generation"
+      ],
+      "owner": "C",
+      "load_mode": "stage_scoped",
+      "purpose": "Write grounded survey sections using CitationReadySet and EvidenceStore only."
+    },
+    {
+      "name": "artifact_generation",
+      "description": "Generate timeline, taxonomy graph, tables, and matrices with declared provenance.",
+      "path": "skills/artifact_generation/SKILL.md",
+      "applies_to": [
+        "survey_generation",
+        "evaluation_render"
+      ],
+      "owner": "C",
+      "load_mode": "stage_scoped",
+      "purpose": "Generate timeline, taxonomy graph, tables, and matrices with declared provenance."
+    }
+  ],
+  "skill_policy": {
+    "progressive_disclosure": true,
+    "load_index_first": true,
+    "only_load_stage_relevant_skills": true,
+    "request_scoped_activation": true,
+    "unload_after_stage": true,
+    "skill_body_loading": "A passes skill paths in requests. B/C load the referenced SKILL.md only when their worker uses an LLM or needs the SOP."
+  }
+}

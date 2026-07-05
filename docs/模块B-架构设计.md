@@ -91,6 +91,31 @@ knowledge_pipeline_worker.run(request_path)
     knowledge_bundle.json → 返回给 A
 ```
 
+## 2.1 各阶段输入输出
+
+每个 phase 是 `tools/phases/` 下的纯函数；编排顺序见 `tools/knowledge_pipeline_worker.py:run`。
+
+**总体（worker.run）**
+
+- 入口：`run(request_path) -> dict`
+- 输入：`knowledge_build_request.json` + `search_strategy.json`（A 产出）+ `cache/surveys.json`（Layer 1 综述库）+ `cache/seed_papers.json`（102 篇，API 不可用时 fallback）
+- 输出：9 个 artifact JSON + 返回 `{status, outputs, metrics, message}`
+- 下游：`knowledge_bundle.json` → A（校验）+ C（写综述）
+
+**逐阶段**
+
+| Phase | 模块 | 输入 | 做什么 | 输出 |
+|---|---|---|---|---|
+| P1 需求拆解 | `phase1_decompose` | request, strategy, seed_papers | 纯启发式，**不调 LLM**：校验 aspects 结构 + 覆盖 | `DecomposedDemand`（aspects/constraints/structure_errors/coverage_warnings） |
+| P2 综述分析 | `phase2_survey_analyzer` | topic, sub_domains, aspects(P1), surveys, llm | 分析 Layer 1 综述骨架 + **Taxonomy Self-Refine Step 1-2**（LLM：prelim→refined） | `SurveyStructure`（refined_taxonomy + expansion_candidates） |
+| P3 论文检索 | `phase3_paper_retriever` | aspects(P1), expansion_candidates(P2), sciverse/mineru/cleaner/seed, pipeline_config, llm | **LLM 关键词翻译（中→英）** + SciVerse meta-search per aspect + PDF URL 过滤 + MinerU 解析 + 空壳检测 + seed fallback | `RetrievedPapers` + `ParsedPapers` |
+| P5.1 Cards | `phase5_cards` | parsed/retrieved(P3), aspects, llm | deep（parsed 全文）+ shallow（retrieved abstract）→ LLM 提取 4 维度 claims | `PaperCards` |
+| P5.2 Evidence | `phase5_evidence` | parsed(P3), cards(P5.1), nli, sciverse | parsed 段落/abstract/caption → evidence + **agentic-search backfill**（无 parsed evidence 的 claim 用 SciVerse chunk 补，NLI 验证 chunk↔claim） | `EvidenceStore` |
+| P5.3-5 Synthesis | `phase5_synthesis_rest` | parsed(P3), refined_taxonomy(P2), cards(P5.1), llm | FigureBank / TableBank / Taxonomy（归并 + 按 keyword overlap 把 card 挂到 category）/ CitationIndex | `FigureBank`/`TableBank`/`Taxonomy`/`CitationIndex` |
+| P6 打包 | `phase6_bundle_assembler` | 全部上游 artifact + structure_errors/coverage_warnings + quality_requirements | 聚合 + 状态判定（success/partial_success/failed）+ quality_report | `KnowledgeBundle` |
+
+依赖链：`strategy → P1 → P2 → P3 → P5.* → P6`。P5.1–P5.5 在 P3 之后相互基本独立（见接口文档 §7.2 并行说明）。Phase 编号沿用代码模块名；无 Phase 4（向量检索 RAG 不采用，见 §0 决策表）。
+
 ---
 
 ## 3. 关键实现细节
@@ -148,6 +173,21 @@ class InternS2Client:
     _min_interval = 2.1  # Intern-S2: 1 req per 2s
     # 每次调用前检查 elapsed，不足则 sleep
 ```
+
+### 3.5 Thinking Mode（LLM Client，全部关闭）
+
+`InternS2Client.chat()` 暴露 `thinking_mode` 参数（默认 `False`），作为 payload 字段发给
+Intern-S2。模块 B 是确定性流水线，所有 LLM 调用都是结构化抽取/翻译/分类这类"快"任务，
+**不需要 thinking**，且 Intern-S2 受速率限制（1 req / 2s），thinking 会显著拖慢链路却无收益。
+
+| 调用点 | 用途 | thinking_mode |
+|---|---|---|
+| `phase2_survey_analyzer.py`（prelim + refine） | 构建 taxonomy | 默认 False |
+| `phase3_paper_retriever.py` | 中文关键词 → 英文 query | 默认 False |
+| `phase5_cards.py` | 抽取 paper card | 显式 `CARD_THINKING_MODE = False` |
+| `verify/claim_mapper.py` | claim 映射辅助 | 默认 False |
+
+新增 B 内 LLM 调用时默认保持 `thinking_mode=False`；确需推理（如复杂的综合改写）再显式打开。
 
 ---
 

@@ -138,9 +138,17 @@ def test_parse_status_abstract_only_when_mineru_disabled():
 
 def test_max_papers_default_40():
     from tools.models.requests import PipelineConfig
-    """pipeline_config_extra returns 40 when PipelineConfig lacks max_papers."""
+
     cfg = PipelineConfig()
     assert pipeline_config_extra(cfg, "max_papers", 40) == 40
+
+
+def test_pipeline_config_keeps_request_limits():
+    from tools.models.requests import PipelineConfig
+
+    cfg = PipelineConfig(max_papers=5, max_core_papers=3)
+    assert cfg.max_papers == 5
+    assert cfg.max_core_papers == 3
 
 
 def test_max_papers_truncation():
@@ -155,14 +163,9 @@ def test_max_papers_truncation():
                 ]
             }
 
-    class CappedConfig:
-        use_seed_fallback = True
-        use_mineru = False
-        max_papers = 1
-
     rp, pp = run(
         "t", [{"keywords": ["wm"]}], [], ManySV(), FakeMU(), FakeCleaner(),
-        [], CappedConfig(),
+        [], PipelineConfig(use_mineru=False, max_papers=1),
     )
     assert len(rp.papers) == 1
 

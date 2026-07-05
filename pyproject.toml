@@ -6,4 +6,7 @@ requires-python = ">=3.11"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-markers = ["nli_real: loads the real DeBERTa NLI model (slow, opt-in)"]
+markers = [
+    "nli_real: loads the real DeBERTa NLI model (slow, opt-in)",
+    "real_api: full real API incl. Intern-S2 + SciVerse + MinerU (expensive, opt-in)",
+]
