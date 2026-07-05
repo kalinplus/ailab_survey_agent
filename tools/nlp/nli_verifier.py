@@ -60,8 +60,9 @@ class FakeNLIModel:
         self.mapping = mapping or {}
 
     def judge(self, premise: str, hypothesis: str) -> NLIResult:
+        low_hypothesis = hypothesis.lower()
         for kw, label in self.mapping.items():
-            if kw in hypothesis:
+            if kw in hypothesis or str(kw).lower() in low_hypothesis:
                 conf = {"entailment": 0.9, "neutral": 0.5, "contradiction": 0.9}[label]
                 support_type = {"entailment": "direct", "neutral": "indirect", "contradiction": "contradictory"}[label]
                 return NLIResult(label, support_type, conf)
@@ -69,8 +70,9 @@ class FakeNLIModel:
 
     def best_match(self, claim: str, evidences: list[str]) -> NLIResult:
         for ev in evidences:
+            low_ev = ev.lower()
             for kw, label in self.mapping.items():
-                if kw in ev:
+                if kw in ev or str(kw).lower() in low_ev:
                     conf = {"entailment": 0.9, "neutral": 0.5, "contradiction": 0.9}[label]
                     support_type = {"entailment": "direct", "neutral": "indirect", "contradiction": "contradictory"}[label]
                     return NLIResult(label, support_type, conf)

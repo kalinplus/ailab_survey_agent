@@ -26,6 +26,8 @@ class AppConfig:
     strategy_probing_enabled: bool
     strategy_probe_limit: int
     strategy_cluster_count: int
+    strategy_memory_enabled: bool
+    strategy_memory_max_chars: int
     request_timeout_seconds: float
     max_llm_retries: int
     tool_timeout_seconds: float
@@ -77,6 +79,8 @@ def load_config() -> AppConfig:
         strategy_probing_enabled=os.getenv("STRATEGY_PROBING_ENABLED", "false").lower() in {"1", "true", "yes"},
         strategy_probe_limit=int(os.getenv("STRATEGY_PROBE_LIMIT", "20")),
         strategy_cluster_count=int(os.getenv("STRATEGY_CLUSTER_COUNT", "4")),
+        strategy_memory_enabled=os.getenv("STRATEGY_MEMORY_ENABLED", "true").lower() in {"1", "true", "yes"},
+        strategy_memory_max_chars=int(os.getenv("STRATEGY_MEMORY_MAX_CHARS", "4000")),
         request_timeout_seconds=float(os.getenv("REQUEST_TIMEOUT_SECONDS", "60")),
         max_llm_retries=int(os.getenv("MAX_LLM_RETRIES", "1")),
         tool_timeout_seconds=float(os.getenv("TOOL_TIMEOUT_SECONDS", "300")),

@@ -10,6 +10,7 @@ from typing import Any
 
 from llm_client import InternS2Client
 from config import AppConfig
+from .memory_manager import MemoryManager
 from .search_strategy_builder import build_search_strategy
 
 
@@ -17,6 +18,11 @@ class Planner:
     def __init__(self, config: AppConfig) -> None:
         self.config = config
         self.llm_client = InternS2Client(config)
+        self.memory_manager = MemoryManager(
+            config.root_dir,
+            enabled=config.strategy_memory_enabled,
+            max_chars=config.strategy_memory_max_chars,
+        )
 
     def make_task_id(self, topic: str) -> str:
         slug = re.sub(r"\W+", "_", topic.lower(), flags=re.UNICODE).strip("_")
@@ -75,20 +81,40 @@ class Planner:
         max_core_papers: int,
         mode: str = "demo",
     ) -> dict[str, Any]:
-        return build_search_strategy(
+        memory_context = self.memory_manager.load_for_strategy(topic)
+        use_probing = mode == "full" and self.config.strategy_probing_enabled
+        strategy = build_search_strategy(
             task_id=task_id,
             topic=topic,
             max_papers=max_papers,
             max_core_papers=max_core_papers,
             end_year=datetime.now().year,
-            use_probing=mode == "full" and self.config.strategy_probing_enabled,
+            use_probing=use_probing,
             sciverse_api_key=self.config.sciverse_api_token,
             sciverse_api_base_url=self.config.sciverse_api_base_url,
             request_timeout_seconds=self.config.request_timeout_seconds,
             probe_limit=self.config.strategy_probe_limit,
             cluster_count=self.config.strategy_cluster_count,
-            llm_json_chat=self._strategy_json_chat if self.llm_client.is_configured() else None,
+            memory_context=memory_context,
+            llm_json_chat=self._strategy_json_chat if mode == "full" and self.llm_client.is_configured() else None,
         )
+        strategy["strategy_generation"] = {
+            "mode": mode,
+            "memory_enabled": self.config.strategy_memory_enabled,
+            "memory_used": bool(memory_context),
+            "memory_chars": len(memory_context),
+            "probing_requested": use_probing,
+            "probing_effective": use_probing and bool(self.config.sciverse_api_token),
+            "probe_limit": self.config.strategy_probe_limit if use_probing else 0,
+        }
+        self.memory_manager.record_strategy_run(
+            topic=topic,
+            strategy=strategy,
+            used_memory=bool(memory_context),
+            mode=mode,
+            used_probing=use_probing and bool(self.config.sciverse_api_token),
+        )
+        return strategy
 
     def build_knowledge_build_request(
         self,
