@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -193,19 +194,36 @@ class AgentLoop:
         Replaces the old half-loop whose second verify result was discarded:
         every round's result is now consumed by the gate. Keeps the best-so-far
         survey ((unsupported, invalid, -chars) lexicographic) and restores it
-        if a later repair round made things worse.
+        if a later repair round made things worse. The joint-3 coverage gate
+        measures text/figure-ref retention against the round-0 baseline, so
+        deletion-style repair cannot hollow out the survey unnoticed.
         """
         best_metrics: dict[str, Any] | None = None
         best_text: str | None = None
         prev_unsupported: int | None = None
+        baseline_chars: int | None = None
+        baseline_fig_refs: int | None = None
+        min_retention = float(
+            os.getenv("EVISURVEY_COVERAGE_MIN", str(goal_gate.MIN_RETENTION_DEFAULT)))
         gate_result = goal_gate.GateResult(False, "not_run", 0, 0, 0.0)
         for repair_round in range(goal_gate.MAX_REPAIR_ROUNDS + 1):
             verify_result = self._run_tool("verify_citations", "requests/verification_request.json")
             metrics = verify_result.get("metrics", {})
-            gate_result = goal_gate.evaluate(
-                metrics, repair_round=repair_round, prev_unsupported=prev_unsupported)
             survey_path = self.config.output_dir / "survey.md"
             survey_text = survey_path.read_text(encoding="utf-8") if survey_path.exists() else ""
+            if baseline_chars is None:
+                baseline_chars, baseline_fig_refs = len(survey_text), goal_gate.figure_ref_count(survey_text)
+            text_retention = len(survey_text) / baseline_chars if baseline_chars else 1.0
+            fig_refs = goal_gate.figure_ref_count(survey_text)
+            fig_retention = fig_refs / baseline_fig_refs if baseline_fig_refs else 1.0
+            gate_result = goal_gate.evaluate(
+                metrics,
+                repair_round=repair_round,
+                prev_unsupported=prev_unsupported,
+                text_retention=text_retention,
+                figure_ref_retention=fig_retention,
+                min_retention=min_retention,
+            )
             if best_metrics is None or _repair_rank(metrics, survey_text) < _repair_rank(best_metrics, best_text or ""):
                 best_metrics, best_text = metrics, survey_text
             self.logger.log("goal_gate", task_id=task_id, round=repair_round, **gate_result.to_dict())

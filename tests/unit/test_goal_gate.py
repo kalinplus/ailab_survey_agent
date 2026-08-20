@@ -62,6 +62,61 @@ def test_repair_rank_prefers_supported_then_longer_text():
     assert _repair_rank(_metrics(unsupported=1), "x" * 999) > _repair_rank(_metrics(unsupported=0), "x")
 
 
+# --- coverage gate (joint 3, spec §4.1 evaluate layer) -------------------------
+
+
+def test_coverage_all_three_gates_pass():
+    gate = goal_gate.evaluate(
+        _metrics(), repair_round=1, text_retention=0.9, figure_ref_retention=0.8)
+    assert gate.passed and gate.stop_reason == goal_gate.STOP_PASSED
+
+
+def test_coverage_text_retention_fail_blocks_pass():
+    # joint-2 B-config pathology: deletion clears unsupported but hollows the
+    # survey -> must NOT count as passed
+    gate = goal_gate.evaluate(
+        _metrics(), repair_round=1, text_retention=0.5, figure_ref_retention=1.0)
+    assert not gate.passed and gate.stop_reason == goal_gate.STOP_COVERAGE
+    assert gate.coverage == {
+        "text_retention": 0.5, "figure_ref_retention": 1.0,
+        "min_retention": goal_gate.MIN_RETENTION_DEFAULT, "ok": False,
+    }
+
+
+def test_coverage_figure_ref_retention_fail():
+    gate = goal_gate.evaluate(
+        _metrics(), repair_round=1, text_retention=1.0, figure_ref_retention=0.2)
+    assert not gate.passed and gate.stop_reason == goal_gate.STOP_COVERAGE
+
+
+def test_coverage_fail_priority_over_budget_and_fixpoint():
+    gate = goal_gate.evaluate(
+        _metrics(unsupported=5), repair_round=goal_gate.MAX_REPAIR_ROUNDS,
+        text_retention=0.5)
+    assert gate.stop_reason == goal_gate.STOP_COVERAGE
+    gate = goal_gate.evaluate(
+        _metrics(unsupported=5), repair_round=1, prev_unsupported=5,
+        text_retention=0.5)
+    assert gate.stop_reason == goal_gate.STOP_COVERAGE
+
+
+def test_coverage_ok_with_unsupported_repairs_on():
+    gate = goal_gate.evaluate(
+        _metrics(unsupported=5), repair_round=0, text_retention=0.8)
+    assert not gate.passed and gate.stop_reason == goal_gate.STOP_REPAIRING
+
+
+def test_coverage_default_params_keep_old_behavior():
+    gate = goal_gate.evaluate(_metrics(), repair_round=0)
+    assert gate.passed and gate.coverage["ok"] is True
+
+
+def test_figure_ref_count():
+    md = "text ![fig a](figs/a.png) middle\n![b](b.png) tail ![c](c.png)"
+    assert goal_gate.figure_ref_count(md) == 3
+    assert goal_gate.figure_ref_count("no images [p1] here") == 0
+
+
 # --- agent_loop wiring --------------------------------------------------------
 
 
@@ -138,13 +193,16 @@ def _make_loop(tmp_path, registry):
 
 def test_loop_second_verify_result_is_consumed(tmp_path):
     # regression for the old half-loop: round1 fails, revise, round2 passes
-    # -> the loop must exit on the SECOND verify's result
+    # -> the loop must exit on the SECOND verify's result (texts sized so the
+    # joint-3 coverage gate stays above threshold — not this test's concern)
     output_dir = tmp_path / "output"
     output_dir.mkdir()
-    (output_dir / "survey.md").write_text("draft with one bad claim [p1]", encoding="utf-8")
+    (output_dir / "survey.md").write_text(
+        "draft with one bad claim [p1] plus enough surrounding context", encoding="utf-8")
+    fixed_text = "fixed draft [p1] keeping all the surrounding context intact"
     registry = _ScriptedRegistry(
         verify_metrics_sequence=[_metrics(unsupported=3), _metrics(unsupported=0)],
-        revise_texts=["fixed draft [p1]"],
+        revise_texts=[fixed_text],
     )
     registry.output_dir = output_dir
     loop, logger = _make_loop(tmp_path, registry)
@@ -154,7 +212,7 @@ def test_loop_second_verify_result_is_consumed(tmp_path):
     assert gate.passed and gate.stop_reason == goal_gate.STOP_PASSED
     assert registry.verify_calls == 2          # second verify really ran
     assert registry.revise_calls == 1
-    assert (output_dir / "survey.md").read_text(encoding="utf-8") == "fixed draft [p1]"
+    assert (output_dir / "survey.md").read_text(encoding="utf-8") == fixed_text
     gate_events = [f for name, f in logger.events if name == "goal_gate"]
     assert len(gate_events) == 2               # one per verify round
     assert gate_events[-1]["passed"] is True
@@ -198,10 +256,11 @@ def test_loop_budget_exhausted_after_two_repairs(tmp_path):
 
 
 def test_loop_rolls_back_worse_round(tmp_path):
-    # round1: 3 unsupported, 100 chars; round2 (after a deletion-happy revise):
-    # 2 unsupported but only 10 chars. Rank prefers fewer unsupported, so round2
+    # round1: 3 unsupported, 100 chars; round2 (after a light-trim revise):
+    # 2 unsupported, 80 chars. Rank prefers fewer unsupported, so round2
     # text is kept. Then a round3 with SAME failures but shorter text loses ->
-    # rollback to the round2 text.
+    # rollback to the round2 text. (Both trims stay above the joint-3
+    # coverage threshold so this test stays about rollback, not coverage.)
     output_dir = tmp_path / "output"
     output_dir.mkdir()
     (output_dir / "survey.md").write_text("x" * 100, encoding="utf-8")
@@ -209,7 +268,7 @@ def test_loop_rolls_back_worse_round(tmp_path):
         verify_metrics_sequence=[
             _metrics(unsupported=3), _metrics(unsupported=2), _metrics(unsupported=2),
         ],
-        revise_texts=["y" * 80, "z" * 10],
+        revise_texts=["y" * 80, "z" * 75],
     )
     registry.output_dir = output_dir
     loop, logger = _make_loop(tmp_path, registry)
@@ -234,3 +293,107 @@ def test_loop_first_pass_skips_revise_entirely(tmp_path):
 
     assert gate.passed
     assert registry.verify_calls == 1 and registry.revise_calls == 0
+
+
+# --- coverage gate wiring (joint 3, spec §4.1 loop layer) ----------------------
+
+
+def test_loop_coverage_fail_stops_and_rolls_back(tmp_path):
+    # deletion-happy revise shrinks the survey to 30% of the round-0 baseline
+    # with no unsupported improvement -> coverage_fail stop + rollback to the
+    # longer round-0 text (spec §4.1 ⑨)
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    (output_dir / "survey.md").write_text("x" * 100, encoding="utf-8")
+    registry = _ScriptedRegistry(
+        verify_metrics_sequence=[_metrics(unsupported=5), _metrics(unsupported=5)],
+        revise_texts=["y" * 30],
+    )
+    registry.output_dir = output_dir
+    loop, logger = _make_loop(tmp_path, registry)
+
+    gate = loop._verify_repair_loop("task_x")
+
+    assert not gate.passed and gate.stop_reason == goal_gate.STOP_COVERAGE
+    assert gate.coverage["text_retention"] == 0.3
+    assert registry.verify_calls == 2 and registry.revise_calls == 1
+    assert (output_dir / "survey.md").read_text(encoding="utf-8") == "x" * 100
+    assert any(name == "repair_rollback" for name, _ in logger.events)
+    goal_gate_events = [f for name, f in logger.events if name == "goal_gate"]
+    assert goal_gate_events[-1]["stop_reason"] == goal_gate.STOP_COVERAGE
+
+
+def test_loop_coverage_fail_annotates_when_hollowed_text_is_rank_best(tmp_path):
+    # hollowed round-1 text has FEWER unsupported -> _repair_rank keeps it as
+    # best (spec §5: rank stays unchanged); the gate still annotates honestly
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    (output_dir / "survey.md").write_text("x" * 100, encoding="utf-8")
+    registry = _ScriptedRegistry(
+        verify_metrics_sequence=[_metrics(unsupported=3), _metrics()],
+        revise_texts=["y" * 30],
+    )
+    registry.output_dir = output_dir
+    loop, _ = _make_loop(tmp_path, registry)
+
+    gate = loop._verify_repair_loop("task_x")
+
+    assert not gate.passed and gate.stop_reason == goal_gate.STOP_COVERAGE
+    assert (output_dir / "survey.md").read_text(encoding="utf-8") == "y" * 30
+
+
+def test_loop_coverage_threshold_from_env(tmp_path, monkeypatch):
+    # 80% retention passes the default 0.7 threshold but fails an env-raised one
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    (output_dir / "survey.md").write_text("x" * 100, encoding="utf-8")
+    registry = _ScriptedRegistry(
+        verify_metrics_sequence=[_metrics(unsupported=5), _metrics(unsupported=5)],
+        revise_texts=["y" * 80],
+    )
+    registry.output_dir = output_dir
+    loop, _ = _make_loop(tmp_path, registry)
+    monkeypatch.setenv("EVISURVEY_COVERAGE_MIN", "0.9")
+
+    gate = loop._verify_repair_loop("task_x")
+
+    assert gate.stop_reason == goal_gate.STOP_COVERAGE
+    assert gate.coverage["min_retention"] == 0.9
+
+
+def test_loop_figure_ref_drop_triggers_coverage_fail(tmp_path):
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    baseline = "a ![f1](figs/1.png)\n" + "x" * 90 + "\nb ![f2](figs/2.png)"
+    shrunk = "a ![f1](figs/1.png)\n" + "x" * 80  # same length band, one ref gone
+    (output_dir / "survey.md").write_text(baseline, encoding="utf-8")
+    registry = _ScriptedRegistry(
+        verify_metrics_sequence=[_metrics(unsupported=5), _metrics(unsupported=5)],
+        revise_texts=[shrunk],
+    )
+    registry.output_dir = output_dir
+    loop, _ = _make_loop(tmp_path, registry)
+
+    gate = loop._verify_repair_loop("task_x")
+
+    assert gate.stop_reason == goal_gate.STOP_COVERAGE
+    assert gate.coverage["figure_ref_retention"] == 0.5
+    assert gate.coverage["text_retention"] > goal_gate.MIN_RETENTION_DEFAULT
+
+
+def test_loop_zero_baseline_figure_refs_guarded(tmp_path):
+    # no figure refs in the baseline -> figure ratio is 1.0, never a false fail
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    (output_dir / "survey.md").write_text("x" * 100, encoding="utf-8")
+    registry = _ScriptedRegistry(
+        verify_metrics_sequence=[_metrics(unsupported=5), _metrics(unsupported=5)],
+        revise_texts=["y" * 80],
+    )
+    registry.output_dir = output_dir
+    loop, _ = _make_loop(tmp_path, registry)
+
+    gate = loop._verify_repair_loop("task_x")
+
+    assert gate.coverage["figure_ref_retention"] == 1.0
+    assert gate.stop_reason == goal_gate.STOP_FIXPOINT  # old semantics intact

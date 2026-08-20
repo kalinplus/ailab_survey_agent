@@ -163,6 +163,16 @@ evaluate 层：
 
 ---
 
-## 6. 实现记录
+## 6. 实现记录（2026-08-21）
 
-（实施后补）
+代码落地与规格一致（TDD：每个切片先失败测试后实现）。实现层补充：
+
+1. **`coverage` 字段总是填充**：即使调用方不传 retention（默认 1.0），`GateResult.coverage` 也带 `{text_retention, figure_ref_retention, min_retention, ok}`——final_state 与 run.jsonl 里每轮都有完整签名，无 None 分支。
+2. **两个既有测试的构造调整**（§4.2 预案兑现）：`test_loop_second_verify_result_is_consumed`（短文本 16/29≈0.59 意外破线）与 `test_loop_rolls_back_worse_round`（末轮 10 字符 = retention 0.1）——两者本意是"二次验证被消费"与"回滚语义"，构造改为保留率 ≥0.7 后原断言全部保留（后者末轮 "z"×10 → "z"×75，stop_reason 维持 STOP_BUDGET）。
+3. **rank 与闸的分工如实记录**：`test_loop_coverage_fail_annotates_when_hollowed_text_is_rank_best` 固化了规格 §5 的取舍——掏空但 unsupported 更少的版本仍是 `_repair_rank` 意义上的 best（保留交付），但 `stop_reason=coverage_fail` 如实进 final_state。若后续想改变交付选择，改的是 rank（另立决策），不是闸。
+
+**文件**：`harness/goal_gate.py`（`STOP_COVERAGE` + `coverage` 字段 + retention 参数 + `figure_ref_count`）、`harness/agent_loop.py`（`_verify_repair_loop` 基线快照 + retention 计算 + `EVISURVEY_COVERAGE_MIN` 传参）、`tests/unit/test_goal_gate.py`（12 → 24 个测试：evaluate 层 +7、接线层 +5、构造调整 2）。
+
+**测试**：单测 258 passed, 1 skipped（全量回归零破坏）；showcase / `FINAL_SEED_PAPERS` 路径 round 0 即 passed、coverage 恒 1.0，行为零变化。
+
+**DoD 核对**：§4.3 五项全过——新单测绿 ✓、全量回归绿 ✓、删除掏空被拦（coverage_fail + 回滚 + final_state 标注）✓、showcase 零变化 ✓、文档同步（本文件 + CLAUDE.md + 总计划 §3.3 勾掉）✓。

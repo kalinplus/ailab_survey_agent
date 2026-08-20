@@ -146,6 +146,8 @@ for round in range(2):                                  # MAX_REPAIR_ROUNDS
 
 ### 3.3 Goal Gate（确定性代码，非 LLM）
 
+**已实施 → [关节3-GlobalGate-方案与测试.md](关节3-GlobalGate-方案与测试.md)**（关节2 先落了前两道闸，关节3 补全 coverage 闸；实现记录见该文档 §6）。
+
 Gate 本身不 LLM 化——确定性策略作用于数据依赖信号，这正是它与 Agent 关节的区别。落 `agent_loop.py`，约半天：
 
 ```python
@@ -156,6 +158,8 @@ gates = {
 }
 # passed / stop_reason 写入 final_state.json 和 run.jsonl
 ```
+
+> 实施修正：`sections >= N and figures >= M` 的绝对下限拦不住删除掏空（修复只删句子不删标题，关节2 对照实验证明删除式在旧两闸口径下"天然获胜"）。关节3 定稿为**相对 round 0 基线的正文/图表引用保留率 ≥ 0.7**（`EVISURVEY_COVERAGE_MIN` 可配），破线即停修 + `stop_reason=coverage_fail`。
 
 ### 3.4 前提修正（不做则实验无效）
 
