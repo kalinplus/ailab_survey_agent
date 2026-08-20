@@ -1,6 +1,6 @@
 # 关节 3：Global Gate（coverage 闸补全）— 落地方案与测试方案
 
-> 日期：2026-08-21 ｜ 状态：**设计定稿，待实施**
+> 日期：2026-08-21 ｜ 状态：**已实施**（实现记录 §6、真 API 端到端验证 §7）
 > 上游：[Agent关节改造-审计与计划.md](Agent关节改造-审计与计划.md) §3.3（三闸设计）、[关节2-修复Agent-方案与测试.md](关节2-修复Agent-方案与测试.md) 决策3（coverage 留 v3）与 §6 实验教训（v2.1 遗留）
 > 前置：关节 1、关节 2 已实现（`harness/agents/` + `harness/goal_gate.py` 两道闸运行中）。
 > 本文件是关节 3 的完整实施规格。它是三件改造里最小的一件：**一个确定性闸的补全，不含任何 LLM 环节**。
@@ -176,3 +176,24 @@ evaluate 层：
 **测试**：单测 258 passed, 1 skipped（全量回归零破坏）；showcase / `FINAL_SEED_PAPERS` 路径 round 0 即 passed、coverage 恒 1.0，行为零变化。
 
 **DoD 核对**：§4.3 五项全过——新单测绿 ✓、全量回归绿 ✓、删除掏空被拦（coverage_fail + 回滚 + final_state 标注）✓、showcase 零变化 ✓、文档同步（本文件 + CLAUDE.md + 总计划 §3.3 勾掉）✓。
+
+---
+
+## 7. 端到端验证（2026-08-21，真 API 全栈）
+
+命令：`EVISURVEY_REAL_NLI=1 EVISURVEY_REPAIR_AGENT=1 EVISURVEY_NLI_DEVICE=cpu python main.py --topic "世界模型综述" --max-papers 5 --max-core-papers 3 --mode full`（策略 Agent full 模式默认开；三关节 + 真 NLI + 真 SciVerse/Intern-S2）。**exit 0，全链路通过。**
+
+三次运行、两个途中发现的既有问题（均非关节3 引入）：
+
+1. **matplotlib GUI 后端崩**（run 1）：`write_survey._draw_*_png` 在 ToolRegistry 工作线程画图，本机默认 `macosx` 后端不能在非主线程建 FigureManager。该代码 `24806fa` 加入后只被 AB 脚本（主线程直 import）跑过，线程路径从未验证。修复：两个绘图模块顶部 `matplotlib.use("Agg")`（commit `294e68a`，含回归测试）。
+2. **MPS OOM**（run 2）：`claim_mapper → nli.best_match(claim, 全部证据)` 在回填膨胀后的大证据列表上打爆 MPS 20GB——即关节2 §6 已记录的 v2.1 遗留（best_match 证据列表上限）。绕开：`EVISURVEY_NLI_DEVICE=cpu`（受支持配置）；根治留 v2.1。
+
+run 3 关键结果（关节3 视角）：
+
+- 循环 4 个 `goal_gate` 事件，每轮带完整 coverage 签名（run.jsonl 可复盘）；
+- `text_retention` 1.0 → 1.09 → 1.18：修复 Agent 的 rewrite/backfill 把正文**写厚**了，未触发 coverage_fail——删除掏空路径未被真跑触发属预期（触发语义由单测 `test_loop_coverage_fail_*` 证明）；这也实证了修复 Agent 相对删除式内核的保留优势；
+- 不动点/回滚工作正常：round2 unsupported 17 > round1 14 → `repair_rollback` 事件 + 回滚 round1 文本；终态 `stop_reason=repair_budget_exhausted`，`final_state.goal_gate` 带 coverage dict；
+- repair_log 51 条动作：backfill 20 / rewrite 12 / remap 6 / keep 5 / swap 2 / delete 6——删除是少数，设计意图成立；
+- 诚实呈现：review 判 `public_but_not_submission_ready`（evidence_grounding 0.536——5 篇摘要级证据的固有小配置局限，与门无关）。
+
+已知小瑕疵（记录不展开）：`final_state.goal_gate` 的 metrics 是**末轮** verify 的口径，而交付文本是回滚后的 best 版本——两者可能不一致（joint2 既有语义，若需对齐属 v2.1 范畴）。
