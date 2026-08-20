@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from config import AppConfig
+from . import goal_gate
 from .agent_context import build_agent_context
 from .citation_prelock import build_citation_ready_set
 from .json_io import read_json, write_json
@@ -44,6 +45,7 @@ class AgentLoop:
         max_papers: int,
         max_core_papers: int,
         prepare_only: bool = False,
+        use_mineru: bool = False,
     ) -> dict[str, Any]:
         task_id = self.planner.make_task_id(topic)
         state = self.state_manager.init(task_id)
@@ -56,6 +58,7 @@ class AgentLoop:
             mode=mode,
             max_papers=max_papers,
             max_core_papers=max_core_papers,
+            use_mineru=use_mineru,
         )
         self._write("cache/task_request.json", task_request)
         state = self.state_manager.advance(
@@ -161,23 +164,7 @@ class AgentLoop:
             skill_policy=self.skill_manager.policy(),
         )
         self._write("requests/verification_request.json", verification_request)
-        self._run_tool("verify_citations", "requests/verification_request.json")
-
-        citation_result = self._read("output/citation_result.json")
-        if not self._verification_passed(citation_result):
-            revision_request = self.planner.build_revision_request(
-                task_id,
-                "Evidence verification failed.",
-                active_skills=self._active_skills("revision"),
-                skill_policy=self.skill_manager.policy(),
-            )
-            self._write("requests/revision_request.json", revision_request)
-            self._run_tool("revise_survey", "requests/revision_request.json")
-            revised = self.config.output_dir / "survey_revised.md"
-            if revised.exists():
-                survey = self.config.output_dir / "survey.md"
-                survey.write_text(revised.read_text(encoding="utf-8"), encoding="utf-8")
-            self._run_tool("verify_citations", "requests/verification_request.json")
+        gate_result = self._verify_repair_loop(task_id)
 
         evaluation_request = self.planner.build_evaluation_render_request(
             task_id,
@@ -188,7 +175,7 @@ class AgentLoop:
         self._write("requests/evaluation_render_request.json", evaluation_request)
         self._run_tool("render_report", "requests/evaluation_render_request.json")
 
-        final_state = self._completed_state(task_id, topic)
+        final_state = self._completed_state(task_id, topic, gate_result)
         self._write("output/final_state.json", final_state)
         self.state_manager.advance(
             state,
@@ -200,15 +187,51 @@ class AgentLoop:
         self.logger.log("run_completed", task_id=task_id)
         return final_state
 
-    def _verification_passed(self, citation_result: dict[str, Any]) -> bool:
-        figure_check = citation_result.get("figure_check", {})
-        table_check = citation_result.get("table_check", {})
-        return (
-            citation_result.get("invalid_citations", 0) == 0
-            and figure_check.get("invalid_figures", 0) == 0
-            and table_check.get("invalid_tables", 0) == 0
-            and citation_result.get("citation_validity_score", 0) >= 0.95
-        )
+    def _verify_repair_loop(self, task_id: str) -> goal_gate.GateResult:
+        """verify -> (revise -> verify)* under the deterministic Goal Gate.
+
+        Replaces the old half-loop whose second verify result was discarded:
+        every round's result is now consumed by the gate. Keeps the best-so-far
+        survey ((unsupported, invalid, -chars) lexicographic) and restores it
+        if a later repair round made things worse.
+        """
+        best_metrics: dict[str, Any] | None = None
+        best_text: str | None = None
+        prev_unsupported: int | None = None
+        gate_result = goal_gate.GateResult(False, "not_run", 0, 0, 0.0)
+        for repair_round in range(goal_gate.MAX_REPAIR_ROUNDS + 1):
+            verify_result = self._run_tool("verify_citations", "requests/verification_request.json")
+            metrics = verify_result.get("metrics", {})
+            gate_result = goal_gate.evaluate(
+                metrics, repair_round=repair_round, prev_unsupported=prev_unsupported)
+            survey_path = self.config.output_dir / "survey.md"
+            survey_text = survey_path.read_text(encoding="utf-8") if survey_path.exists() else ""
+            if best_metrics is None or _repair_rank(metrics, survey_text) < _repair_rank(best_metrics, best_text or ""):
+                best_metrics, best_text = metrics, survey_text
+            self.logger.log("goal_gate", task_id=task_id, round=repair_round, **gate_result.to_dict())
+            if gate_result.stop_reason != goal_gate.STOP_REPAIRING:
+                break
+            revision_request = self.planner.build_revision_request(
+                task_id,
+                "Evidence verification failed.",
+                active_skills=self._active_skills("revision"),
+                skill_policy=self.skill_manager.policy(),
+            )
+            self._write("requests/revision_request.json", revision_request)
+            self._run_tool("revise_survey", "requests/revision_request.json")
+            revised = self.config.output_dir / "survey_revised.md"
+            if revised.exists():
+                (self.config.output_dir / "survey.md").write_text(
+                    revised.read_text(encoding="utf-8"), encoding="utf-8")
+            prev_unsupported = gate_result.unsupported
+
+        # rollback guard: never leave a worse round's text as the delivered survey
+        survey_path = self.config.output_dir / "survey.md"
+        if best_text is not None and survey_path.exists() \
+                and survey_path.read_text(encoding="utf-8") != best_text:
+            self.logger.log("repair_rollback", task_id=task_id)
+            survey_path.write_text(best_text, encoding="utf-8")
+        return gate_result
 
     def _run_tool(self, tool_name: str, request_path: str) -> dict[str, Any]:
         result = self.tool_registry.run(tool_name, request_path)
@@ -232,12 +255,15 @@ class AgentLoop:
             "scores": {},
         }
 
-    def _completed_state(self, task_id: str, topic: str) -> dict[str, Any]:
+    def _completed_state(
+        self, task_id: str, topic: str, gate_result: goal_gate.GateResult | None = None,
+    ) -> dict[str, Any]:
         evaluation_report = self._read_optional("output/evaluation_report.json", {})
-        return {
+        state = {
             "task_id": task_id,
             "topic": topic,
             "status": "completed",
+            "goal_gate": gate_result.to_dict() if gate_result else None,
             "final_outputs": {
                 "survey_markdown": "output/survey.md",
                 "html_report": "output/final_report.html",
@@ -256,6 +282,7 @@ class AgentLoop:
                 "visualization_score": evaluation_report.get("visualization_score", 0.0),
             },
         }
+        return state
 
     def _path(self, relative_path: str) -> Path:
         return self.config.root_dir / relative_path
@@ -275,3 +302,16 @@ class AgentLoop:
         if not path.exists():
             return default
         return read_json(path)
+
+
+def _repair_rank(metrics: dict[str, Any], survey_text: str) -> tuple[int, int, int]:
+    """Best-so-far ordering for the repair loop: lower is better.
+
+    Fewer unsupported claims first, then fewer invalid citations, then the
+    longer text wins (deletion-only repair shrinks the survey for free).
+    """
+    return (
+        int(metrics.get("unsupported_claims", 0)),
+        int(metrics.get("invalid_citations", 0)),
+        -len(survey_text),
+    )

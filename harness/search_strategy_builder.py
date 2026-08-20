@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import math
 import re
 from typing import Any, Callable
@@ -17,6 +18,14 @@ except ModuleNotFoundError:
                 raise ModuleNotFoundError("httpx is required for strategy probing")
 
     httpx = _MissingHttpx()  # type: ignore[assignment]
+
+logger = logging.getLogger(__name__)
+
+# Experiment switch: True disables the demo-topic priors (game/world aspect
+# templates, extra probe queries, GameCraft prompt hints) so A/B baselines are
+# topic-neutral. The delivery path keeps the default False — showcase behavior
+# must not change. Set only from experiment scripts.
+TOPIC_NEUTRAL = False
 
 
 DEFAULT_ASPECTS = [
@@ -42,7 +51,25 @@ def build_search_strategy(
     cluster_count: int = 4,
     memory_context: str = "",
     llm_json_chat: Callable[[list[dict[str, str]]], dict[str, Any]] | None = None,
+    use_strategy_agent: bool = False,
 ) -> dict[str, Any]:
+    # Joint 1 (docs/RealAgent/关节1-策略Agent-方案与测试.md): open-book decomposition
+    # with a bounded edit loop. On any failure degrade to the deterministic chain below.
+    if use_strategy_agent and llm_json_chat is not None and sciverse_api_key:
+        from .agents.strategy_agent import run_strategy_agent  # lazy: keeps imports light
+
+        try:
+            return run_strategy_agent(
+                task_id=task_id, topic=topic, max_papers=max_papers,
+                max_core_papers=max_core_papers, end_year=end_year,
+                llm_json_chat=llm_json_chat, sciverse_api_key=sciverse_api_key,
+                sciverse_api_base_url=sciverse_api_base_url,
+                memory_context=memory_context, probe_limit=probe_limit,
+                cluster_count=cluster_count,
+            )
+        except (httpx.HTTPError, ValueError, KeyError, TypeError, RuntimeError) as exc:
+            logger.warning(f"[strategy] agent joint failed -> deterministic chain: {exc}")
+
     probe_papers: list[dict[str, Any]] = []
     llm_error: Exception | None = None
     if use_probing and sciverse_api_key:
@@ -164,6 +191,11 @@ def _strategy_prompt(
         probe_lines.append(f"{index}. ({year}) {title[:160]}")
     probe_text = "\n".join(probe_lines) if probe_lines else "No external probe papers are available."
     memory_text = memory_context.strip() if memory_context.strip() else "No prior project memory is relevant."
+    gamecraft_hint = "" if TOPIC_NEUTRAL else (
+        'For "World Models for GameCraft", prefer technical AI/game-world-model themes '
+        "over social gaming culture.\n"
+        'Prefer specific methods/systems (e.g. "dreamer world model reinforcement learning") '
+        "over broad neighbors (e.g. \"cognitive architecture\").\n")
 
     return f"""
 Return exactly one compact JSON object and nothing else. Do not output any thinking process.
@@ -180,14 +212,12 @@ Example: "The development of agent" should be chronological or hybrid, not a fla
 
 Generate 3-6 topic-specific aspects. Do NOT use generic names:
 Foundational Concepts; Methods and Systems; Benchmarks and Evaluation; Recent and Emerging Directions.
-For "World Models for GameCraft", prefer technical AI/game-world-model themes over social gaming culture.
+{gamecraft_hint}
 
 Each aspect's keywords must stay inside the topic's own technical field and read like concrete academic
 search queries that a paper in THIS field would match. Anchor every keyword on the topic's core concept,
 and exclude directions that only overlap lexically: a "world model" survey must not surface pure LLMs,
 cognitive-science education, pathology, or any area that merely shares a word like "model"/"world"/"cognitive".
-Prefer specific methods/systems (e.g. "dreamer world model reinforcement learning") over broad neighbors
-(e.g. "cognitive architecture").
 
 Required compact JSON shape:
 {{
@@ -551,7 +581,7 @@ def _build_default_strategy(
 
 def _fallback_aspect_templates(topic: str) -> list[tuple[str, str, str, int]]:
     text = topic.lower()
-    if "world" in text and "game" in text:
+    if not TOPIC_NEUTRAL and "world" in text and "game" in text:
         return [
             (
                 "aspect_001",
@@ -631,7 +661,7 @@ def _probe_queries(topic: str) -> list[str]:
         f"{topic} foundational recent representative papers",
     ]
     text = topic.lower()
-    if "world" in text and "game" in text:
+    if not TOPIC_NEUTRAL and "world" in text and "game" in text:
         base.extend(
             [
                 f"{topic} interactive world model game simulation",

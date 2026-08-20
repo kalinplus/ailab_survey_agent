@@ -1,15 +1,25 @@
-"""C tool: conservative survey revision after verification failure."""
+"""C tool: survey revision after verification failure.
+
+Two kernels behind the same request protocol:
+- default (off switch): conservative deletion repair, unchanged behavior;
+- EVISURVEY_REPAIR_AGENT=1: joint-2 repair agent (failure-typed actions,
+  incremental NLI re-verification, repair_log) — spec
+  docs/RealAgent/关节2-修复Agent-方案与测试.md.
+"""
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 from pathlib import Path
 from typing import Any
 
 from config import load_config
-from harness.json_io import read_json
+from harness.json_io import read_json, write_json
 from harness.logger import now_iso
+
+logger = logging.getLogger(__name__)
 
 
 def run(request_path: str) -> dict[str, Any]:
@@ -32,16 +42,115 @@ def run(request_path: str) -> dict[str, Any]:
     card_by_id = {item.get("paper_id"): item for item in ready_set.get("items", []) if item.get("paper_id")}
 
     markdown = survey_path.read_text(encoding="utf-8")
+
+    if _repair_agent_enabled(cfg):
+        result = _run_repair_agent(cfg, root, task_id, inputs, markdown, claim_map,
+                                   ready_set, allowed_artifacts)
+        if result is not None:
+            revised, notes, metrics = result
+            revised = _replace_references(revised, card_by_id)
+            revised = _append_revision_notes(revised, notes)
+            return _write_revised(root, task_id, request_path, outputs, revised, metrics,
+                                  "Survey repaired by failure-typed actions.")
+
     notes: list[str] = []
     revised = _remove_invalid_entries(markdown, citation_result, allowed_ids, allowed_artifacts, notes)
     revised = _revise_unsupported_claims(revised, claim_map, allowed_ids, notes)
     revised = _replace_references(revised, card_by_id)
     revised = _append_revision_notes(revised, notes)
+    return _write_revised(root, task_id, request_path, outputs, revised,
+                          {"revision_notes": len(notes),
+                           "remaining_citations": len(_extract_citations(revised)),
+                           "remaining_artifact_refs": len(_extract_figure_refs(revised))},
+                          "Survey revised conservatively without adding references.")
 
+
+def _repair_agent_enabled(cfg) -> bool:
+    if os.getenv("EVISURVEY_REPAIR_AGENT", "0").lower() not in {"1", "true", "yes"}:
+        return False
+    if not cfg.intern_api_key:
+        logger.warning("[revise] EVISURVEY_REPAIR_AGENT on but INTERN_API_KEY missing -> deletion path")
+        return False
+    return True
+
+
+def _run_repair_agent(cfg, root: Path, task_id: str, inputs: dict, markdown: str,
+                      claim_map: dict, ready_set: dict, allowed_artifacts: set):
+    """Delegate to the joint-2 repair agent; None means 'fall back to deletion'."""
+    from harness.agents.repair_agent import run_repair
+    from tools.verify_citations import _nli_model
+
+    evidence_path = _resolve(root, inputs.get("evidence_store_path", "cache/evidence_store.json"))
+    figure_bank = _read_optional(root, inputs.get("figure_bank_path", "cache/figure_bank.json"),
+                                 {"figures": []})
+    figure_items = [f for f in figure_bank.get("figures", []) if isinstance(f, dict)]
+    evidence_store = _read_optional(root, inputs.get("evidence_store_path"),
+                                    {"evidence": []})
+    try:
+        result = run_repair(
+            task_id=task_id, round_no=_next_repair_round(root),
+            survey_md=markdown, claim_map=claim_map, evidence_store=evidence_store,
+            ready_set=ready_set, figure_items=figure_items,
+            allowed_artifacts=allowed_artifacts,
+            llm_json_chat=_make_llm_json_chat(cfg), nli=_nli_model(),
+            sciverse=_make_sciverse(cfg),
+            trajectory_dir=root / "logs" / "trajectory")
+    except (ValueError, KeyError, TypeError, RuntimeError) as exc:
+        # joint boundary: a crashed repair must not lose the run — fall back to deletion
+        logger.warning(f"[revise] repair agent failed -> deletion path: {exc}")
+        return None
+
+    if result["evidence_store"] != evidence_store:
+        write_json(evidence_path, result["evidence_store"])
+    repair_log_path = root / "output" / "repair_log.json"
+    existing = read_json(repair_log_path) if repair_log_path.exists() else []
+    write_json(repair_log_path, existing + result["repair_log"])
+    # NOTE: no square brackets anywhere in these lines — the verifier's citation
+    # extractor treats [x] as a reference id, so bracketed notes would pollute
+    # the next verify round with phantom claims
+    notes = [f"type={entry['failure_type']} {entry['action']} -> {entry['outcome']}: "
+             f"{entry['reason']}" for entry in result["repair_log"]]
+    return result["revised_md"], notes, result["metrics"]
+
+
+def _next_repair_round(root: Path) -> int:
+    """Outer Goal-Gate round number = how many repairs already happened."""
+    repair_log_path = root / "output" / "repair_log.json"
+    if not repair_log_path.exists():
+        return 1
+    entries = read_json(repair_log_path)
+    return max((int(e.get("round", 0)) for e in entries if isinstance(e, dict)), default=0) + 1
+
+
+def _make_llm_json_chat(cfg):
+    from llm_client import InternS2Client, _extract_json_object
+
+    client = InternS2Client(cfg)
+
+    def chat(messages):
+        try:
+            return client.json_chat(messages, temperature=0.1, max_tokens=3000)
+        except Exception:
+            content = client.chat(messages, temperature=0.1, max_tokens=3000)
+            extracted = _extract_json_object(content)
+            if extracted is None:
+                raise ValueError("model reply contained no JSON object")
+            return extracted
+
+    return chat
+
+
+def _make_sciverse(cfg):
+    from tools.clients.sciverse_client import SciVerseClient
+
+    return SciVerseClient(base_url=cfg.sciverse_api_base_url, api_key=cfg.sciverse_api_token)
+
+
+def _write_revised(root: Path, task_id: str, request_path: str, outputs: dict,
+                   revised: str, metrics: dict, message: str) -> dict[str, Any]:
     revised_path = _resolve(root, outputs.get("revised_survey_markdown_path", "output/survey_revised.md"))
     revised_path.parent.mkdir(parents=True, exist_ok=True)
     revised_path.write_text(revised, encoding="utf-8")
-
     return {
         "task_id": task_id,
         "tool": "revise_survey",
@@ -49,12 +158,8 @@ def run(request_path: str) -> dict[str, Any]:
         "status": "success",
         "input_request": request_path,
         "outputs": [_rel(root, revised_path)],
-        "metrics": {
-            "revision_notes": len(notes),
-            "remaining_citations": len(_extract_citations(revised)),
-            "remaining_artifact_refs": len(_extract_figure_refs(revised)),
-        },
-        "message": "Survey revised conservatively without adding references.",
+        "metrics": metrics,
+        "message": message,
         "timestamp": now_iso(),
     }
 

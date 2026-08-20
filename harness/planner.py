@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import re
 from datetime import datetime
 from typing import Any
@@ -38,6 +39,7 @@ class Planner:
         mode: str,
         max_papers: int,
         max_core_papers: int,
+        use_mineru: bool = False,
     ) -> dict[str, Any]:
         return {
             "task_id": task_id,
@@ -65,7 +67,7 @@ class Planner:
             "run_config": {
                 "use_online_search": mode == "full",
                 "use_seed_fallback": True,
-                "use_mineru": False,
+                "use_mineru": use_mineru,
                 "max_papers": max_papers,
                 "max_core_papers": max_core_papers,
                 "mode": mode,
@@ -83,6 +85,12 @@ class Planner:
     ) -> dict[str, Any]:
         memory_context = self.memory_manager.load_for_strategy(topic)
         use_probing = mode == "full" and self.config.strategy_probing_enabled
+        use_strategy_agent = (
+            mode == "full"
+            and self.llm_client.is_configured()
+            and bool(self.config.sciverse_api_token)
+            and os.getenv("EVISURVEY_STRATEGY_AGENT", "1").lower() not in {"0", "false", "no"}
+        )
         strategy = build_search_strategy(
             task_id=task_id,
             topic=topic,
@@ -97,7 +105,11 @@ class Planner:
             cluster_count=self.config.strategy_cluster_count,
             memory_context=memory_context,
             llm_json_chat=self._strategy_json_chat if mode == "full" and self.llm_client.is_configured() else None,
+            use_strategy_agent=use_strategy_agent,
         )
+        agent_lessons = (strategy.get("strategy_agent") or {}).get("lessons", [])
+        if agent_lessons:
+            self.memory_manager.append_lessons(topic, agent_lessons)
         strategy["strategy_generation"] = {
             "mode": mode,
             "memory_enabled": self.config.strategy_memory_enabled,
@@ -106,6 +118,7 @@ class Planner:
             "probing_requested": use_probing,
             "probing_effective": use_probing and bool(self.config.sciverse_api_token),
             "probe_limit": self.config.strategy_probe_limit if use_probing else 0,
+            "strategy_agent": use_strategy_agent and "strategy_agent" in strategy,
         }
         self.memory_manager.record_strategy_run(
             topic=topic,

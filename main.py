@@ -20,6 +20,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-papers", type=int, default=40)
     parser.add_argument("--max-core-papers", type=int, default=15)
     parser.add_argument(
+        "--use-mineru",
+        action="store_true",
+        help="Parse candidate PDFs with MinerU (feeds the evidence store; off by default).",
+    )
+    parser.add_argument(
         "--prepare-only",
         action="store_true",
         help="Only generate A-owned requests and state files; do not invoke B/C tools.",
@@ -56,6 +61,7 @@ def main() -> int:
         max_papers=args.max_papers,
         max_core_papers=args.max_core_papers,
         prepare_only=args.prepare_only,
+        use_mineru=args.use_mineru,
     )
 
     print(f"status: {final_state['status']}")

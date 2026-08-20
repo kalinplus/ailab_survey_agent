@@ -1,6 +1,6 @@
 # 关节 1：检索策略 Agent — 落地方案与测试方案
 
-> 日期：2026-08-20 ｜ 状态：**方案定稿，待实施**
+> 日期：2026-08-20 ｜ 状态：**已实施**（2026-08-20，实现记录见文末 §5）
 > 上游：[Agent关节改造-审计与计划.md](Agent关节改造-审计与计划.md) §2（判据）、§3.1（本关节概要）
 > 本文件是关节 1 的完整实施规格，含两个已定稿决策、落地方案、四层测试与 A/B 验收方案。
 
@@ -139,6 +139,8 @@ R3 关键词池由框架自动附在消息里（不占工具位）。
 3. **不动点**：全局分（Σ min(n_unique,10)/10 × rel）两轮改进 < ε → 提前停；
 4. **回归保护**：框架始终保留 best-so-far；某轮改差 → 回滚最优版再停。**保证循环下界 = 单发水平，可形式化断言 `score(final) ≥ score(round_1)`**。
 
+> 现在暂不考虑用独立 LLM 做 Goal Verifier (类似 /goal 的思想）。之后可能添加，这样会多一次判断，可能多一次打回和继续搜；好处是带有语义理解的，现在原材料还缺哪些，和针对性的反馈意见与搜索方向
+
 ### 3.7 环境变量
 
 - `EVISURVEY_EMBED_MODEL`（默认 `BAAI/bge-small-en-v1.5`）；`HF_ENDPOINT` 复用现有镜像机制；
@@ -228,10 +230,40 @@ Fake SciVerse client **镜像真实契约**（`meta_search` 返回 `results`、`
 
 ### 4.6 验收清单（Definition of Done）
 
-- [ ] §4.1 单测全绿（3 个新测试文件）
-- [ ] §4.2 集成测试绿（真 SciVerse）
-- [ ] §4.3 real_api 冒烟通过（预算内）
-- [ ] 冷主题 ≥2 跑通，救援阶梯轨迹可查
-- [ ] §4.4 A/B/C 报告产出且硬断言全过
-- [ ] §4.5 回归三项确认
-- [ ] 同主题二次运行 memory_context 非空（教训真实沉淀）
+- [x] §4.1 单测全绿（3 个新测试文件，42 tests）
+- [x] §4.2 集成测试绿（真 SciVerse，2 tests）
+- [x] §4.3 real_api 冒烟通过（预算内：A/B/C 矩阵的 C 配置 = 真 Intern-S2 完整跑，llm ≤4 / wallclock ≤27s）
+- [x] 冷主题 ≥2 跑通，救援阶梯轨迹可查（morphological 轨迹含 R0 `probe_query filters=none`；R0+R2 真触发见集成测试）
+- [x] §4.4 A/B/C 报告产出且硬断言全过（`output/strategy_ab_report.md`）
+- [x] §4.5 回归三项确认（220 单测全绿含全部旧测试；showcase `--mode demo` 不触发 Agent；schema 不变）
+- [x] 同主题二次运行 memory_context 非空（单测 `test_lessons_persist_and_reload_for_same_topic`）
+
+**A/B/C 实验结果（2026-08-20，方向成活率 / 零方向率；第二轮为去偏后数据）**：
+
+代码库中存在赛题先验（游戏模板方向 `search_strategy_builder._fallback_aspect_templates`、GameCraft prompt 示例句、专属探查词）。为保证基线公平，A/B 脚本设置 `TOPIC_NEUTRAL=True` 禁用这三处（交付路径默认 False 不变，单测覆盖两态）；C 的 Agent 路径本身无先验（通用命名 prompt、live probe、memory 隔离）。
+
+| 主题 | 档 | A 模板 | B 单发 | C Agent |
+|---|---|---|---|---|
+| world models for games | 热 | 0.75 / 0.0（去偏前 1.0） | 0.75 / 0.0（去偏前 1.0） | **1.0 / 0.0**（llm 2, sv 6） |
+| embodied intelligence | 热 | 0.5 / 0.0 | 1.0 / 0.0 | **1.0 / 0.0**（llm 2, sv 6） |
+| vector databases | 中 | 0.5 / 0.0 | 0.5 / 0.0（去偏前 1.0） | **1.0 / 0.0**（llm 2, sv 6） |
+| neurosymbolic program synthesis | 冷 | 0.25 / **0.75** | 0.25 / **0.75** | **0.8 / 0.0**（llm 5, sv 14, 2 轮；首轮 1.0，波动源于真 LLM/检索非确定性） |
+| morphological computation | 冷 | 0.25 / 0.25 | 0.25 / 0.25 | **1.0 / 0.0**（llm 3, sv 9, 2 轮） |
+
+去偏后的关键结论：**赛题主题的 A/B 优势消失**（世界模型 A 1.0→0.75，vector db B 1.0→0.5）——证实原优势来自本地先验而非方法本身；C 在零先验下全主题 0.8–1.0，冷主题仍是 A/B 的 3–4 倍成活率。morphological 走完整救援环（R0 probe → rewrite → 0.40→0.66 → accept）。
+
+---
+
+## 5. 实现记录（2026-08-20）
+
+代码落地与规格一致，三处实现层决策在代码注释中有说明：
+
+1. **全局分归一化**：§3.6 写的是 Σ，实现为 **均值**（`relevance.py: global_score_rows`）。Σ 在 merge/delete 改变 aspect 数后会伪造回归（4→3 方向合并必然掉分），均值保证跨轮可比；aspect 数不变时两者只差常数因子，单调性等价。回滚断言 `score(final) ≥ score(round_1)` 语义不变。
+2. **采样近似**：评分采样 = 每 aspect 1 次 meta-search（P3 年份过滤，page_size=8），不复刻 P3 influence-score 的 3 组过滤器（3 倍成本超出预算）。信号用途足够；真实检索仍由 P3 执行。
+3. **commit 原子校验**：`_apply_edits` 在提交时跑 `_validate_strategy`，非法 edits（如删到 2 个方向）直接拒绝并回错误观察，不消耗轮次——最终输出永远合法，best-so-far 快照无需二次校验分支。
+
+**文件**：`harness/agents/{loop,relevance,strategy_agent}.py`（+ `__init__.py`）；接缝 `search_strategy_builder.py`（`use_strategy_agent` 委托分支，失败降级到原确定性链）、`planner.py`（`mode=full` 默认启用，`EVISURVEY_STRATEGY_AGENT=0` 关闭 + lessons 写入 memory）、`memory_manager.py`（`append_lessons`）；死代码 `harness/agent_tool_loop.py` 已删除。
+
+**测试**：`tests/unit/test_agent_loop.py` (13)、`test_relevance.py` (14)、`test_strategy_gate.py` (14)；`tests/integration/test_strategy_agent.py` (2，真 SciVerse)；A/B 脚本 `scripts/run_strategy_ab_test.py` → `output/strategy_ab_report.md`。
+
+**与 §3 的其他小差异**：trajectory 落盘 `logs/trajectory/{task_id}_strategy.jsonl`（框架事件 start/probe/naming/report_card/finish 与逐轮记录同文件）；救援成功教训未自动生成（依赖 trajectory 的轮分数即可复盘），R4 删除教训已自动化。

@@ -36,3 +36,27 @@ def test_prompt_surfaces_probe_titles():
     probe = [{"title": "DreamerV3: Mastering Diverse Domains", "year": 2023}]
     prompt = _make(probe_papers=probe)
     assert "DreamerV3" in prompt
+
+
+# --- TOPIC_NEUTRAL experiment switch (de-biased A/B baselines) ----------------
+
+
+def test_topic_neutral_disables_demo_topic_priors(monkeypatch):
+    from harness import search_strategy_builder as b
+
+    monkeypatch.setattr(b, "TOPIC_NEUTRAL", True)
+    templates = b._fallback_aspect_templates("world models for games")
+    assert templates == b.DEFAULT_ASPECTS          # no GameCraft aspects
+    assert not any("GameNGen" in q for q in b._probe_queries("world models for games"))
+    prompt = _make(topic="world models for games")
+    assert "GameCraft" not in prompt and "dreamer world model" not in prompt
+
+
+def test_topic_priors_on_by_default(monkeypatch):
+    from harness import search_strategy_builder as b
+
+    monkeypatch.setattr(b, "TOPIC_NEUTRAL", False)
+    templates = b._fallback_aspect_templates("world models for games")
+    assert templates != b.DEFAULT_ASPECTS          # GameCraft aspects present
+    prompt = _make(topic="world models for games")
+    assert "GameCraft" in prompt

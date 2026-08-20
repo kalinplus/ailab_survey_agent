@@ -114,6 +114,10 @@
 
 ### 3.2 关节 2（生产相）：按失败类型修复——最高优先级
 
+**方案已定稿并拆分为独立模块文档 → [关节2-修复Agent-方案与测试.md](关节2-修复Agent-方案与测试.md)**（含三个定稿决策、失败分组与动作执行设计、Goal Gate 接线、分层测试与三配置验收）。实施以该文档为准。
+
+概要：失败分类**已经算好**（claim_map 的 `status/confidence/evidence_ids` + citation_result 的 `valid`），五类失败（A 引用 id 错 / B 有证据不蕴含 / C 零证据 / D 措辞过强 / E 图表引用错）由分组器机械判定，LLM 按类型**批量**选动作（remap / swap_evidence / rewrite / backfill / delete-最后手段），改写句增量重过 NLI 兜底。三个定稿决策：允许 LLM 改写句子（引用 id 不变 + 强制重验证）；`use_mineru` 显式可配并捆绑实施；Goal Gate v2 只设 structural + unsupported 两道闸（coverage 留 v3）。`EVISURVEY_REPAIR_AGENT` 默认 off（revise 在 demo 也会跑，默认关保交付路径零风险）。原设计表如下（细节以模块文档为准）：
+
 位置：重写 `tools/revise_survey.py` + 修 `harness/agent_loop.py:167-180`。失败分类**已经算好**（claim_map 的 `status/confidence/evidence_ids` + citation_result 的 `valid`），缺的只是动作选择层。
 
 | 失败类型（现成字段判定） | 合理动作 | 实现 |

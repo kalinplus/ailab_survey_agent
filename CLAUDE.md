@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Hackathon project for 上海人工智能实验室 2026 暑期夏令营, Task 4 (3人团队). Topic: World Models / GameCraft — generate a verified, figure-rich academic survey (HTML/PDF). **综述标题正在修改中**；核心约束不变：核心 LLM 必须是 Intern-S2-Preview（`INTERN_API_BASE_URL` / `INTERN_API_KEY`），评审时主办方会替换 API Key 重跑.
 
-**Status (2026-08)**: Public submission delivered (final report + showcase demo + README). Now in **v2 improvement phase** — adding bounded agent loops at three DAG-shaped holes (strategy / repair / goal gate). Plans and audit live in `docs/RealAgent/`; read `docs/RealAgent/Agent关节改造-审计与计划.md` (总计划) and per-joint module docs before touching the strategy/verify/revise paths.
+**Status (2026-08)**: Public submission delivered (final report + showcase demo + README). Now in **v2 improvement phase** — bounded agent loops at three DAG-shaped holes (strategy / repair / goal gate). **关节1（策略 Agent）与 关节2（修复 Agent + Goal Gate）已实现**（`harness/agents/` + `harness/goal_gate.py`）。Plans and audit live in `docs/RealAgent/`; read `docs/RealAgent/Agent关节改造-审计与计划.md` (总计划) and per-joint module docs before touching the strategy/verify/revise paths.
 
 ## Architecture: Three Modules + Linear Pipeline
 
@@ -22,13 +22,13 @@ User topic ─▶ Module A (harness/) — Planner / AgentLoop / tool registry / 
              output/final_report.html / .pdf + verification + evaluation reports
 ```
 
-- **A** (`harness/`): `AgentLoop.run()` (agent_loop.py:115-189) is a hardcoded sequence, not LLM-driven. `search_strategy_builder.py` builds sub-queries (3-level fallback: LLM → cluster → template; LLM only in `--mode full`). `tool_registry.py` dispatches B/C tools in-process with timeout + result truncation. `--prepare-only` stops after A emits requests.
+- **A** (`harness/`): `AgentLoop.run()` (agent_loop.py:115-189) is a hardcoded sequence, not LLM-driven. `search_strategy_builder.py` builds sub-queries (3-level fallback: LLM → cluster → template; LLM only in `--mode full`). **`harness/agents/` = 关节1 策略 Agent** (spec `docs/RealAgent/关节1-策略Agent-方案与测试.md`): `loop.py` shared bounded typed-action chassis (budget breakers + trajectory jsonl; joint 2 will reuse it), `relevance.py` report card (bge embedding, keyword fallback), `strategy_agent.py` probe→cluster→naming→sample→edit-loop(≤3 rounds)→deterministic gate→best-so-far rollback. Enabled when `--mode full` (disable via `EVISURVEY_STRATEGY_AGENT=0`); toolbox = permission boundary; output schema unchanged (P1–P6 untouched). `tool_registry.py` dispatches B/C tools in-process with timeout + result truncation. `--prepare-only` stops after A emits requests.
 - **B** phases (`tools/phases/`): P1 decompose → P2 survey analyzer → P3 retriever (real meta-search per aspect; MinerU off unless `use_mineru`) → P5 cards/evidence/synthesis (`paper_cards`, `evidence_store`, `figure_bank`, `table_bank`, `taxonomy`, `citation_index`) → P6 assembler. **No P4** (superseded by SciVerse `agentic-search`).
-- **C**: `write_survey.py` drafts from the bundle (template-based, not free LLM writing) → `verify_citations.py` (regex whitelist + claim_map NLI) → `revise_survey.py` (regex deletion repair) → `render_report.py` (HTML/PDF + visual assets + `evaluation_report.json` + `review_report.json` readiness gates).
+- **C**: `write_survey.py` drafts from the bundle (template-based, not free LLM writing) → `verify_citations.py` (regex whitelist + claim_map NLI) → `revise_survey.py` → `render_report.py` (HTML/PDF + visual assets + `evaluation_report.json` + `review_report.json` readiness gates). **关节2 修复回路**：`agent_loop._verify_repair_loop` = verify → 确定性 Goal Gate（`harness/goal_gate.py`，两道闸：invalid=0 + unsupported 清零或预算尽；不动点 + best-so-far 回滚）→ revise (≤2 轮，每轮结果都被消费；goal_gate 写入 final_state.json)。`revise_survey` 双内核：默认删除式（交付行为不变）；`EVISURVEY_REPAIR_AGENT=1` 走 `harness/agents/repair_agent.py`（A–E 失败分组 → LLM 批量选动作 remap/rewrite/swap/backfill/delete-最后手段 → 改写句增量重过 NLI → `output/repair_log.json` + trajectory）。引用非法 id 的 claim 是 A 类连带，不进 B/C 组（一次 remap 修全部出现）。
 - Typed models in `tools/models/`; clients in `tools/clients/`; NLI + cleaner in `tools/nlp/`; claim mapper + structural checks in `tools/verify/`.
 - Runtime dirs: `requests/` (A→B/C request files), `cache/` (artifacts), `output/`, `logs/` (run.jsonl + state.json), `memory/` (strategy memory persisted across runs).
 
-**Known traps (verified, see audit §1 in docs/RealAgent/总计划):** NLI defaults to a keyword FakeNLIModel (real model needs `EVISURVEY_REAL_NLI=1`); `use_mineru` hardcoded False in `planner.py:68` (parsed_papers empty by default → demo-mode evidence store empty, masked only by FINAL_SEED_PAPERS); second verify result after revise is discarded (`agent_loop.py:167-180`); `harness/agent_tool_loop.py` is dead code.
+**Known traps (verified, see audit §1 in docs/RealAgent/总计划):** NLI defaults to a keyword FakeNLIModel (real model needs `EVISURVEY_REAL_NLI=1` — hard precondition for repair experiments); `use_mineru` now opt-in via `--use-mineru` (default False → demo-mode evidence store stays thin, masked only by FINAL_SEED_PAPERS); the old discarded-second-verify half-loop is fixed by `_verify_repair_loop` + Goal Gate. (Dead `harness/agent_tool_loop.py` was removed when the shared chassis landed in `harness/agents/loop.py`.)
 
 ### Reproducible final run
 
@@ -57,6 +57,10 @@ RUN_NLI_REAL=1 pytest -m nli_real tests/unit/test_nli_verifier.py -v   # real NL
 python main.py --topic "世界模型综述" --max-papers 5 --max-core-papers 3 --mode full  # fast smoke
 python main.py --topic "..." --prepare-only --mode full     # A-owned requests only
 
+python scripts/run_strategy_ab_test.py                  # 策略关节 A/B/C 对照 (real APIs, ~10min)
+python scripts/run_repair_ab_test.py                    # 修复关节 A/B/C 对照 (real APIs + real NLI, ~1h)
+RUN_NLI_REAL=1 python -m pytest -m nli_real tests/integration/test_repair_agent.py -v  # 真 NLI 修复集成
+
 python scripts/run_showcase_demo.py                     # final delivery demo
 ```
 
@@ -64,9 +68,9 @@ Add `-s --log-cli-level=INFO` for the full pipeline trace; default WARNING surfa
 
 ## Environment
 
-- **Conda env: `base`** (`/Users/kalin/miniconda3`, Python 3.13.12). No dedicated project env; all deps installed there (pytest, httpx, pydantic, python-dotenv, sentence-transformers 5.6.0, torch 2.11.0). Unit suite verified green on it (179 passed).
-- `.env` keys (present): `INTERN_API_BASE_URL`, `INTERN_API_KEY`, `SCIVERSE_API_KEY`, `MINERU_API_KEY`, `SCIVERSE_MIN_INTERVAL`. Optional: `INTERN_MODEL_NAME` (default `intern-s2-preview`), `HF_ENDPOINT`, `EVISURVEY_LANGUAGE` (zh) / `EVISURVEY_MODE` (demo), `EVISURVEY_REAL_NLI`, `STRATEGY_*`, `REQUEST_TIMEOUT_SECONDS` / `MAX_LLM_RETRIES` / `TOOL_TIMEOUT_SECONDS` / `TOOL_RESULT_MAX_CHARS`. `API_BASE_URL`/`API_KEY` are aliases. `config.py` loads `.env` and strips `all_proxy`.
-- NLI/embedding models download from HuggingFace on first use; if slow set `HF_ENDPOINT=https://hf-mirror.com`.
+- **Conda env: `base`** (`/Users/kalin/miniconda3`, Python 3.13.12). No dedicated project env; all deps installed there (pytest, httpx, pydantic, python-dotenv, sentence-transformers 5.6.0, torch 2.11.0). Unit suite verified green on it.
+- `.env` keys (present): `INTERN_API_BASE_URL`, `INTERN_API_KEY`, `SCIVERSE_API_KEY`, `MINERU_API_KEY`, `SCIVERSE_MIN_INTERVAL`. Optional: `INTERN_MODEL_NAME` (default `intern-s2-preview`), `HF_ENDPOINT`, `EVISURVEY_LANGUAGE` (zh) / `EVISURVEY_MODE` (demo), `EVISURVEY_REAL_NLI`, `EVISURVEY_STRATEGY_AGENT` (default on in full mode), `EVISURVEY_REPAIR_AGENT` (default off — on = joint-2 action repair in revise), `EVISURVEY_EMBED_MODEL` (default `BAAI/bge-small-en-v1.5`), `STRATEGY_*`, `REQUEST_TIMEOUT_SECONDS` / `MAX_LLM_RETRIES` / `TOOL_TIMEOUT_SECONDS` / `TOOL_RESULT_MAX_CHARS`. `API_BASE_URL`/`API_KEY` are aliases. `config.py` loads `.env` and strips `all_proxy`.
+- NLI/embedding models download from HuggingFace on first use; if slow set `HF_ENDPOINT=https://hf-mirror.com`. NLI inference auto-picks MPS on Apple Silicon (~2.7x faster than the 4 CPU cores); override with `EVISURVEY_NLI_DEVICE=cpu|mps|cuda`.
 
 ## Language
 

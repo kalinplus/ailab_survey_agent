@@ -1,8 +1,25 @@
 """NLI verifier — adapted from SurGE's eval_relevance_* (CrossEncoder + label_mapping)."""
 
+import os
 from dataclasses import dataclass
 
 LABELS = ["contradiction", "entailment", "neutral"]
+
+
+def _default_device() -> str:
+    """MPS first on Apple Silicon (~2.7x over 4 CPU cores for this model)."""
+    override = os.getenv("EVISURVEY_NLI_DEVICE")
+    if override:
+        return override
+    try:
+        import torch
+        if torch.backends.mps.is_available():
+            return "mps"
+        if torch.cuda.is_available():
+            return "cuda"
+    except Exception:
+        pass
+    return "cpu"
 
 
 @dataclass
@@ -21,9 +38,9 @@ class NLIResult:
 
 
 class NLIVerifier:
-    def __init__(self, model_name="cross-encoder/nli-deberta-v3-base"):
+    def __init__(self, model_name="cross-encoder/nli-deberta-v3-base", device=None):
         from sentence_transformers import CrossEncoder  # lazy import
-        self.model = CrossEncoder(model_name)
+        self.model = CrossEncoder(model_name, device=device or _default_device())
 
     def judge(self, premise: str, hypothesis: str) -> NLIResult:
         scores = self.model.predict([(premise, hypothesis)])[0]  # [contra, entail, neutral]

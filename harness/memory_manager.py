@@ -101,6 +101,16 @@ class MemoryManager:
             with (self.memory_dir / "strategy_lessons.md").open("a", encoding="utf-8") as handle:
                 handle.write(f"\n- {timestamp}: {lesson}\n")
 
+    def append_lessons(self, topic: str, lessons: list[str]) -> None:
+        """Persist strategy-agent lessons (R4 deletions, dead-query findings)."""
+        if not self.enabled or not lessons:
+            return
+        self.ensure_defaults()
+        timestamp = datetime.now().isoformat(timespec="seconds")
+        with (self.memory_dir / "strategy_lessons.md").open("a", encoding="utf-8") as handle:
+            for lesson in lessons:
+                handle.write(f"\n- {timestamp}: {lesson}\n")
+
     def record_strategy_run(
         self,
         *,
