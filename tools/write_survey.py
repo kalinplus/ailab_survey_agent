@@ -9,6 +9,12 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+import matplotlib
+
+# tools run in ToolRegistry worker threads; a GUI backend (macosx) cannot
+# create a FigureManager off the main thread, and we only ever savefig to files
+matplotlib.use("Agg")
+
 from config import load_config
 from harness.json_io import read_json, write_json
 from harness.logger import now_iso

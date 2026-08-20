@@ -322,3 +322,13 @@ def test_final_seed_write_and_render_submission_ready(tmp_path, monkeypatch):
     assert readiness["pass"]
     review = json.loads((output / "review_report.json").read_text(encoding="utf-8"))
     assert review["final_decision"] == "submission_ready"
+
+
+def test_plotting_tools_force_agg_backend():
+    # write_survey/_draw_*_png and render_report's PDF fallback run inside
+    # ToolRegistry worker threads; a GUI backend (macosx on this machine)
+    # raises "Cannot create a GUI FigureManager outside of the main thread".
+    # Both modules must pin the non-interactive agg backend on import.
+    import matplotlib
+
+    assert matplotlib.get_backend().lower() == "agg"
