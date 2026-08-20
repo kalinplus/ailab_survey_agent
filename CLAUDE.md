@@ -1,183 +1,89 @@
-# Project: Academic Paper Survey Generation Harness (学术论文综述生成 Harness)
+# CLAUDE.md
 
-## Context
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Hackathon project for 上海人工智能实验室 2026 暑期夏令营. Task 4 (团队挑战题, 3人团队).
+## Project: EviSurvey — Evidence-grounded Survey Harness
 
-**Topic**: 世界模型 (World Models) — 生成一篇图文并茂的综述 (HTML/PDF).
+Hackathon project for 上海人工智能实验室 2026 暑期夏令营, Task 4 (3人团队). Topic: World Models / GameCraft — generate a verified, figure-rich academic survey (HTML/PDF). **综述标题正在修改中**；核心约束不变：核心 LLM 必须是 Intern-S2-Preview（`INTERN_API_BASE_URL` / `INTERN_API_KEY`），评审时主办方会替换 API Key 重跑.
 
-**Core constraint**: Harness 的核心大模型调用必须使用 Intern-S2-Preview API. 评审时主办方会替换 API Key 重新运行.
+**Status (2026-08)**: Public submission delivered (final report + showcase demo + README). Now in **v2 improvement phase** — adding bounded agent loops at three DAG-shaped holes (strategy / repair / goal gate). Plans and audit live in `docs/RealAgent/`; read `docs/RealAgent/Agent关节改造-审计与计划.md` (总计划) and per-joint module docs before touching the strategy/verify/revise paths.
 
-## Key Requirements
-
-- No hallucinated citations, no fact-less descriptions
-- Output must be rich with figures and text (图文并茂)
-- Must support `API_BASE_URL` and `API_KEY` via environment variables
-- Code must be original (semantic plagiarism check will be performed)
-
-## Available Resources
-
-- **Intern-S2-Preview API**: https://chat.intern-ai.org.cn
-- **MinerU 文档解析 API**: https://mineru.net/ (for parsing academic PDFs)
-- **Sciverse 科学文献库 API**: https://sciverse.space/ (for paper search/retrieval)
-
-## Architecture
+## Architecture: Three Modules + Linear Pipeline
 
 ```
-User Query ("世界模型 综述")
-    ↓
-Agent Loop (Intern-S2-Preview as core LLM)
-    ↓
-Tool Calls:
-  - Sciverse API → search & retrieve papers
-  - MinerU API → parse PDF content
-  - File I/O → read/write drafts, manage references
-  - Web search → supplementary info (optional)
-    ↓
-Iterative: summarize → classify → organize → write → verify citations
-    ↓
-Output: HTML survey with figures
+User topic ─▶ Module A (harness/) — Planner / AgentLoop / tool registry / state / memory / skills
+                    │ emits request files to requests/
+                    ▼
+             Module B (tools/knowledge_pipeline_worker.py + tools/phases/) — P1–P6 linear
+                    │ produces cache/knowledge_bundle.json (8 typed artifacts)
+                    ▼
+             Module C (write_survey → verify_citations → revise_survey → render_report)
+                    ▼
+             output/final_report.html / .pdf + verification + evaluation reports
 ```
 
-### Agent Loop Design
+- **A** (`harness/`): `AgentLoop.run()` (agent_loop.py:115-189) is a hardcoded sequence, not LLM-driven. `search_strategy_builder.py` builds sub-queries (3-level fallback: LLM → cluster → template; LLM only in `--mode full`). `tool_registry.py` dispatches B/C tools in-process with timeout + result truncation. `--prepare-only` stops after A emits requests.
+- **B** phases (`tools/phases/`): P1 decompose → P2 survey analyzer → P3 retriever (real meta-search per aspect; MinerU off unless `use_mineru`) → P5 cards/evidence/synthesis (`paper_cards`, `evidence_store`, `figure_bank`, `table_bank`, `taxonomy`, `citation_index`) → P6 assembler. **No P4** (superseded by SciVerse `agentic-search`).
+- **C**: `write_survey.py` drafts from the bundle (template-based, not free LLM writing) → `verify_citations.py` (regex whitelist + claim_map NLI) → `revise_survey.py` (regex deletion repair) → `render_report.py` (HTML/PDF + visual assets + `evaluation_report.json` + `review_report.json` readiness gates).
+- Typed models in `tools/models/`; clients in `tools/clients/`; NLI + cleaner in `tools/nlp/`; claim mapper + structural checks in `tools/verify/`.
+- Runtime dirs: `requests/` (A→B/C request files), `cache/` (artifacts), `output/`, `logs/` (run.jsonl + state.json), `memory/` (strategy memory persisted across runs).
 
-1. **Task Decomposition**: Break "world models survey" into sub-tasks (literature search, categorization, timeline, future directions)
-2. **Tool Orchestration**: Call Sciverse to find papers → MinerU to parse → LLM to summarize/classify
-3. **Citation Verification**: Cross-check every citation against actual paper metadata from Sciverse
-4. **Iterative Refinement**: Review drafts, check for hallucinations, regenerate if needed
-5. **Output Generation**: Render final survey as HTML with embedded figures
+**Known traps (verified, see audit §1 in docs/RealAgent/总计划):** NLI defaults to a keyword FakeNLIModel (real model needs `EVISURVEY_REAL_NLI=1`); `use_mineru` hardcoded False in `planner.py:68` (parsed_papers empty by default → demo-mode evidence store empty, masked only by FINAL_SEED_PAPERS); second verify result after revise is discarded (`agent_loop.py:167-180`); `harness/agent_tool_loop.py` is dead code.
 
-### Anti-Hallucination Strategy
+### Reproducible final run
 
-- All paper metadata (title, authors, year, venue) must come from Sciverse API results, never LLM-generated
-- Every claim must be traced back to a specific paper reference
-- Verification pass: extract all citations from draft → validate each against source
-- Figures must come from parsed papers (via MinerU) or be generated from verified content
+Prebuilt topic-aligned seed data in `cache/final_*.json`. `FINAL_SEED_PAPERS=1` makes Module C load these instead of a live bundle — reproducibility mechanism for the delivered run, **not a mock**; regenerate with `scripts/build_final_seed_papers.py`. `scripts/run_showcase_demo.py` is the 8-stage demo runner (sets `FINAL_SEED_PAPERS=1`, `SHOWCASE_LOG=1`, `GENERATE_IMAGE_QUALITY=low` itself).
 
-## Deliverables Checklist
+## Anti-Hallucination (enforced, keep it that way)
 
-- [ ] Working Harness prototype (source code + run instructions)
-- [ ] API config via environment variables (`INTERN_API_BASE_URL`, `INTERN_API_KEY`)
-- [ ] Output: world models survey (HTML/PDF, 图文并茂)
-- [ ] Intern-S2-Preview capability analysis table
-- [ ] Presentation slides
+- Paper metadata (title/authors/year/venue) only from SciVerse API results, never LLM-generated.
+- Claims bind to evidence via claim map (`tools/verify/claim_mapper.py`); SciVerse `agentic-search` chunks ground claims.
+- Every citation cross-checked against `citation_index` by the NLI verifier (`tools/nlp/nli_verifier.py`).
+- Figures/tables mined into `figure_bank`/`table_bank`; generated visuals derived from verified content only.
 
-## Bonus Features (prioritized)
+## Commands
 
-1. **Memory system**: persist paper metadata across sessions to avoid re-searching
-2. **Skill system**: packaged workflow for "generate survey from topic X"
-3. **Sub-agent parallelism**: concurrent paper parsing and summarization
-4. **Context compression**: handle long paper collections within model context limits
+```bash
+# Unit tests (fake LLM, no network)
+pytest tests/unit/ --log-cli-level=WARNING
+pytest tests/unit/test_phase3.py::test_name -v          # single test
+
+# Integration (real SciVerse + fake LLM; needs .env)
+pytest tests/integration/ -v
+pytest tests/integration/ -v -m real_api                # all three APIs live, expensive
+RUN_NLI_REAL=1 pytest -m nli_real tests/unit/test_nli_verifier.py -v   # real NLI model
+
+# CLI full flow
+python main.py --topic "世界模型综述" --max-papers 5 --max-core-papers 3 --mode full  # fast smoke
+python main.py --topic "..." --prepare-only --mode full     # A-owned requests only
+
+python scripts/run_showcase_demo.py                     # final delivery demo
+```
+
+Add `-s --log-cli-level=INFO` for the full pipeline trace; default WARNING surfaces degradations (MinerU → abstract_only, API errors, timeouts).
+
+## Environment
+
+- **Conda env: `base`** (`/Users/kalin/miniconda3`, Python 3.13.12). No dedicated project env; all deps installed there (pytest, httpx, pydantic, python-dotenv, sentence-transformers 5.6.0, torch 2.11.0). Unit suite verified green on it (179 passed).
+- `.env` keys (present): `INTERN_API_BASE_URL`, `INTERN_API_KEY`, `SCIVERSE_API_KEY`, `MINERU_API_KEY`, `SCIVERSE_MIN_INTERVAL`. Optional: `INTERN_MODEL_NAME` (default `intern-s2-preview`), `HF_ENDPOINT`, `EVISURVEY_LANGUAGE` (zh) / `EVISURVEY_MODE` (demo), `EVISURVEY_REAL_NLI`, `STRATEGY_*`, `REQUEST_TIMEOUT_SECONDS` / `MAX_LLM_RETRIES` / `TOOL_TIMEOUT_SECONDS` / `TOOL_RESULT_MAX_CHARS`. `API_BASE_URL`/`API_KEY` are aliases. `config.py` loads `.env` and strips `all_proxy`.
+- NLI/embedding models download from HuggingFace on first use; if slow set `HF_ENDPOINT=https://hf-mirror.com`.
 
 ## Language
 
-- Code and comments: English
-- Comments and explanations to user: 中文
-- Commit messages: English
-- Survey output: 中文 (academic style)
+Code/comments English; explanations to user 中文; commit messages English; survey output 中文 academic style (showcase used `--language en`).
 
 ## Preferences
 
-- Fail fast, let exceptions bubble up
-- Only add error handling at system boundaries (API calls, file I/O)
-- Minimal abstraction — prefer flat, readable code over over-engineering
-- Edit existing files over creating new ones
-- **Real-API-first, no production mocks**: the harness MUST work under the real
-  SciVerse / MinerU / Intern-S2 APIs. Never rely on mock fallbacks to make the
-  pipeline produce output — mock fallbacks hide real failures and silently
-  inject fake content (anti-hallucination risk). Production clients default to
-  `use_mock=False`; when a real parse fails, degrade to the real SciVerse
-  abstract (`parse_status="abstract_only"`) rather than emit mock data. Validate
-  every integration change against the real APIs (stronger than mock-based unit
-  tests, which can match a wrong contract and give false confidence). Test
-  doubles are fine for fast unit tests but must mirror the real contract shape.
-- **Test logging**: when running `pytest`, always pass `--log-cli-level=WARNING`
-  by default — it surfaces process problems (MinerU degradation → mock,
-  SciVerse / Intern-S2 failures, timeouts) without flooding the INFO progress
-  logs. Add `-s` and bump to `--log-cli-level=INFO` only when you need the full
-  pipeline trace (`[worker] P1/P2/P3 done`, per-call summaries). Why a flag is
-  needed: stdlib root logger defaults to WARNING and `setup_logging()` (which
-  raises it to INFO) only runs inside `worker.run()` / `verify_citations.run()`,
-  so most tests stay silent without `--log-cli-level`.
+- Fail fast, let exceptions bubble up; error handling only at system boundaries (API calls, file I/O).
+- Minimal abstraction — flat, readable code; edit existing files over creating new ones.
+- **Real-API-first, no production mocks**: harness MUST work under real SciVerse / MinerU / Intern-S2. Clients default `use_mock=False`; on real parse failure degrade to real SciVerse abstract (`parse_status="abstract_only"`), never emit mock data. Validate integration changes against real APIs. Test doubles are fine for unit tests but must mirror the real contract shape.
 
-## Test & Run Commands
+## External API Contracts (verified 2026-07-05; full field lists in `docs/外部服务接口/`)
 
-Unit tests (fake LLM, no network): fast contract checks. Default log level surfaces
-degradation/failures without flooding progress logs.
+- **Intern-S2-Preview** (core LLM, OpenAI-compatible): `INTERN_API_BASE_URL`/`INTERN_API_KEY`, model `intern-s2-preview`. Surface `.chat(...)`/`.json_chat(...)`; ~1 req / 2s (client enforces). `config.py` normalizes bare hosts to `.../api/v1`.
+- **SciVerse** (`https://api.sciverse.space` — NOT the website host): `POST /meta-search` returns `{"results": [...]}`; `POST /agentic-search {query, top_k}` returns `{"hits": [...]}` (different key!). Boosts `freshness_boost`/`impact_boost` accept `"MILD"` only (`"HIGH"` rejected), apply only when `sort` unset. agentic-search `author` field is mangled — get authors via meta-search. `GET /content?doc_id=` reads full text; `/resource` unverified (507 in probes).
+- **MinerU** (`https://mineru.net`): `POST /api/v1/agent/parse/url {url, light}`; `POST /api/v4/extract/task {url}` → poll `GET /api/v4/extract/task/{id}` until succeeded/failed. Needs a direct PDF URL (doi.org landing pages are not PDFs).
 
-```
-pytest tests/unit/ --log-cli-level=WARNING
-```
+## Reference Repos
 
-Integration / e2e (real SciVerse + fake LLM + real MinerU degrading per-paper):
-exercises A→B phases 1–6 end-to-end. Needs `SCIVERSE_API_KEY` (or a `.env`).
-
-```
-pytest tests/integration/ -v
-```
-
-Full real API (adds real Intern-S2, all three APIs live): opt-in marker, expensive.
-
-```
-pytest tests/integration/ -v -m real_api
-```
-
-CLI full flow (A planner → B/C tools): real run of the harness.
-
-```
-python main.py --topic "世界模型综述"            # full run
-python main.py --topic "..." --max-papers 5 --max-core-papers 3 --mode full  # fast smoke (caps P3 retrieval + parse)
-python main.py --topic "..." --prepare-only --mode full   # A-owned requests only, no B/C
-```
-
-Add `-s --log-cli-level=INFO` when you need the full pipeline trace (`[worker] P1/P2/P3 done`, per-call summaries).
-
-## HuggingFace Endpoint (NLI model download)
-
-`NLIVerifier` (phase 5 evidence + citation verify) downloads
-`cross-encoder/nli-deberta-v3-base` from HuggingFace on first use. If HF is slow
-or blocked, set `HF_ENDPOINT` in `.env` (read natively by `huggingface_hub`,
-loaded via dotenv before any model is constructed):
-
-```
-HF_ENDPOINT=https://hf-mirror.com
-```
-
-Unset = direct HF access (default).
-
-Real NLI smoke test is opt-in to avoid model downloads during default tests:
-
-```
-RUN_NLI_REAL=1 pytest -m nli_real tests/unit/test_nli_verifier.py -v
-```
-
-## External API Contracts (verified against live APIs 2026-07-05)
-
-- **Intern-S2-Preview** (core LLM, OpenAI-compatible): base `INTERN_API_BASE_URL`,
-  key `INTERN_API_KEY`, model `intern-s2-preview`. Duck-typed surface
-  `.chat(messages, *, temperature) -> str` / `.json_chat(...) -> dict`.
-- **SciVerse meta-search** (metadata list / filtering): base
-  `https://api.sciverse.space` (NOT the `sciverse.space` website host — that
-  404s). `POST /meta-search`; body keys `query` / `filters` / `fields` / `page`
-  / `page_size` / `sort`, plus `freshness_boost` / `impact_boost` (send each
-  only when set; they bias toward recent / highly-cited results and apply when
-  `sort` is NOT set; verified valid value `"MILD"`, `"HIGH"` is rejected).
-  Response `{"results": [...]}`. Each result: `unique_id`, `title`, `author`
-  (list of `{orcid, name}`), `publication_published_year` (float),
-  `publication_venue_name_unified`, `abstract`, `keywords`, `citation_count`
-  (float), `doi`, `access_oa_url` (list), `locations` (list of
-  `{type, is_oa, url, license}`), `is_content_accessible`. Filter entry shape:
-  `{"field": "...", "operator": "FILTER_OP_GTE"|"FILTER_OP_LTE"|..., "value": ...}`.
-- **SciVerse agentic-search** (RAG / citable chunks): `POST /agentic-search`
-  `{query, top_k}`; response `{"hits": [...]}` (NOTE: `hits`, not `results`).
-  Each hit carries a citable fragment: `chunk` (text), `doc_id`, `chunk_id`,
-  `page_no`, `offset`, `score`, `title`, `publication_published_year`,
-  `publication_venue_name_unified`. Use to ground claims/evidence. Caveat: the
-  `author` field comes back mangled (ASCII codepoint lists) — do not use it;
-  fetch authors via meta-search instead. `GET /content?doc_id=...` reads full
-  text; `GET /resource?file_name=...` downloads figures/attachments (the
-  `file_name` mapping is unverified — `/resource` returned 507 in probes).
-- **MinerU** (PDF parsing): base `https://mineru.net`. `POST /api/v1/agent/parse/url`
-  `{url, light}`; `POST /api/v4/extract/task` `{url}` → `task_id`, poll
-  `GET /api/v4/extract/task/{task_id}` until `status` ∈ {succeeded, failed}.
-  Needs a real PDF URL; doi.org landing pages are not direct PDFs.
+`ref/` (SurGE, SurveyX, LiRA) — design references only. Do not modify; do not copy code (semantic plagiarism check — code must be original).
