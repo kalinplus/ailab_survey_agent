@@ -1,0 +1,1708 @@
+{
+ "source": {
+  "title": "Understanding World or Predicting Future? A Comprehensive Review of World Models",
+  "arxiv_id": "2411.14499",
+  "year": 2024,
+  "url": "https://arxiv.org/abs/2411.14499",
+  "n_references": 339,
+  "extracted_via": "arXiv HTML bibliography; malformed=True marks entries whose authors/title/venue merged into one block (kept as full text for substring matching); note DreamerV3 cited in body (hafner2025mastering) but missing from rendered bib",
+  "extracted_date": "2026-08-21"
+ },
+ "references": [
+  {
+   "title": "Gpt-4 technical report",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Cosmos world foundation model platform for physical ai",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Nebula: Quest for robotic autonomy in challenging environments; team costar at the darpa subterranean challenge",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Solving rubik’s cube with a robot hand",
+   "year": 1910,
+   "malformed": false
+  },
+  {
+   "title": "Project sid: Many-agent simulations toward ai civilization",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Aloha 2: An enhanced low-cost hardware for bimanual teleoperation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "An lstm network for highway trajectory prediction",
+   "year": 2017,
+   "malformed": false
+  },
+  {
+   "title": "V-jepa 2: Self-supervised video models enable understanding, prediction and planning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Genesis Authors. Genesis: A generative and universal physics engine for robotics and beyond, December 2024",
+   "year": 2024,
+   "malformed": true
+  },
+  {
+   "title": "Transfusion: Robust lidar-camera fusion for 3d object detection with transformers",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Genie 3: A new frontier for world models",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "Videophy: Evaluating physical commonsense for video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Navigation world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Revisiting feature prediction for learning visual representations from video",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Physics-informed diffusion models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Digital twins in city planning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Ai’s blind spots: Geographic knowledge and diversity deficit in generated urban scenario",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Zero-shot robotic manipulation with pretrained image-editing diffusion models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Muvo: A multimodal generative world model for autonomous driving with geometric representations",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Heterogeneous beliefs and routes to chaos in a simple asset pricing model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Video generation models as world simulators",
+   "year": 2024,
+   "malformed": false
+  },
+  {
+   "title": "Language models are few-shot learners",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Genie: Generative interactive environments",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Diffdreamer: Towards consistent unsupervised single-view scene extrapolation with conditional diffusion models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Web agents with world models: Learning and leveraging environment dynamics in web navigation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Matterport3d: Learning from rgb-d data in indoor environments",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gamegen-x: Interactive open-world game video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gr-2: A generative video-language-action model with web-scale knowledge for robot manipulation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Jianyu Chen, Bodi Yuan, and Masayoshi Tomizuka. Model-free deep reinforcement learning for urban autonomous driving, 2019",
+   "year": 2019,
+   "malformed": true
+  },
+  {
+   "title": "Model as a game: On numerical and spatial consistency for generative games",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Deepverse: 4d autoregressive video generation as a world model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Legent: Open platform for embodied agents",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Diffusion policy: Visuomotor policy learning via action diffusion",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Eva: An embodied world model for future video anticipation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Sora as an agi world model? a complete survey on text-to-video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Predicting motion of vulnerable road users using high-definition maps and efficient convnets",
+   "year": 2020,
+   "malformed": false
+  },
+  {
+   "title": "Physbench: Benchmarking and enhancing vision-language models for physical world understanding",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Deep reinforcement learning in a handful of trials using probabilistic dynamics models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "The nature of explanation",
+   "year": 1943,
+   "malformed": false
+  },
+  {
+   "title": "Multimodal trajectory predictions for autonomous driving using deep convolutional networks",
+   "year": 2019,
+   "malformed": false
+  },
+  {
+   "title": "Scalable watermarking for identifying large language model outputs",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Procthor: Large-scale embodied ai using procedural generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Streetscapes: Large-scale consistent street view generation using autoregressive video diffusion",
+   "year": 2024,
+   "malformed": false
+  },
+  {
+   "title": "Multi-robot grasp planning for sequential assembly operations",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "An image is worth 16x16 words: Transformers for image recognition at scale",
+   "year": 2010,
+   "malformed": false
+  },
+  {
+   "title": "Carla: An open urban driving simulator",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Glam: Efficient scaling of language models with mixture-of-experts",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning universal policies via text-guided video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Cams: A citygpt-powered agentic framework for urban human mobility simulation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Worldscore: A unified evaluation benchmark for world generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Simultaneous localization and mapping: part i",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Generative social science: Studies in agent-based computational modeling",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Video prediction models as rewards for reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Structure and content-guided video synthesis with diffusion models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Minedojo: Building open-ended embodied agents with internet-scale knowledge",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gps as a control signal for image generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Citygpt: Empowering urban spatial cognition of large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Agentmove: A large language model based agentic framework for zero-shot next location prediction",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "Urbanllava: A multi-modal large language model for urban intelligence with spatial reasoning and understanding",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A survey of large language model-powered spatial intelligence across scales: Advances in embodied agents, smart cities, and earth science",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Citybench: Evaluating the capabilities of large language model as world model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Dense reinforcement learning for safety validation of autonomous vehicles",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Generalist bimanual manipulation via foundation video diffusion models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Unsupervised learning for physical interaction through video prediction",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Deep visual foresight for planning robot motion",
+   "year": 2017,
+   "malformed": false
+  },
+  {
+   "title": "Anyhome: Open-vocabulary generation of structured and textured 3d homes",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Threedworld: A platform for interactive multi-modal physical simulation",
+   "year": 2007,
+   "malformed": false
+  },
+  {
+   "title": "Large language models empowered agent-based modeling and simulation: A survey and perspectives",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "S3: Social-network simulation system with large language model-empowered agents",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Embodiedcity: A benchmark platform for embodied agent in real-world city environment",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Alexa arena: A user-centric interactive platform for embodied ai",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Do vision-language models have internal world models? towards an atomic evaluation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Vista: A generalizable driving world model with high fidelity and versatile controllability",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Worldgpt: Empowering llm as multimodal world model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Pwm: Policy learning with multi-task world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Nl2plan: Robust llm-driven planning from minimal text descriptions",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Rich feature hierarchies for accurate object detection and semantic segmentation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Behavegpt: A foundation model for large-scale user behavior modeling",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Automated construction of cognitive maps with visual predictive coding",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Is your llm secretly a world model of the internet? model-based planning for web agents",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Agent group chat: An interactive group chat simulacra for better eliciting collective emergent behavior",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Leveraging pre-trained large language models to construct and utilize world models for model-based task planning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "World models for autonomous driving: An initial survey",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Waymax: An accelerated, data-driven simulator for large-scale autonomous driving research",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Mineworld: a real-time and open-source interactive world model on minecraft",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "T2vphysbench: A first-principles benchmark for physical consistency in text-to-video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Language models represent space and time",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Recurrent world models facilitate policy evolution",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "World models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning to walk in the real world with minimal human effort",
+   "year": 2002,
+   "malformed": false
+  },
+  {
+   "title": "Dream to control: Learning behaviors by latent imagination",
+   "year": 1912,
+   "malformed": false
+  },
+  {
+   "title": "Learning latent dynamics for planning from pixels",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Mastering atari with discrete world models",
+   "year": 2010,
+   "malformed": false
+  },
+  {
+   "title": "Mastering diverse control tasks through world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Td-mpc2: Scalable, robust world models for continuous control",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning an actionable discrete diffusion policy via large-scale actionless video pre-training",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Mgnet: A unified framework of multigrid and convolutional neural network",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Streamingt2v: Consistent, dynamic, and extendable long video generation from text",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Denoising diffusion probabilistic models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Sim2real in robotics and automation: Applications and challenges",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gaia-1: A generative world model for autonomous driving",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Anthony Hu, Lloyd Russell, Hudson Yeo, Zak Murez, George Fedoseev, Alex Kendall, Jamie Shotton, and Gianluca Corrado. Gaia-1: A generative world model for autonomous driving, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "Sequential classification-based optimization for direct policy search",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Yihan Hu, Jiazhi Yang, Li Chen, Keyu Li, Chonghao Sima, Xizhou Zhu, Siqi Chai, Senyao Du, Tianwei Lin, Wenhai Wang, Lewei Lu, Xiaosong Jia, Qiang Liu, Jifeng Dai, Yu Qiao, and Hongyang Li. Planning-oriented autonomous driving, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "Video prediction policy: A generalist robot policy with predictive visual representations",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gensim2: Scaling robot data generation with multi-modal and reasoning llms",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Inner monologue: Embodied reasoning through planning with language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A survey on trajectory-prediction methods for autonomous driving",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Multi-modal motion prediction with transformer-based neural network for autonomous driving",
+   "year": 2022,
+   "malformed": false
+  },
+  {
+   "title": "Vbench: Comprehensive benchmark suite for video generative models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Llama guard: Llm-based input-output safeguard for human-ai conversations",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Elements of world knowledge (ewok): A cognition-inspired framework for evaluating basic world knowledge in language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Peekaboo: Interactive video generation via masked-diffusion",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Bc-z: Zero-shot task generalization with robotic imitation learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Dreamgen: Unlocking generalization in robot learning through video world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "When to trust your model: Model-based policy optimization",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Offline reinforcement learning as one big sequence modeling problem",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Srap-agent: Simulating and optimizing scarce resource allocation policy with llm-based agent",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Chiyu Max Jiang, Andre Cornman, Cheolho Park, Ben Sapp, Yin Zhou, and Dragomir Anguelov. Motiondiffuser: Controllable multi-agent motion prediction using diffusion, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "Enerverse-ac: Envisioning embodied environments with action condition",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Emergent representations of program semantics in language models trained on programs",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Mental models: Towards a cognitive science of language, inference, and consciousness",
+   "year": 1983,
+   "malformed": false
+  },
+  {
+   "title": "Uncertainty-aware reinforcement learning for collision avoidance",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Position: Llms can’t plan, but can help planning in llm-modulo frameworks",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "World and human action models towards gameplay ideation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "How far is video generation from world model: A physical law perspective",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Multimodal trajectory predictions for urban environments using geometric relationships between a vehicle and lanes",
+   "year": 2020,
+   "malformed": false
+  },
+  {
+   "title": "A survey on learning-based robotic grasping",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Ai2-thor: An interactive 3d environment for visual ai",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Evaluating large language models in theory of mind tasks",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Model predictive control",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Imagenet classification with deep convolutional neural networks",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Kling ai: Next-generation ai creative studio",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "Certifying llm safety against adversarial prompting",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Rma: Rapid motor adaptation for legged robots",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Varun Ravi Kumar, Senthil Yogamani, Hazem Rashed, Ganesh Sistu, Christian Witt, Isabelle Leang, Stefan Milz, and Patrick Mäder. Omnidet: Surround view cameras based multi-task visual perception network for autonomous driving, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "Model-ensemble trust-region policy optimization",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Localgpt: Benchmarking and advancing large language models for local life services",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Open-set living need prediction with large language models",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "A path towards autonomous machine intelligence version 0.9. 2, 2022-06-27",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gradient-based learning applied to document recognition",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Collective intelligence: Mankind’s emerging world in cyberspace",
+   "year": 1997,
+   "malformed": false
+  },
+  {
+   "title": "Do vision and language models share concepts? a vector space alignment study",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Unbounded: A generative infinite game of character life simulation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Data-centric evolution in autonomous driving: A comprehensive survey of big data system, data mining, and closed-loop technologies",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Recognition through reasoning: Reinforcing image geo-localization with large vision-language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Embodied agent interface: Benchmarking llms for embodied decision making",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Econagent: large language model-empowered agents for simulating macroeconomic activities",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Llm-pbe: Assessing data privacy in large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Metadrive: Composing diverse driving scenarios for generalizable reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Yuxiao Li, Eric J. Michaud, David D. Baek, Joshua Engels, Xiaoqing Sun, and Max Tegmark. The geometry of concepts: Sparse autoencoder feature structure, 2024",
+   "year": 2024,
+   "malformed": true
+  },
+  {
+   "title": "Bevformer: Learning bird’s-eye-view representation from multi-camera images via spatiotemporal transformers",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Genie envisioner: A unified world foundation platform for robotic manipulation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Jessy Lin, Yuqing Du, Olivia Watkins, Danijar Hafner, Pieter Abbeel, Dan Klein, and Anca Dragan. Learning to model the world with language, 2024",
+   "year": 2024,
+   "malformed": true
+  },
+  {
+   "title": "Text2motion: From natural language instructions to feasible plans",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "World model on million-length video and language with ringattention",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Visual instruction tuning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Physgen: Rigid-body physics-grounded image-to-video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Citywalker: Learning embodied urban navigation from web-scale videos",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Zhihan Liu, Hao Hu, Shenao Zhang, Hongyi Guo, Shuqi Ke, Boyi Liu, and Zhaoran Wang. Reason for future, act for now: A principled framework for autonomous llm agents with provable sample efficiency, 2024",
+   "year": 2024,
+   "malformed": true
+  },
+  {
+   "title": "Discuss before moving: Visual language navigation via multi-expert discussions",
+   "year": 2024,
+   "malformed": false
+  },
+  {
+   "title": "Microscopic traffic simulation using sumo",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gwm: Towards scalable gaussian world models for robotic manipulation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A survey on model-based reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Algorithmic framework for model-based deep reinforcement learning with theoretical guarantees",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "From efficient multimodal models to world models: A survey",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Openeqa: Embodied question answering in the era of foundation models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Superminds: The surprising power of people and computers thinking together",
+   "year": 2018,
+   "malformed": false
+  },
+  {
+   "title": "Handbook of collective intelligence",
+   "year": 2015,
+   "malformed": false
+  },
+  {
+   "title": "Large language models are geographically biased",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Geollm: Extracting geospatial knowledge from large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Yume: An interactive world generation model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Structured world models from human videos",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Uniworld: Autonomous driving pre-training via world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Marvin Minsky. A framework for representing knowledge, 1974",
+   "year": 1974,
+   "malformed": true
+  },
+  {
+   "title": "Human-level control through deep reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A0c: Alpha zero in continuous action space",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Do generative video models learn physical principles from watching videos?",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Eai: Emotional decision-making of llms in strategic games and ethical dilemmas",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Clarifygpt: Empowering llm-based code generation with intention clarification",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Blend: A benchmark for llms on everyday knowledge in diverse cultures and languages",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Neural network dynamics for model-based deep reinforcement learning with model-free fine-tuning",
+   "year": 2018,
+   "malformed": false
+  },
+  {
+   "title": "Nigamaa Nayakanti, Rami Al-Rfou, Aurick Zhou, Kratarth Goel, Khaled S. Refaat, and Benjamin Sapp. Wayformer: Motion forecasting via simple &amp; efficient attention networks, 2022",
+   "year": 2022,
+   "malformed": true
+  },
+  {
+   "title": "Scene transformer: A unified multi-task model for behavior prediction and planning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Value prediction network",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Introducing chatgpt",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "Sora: Creating video from text",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "Network formation and dynamics among multi-llms",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Generative agents: Interactive simulacra of human behavior",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Social simulacra: Creating populated prototypes for social computing systems",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Genie 2: A large-scale foundation world model",
+   "year": 2024,
+   "malformed": false
+  },
+  {
+   "title": "Avlen: Audio-visual-language embodied navigation in 3d environments",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Causal inference in statistics: An overview",
+   "year": 2009,
+   "malformed": false
+  },
+  {
+   "title": "Covernet: Multimodal behavior prediction using trajectory sets",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Agentsociety: Large-scale simulation of llm-driven generative agents advances understanding of human behaviors and society",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Cooperate or collapse: Emergence of sustainability behaviors in a society of llm agents",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Does the chimpanzee have a theory of mind?",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Virtualhome: Simulating household activities via programs",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Pointnet: Deep learning on point sets for 3d classification and segmentation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Charles R. Qi, Li Yi, Hao Su, and Leonidas J. Guibas. Pointnet++: Deep hierarchical feature learning on point sets in a metric space, 2017",
+   "year": 2017,
+   "malformed": true
+  },
+  {
+   "title": "Pointnext: Revisiting pointnet++ with improved training and scaling strategies",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Agent planning with world knowledge model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Worldsimbench: Towards video generation models as world simulators",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Evaluating robot policies in a world model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, and Ilya Sutskever. Learning transferable visual models from natural language supervision, 2021",
+   "year": 2021,
+   "malformed": true
+  },
+  {
+   "title": "Direct preference optimization: Your language model is secretly a reward model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A game theoretic framework for model based reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Deepfake detection: A systematic literature review",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Faster r-cnn: Towards real-time object detection with region proposal networks",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Consisti2v: Enhancing visual consistency for image-to-video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "General agents need world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Avid: Adapting video diffusion models to world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gpt4geo: How a language model sees the world’s geography",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning to walk in minutes using massively parallel deep reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Runway gen-2",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "Mastering memory tasks with world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning to simulate complex physics with graph networks",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Neural theory-of-mind? on the limits of social intelligence in large lms",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Exploration-driven generative interactive environments",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Habitat: A platform for embodied ai research",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Driving in dense traffic with model-free reinforcement learning",
+   "year": 2020,
+   "malformed": false
+  },
+  {
+   "title": "Dynamic models of segregation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A generalist dynamics model for control",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Proximal policy optimization algorithms",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gnm: A general navigation model to drive any robot",
+   "year": 2023,
+   "malformed": false
+  },
+  {
+   "title": "Urbanworld: An urban world model for 3d city generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Defint: A default-interventionist framework for efficient reasoning with hybrid large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Roboscape: Physics-informed embodied world model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Beyond imitation: Generating human mobility from context-aware reasoning with large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "igibson 1.0: A simulation environment for interactive tasks in large realistic scenes",
+   "year": 2021,
+   "malformed": false
+  },
+  {
+   "title": "Robocraft: Learning to see, simulate, and shape elasto-plastic objects in 3d with graph networks",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Muma-tom: Multi-modal multi-agent theory of mind",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning symbolic models for graph-structured physical mechanism",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Motion transformer with global intention localization and local movement refinement",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Alfworld: Aligning text and embodied environments for interactive learning",
+   "year": 2010,
+   "malformed": false
+  },
+  {
+   "title": "Mastering the game of go with deep neural networks and tree search",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Mastering the game of go without human knowledge",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A walk in the park: Learning to walk in 20 minutes with model-free reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Score-based generative modeling through stochastic differential equations",
+   "year": 2011,
+   "malformed": false
+  },
+  {
+   "title": "Testing theory of mind in large language models and humans",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Llms achieve adult human performance on higher-order theory of mind tasks",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "T2v-compbench: A comprehensive benchmark for compositional text-to-video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Integrated architectures for learning, planning, and reacting based on approximating dynamic programming",
+   "year": 1990,
+   "malformed": false
+  },
+  {
+   "title": "Design principles for the general data protection regulation (gdpr): A formal concept analysis and its evaluation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Worldcoder, a model-based llm agent: Building world models by writing code and interacting with the environment",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Jiakai Tang, Heyang Gao, Xuchen Pan, Lei Wang, Haoran Tan, Dawei Gao, Yushuo Chen, Xu Chen, Yankai Lin, Yaliang Li, et al. Gensim: A general social simulation platform with large language model based agents",
+   "year": null,
+   "malformed": true
+  },
+  {
+   "title": "Aether: Geometric-aware unified world modeling",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Hunyuanworld 1.0: Generating immersive, explorable, and interactive 3d worlds from words or pixels",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Spatiallm: Large language model for spatial understanding",
+   "year": 2025,
+   "malformed": false
+  },
+  {
+   "title": "Marvin Teichmann, Michael Weber, Marius Zoellner, Roberto Cipolla, and Raquel Urtasun. Multinet: Real-time joint semantic reasoning for autonomous driving, 2018",
+   "year": 2018,
+   "malformed": true
+  },
+  {
+   "title": "Ran Tian, Boyi Li, Xinshuo Weng, Yuxiao Chen, Edward Schmerling, Yue Wang, Boris Ivanovic, and Marco Pavone. Tokenize the world into object-level knowledge to address long-tail events in autonomous driving, 2024",
+   "year": 2024,
+   "malformed": true
+  },
+  {
+   "title": "Cognitive maps in rats and men",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Llama: Open and efficient foundation language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Diffusion models are real-time game engines",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Attention is all you need",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "All languages matter: Evaluating lmms on culturally diverse 100 languages",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Dat Vu, Bao Ngo, and Hung Phan. Hybridnets: End-to-end perception network, 2022",
+   "year": 2022,
+   "malformed": true
+  },
+  {
+   "title": "Wan: Open and advanced large-scale video generative models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Repvit: Revisiting mobile cnn from vit perspective",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Grutopia: Dream general robots in a city at scale",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Yulan-onesim: Towards the next generation of social simulator with large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Occsora: 4d occupancy generation models as world simulators for autonomous driving",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gensim: Generating robotic simulation tasks via large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Exploring model-based planning with policy networks",
+   "year": 1906,
+   "malformed": false
+  },
+  {
+   "title": "Drivedreamer: Towards real-world-driven world models for autonomous driving",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Xiaofeng Wang, Zheng Zhu, Guan Huang, Xinze Chen, Jiagang Zhu, and Jiwen Lu. Drivedreamer: Towards real-world-driven world models for autonomous driving, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "Worlddreamer: Towards general world models for video generation via predicting masked tokens",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Newton: Are large language models capable of physical reasoning?",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Yuqi Wang, Jiawei He, Lue Fan, Hongxin Li, Yuntao Chen, and Zhaoxiang Zhang. Driving into the future: Multiview visual forecasting and planning with world model for autonomous driving, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "The emergence of deepfake technology: A review",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Alex Wilf, Sihyun Shawn Lee, Paul Pu Liang, and Louis-Philippe Morency. Think twice: Perspective-taking improves large language models’ theory-of-mind capabilities, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "Yolop: You only look once for panoptic driving perception",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "ivideogpt: Interactive videogpts are scalable world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Coke: A cognitive knowledge graph for machine theory of mind",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Daydreamer: World models for physical robot learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Metaurban: A simulation platform for embodied ai in urban spaces",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Towards autonomous micromobility through scalable urban simulation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Sapien: A simulated part-based interactive environment",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Pandora: Towards general world model with natural language actions and video states",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Language models meet world models: Embodied experiences enhance language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Worldmem: Long-term consistent world simulation with memory",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Vid2sim: Realistic and interactive simulation from video for urban navigation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Towards large reasoning models: A survey of reinforced reasoning with large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Urban generative intelligence (ugi): A foundational platform for agents in embodied city environment",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Defining and evaluating visual language models’ basic spatial abilities: A perspective from psychometrics",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Exploring large language models for communication games: An empirical study on werewolf",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Videogpt: Video generation using vq-vae and transformers",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Forging vision foundation models for autonomous driving: Challenges, methodologies, and opportunities",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Opencity: A scalable platform to simulate urban activities with massive llm agents",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Worldgpt: a sora-inspired video ai agent as rich world models from text and image inputs",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Thinking in space: How multimodal large language models see, remember, and recall spaces",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Probabilistic adaptation of text-to-video models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning interactive real-world simulators",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning interactive real-world simulators",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Video as the new language for real-world decision making",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Holodeck: Language guided generation of 3d embodied ai environments",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Rila: Reflective and imaginative language agent for zero-shot semantic audio-visual navigation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Matrix-3d: Omnidirectional explorable 3d world generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Cogvideox: Text-to-video diffusion models with an expert transformer",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Ziyi Yang, Zaibin Zhang, Zirui Zheng, Yuxian Jiang, Ziyue Gan, Zhiyu Wang, Zijian Ling, Martin Ma, Bowen Dong, Prateek Gupta, et al. Oasis: Open agents social interaction simulations on a large scale",
+   "year": null,
+   "malformed": true
+  },
+  {
+   "title": "A survey on large language model (llm) security and privacy: The good, the bad, and the ugly",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Safeworld: Geo-diverse safety alignment",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Nuwa-xl: Diffusion over diffusion for extremely long video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Wonderworld: Interactive 3d scene generation from a single image",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Kola: Carefully benchmarking world knowledge of large language models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Gamefactory: Creating new games with generative interactive videos",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Magvit: Masked generative video transformer",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Se-resunet: A novel robotic grasp detection method",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Derivative-free optimization via classification",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Learning the complexity of urban mobility with deep generative network",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Ewmbench: Evaluating scene, motion, and semantic quality in embodied world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Exploring collaboration mechanisms for llm agents: A social psychology view",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Lunjun Zhang, Yuwen Xiong, Ze Yang, Sergio Casas, Rui Hu, and Raquel Urtasun. Copilot4d: Learning unsupervised world models for autonomous driving via discrete diffusion, 2024",
+   "year": 2024,
+   "malformed": true
+  },
+  {
+   "title": "Physdreamer: Physics-based interaction with 3d objects via video generation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Citynavagent: Aerial vision-and-language navigation with hierarchical semantic planning and global memory",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Agent-pro: Learning to evolve via policy-level reflection and optimization",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Socioverse: A world model for social simulation powered by llm agents and a pool of 10 million real-world users",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Matrix-game: Interactive world foundation model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "A survey on the memory mechanism of large language model based agents",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Trafficbots: Towards world models for autonomous driving simulation and motion prediction",
+   "year": 2023,
+   "malformed": false
+  },
+  {
+   "title": "Zhejun Zhang, Alexander Liniger, Christos Sakaridis, Fisher Yu, and Luc Van Gool. Real-time motion prediction via heterogeneous polyline transformer with relative pose encoding, 2023",
+   "year": 2023,
+   "malformed": true
+  },
+  {
+   "title": "Urbanvideo-bench: Benchmarking vision-language models on embodied intelligence with video data in urban spaces",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Airscape: An aerial generative world model with motion controllability",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Over-nav: Elevating iterative vision-and-language navigation with open-vocabulary detection and structured representation",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Guosheng Zhao, Xiaofeng Wang, Zheng Zhu, Xinze Chen, Guan Huang, Xiaoyi Bao, and Xingang Wang. Drivedreamer-2: Llm-enhanced world models for diverse driving video generation, 2024",
+   "year": 2024,
+   "malformed": true
+  },
+  {
+   "title": "Cityeqa: A hierarchical llm agent on embodied question answering benchmark in city space",
+   "year": 2017,
+   "malformed": false
+  },
+  {
+   "title": "Large language models as commonsense knowledge for large-scale task planning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "3d-vla: A 3d vision-language-action generative world model",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Tesseract: learning 4d embodied world models",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Vbench-2.0: Advancing video generation benchmark suite for intrinsic faithfulness",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "The ai economist: Taxation policy design via two-level deep multiagent reinforcement learning",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Occworld: Learning a 3d occupancy world model for autonomous driving",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Open-sora: Democratizing efficient video production for all",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Hongyu Zhou, Zheng Ge, Zeming Li, and Xiangyu Zhang. Matrixvt: Efficient multi-camera to bev transformation for 3d perception, 2022",
+   "year": 2022,
+   "malformed": true
+  },
+  {
+   "title": "Robodreamer: Learning compositional world models for robot imagination",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Query-centric trajectory prediction",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Irasim: Learning interactive real-robot action simulators",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Is sora a world simulator? a comprehensive survey on general world models and beyond",
+   "year": null,
+   "malformed": false
+  },
+  {
+   "title": "Naturalistic driver intention and path prediction using recurrent neural networks",
+   "year": null,
+   "malformed": false
+  }
+ ]
+}

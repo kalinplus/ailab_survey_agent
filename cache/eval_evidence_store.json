@@ -1,0 +1,166 @@
+{
+ "task_id": "survey_eval_delivered",
+ "evidence": [
+  {
+   "evidence_id": "paper:10.1109/access.2026.3677595_title_0",
+   "paper_id": "paper:10.1109/access.2026.3677595",
+   "source_type": "agentic_chunk",
+   "source_page": 17,
+   "text": "[3] M. Hendrikx, S. Meijer, J. Van Der Velden, and A. Iosup, “Procedural content generation for games: A survey,” ACM Transactions on Multimedia Computing, Communications, and Applications (TOMM), vol. 9, no. 1, p. 1, 2013.   \n[4] S. Colton, “Automated puzzle generation,” in Proceedings of the AISB’02 Symposium on AI and Creativity in the Arts and Science, 2002.\n\n[5] N. Shaker, J. Togelius, and M. J. Nelson, Procedural Content Generation in Games: A Textbook and an Overview of Current Research. Springer, 2016. [6] J. Togelius, G. N. Yannakakis, K. O. Stanley, and C. Browne, “Searchbased procedural content generation: A taxonomy and survey,” IEEE Transactions on Computational Intelligence and AI in Games, vol. 3, no. 3, pp. 172–186, 2011."
+  },
+  {
+   "evidence_id": "paper:10.1109/access.2026.3677595_title_1",
+   "paper_id": "paper:10.1109/access.2026.3677595",
+   "source_type": "agentic_chunk",
+   "source_page": 1,
+   "text": "Previous surveys of PCG for games, covered in [3] and [5], look at generation techniques used for a wide range of game content—covering everything from 3D objects to game systems. Puzzles are one type of game content addressed in that range, but, given the broadness of those surveys, only a limited view is provided. Our survey aims to focus specifically on research in PCG for puzzles.\n\nWork on procedural puzzle generation has mostly focused on specific puzzles, because creating a generator requires at least some knowledge of specific puzzle rules. Our approach in this paper is to review research in puzzle generation by puzzle types; we divide the space of all puzzles that have been subject to PCG into categories that reflect common puzzle genres. The categories are not based on a formal survey of puzzles and are not intended as a taxonomy of puzzles."
+  },
+  {
+   "evidence_id": "paper:10.1109/access.2026.3677595_title_2",
+   "paper_id": "paper:10.1109/access.2026.3677595",
+   "source_type": "agentic_chunk",
+   "source_page": 9,
+   "text": "[1] M. Hendrikx, S. Meijer, J. Van Der Velden, and A. Iosup, “Procedural content generation for games: A survey,” ACM Trans. Multimedia Comput. Commun. Appl., vol. 9, no. 1, pp. 1–22, Feb. 2013. [Online]. Available: http://doi.acm.org/10.1145/2422956.2422957   \n[2] J. Togelius, G. N. Yannakakis, K. O. Stanley, and C. Browne, “Searchbased procedural content generation: A taxonomy and survey,” IEEE Transactions on Computational Intelligence and AI in Games, vol. 3, no. 3, pp. 172–186, 2011.   \n[3] C. Browne, “The nature of puzzles,” Game & Puzzle Design, vol. 1, no. 1, pp. 23–34, 2015."
+  },
+  {
+   "evidence_id": "paper:10.1109/access.2026.3677595_title_3",
+   "paper_id": "paper:10.1109/access.2026.3677595",
+   "source_type": "agentic_chunk",
+   "source_page": 18,
+   "text": "This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication. Citation information: DOI 10.1109/TG.2019.2917792, IEEE Transactions on Games\n\n[25] “Article: Procedural generation of puzzle game levels gamedev.net your game development resource,” http: //www.gamedev.net/page/resources/ /technical/game-programming/ procedural-generation-of-puzzle-game-levels-r3862, (Accessed on 08/30/2016).   \n[26] P. Song, C.-W. Fu, and D. Cohen-Or, “Recursive interlocking puzzles,” ACM Transactions on Graphics (TOG), vol. 31, no. 6, p. 128, 2012.   \n[27] D. Ashlock, “Automatic generation of game elements via evolution,” in Proceedings of the 2010 IEEE Conference on Computational Intelligence and Games. IEEE, 2010, pp. 289–296."
+  },
+  {
+   "evidence_id": "paper:10.1109/access.2026.3677595_title_4",
+   "paper_id": "paper:10.1109/access.2026.3677595",
+   "source_type": "agentic_chunk",
+   "source_page": 13,
+   "text": "21. Hendrikx, M.; Meijer, S.; Van Der Velden, J.; Iosup, A. Procedural content generation for games: A survey. ACM Trans. Multimed. Comput. Commun. Appl. (TOMM) 2013, 9, 1–22. [CrossRef]   \n22. Summerville, A.; Snodgrass, S.; Guzdial, M.; Holmgård, C.; Hoover, A.K.; Isaksen, A.; Nealen, A.; Togelius, J. Procedural content generation via machine learning (PCGML). IEEE Trans. Games 2018, 10, 257–270. [CrossRef]   \n23. Millodot, M. Dictionary of Optometry and Visual Science E-Book; Elsevier Health Sciences: London, UK, 2014."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2402.12348_title_5",
+   "paper_id": "paper:10.48550/arxiv.2402.12348",
+   "source_type": "agentic_chunk",
+   "source_page": 2,
+   "text": "The study \"Can Large Language Models Serve as Rational Players in Game Theory?\" evaluates LLMs' potential in game theory, identifying gaps in mimicking human rationality [37]. Another study explores models like Claude 2, GPT-3.5, and GPT-4 in processing game strategy and spatial information through Tic-Tac-Toe, finding that prompt design significantly impacts performance [38].\n\nGTBENCH evaluates LLMs' strategic reasoning in competitive game-theoretic tasks [39]. It features 10 tasks covering complete vs. incomplete information, dynamic vs. static, and probabilistic vs. deterministic scenarios. Results show LLMs struggle in complete, deterministic games but perform better in probabilistic ones. Commercial LLMs like GPT-4 outperform open-source models such as CodeLlama-34b-Instruct. Code-pretraining aids strategic reasoning, but advanced methods like Chain-of-Thought (CoT) and Tree-of-Thought do not consistently help. Detailed error profiles are provided to understand LLM behaviors [39]."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2402.12348_title_6",
+   "paper_id": "paper:10.48550/arxiv.2402.12348",
+   "source_type": "agentic_chunk",
+   "source_page": 3,
+   "text": "$$\n\\max  _ {\\sigma_ {1}} \\min  _ {\\sigma_ {2}} U _ {1} (\\sigma_ {1}, \\sigma_ {2}) = \\min  _ {\\sigma_ {2}} \\max  _ {\\sigma_ {1}} U _ {1} (\\sigma_ {1}, \\sigma_ {2}).\n$$\n\nLLM agents have been evaluated in adversarial benchmarks and games. For example, GTBench [Duan et al., 2024] is a game-theoretic benchmark with ten classic games (board, card, negotiation, auctions) probing pure strategic reasoning. Another testbed, GameBench [Costarelli et al., 2024], covers nine diverse game environments, revealing that GPT-4 still struggles to match human-level performance in zero-sum games. Specialized competitive frameworks, such as multi-agent debate systems [Cheng et al., 2024], facilitate agents arguing opposing viewpoints, thereby refining their answers. Empirical studies report that, though limitations in multi-step strategy anticipation remain, such competitive exercises help LLMs exhibit long-term planning and opponent modeling."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2402.12348_title_7",
+   "paper_id": "paper:10.48550/arxiv.2402.12348",
+   "source_type": "agentic_chunk",
+   "source_page": 1,
+   "text": "GTBench [6] benchmarks LLM strategic reasoning, finding that LLMs deviate from rational strategies as game complexity increases-motivating our use of game theory as a design framework rather than assuming strategic behavior by LLM agents. GT-HarmBench [1] extends game-theoretic evaluation to multi-agent safety, benchmarking risks in adversarial settings-complementary to our adversarial verification game.\n\n# 2.5 Positioning of Our Work"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2402.12348_title_8",
+   "paper_id": "paper:10.48550/arxiv.2402.12348",
+   "source_type": "agentic_chunk",
+   "source_page": 2,
+   "text": "![](dt=2026-06-04/ht=06/004a6f1ff62061e0a2375bea43774b0667d2db1c9bd87494313b148137a5ce6d.jpg)\n\n![](dt=2026-06-04/ht=06/ff6d499cdbb94bb31c494c77a9413df7b1e999dafb722492de3c45bc7c2f8cff.jpg)\n\n# 2 Related Work\n\nStrategic reasoning evaluation in LLMs. A growing body of work evaluates LLM behavior in strategic settings. Gandhi et al. [2023] show that chain-of-thought prompting enables LLMs to generalize strategic behavior across classic games; related prompting work shows that explicit reasoning traces can improve algorithmic tasks [Wei et al., 2022, Kojima et al., 2022, Nye et al., 2021, Zelikman et al., 2022]. Duan et al. [2024] introduce GTBench, showing that even frontier models fail on many game-theoretic tasks. Fan et al. [2024] study whether LLMs can serve as rational agents in economic games."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2402.12348_title_9",
+   "paper_id": "paper:10.48550/arxiv.2402.12348",
+   "source_type": "agentic_chunk",
+   "source_page": 1,
+   "text": "Benchmark driven work further quantifies these limitations. GT-Bench reveals substantial weakness in LLM strategic reasoning across structured tasks [14], while recursive look-ahead prompting can improve performance, although it does not eliminate failures [13]. More recent work reframes these behaviors through the lens of bounded rationality: both humans and LLMs deviate from Nash equilibrium in ways consistent with heuristic reasoning [55], and LLM decisions often align more closely with behavioral game-theoretic patterns than with strict payoff maximization [26]."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_title_10",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_chunk",
+   "source_page": 0,
+   "text": "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg)\n\n# Abstract\n\nGenerative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_title_11",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_chunk",
+   "source_page": 7,
+   "text": "# 7. Conclusion\n\nIn this paper, we propose GameFactory, a framework that uses generative interactive videos to create new games, addressing significant gaps in existing research, particularly in scene generalization. The study of generative game engines still faces many challenges, including the design of diverse levels and gameplay, player feedback systems, in-game object manipulation, long-context memory, and real-time game generation. GameFactory marks our first effort in this field, and we aim to continue progressing toward the realization of a fully capable generative game engine.\n\n# References"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_title_12",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_chunk",
+   "source_page": 18,
+   "text": "Generalization Across Diverse Environments. The ability to adapt across varied gaming scenarios and environments represents perhaps the most challenging dimension. GameFactory addresses this through scene-generalizable action control, leveraging open-domain generative priors from pre-trained video diffusion models to create entirely new games beyond fixed styles and scenes [306]. Recent work further creates a \"generative infinite game\" that transcends traditional finite, hard-coded systems [144]."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_title_13",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_chunk",
+   "source_page": 0,
+   "text": "# GameFactory: Creating New Games with Generative Interactive Videos\n\nJiwen $\\mathbf{Yu}^{1*\\dagger}$\n\nYiran Qin $^{1*}$\n\nXintao Wang $^{2\\dagger}$\n\nPengfei Wan\n\nDi Zhang $^{2}$\n\nXihui Liu†\n\n<sup>1</sup> The University of Hong Kong\n\n$^{2}$ Kuaishou Technology\n\nhttps://yujiwen.github.io/gamefactory/\n\n![](dt=2026-06-04/ht=19/d98137abe84416f47ace61c8a4d5956738de4681ed66fe39f9c4e71a6770d782.jpg)\n\n![](dt=2026-06-04/ht=19/5f5f71c3bc199b79267b59aac6c2384edeec4f1702315914656cf74a911d948e.jpg)"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_title_14",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_chunk",
+   "source_page": 12,
+   "text": "Efficient video generation provides critical support for interactive world simulation, and games have become a common deployment setting because of their well-defined interaction interfaces and controllable closed-loop evaluation.\n\nAmong representative works, GameGen-X [221] targets open-world game videos, injecting keyboard actions and multimodal instructions into the generation process to improve interactive responsiveness over long sequences. GameFactory [222] models action control independently of the game genre to enable action-conditioned interactive video generation for diverse open-world scenarios. Focusing on Minecraft, MineWorld [223] increases interactive frame rates by alleviating the throughput bottleneck of autoregressive tokens via"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_claim_0",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_claim",
+   "source_page": 1,
+   "text": "In this work, we present GameFactory, a framework for action-controlled and scene-generalizable game video generation. To achieve action-controlled video generation, we firstly collect an action-annotated game video dataset GF-Minecraft. This dataset, sourced from the Minecraft platform [13], features an unbiased action distribution, diverse scenes, and text annotations (Sec. 4.1). Secondly, we design action control mechanisms for continuous mouse movements and discrete keyboard inputs, respectively."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_claim_1",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_claim",
+   "source_page": 0,
+   "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_claim_2",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_claim",
+   "source_page": 0,
+   "text": "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg)\n\n# Abstract\n\nGenerative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_claim_3",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_claim",
+   "source_page": 0,
+   "text": "autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental"
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_claim_4",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "agentic_claim",
+   "source_page": 0,
+   "text": "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg)\n\n# Abstract\n\nGenerative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support"
+  },
+  {
+   "evidence_id": "paper:10.1109/access.2026.3677595_abstract",
+   "paper_id": "paper:10.1109/access.2026.3677595",
+   "source_type": "abstract",
+   "source_page": 0,
+   "text": "Procedural Content Generation (PCG) is the use of automatic techniques to create content for games, varying from the generation of fundamental units such as textures or sound to complex environments and entire games. It can be used to provide diverse challenges for players every session, and to generate large amounts of content that would be unfeasible to design manually. Puzzle games are a popular PCG domain due to their combinatorial complexity. However, the selection of an adequate representation for PCG in puzzles remains an unanswered question, which cannot ensure that the best possible results are attained. This research aims to bridge the gap by reviewing different representations used for procedural puzzle generation. A systematic literature review is conducted, identifying 931 articles between 2020 and 2025. After a thorough selection process, 111 studies were used to answer three research questions related to the usage of representations in procedural puzzle generation. Our results include a classification of representations in ‘‘logical’’ (related to the topology of the search space and move generation) and ‘‘physical’’ (data structures used for implementation), along with the factors that influence their selection. We also extend current taxonomy in puzzle game classification to give further context in the utilization of certain PCG techniques in certain domains.We conclude that a significant gap exists in studies addressing the problem of representation selection. Future studies may utilize existing frameworks and explore established problems with novel approaches to enhance the process of generating puzzle game instances."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2402.12348_abstract",
+   "paper_id": "paper:10.48550/arxiv.2402.12348",
+   "source_type": "abstract",
+   "source_page": 0,
+   "text": "As Large Language Models (LLMs) are integrated into critical real-world applications, their strategic and logical reasoning abilities are increasingly crucial. This paper evaluates LLMs' reasoning abilities in competitive environments through game-theoretic tasks, e.g., board and card games that require pure logic and strategic reasoning to compete with opponents. We first propose GTBench, a language-driven environment composing 10 widely recognized tasks, across a comprehensive game taxonomy: complete versus incomplete information, dynamic versus static, and probabilistic versus deterministic scenarios. Then, we (1) Characterize the game-theoretic reasoning of LLMs; and (2) Perform LLM-vs.-LLM competitions as reasoning evaluation. We observe that (1) LLMs have distinct behaviors regarding various gaming scenarios; for example, LLMs fail in complete and deterministic games yet they are competitive in probabilistic gaming scenarios; (2) Most open-source LLMs, e.g., CodeLlama-34b-Instruct and Llama-2-70b-chat, are less competitive than commercial LLMs, e.g., GPT-4, in complex games, yet the recently released Llama-3-70b-Instruct makes up for this shortcoming. In addition, code-pretraining greatly benefits strategic reasoning, while advanced reasoning methods such as Chain-of-Thought (CoT) and Tree-of-Thought (ToT) do not always help. We further characterize the game-theoretic properties of LLMs, such as equilibrium and Pareto Efficiency in repeated games. Detailed error profiles are provided for a better understanding of LLMs' behavior. We hope our research provides standardized protocols and serves as a foundation to spur further explorations in the strategic reasoning of LLMs."
+  },
+  {
+   "evidence_id": "paper:10.48550/arxiv.2501.08325_abstract",
+   "paper_id": "paper:10.48550/arxiv.2501.08325",
+   "source_type": "abstract",
+   "source_page": 0,
+   "text": "Generative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video generation. We first address the fundamental challenge of action controllability by introducing GF-Minecraft, an action-annotated game video dataset without human bias, and developing an action control module that enables precise control over both keyboard and mouse inputs. We further extend to support autoregressive generation for unlimited-length interactive videos. More importantly, GameFactory tackles the critical challenge of scene-generalizable action control, which most existing methods fail to address. To enable the creation of entirely new and diverse games beyond fixed styles and scenes, we leverage the open-domain generative priors from pre-trained video diffusion models. To bridge the domain gap between open-domain priors and small-scale game datasets, we propose a multi-phase training strategy with a domain adapter that decouples game style learning from action control. This decoupling ensures that action control learning is no longer bound to specific game styles, thereby achieving scene-generalizable action control. Experimental results demonstrate that GameFactory effectively generates open-domain action-controllable game videos, representing a significant step forward in AI-driven game generation."
+  }
+ ]
+}
