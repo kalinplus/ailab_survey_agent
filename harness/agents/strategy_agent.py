@@ -63,6 +63,13 @@ Reply with exactly ONE JSON object choosing one action:
 - {"action": "discover_by_description", "text": "natural-language description of the sub-field"}
   Semantic search that tolerates missing jargon; returns real titles and field keywords
   you can mine into concrete queries. Does NOT consume a round.
+- {"action": "delegate_search", "goal": "...", "queries": ["...", "..."]}
+  Hand ONE deep-exploration goal to a bounded search subagent (max 2 delegations per
+  run, does NOT consume a round). It runs its own SciVerse searches and returns ONLY a
+  compact summary: n_queries, up to 8 paper titles with years, at most 10 field
+  keywords, and its notes — raw hits never reach this conversation. Its SciVerse calls
+  share your budget. Use it for depth after R2/R3 fail, or to scout a brand-new
+  direction before committing keywords to it.
 - {"action": "commit_edits", "edits": [{"...see ops below...}]}
   Apply edits and trigger a full re-sample + a new report card. CONSUMES ONE ROUND.
   Ops:
@@ -83,12 +90,33 @@ R2: discover_by_description with a plain-language description of what the aspect
     mine the returned titles/keywords into queries.
 R3: the framework state lists "donated keywords" from the nearest already-retrieved
     papers — reuse them.
+Deep exploration: when R2/R3 leave you guessing, delegate_search with a crisp goal and
+    2-3 candidate queries instead of spending your own turns on repeated probes.
 R4: if everything fails, delete the aspect in a commit (an empty sub-area is itself a
     finding) — keep 3 to 6 aspects in total.
 
 Other signals: two aspects with high mutual overlap are the same aspect -> merge them.
 High n_hits but low rel -> keywords too broad -> narrow them. You have few rounds and
 few SciVerse calls (see budget line) — do not commit trivial edits."""
+
+MAX_DELEGATIONS = 2
+SUBAGENT_MAX_TURNS = 4
+SUBAGENT_MAX_LLM_CALLS = 3
+SUBAGENT_MAX_WALLCLOCK = 90.0
+
+SUBAGENT_SYSTEM = """You are EviSurvey's delegated search subagent. The strategy agent
+hands you ONE exploration goal; you run the searches and report a compact summary.
+Reply with exactly ONE JSON object choosing one action:
+- {"action": "search_papers", "query": "...", "page_size": 8}
+  Meta-search with no year filter; returns mined title/year/keywords per hit.
+- {"action": "discover", "text": "plain-language description of the sub-field"}
+  Semantic search that tolerates missing jargon; returns titles and field keywords.
+- {"action": "report_findings", "notes": "one short line: does the area exist, which keywords worked"}
+  Finish. The papers and keywords you actually retrieved are attached automatically —
+  never invent papers or keywords.
+
+You have very few turns and you share the strategy joint's SciVerse budget: stop
+exploring as soon as you hold enough titles/keywords and report."""
 
 
 def _sampling_filters(end_year: int) -> list[dict]:
@@ -626,6 +654,120 @@ def run_strategy_agent(
                       "then commit_edits and accept."}
         raise LoopFinished({"status": "accept"})
 
+    # -- delegated exploration: bounded search subagent (spec 搜索SubAgent工具) --
+    # The subagent shares budget (same _CountingSciverse), llm_json_chat and the
+    # trajectory writer; only its compact summary ever returns to the main loop.
+
+    sub: dict[str, Any] = {
+        "delegations": 0, "llm_calls": 0, "queries": [], "papers": [],
+        "keywords": Counter(), "errors": [],
+    }
+
+    def _sub_record_hits(hits: list[dict]) -> None:
+        seen = {p["title"] for p in sub["papers"]}
+        for hit in hits:
+            title = str(hit.get("title", "") or "").strip()
+            if title and title not in seen:
+                seen.add(title)
+                sub["papers"].append({"title": title[:140], "year": hit_year(hit)})
+            for keyword in hit.get("keywords") or []:
+                text = str(keyword).strip()
+                if len(text) > 2:
+                    sub["keywords"][text] += 1
+            for token in re.findall(r"[a-zA-Z][a-zA-Z-]{3,}", title):
+                sub["keywords"][token.lower()] += 1
+
+    def _sub_summary(notes: str) -> dict:
+        summary = {
+            "n_queries": len(sub["queries"]),
+            "papers": sub["papers"][:8],
+            "field_keywords": [k for k, _ in sub["keywords"].most_common(10)],
+            "notes": notes,
+        }
+        if sub["errors"]:
+            summary["error"] = "; ".join(dict.fromkeys(sub["errors"]))
+        return summary
+
+    def sub_search_papers(decision: dict) -> dict:
+        query = str(decision.get("query", "")).strip()
+        if not query:
+            return {"error": "query is required"}
+        page_size = max(1, min(8, _to_int(decision.get("page_size"), 8)))
+        try:
+            res = budget.meta_search(query=query, filters=None, page_size=page_size)
+        except _BudgetExceeded as exc:
+            sub["errors"].append(str(exc))
+            return {"error": str(exc)}
+        except Exception as exc:  # external API boundary
+            sub["errors"].append(f"search failed: {exc}")
+            return {"error": f"search failed: {exc}"}
+        hits = res.get("results", [])
+        sub["queries"].append(query)
+        _sub_record_hits(hits)
+        return {"query": query, "n_hits": len(hits),
+                "papers": [{"title": str(h.get("title", ""))[:140], "year": hit_year(h),
+                            "keywords": [str(k) for k in (h.get("keywords") or [])][:6]}
+                           for h in hits[:page_size]]}
+
+    def sub_discover(decision: dict) -> dict:
+        text = str(decision.get("text", "")).strip()
+        if not text:
+            return {"error": "text is required"}
+        try:
+            res = budget.agentic_search(query=text, top_k=8)
+        except _BudgetExceeded as exc:
+            sub["errors"].append(str(exc))
+            return {"error": str(exc)}
+        except Exception as exc:  # external API boundary
+            sub["errors"].append(f"agentic_search failed: {exc}")
+            return {"error": f"agentic_search failed: {exc}"}
+        hits = res.get("hits", [])
+        sub["queries"].append(text)
+        _sub_record_hits(hits)
+        return _mine_discovery_hits(hits)
+
+    def sub_report_findings(decision: dict) -> dict:
+        raise LoopFinished(_sub_summary(str(decision.get("notes", "")).strip()))
+
+    def delegate_search(decision: dict) -> dict:
+        goal = str(decision.get("goal", "")).strip()
+        if not goal:
+            return {"error": "goal is required"}
+        if sub["delegations"] >= MAX_DELEGATIONS:
+            return {"error": (f"delegation budget exhausted ({MAX_DELEGATIONS} per run); "
+                              "explore yourself with probe_query / discover_by_description")}
+        sub["delegations"] += 1
+        suggested = [str(q).strip() for q in decision.get("queries", []) if str(q).strip()][:5]
+        sub_task = (f"Exploration goal from the strategy agent: {goal}\n"
+                    + (f"Suggested starting queries: {suggested}\n" if suggested else "")
+                    + "Search for what this goal needs, then report_findings "
+                      "with one short notes line.")
+        sub_config = AgentConfig(
+            name="strategy_subagent",
+            system_prompt=SUBAGENT_SYSTEM,
+            tools={"search_papers": sub_search_papers,
+                   "discover": sub_discover,
+                   "report_findings": sub_report_findings},
+            max_turns=SUBAGENT_MAX_TURNS,
+            max_llm_calls=SUBAGENT_MAX_LLM_CALLS,
+            max_wallclock=SUBAGENT_MAX_WALLCLOCK,
+            on_action=log,
+            on_finish=lambda summary: log(
+                {"agent": "strategy_subagent", "event": "loop_finish", **summary}),
+        )
+        sub_loop = BoundedAgentLoop(sub_config, llm_json_chat)
+        try:
+            result = sub_loop.run(sub_task)
+        except Exception as exc:  # delegation boundary: a broken subagent must not abort the main loop
+            logger.warning(f"[strategy-agent] subagent aborted: {exc}")
+            sub["errors"].append(f"subagent aborted: {exc}")
+            sub["llm_calls"] += sub_loop.llm_calls
+            return _sub_summary("")
+        sub["llm_calls"] += sub_loop.llm_calls
+        if result.status == "finished" and result.payload:
+            return result.payload
+        return _sub_summary(f"subagent stopped on {result.status} before reporting")
+
     def state_provider() -> str:
         state = render_card(frame["card"],
                             rounds_left=max_rounds - frame["rounds_used"],
@@ -643,6 +785,7 @@ def run_strategy_agent(
         system_prompt=STRATEGY_SYSTEM,
         tools={"probe_query": probe_query,
                "discover_by_description": discover_by_description,
+               "delegate_search": delegate_search,
                "commit_edits": commit_edits,
                "accept": accept},
         max_turns=2 * max_llm_calls,
@@ -684,6 +827,7 @@ def run_strategy_agent(
         "status": finish_status,
         "naming_mode": naming_mode,
         "llm_calls": 1 + loop_llm_calls,
+        "subagent": {"delegations": sub["delegations"], "llm_calls": sub["llm_calls"]},
         "sciverse_calls": budget.calls,
         "elapsed_sec": round(time.monotonic() - started, 1),
         "rel_mode": best.card["rel_mode"],

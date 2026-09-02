@@ -262,6 +262,139 @@ def test_r3_donated_keywords_injected_for_starving_aspect(tmp_path):
     assert "alpha kw" in state_texts[0] or "beta kw" in state_texts[0]
 
 
+# --- delegated search subagent (specs/搜索SubAgent工具.md) ---------------------
+
+
+def _main_observation(llm, needle):
+    """Newest observation of the first MAIN-loop turn whose latest observation has needle.
+
+    Both loops speak the same "Observation:" format and the message list grows, so a
+    main-loop snapshot is told apart by its auto-injected report-card state block
+    (the subagent has no state_provider); within a snapshot the model reacts to the
+    LAST observation.
+    """
+    for snapshot in llm.messages_seen:
+        if not any("[framework state]" in m["content"] and "report card" in m["content"]
+                   for m in snapshot):
+            continue
+        observations = [m["content"] for m in snapshot
+                        if m["role"] == "user" and "Observation" in m["content"]]
+        if observations and needle in observations[-1]:
+            return observations[-1]
+    raise AssertionError(f"no main-line observation containing {needle!r}")
+
+
+def _observation_payload(text):
+    """Parse the delegate_search summary JSON out of a main-line observation."""
+    body = text.split("Observation:\n", 1)[1].split("\n\n[framework state]")[0]
+    return json.loads(body)
+
+
+def _trajectory_events(tmp_path):
+    lines = (tmp_path / "traj" / "task_test_001_strategy.jsonl").read_text().splitlines()
+    return [json.loads(line) for line in lines]
+
+
+def test_delegate_search_returns_compact_summary(tmp_path):
+    sv = _meta_fake()
+    sv.meta_by_needle["deeper dive"] = _hits(4, "deep")
+    sv.agentic_by_needle["deeper dive"] = [
+        {"title": "Deeper Dive World Models", "keywords": ["deeper dive", "latent dynamics"]}]
+    llm = ScriptedLLM([
+        GOOD_PLAN,
+        {"action": "delegate_search", "goal": "explore the deeper-dive sub-field",
+         "queries": ["deeper dive methods"]},
+        {"action": "discover", "text": "semantic description of the deeper dive sub-field"},
+        {"action": "search_papers", "query": "deeper dive methods"},
+        {"action": "report_findings", "notes": "sub-field exists; 'deeper dive' works"},
+        {"action": "accept"},
+    ])
+    strategy = _run(sv, llm, tmp_path)
+    meta = strategy["strategy_agent"]
+    assert meta["subagent"] == {"delegations": 1, "llm_calls": 3}
+    # the subagent searched through the shared counting proxy: agentic + meta, filters=none
+    assert "deeper dive" in sv.agentic_calls[-1]["query"]
+    assert sv.meta_calls[-1]["query"] == "deeper dive methods"
+    assert sv.meta_calls[-1]["filters"] is None
+    assert sv.meta_calls[-1]["page_size"] == 8
+    assert meta["sciverse_calls"] == len(sv.meta_calls) + len(sv.agentic_calls)
+    payload = _observation_payload(_main_observation(llm, '"n_queries"'))
+    assert set(payload) == {"n_queries", "papers", "field_keywords", "notes"}
+    assert payload["n_queries"] == 2
+    assert payload["notes"] == "sub-field exists; 'deeper dive' works"
+    assert len(payload["papers"]) <= 8 and len(payload["field_keywords"]) <= 10
+    assert all(set(p) == {"title", "year"} for p in payload["papers"])
+    papers_text = json.dumps(payload["papers"])
+    assert "deep paper 1" in papers_text and "Deeper Dive World Models" in papers_text
+    # raw subagent retrieval output never reaches the main-line observation
+    text = _main_observation(llm, '"n_queries"')
+    for leaked in ("unique_id", "abstract", "citation_count", "doi"):
+        assert leaked not in text
+    # subagent turns share the same trajectory file under their own agent name
+    sub_turns = [e for e in _trajectory_events(tmp_path)
+                 if e.get("agent") == "strategy_subagent" and "action" in e]
+    assert [t["action"] for t in sub_turns] == ["discover", "search_papers", "report_findings"]
+
+
+def test_subagent_toolbox_has_no_delegate_or_edit_tools(tmp_path):
+    sv = _meta_fake()
+    llm = ScriptedLLM([
+        GOOD_PLAN,
+        {"action": "delegate_search", "goal": "scout a brand-new direction"},
+        {"action": "delegate_search", "goal": "recursive delegation attempt"},
+        {"action": "report_findings", "notes": "nothing usable"},
+        {"action": "accept"},
+    ])
+    strategy = _run(sv, llm, tmp_path)
+    sub_turns = [e for e in _trajectory_events(tmp_path)
+                 if e.get("agent") == "strategy_subagent" and "action" in e]
+    assert sub_turns[0]["action"] == "delegate_search"
+    digest = sub_turns[0]["result_digest"]
+    # the chassis rejection lists the real subagent toolbox: no recursion, no edit rights
+    assert "unknown action 'delegate_search'" in digest
+    assert "allowed actions: ['discover', 'report_findings', 'search_papers']" in digest
+    assert "commit_edits" not in digest and "accept" not in digest
+    # the main line only sees the summary, not the subagent's internal error
+    assert strategy["strategy_agent"]["subagent"] == {"delegations": 1, "llm_calls": 2}
+    payload = _observation_payload(_main_observation(llm, '"n_queries"'))
+    assert payload["n_queries"] == 0 and payload["notes"] == "nothing usable"
+
+
+def test_subagent_shares_sciverse_budget_and_main_loop_continues(tmp_path):
+    sv = _meta_fake()
+    llm = ScriptedLLM([
+        GOOD_PLAN,
+        {"action": "delegate_search", "goal": "explore further after the sample"},
+        {"action": "search_papers", "query": "alpha query"},
+        {"action": "report_findings", "notes": "blocked"},
+        {"action": "accept"},
+    ])
+    # probe(2) + sample(3) exhausts the joint budget before the subagent searches
+    strategy = _run(sv, llm, tmp_path, max_sciverse_calls=5)
+    text = _main_observation(llm, '"n_queries"')
+    assert "SciVerse budget exhausted" in text          # error observation reaches the main line
+    payload = _observation_payload(text)
+    assert payload["n_queries"] == 0 and payload["papers"] == []
+    assert len(sv.meta_calls) == 5                      # refused call never hit SciVerse
+    assert strategy["strategy_agent"]["status"] == "finished:accept"  # main loop survived
+
+
+def test_third_delegation_is_refused(tmp_path):
+    sv = _meta_fake()
+    llm = ScriptedLLM([
+        GOOD_PLAN,
+        {"action": "delegate_search", "goal": "goal one"},
+        {"action": "report_findings", "notes": "n1"},
+        {"action": "delegate_search", "goal": "goal two"},
+        {"action": "report_findings", "notes": "n2"},
+        {"action": "delegate_search", "goal": "goal three"},
+        {"action": "accept"},
+    ])
+    strategy = _run(sv, llm, tmp_path)
+    assert strategy["strategy_agent"]["subagent"] == {"delegations": 2, "llm_calls": 2}
+    assert "delegation budget exhausted (2 per run)" in _main_observation(llm, "delegation budget exhausted")
+
+
 # --- budgets / robustness ------------------------------------------------------
 
 
