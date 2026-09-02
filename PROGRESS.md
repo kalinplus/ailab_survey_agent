@@ -5,42 +5,32 @@
 
 ## Current
 
-### 文件为窗口的非阻塞工作流（本仓落地）
-
-- 任务目标：协作从阻塞式对话框迁到"文件为窗口"——状态进 `PROGRESS.md` / `specs/`，会话边界读写，需求可异步累积。
-- 验收条件：
-  - 协议写入用户级 CLAUDE.md（已达成）
-  - 本仓建立 `PROGRESS.md`，项目 CLAUDE.md 注明 solo dev 与提交约定（已达成）
-  - 一个真实需求按 spec → 实现 → 回写跑通全流程
+（无进行中任务）
 
 ## Next
 
-### 评测体系 v2：离线四层改造（可并行派发）
+### 交付件重跑与评测联动
 
-- 任务目标：把离线评测从"引用中心三层"扩为四层（确定性画像 / corpus-grounded coverage / 未引用句验证 / DeepSurvey 三维 judge），报告重组为四区块，服务交付质量背书。设计见 `specs/评测体系v2-离线四层改造.md`。
+- 任务目标：评测 v2 首跑暴露 delivered `output/survey.md` 工件真实缺陷（84 处引用仅 3 个唯一 id、小节相似度 max 0.952、纯描述无批判分析 → L3 informational/guidance 1/5）。用交付级配置重跑一次生成侧（showcase demo 或 full），使四层评测对象是自洽工件，验证 L3 分数回升、id 失配告警消失。
 - 验收条件：
-  - `pytest tests/unit/` 全绿（零网络：fake LLM / FakeNLI / stub sciverse）
-  - 四层各至少一条精确数值断言的正例单测
-  - uncited 层缓存续跑：同 fixture 第二次 run stub 检索计数零新增
-  - citation_quality / reference_coverage / ab_comparison 存量断言保持绿
-  - 真跑验收合并后主工作区做一次（`EVISURVEY_REAL_NLI=1` 全量，目检四区块报告）
-
-### 真实需求走通一轮工作流
-
-- 任务目标：用下一个实际需求检验协议摩擦点（spec 粒度、回写时机）。
-- 验收条件：
-  - 全流程（spec 文件 → 实现 → PROGRESS 回写）走通一次
-  - 摩擦点记入 Log
-
-### 给搜索模块加上 SubAgent 工具
-
-- 任务目标：现在的搜索 Agent 模块都是自己去搜索文件，聚合关键词，并且具体搜索。但是在确定要搜索的方向后，其实更好的方式是让一个 subagent 去搜索，这样就不会被中间的一些信息和工具输出影响到上下文。
-- 验收条件：
-  - 给搜索 Agent 加入 Subagent 工具，并且 Subagent 可用工具列表里不包含 Subagent 不能递归，代码编译要通过。
-  - 搜索 Agent 的已有工具以及新增的 Subagent 工具都要能够正常使用。单独的工具单元测试要能够通过。
-  - 整体流程的话，对比测试和冒烟测试没有问题。
+  - 新 run 的 `output/survey.md` 与 `cache/final_*` 同 id 空间，`id_space_mismatch=false`
+  - 四层全量真跑通过，L3 三维 rationale 指向的缺陷不再是引用塌缩/复述
+  - 重跑后的 showcase 产物（HTML/PDF）仍通过 readiness gates
 
 ## Log
+
+### 2026-09-02（下午：双 worktree 并行派发落地）
+
+- 双任务并行派发全流程走通：评测体系 v2 四层改造（spec `specs/评测体系v2-离线四层改造.md`）+ 搜索 SubAgent 工具（spec `specs/搜索SubAgent工具.md`，派发前由主会话补薄设计并提交）。触达文件集不相交，两 worktree 并行零冲突；各 cherry-pick 单 commit 合并（`eeefb94` SubAgent、`a444ee1` 评测 v2）。
+- 评测 v2 真跑验收通过：`EVISURVEY_REAL_NLI=1` 全量四区块报告（`output/survey_eval_report.md`）。L1.5 缓存续跑在真实中断场景验证成功（上次被杀 run 留下 18 条缓存命中，本次仅新检索 19 条）；id 失配告警按设计触发（`10.1109/...` vs `alphastar_2019`）。L3 打分 1.667/5 且 rationale 与 L0/L1 数据交叉印证（84 引用 3 唯一 id、相似度 0.952、零批判）——judge 正确，暴露的是工件本身缺陷，评测体系价值首验。
+- SubAgent 真跑验收通过：`main.py` full 冒烟 exit 0、`meta["subagent"]` 恒存在（delegations=0）；A/B/C 对比全硬断言 PASS，C 配置 survival 全面优于 A/B（1.0 vs 0.25–0.5）。Intern-S2 在 10 个真实场景零自发委托（aspects 健康时不需深挖；委托机制由 4 条单测覆盖：正例摘要/无递归/共享预算/上限拒绝）。
+- 工作流验收："文件为窗口"三条全达成——协议写入用户级 CLAUDE.md、本仓建立 PROGRESS/specs 并提交、真实需求（本双任务）spec→实现→真跑→回写走通。
+- 摩擦点（供协议迭代）：
+  - worktree 基点落后 main（0b909d0），agent 需自行 ff-merge 才能看到派发前提交的 spec——派发前应确认 Agent tool 的 worktree 基点行为或派发说明里写明基点 commit。
+  - 真跑验收有顺序依赖：评测先于 smoke（smoke 覆盖 `output/survey.md` 会破坏评测的工件配对）；多任务真跑要按数据依赖排序，不是简单串行。
+  - 后台长命令输出经管道缓冲后中途不可观测，被杀时零诊断信息——长真跑一律 `python -u` 直出。
+  - review 发现的问题（评测 id 失配裸 0.0）通过 SendMessage 回传 agent amend 单 commit 解决，保持一任务一 commit，闭环顺畅。
+- 清理：删除已合入 main 的遗留分支 `feat/module-b-knowledge-pipeline`；两个 worktree 与 `worktree-agent-*` 分支已清理。`docs/相关工作对比.md` 仍未跟踪，待用户决定归档方式。
 
 ### 2026-09-02
 
