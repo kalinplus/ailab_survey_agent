@@ -8,6 +8,19 @@ Hackathon project for 上海人工智能实验室 2026 暑期夏令营, Task 4 (
 
 **Status (2026-08)**: Public submission delivered (final report + showcase demo + README). v2 improvement phase — bounded agent loops at three DAG-shaped holes (strategy / repair / goal gate). **关节1（策略 Agent）、关节2（修复 Agent + Goal Gate）、关节3（coverage 闸补全）均已实现**（`harness/agents/` + `harness/goal_gate.py`）。Plans and audit live in `docs/RealAgent/`; read `docs/RealAgent/Agent关节改造-审计与计划.md` (总计划) and per-joint module docs before touching the strategy/verify/revise paths.
 
+**Solo dev (2026-09)**: now developed personally — no teammate considerations. `PROGRESS.md` (session work state) and `specs/` are committed to git, not ignored; read `PROGRESS.md` at session start and write back when a bounded unit of work completes.
+
+## Parallel Dispatch Protocol (git worktree agents)
+
+When the user proposes a direction, the main session may dispatch implementation to parallel worktree subagents (Agent tool, `isolation: "worktree"`) instead of implementing serially in the main workspace.
+
+- **Dispatch unit** = one `###` task in `PROGRESS.md` Next (goal + decidable acceptance criteria). Non-trivial tasks get `specs/<topic>.md` (motivation + acceptance criteria), committed BEFORE dispatch — worktrees only see committed files.
+- **Parallel condition**: dispatch in parallel only when the tasks' touched-file sets are disjoint; otherwise serial.
+- **Agent discipline** (state in every dispatch prompt): never edit `PROGRESS.md` or `specs/` — the main session owns state write-back (this is what prevents merge conflicts); fail fast; verify against the acceptance criteria.
+- **Verification depth** follows the task's acceptance criteria; default `pytest tests/unit/` (fake LLM, no network — zero interference between parallel agents). Real-API acceptance (integration/eval) runs ONCE in the main workspace after merge by default (Intern ~1req/2s — parallel real-API runs contend); run it inside the worktree only when the spec explicitly says so, and don't parallelize that task.
+- **Merge & write-back (main session only)**: review `git diff main...<branch>` → merge (one commit per task) → update `PROGRESS.md` (task out of Current/Next, conclusions into Log) → report to user → clean up worktree/branch.
+- Worktrees are self-sufficient here: `.env` and `cache/final_*.json` are tracked; conda `base` is shared, no per-worktree installs.
+
 ## Architecture: Three Modules + Linear Pipeline
 
 ```
