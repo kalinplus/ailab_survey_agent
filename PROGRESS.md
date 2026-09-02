@@ -15,6 +15,16 @@
 
 ## Next
 
+### 评测体系 v2：离线四层改造（可并行派发）
+
+- 任务目标：把离线评测从"引用中心三层"扩为四层（确定性画像 / corpus-grounded coverage / 未引用句验证 / DeepSurvey 三维 judge），报告重组为四区块，服务交付质量背书。设计见 `specs/评测体系v2-离线四层改造.md`。
+- 验收条件：
+  - `pytest tests/unit/` 全绿（零网络：fake LLM / FakeNLI / stub sciverse）
+  - 四层各至少一条精确数值断言的正例单测
+  - uncited 层缓存续跑：同 fixture 第二次 run stub 检索计数零新增
+  - citation_quality / reference_coverage / ab_comparison 存量断言保持绿
+  - 真跑验收合并后主工作区做一次（`EVISURVEY_REAL_NLI=1` 全量，目检四区块报告）
+
 ### 真实需求走通一轮工作流
 
 - 任务目标：用下一个实际需求检验协议摩擦点（spec 粒度、回写时机）。
@@ -34,6 +44,7 @@
 
 ### 2026-09-02
 
+- 评测体系 v2 立项：诊断确认现有三层过度集中于引用核查（L1 与线上 verify 同源、L2 依赖 gold、L3 单 judge 偏置），最大盲区是 citation_coverage≈0.4–0.5 的未引用正文无人核查。定稿四层方案（确定性画像 / corpus-grounded coverage / 未引用句验证 / DeepSurvey 三维 judge；AHA 明确不做），spec 在 `specs/评测体系v2-离线四层改造.md`，按并行派发协议出 worktree。
 - 工作流迁移模板落地 `~/.claude/templates/workflow-bootstrap.md`：引导 prompt + 项目协议节填空模板，供新仓库快速迁移（协议本体在用户级 CLAUDE.md 全局生效，迁移仅项目级四件）。
 - 落地 worktree 并行派发协议：项目 CLAUDE.md 增 "Parallel Dispatch Protocol" 小节；用户级 CLAUDE.md 增通用 "Git Worktree 并行派发" 原则；`PROGRESS.md` 首次提交（worktree 只见已提交内容，此为派发前提）。下一个真实任务（搜索 SubAgent 工具）按协议派发，验证全链路。
 - 建立工作流：`PROGRESS.md` + `specs/` + 用户级 CLAUDE.md 协议（含 PROGRESS 模板）；项目转个人开发，本文件与 `specs/` 提交进 git（项目 CLAUDE.md 已注明）。
