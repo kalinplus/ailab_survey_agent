@@ -1,8 +1,11 @@
+import re
+
 from tools.phases.phase3_paper_retriever import (
     run,
     dedup,
     _influence_filter_sets,
     _filter_relevant_candidates,
+    _paper_relevance_score,
     _rank_by_influence,
     _to_retrieved,
     pipeline_config_extra,
@@ -509,3 +512,275 @@ def test_parse_degrades_to_abstract_only_when_mineru_raises():
     )
     assert rp.papers[0].parse_status == "abstract_only"
     assert len(pp.papers) == 0  # degraded; not crashed
+
+
+# --- S1 breadth knobs (specs/检索广度与来源深度.md) -------------------------------
+
+
+class BreadthSV:
+    """Fake meta-search mirroring the real contract shape ({"results": [...]} + page_size).
+
+    Hits are tagged with the aspect token (asp<k>) and the query slug found in the query,
+    so every retrieved paper can be attributed to the aspect/query that produced it.
+    """
+
+    def __init__(self, pool=40):
+        self.pool = pool
+        self.calls = []
+        self.hits_by_query = {}
+
+    def meta_search(self, query, **kw):
+        self.calls.append({"query": query, **kw})
+        if query not in self.hits_by_query:
+            aspect = re.search(r"asp(\d+)", query)
+            prefix = f"asp{aspect.group(1)}" if aspect else "q"
+            slug = re.sub(r"\W+", "", query)
+            self.hits_by_query[query] = [
+                {
+                    "unique_id": f"paper:{prefix}:{slug}:{i}",
+                    "title": f"{query} study {i}",
+                    "publication_published_year": 2023,
+                    "abstract": f"{query} abstract {i}",
+                    "citation_count": i,
+                    "url": f"https://arxiv.org/pdf/{prefix}{slug}{i}.pdf",
+                }
+                for i in range(self.pool)
+            ]
+        return {"results": self.hits_by_query[query][: kw.get("page_size", self.pool)]}
+
+
+def _breadth_aspects(n=5):
+    return [
+        {
+            "aspect_id": f"aspect_{k + 1:03d}",
+            "keywords": [f"asp{k} world model", f"asp{k} latent dynamics"],
+        }
+        for k in range(n)
+    ]
+
+
+def _breadth_cfg():
+    from tools.models.requests import PipelineConfig
+
+    # corpus cap far above any pool, so breadth — not max_papers — sets the corpus size
+    return PipelineConfig(use_seed_fallback=False, use_mineru=False, max_papers=1000)
+
+
+def test_breadth_knobs_widen_corpus_monotonically(monkeypatch):
+    for name in ["EVISURVEY_MAX_QUERIES_PER_ASPECT", "EVISURVEY_META_PAGE_SIZE", "EVISURVEY_MAX_CORPUS"]:
+        monkeypatch.delenv(name, raising=False)
+
+    rp, _ = run("t", _breadth_aspects(), [], BreadthSV(), FakeMU(), FakeCleaner(), [], _breadth_cfg())
+    baseline = len(rp.papers)
+
+    monkeypatch.setenv("EVISURVEY_META_PAGE_SIZE", "40")
+    rp, _ = run("t", _breadth_aspects(), [], BreadthSV(), FakeMU(), FakeCleaner(), [], _breadth_cfg())
+    wider_page = len(rp.papers)
+
+    monkeypatch.setenv("EVISURVEY_MAX_QUERIES_PER_ASPECT", "3")
+    rp, _ = run("t", _breadth_aspects(), [], BreadthSV(), FakeMU(), FakeCleaner(), [], _breadth_cfg())
+    widest = len(rp.papers)
+
+    assert 0 < baseline < wider_page < widest
+    assert widest == 5 * 3 * 40  # 5 aspects x 3 queries x page_size 40, all unique hits
+
+
+def test_breadth_knobs_reach_meta_search(monkeypatch):
+    monkeypatch.delenv("EVISURVEY_META_PAGE_SIZE", raising=False)
+    monkeypatch.delenv("EVISURVEY_MAX_QUERIES_PER_ASPECT", raising=False)
+
+    sv = BreadthSV()
+    run("t", _breadth_aspects(1), [], sv, FakeMU(), FakeCleaner(), [], _breadth_cfg())
+    assert len(sv.calls) == 3  # 1 query x 3 influence bands
+    assert sv.calls[0]["page_size"] == 15
+
+    monkeypatch.setenv("EVISURVEY_MAX_QUERIES_PER_ASPECT", "3")
+    monkeypatch.setenv("EVISURVEY_META_PAGE_SIZE", "40")
+    wide_sv = BreadthSV()
+    run("t", _breadth_aspects(1), [], wide_sv, FakeMU(), FakeCleaner(), [], _breadth_cfg())
+    assert len(wide_sv.calls) == 9  # 3 queries x 3 influence bands
+    assert {call["page_size"] for call in wide_sv.calls} == {40}
+
+
+def test_max_corpus_caps_with_aspect_balance(monkeypatch):
+    monkeypatch.setenv("EVISURVEY_META_PAGE_SIZE", "40")
+    monkeypatch.setenv("EVISURVEY_MAX_QUERIES_PER_ASPECT", "3")
+    monkeypatch.setenv("EVISURVEY_MAX_CORPUS", "12")
+
+    rp, _ = run("t", _breadth_aspects(), [], BreadthSV(), FakeMU(), FakeCleaner(), [], _breadth_cfg())
+
+    assert len(rp.papers) == 12
+    aspects_seen = {re.match(r"paper:(asp\d+):", p.paper_id).group(1) for p in rp.papers}
+    assert aspects_seen == {f"asp{k}" for k in range(5)}  # the cap erased no aspect
+
+
+def test_max_corpus_keeps_corpus_when_cap_not_binding(monkeypatch):
+    monkeypatch.setenv("EVISURVEY_META_PAGE_SIZE", "40")
+    monkeypatch.setenv("EVISURVEY_MAX_QUERIES_PER_ASPECT", "3")
+    monkeypatch.setenv("EVISURVEY_MAX_CORPUS", "1000")
+
+    rp, _ = run("t", _breadth_aspects(), [], BreadthSV(pool=4), FakeMU(), FakeCleaner(), [], _breadth_cfg())
+
+    assert len(rp.papers) == 5 * 3 * 4  # nothing trimmed, no reordering side effect
+
+
+def test_relevance_threshold_knob_is_monotone(monkeypatch):
+    aspects = [{"keywords": ["world model", "latent dynamics", "gamecraft benchmark"]}]
+    papers = [
+        RetrievedPaper(paper_id="p:strong", title="World model latent dynamics for gamecraft benchmark",
+                       year=2024, abstract="world model latent dynamics for gamecraft benchmark"),
+        RetrievedPaper(paper_id="p:partial", title="Latent dynamics for control",
+                       year=2024, abstract="latent dynamics planning"),
+        RetrievedPaper(paper_id="p:weak", title="Latent-space regularization study",
+                       year=2024, abstract="regularizers over latent space"),
+        RetrievedPaper(paper_id="p:offtopic", title="Cancer statistics 2024",
+                       year=2024, abstract="Annual cancer incidence and mortality statistics."),
+    ]
+    scores = {p.paper_id: _paper_relevance_score(p, aspects) for p in papers}
+
+    monkeypatch.setenv("EVISURVEY_RELEVANCE_MIN_SCORE", "0.6")
+    strict = {p.paper_id for p in _filter_relevant_candidates(papers, aspects)}
+    monkeypatch.setenv("EVISURVEY_RELEVANCE_MIN_SCORE", "0.1")
+    loose = {p.paper_id for p in _filter_relevant_candidates(papers, aspects)}
+
+    assert strict == {pid for pid, s in scores.items() if s >= 0.6}
+    assert loose == {pid for pid, s in scores.items() if s >= 0.1}
+    assert strict < loose
+
+
+# --- S1 relevance prefilter must not erase whole aspects -------------------------
+
+
+def _coverage_fixture():
+    """5 aspects; aspect 0's hits match no pooled relevance term."""
+    aspects, papers_by_query = [], {}
+    for k in range(5):
+        query = f"asp{k} world model benchmark"
+        aspects.append({"aspect_id": f"aspect_{k + 1:03d}", "keywords": [query]})
+        if k == 0:
+            papers_by_query[query] = [
+                {
+                    "unique_id": f"paper:asp0:pottery{i}",
+                    "title": f"Unrelated pottery glaze study {i}",
+                    "publication_published_year": 2023,
+                    "abstract": "pottery glaze chemistry",
+                    "citation_count": i,
+                }
+                for i in range(4)
+            ]
+        else:
+            papers_by_query[query] = [
+                {
+                    "unique_id": f"paper:asp{k}:hit{i}",
+                    "title": f"{query} study {i}",
+                    "publication_published_year": 2023,
+                    "abstract": f"{query} abstract {i}",
+                    "citation_count": i,
+                }
+                for i in range(4)
+            ]
+    return aspects, papers_by_query
+
+
+class QuerySV:
+    def __init__(self, papers_by_query):
+        self.papers_by_query = papers_by_query
+
+    def meta_search(self, query, **kw):
+        return {"results": self.papers_by_query.get(query, [])}
+
+
+def _corpus_counts(papers):
+    counts = {}
+    for p in papers:
+        key = p.paper_id.split(":")[1]
+        counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
+def test_aspect_coverage_floor_keeps_every_aspect_represented(monkeypatch):
+    from tools.models.requests import PipelineConfig
+
+    aspects, papers_by_query = _coverage_fixture()
+    monkeypatch.setenv("EVISURVEY_ASPECT_MIN_PAPERS", "2")
+    rp, _ = run(
+        "t", aspects, [], QuerySV(papers_by_query), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False, use_mineru=False, max_papers=1000),
+    )
+
+    counts = _corpus_counts(rp.papers)
+    for k in range(5):
+        assert counts.get(f"asp{k}", 0) >= 2
+
+
+def test_aspect_coverage_floor_off_by_default(monkeypatch):
+    """Delivered behavior: the pooled prefilter may still wipe a whole aspect."""
+    from tools.models.requests import PipelineConfig
+
+    monkeypatch.delenv("EVISURVEY_ASPECT_MIN_PAPERS", raising=False)
+    aspects, papers_by_query = _coverage_fixture()
+    rp, _ = run(
+        "t", aspects, [], QuerySV(papers_by_query), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False, use_mineru=False, max_papers=1000),
+    )
+
+    counts = _corpus_counts(rp.papers)
+    assert counts.get("asp0", 0) == 0
+    assert all(counts.get(f"asp{k}", 0) >= 4 for k in range(1, 5))
+
+
+# --- S1 depth: MinerU fulltext bounded to the core window ------------------------
+
+
+class CountingMU:
+    def __init__(self):
+        self.calls = 0
+
+    def parse_url(self, url, light=True):
+        self.calls += 1
+        return {
+            "title": "A",
+            "abstract": "abs",
+            "sections": [],
+            "paragraphs": [{"page": 1, "index": 0, "text": "t"}],
+            "figures": [],
+            "tables": [],
+        }
+
+
+class ManyPdfSV:
+    def meta_search(self, query, **kw):
+        return {"results": [
+            {
+                "unique_id": f"paper:{i}",
+                "title": f"World model survey {i}",
+                "year": 2023,
+                "abstract": "world model survey",
+                "url": f"https://arxiv.org/pdf/{i}",
+            }
+            for i in range(8)
+        ]}
+
+
+def test_mineru_fulltext_bounded_to_core_window():
+    from tools.models.requests import PipelineConfig
+
+    mu = CountingMU()
+    cfg = PipelineConfig(use_mineru=True, max_core_papers=3)
+    rp, pp = run("t", [{"keywords": ["world model"]}], [], ManyPdfSV(), mu, FakeCleaner(), [], cfg)
+
+    assert mu.calls == 3  # only the core window reaches MinerU
+    assert {p.paper_id for p in pp.papers} == {"paper:0", "paper:1", "paper:2"}
+    assert sum(1 for p in rp.papers if p.parse_status == "light") == 3
+    assert all(p.parse_status == "abstract_only" for p in rp.papers[3:])
+
+
+def test_mineru_fulltext_covers_all_when_below_core_window():
+    from tools.models.requests import PipelineConfig
+
+    mu = CountingMU()
+    cfg = PipelineConfig(use_mineru=True)  # default max_core_papers=15 > 8 papers
+    rp, pp = run("t", [{"keywords": ["world model"]}], [], ManyPdfSV(), mu, FakeCleaner(), [], cfg)
+
+    assert mu.calls == 8
+    assert len(pp.papers) == 8

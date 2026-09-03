@@ -214,3 +214,26 @@ def test_backfill_skips_contradictory_chunks():
     ])
     es = run("t", pp, cards, NLIContradictoryStub(), sciverse=sv)
     assert [e for e in es.evidence if e.source_type == "agentic_chunk"] == []
+
+
+# --- S1 depth: abstract + fulltext double layer for core papers -------------------
+
+
+def test_core_paper_fulltext_yields_abstract_and_fulltext_layers():
+    """A MinerU-parsed core paper contributes its abstract AND its fulltext paragraphs;
+    a paper with no parsed body stays at the abstract layer."""
+    pp = ParsedPapers(task_id="t", papers=[
+        ParsedPaper(paper_id="paper:core", title="Core", abstract="core abstract",
+                    paragraphs=[Paragraph(page=1, index=0, text="intro"),
+                                Paragraph(page=2, index=0, text="method")]),
+        ParsedPaper(paper_id="paper:thin", title="Thin", abstract="thin abstract"),
+    ])
+    cards = PaperCards(task_id="t", paper_cards=[])
+    es = run("t", pp, cards, NLIStub())
+
+    core = [e for e in es.evidence if e.paper_id == "paper:core"]
+    thin = [e for e in es.evidence if e.paper_id == "paper:thin"]
+    assert [e.source_type for e in core].count("abstract") == 1
+    assert [e.source_type for e in core].count("paragraph") == 2  # fulltext layer
+    assert [e.source_type for e in thin] == ["abstract"]
+    assert len(es.evidence) == 4

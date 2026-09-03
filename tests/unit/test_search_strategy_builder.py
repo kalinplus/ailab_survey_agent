@@ -60,3 +60,49 @@ def test_topic_priors_on_by_default(monkeypatch):
     assert templates != b.DEFAULT_ASPECTS          # GameCraft aspects present
     prompt = _make(topic="world models for games")
     assert "GameCraft" in prompt
+
+
+# --- S1 breadth: aspects must carry a keyword budget for the P3 query knob ------
+# P3 expands each aspect into extra queries from its own keywords
+# (EVISURVEY_MAX_QUERIES_PER_ASPECT); an aspect trimmed to 1-2 keywords would
+# silently disable that knob.
+
+
+def test_default_strategy_keywords_feed_query_expansion():
+    from harness import search_strategy_builder as b
+
+    strategy = b._build_default_strategy(
+        task_id="t", topic="world models for games",
+        max_papers=60, max_core_papers=15, end_year=2026,
+    )
+    aspects = strategy["wide_search"]["search_aspects"]
+    assert 3 <= len(aspects) <= 6
+    for aspect in aspects:
+        assert len(aspect["keywords"]) >= 3
+        assert len(aspect["keywords"]) == len(set(aspect["keywords"]))
+
+
+def test_llm_strategy_keeps_keyword_budget_for_query_expansion():
+    from harness.search_strategy_builder import _coerce_strategy
+
+    raw = {
+        "main_domain": "world models",
+        "organization_mode": "thematic",
+        "aspects": [
+            {
+                "name": f"Cluster {index}",
+                "description": f"aspect {index}",
+                "min_papers": 3,
+                "keywords": [
+                    "world model cluster", "dreamer world model", "gamecraft",
+                    "latent dynamics", "interactive environment benchmark",
+                ],
+            }
+            for index in range(4)
+        ],
+    }
+    strategy = _coerce_strategy(
+        raw, task_id="t", topic="世界模型", max_papers=60, max_core_papers=15, end_year=2026,
+    )
+    for aspect in strategy["wide_search"]["search_aspects"]:
+        assert len(aspect["keywords"]) >= 5
