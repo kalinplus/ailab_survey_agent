@@ -9,12 +9,26 @@
 
 ## Next
 
-### 交付件重跑与评测联动
+### S1 检索广度与来源深度（worktree 并行中）
 
-- 任务目标：评测 v2 首跑暴露 delivered `output/survey.md` 工件真实缺陷（84 处引用仅 3 个唯一 id、小节相似度 max 0.952、纯描述无批判分析 → L3 informational/guidance 1/5）。用交付级配置重跑一次生成侧（showcase demo 或 full），使四层评测对象是自洽工件，验证 L3 分数回升、id 失配告警消失。
+- 任务目标：语料 12→≥30 篇且 5 类目全覆盖、gold recall 0.033→≥0.10；核心论文 MinerU 全文进 evidence store。spec：`specs/检索广度与来源深度.md`
 - 验收条件：
-  - 新 run 的 `output/survey.md` 与 `cache/final_*` 同 id 空间，`id_space_mismatch=false`
-  - 四层全量真跑通过，L3 三维 rationale 指向的缺陷不再是引用塌缩/复述
+  - unit（fake API）：广度旋钮单调生效 + MAX_CORPUS 上限 + 每 aspect ≥2 篇存活（已达成=否，worktree 内验证）
+  - 真跑（S0 合并后）：语料 ≥30 / coverage 1.0 维持 / gold recall ≥0.10
+
+### S2 写作端混合内核（worktree 并行中）
+
+- 任务目标：write_survey.py 从纯模板改为骨架模板+正文 LLM grounded（EVISURVEY_WRITER_LLM 门控，默认 off 行为不变）；修选文塌缩、删元话语、开放挑战/未来方向带引用。spec：`specs/写作端混合内核.md`
+- 验收条件：
+  - unit（fake LLM）：spec 五条 acceptance 全过（选文重叠 ≤2/5、禁词表、白名单引用、fallback）（已达成=否，worktree 内验证）
+  - 真跑（S0 合并后）：L0 max sim<0.8、零引用正文节=0、L1.5 support rate≥0.5、L1 precision≥0.8
+
+### 交付件重跑与评测联动（S0，依赖 S1+S2 合并）
+
+- 任务目标：评测 v2 首跑暴露 delivered `output/survey.md` 工件真实缺陷（84 处引用仅 3 个唯一 id、小节相似度 max 0.952、纯描述无批判分析 → L3 informational/guidance 1/5）。S1/S2 合并后用交付级配置重跑一次生成侧（full，开 `EVISURVEY_WRITER_LLM=1` + 广度旋钮），使四层评测对象是自洽工件，与 2026-09-02 基线（L3 1.667）出 A/B。
+- 验收条件：
+  - 新 run 的 `output/survey.md` 与评测 evidence store 同 id 空间，`id_space_mismatch=false`
+  - 四层全量真跑通过，L3 总分较基线回升且三维 rationale 不再指向引用塌缩/复述
   - 重跑后的 showcase 产物（HTML/PDF）仍通过 readiness gates
 
 ## Log
