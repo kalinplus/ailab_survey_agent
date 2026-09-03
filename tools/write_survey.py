@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import base64
+import logging
 import os
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import matplotlib
 
@@ -16,8 +17,38 @@ import matplotlib
 matplotlib.use("Agg")
 
 from config import load_config
+from harness.agents.relevance import EmbeddingScorer
 from harness.json_io import read_json, write_json
 from harness.logger import now_iso
+
+logger = logging.getLogger(__name__)
+
+# S2 hybrid writer: skeleton stays deterministic, body paragraphs may be
+# LLM-drafted when EVISURVEY_WRITER_LLM=1 (default off = template output).
+SECTION_PAPERS = 5
+SECTION_EVIDENCE_SNIPPETS = 2
+# Spec bound: any two sections may share at most 2 of their selected papers.
+REUSE_LIMIT = 2
+
+# Harness meta-talk that must never reach survey prose (eval v2 L1.5 leak).
+# Values are casefolded; compare with _contains_banned_phrase.
+BANNED_META_PHRASES = [
+    "c 模块",
+    "c module",
+    "citationreadyset",
+    "papercards",
+    "evidencestore",
+    "generatedartifactbank",
+    "reviewboard",
+    "harness 链路",
+    "harness chain",
+    "降调写法",
+    "topic relevance",
+]
+
+_LLM_PARAGRAPH_TAGS = ("summary", "comparison", "limitation")
+
+_SENTENCE_RE = re.compile(r"(?<=[.!?。！？])\s*")
 
 POSITIVE_KEYWORDS = [
     "game",
@@ -87,7 +118,7 @@ def run(request_path: str) -> dict[str, Any]:
     section_plan = _build_section_claim_plan(task_id, categories, cards, evidence_by_paper)
     timeline = _build_timeline(task_id, categories, cards)
     artifacts, image_notes = _build_generated_artifacts(cfg, task_id, timeline, categories, cards, evidence_by_paper)
-    survey = _render_survey(topic, language, section_plan, artifacts, cards)
+    survey = _render_survey(topic, language, section_plan, artifacts, cards, evidence_by_paper, llm_chat=_writer_llm_chat(cfg))
 
     survey_path = _resolve(root, outputs.get("survey_markdown_path", "output/survey.md"))
     timeline_path = _resolve(root, outputs.get("timeline_path", "cache/timeline.json"))
@@ -136,27 +167,84 @@ def run(request_path: str) -> dict[str, Any]:
     )
 
 
+def _writer_llm_chat(cfg) -> Callable | None:
+    """`.chat` callable for the hybrid writer, or None when it stays template-only."""
+    if os.getenv("EVISURVEY_WRITER_LLM", "0").lower() not in {"1", "true", "yes"}:
+        return None
+    from llm_client import InternS2Client
+
+    client = InternS2Client(cfg)
+    if not client.is_configured():
+        logger.warning("[writer] EVISURVEY_WRITER_LLM on but INTERN_API_KEY missing -> template path")
+        return None
+    return client.chat
+
+
 def _build_section_claim_plan(
     task_id: str,
     categories: list[dict[str, Any]],
     cards: list[dict[str, Any]],
     evidence_by_paper: dict[str, list[dict[str, Any]]],
+    scorer: EmbeddingScorer | None = None,
 ) -> list[dict[str, Any]]:
-    cards_by_category: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    """Assign citation-ready papers to sections by relevance, best fit first.
+
+    Replaces the old global-top rotation that put the same handful of papers in
+    every section (84 citations over 3 unique ids) and let off-topic cards
+    survive a category-bucket miss. Sections are filled from their best-fitting
+    untaken papers under an equal quota; only a pool that has run dry is
+    back-filled, and never past REUSE_LIMIT shared papers between two sections.
+    """
     global_ranked = _rank_cards(cards, evidence_by_paper)
+    scorer = scorer or _relevance_scorer()
+    relevance = _section_relevance_matrix(categories, cards, scorer)
+
+    cards_by_category: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for card in cards:
         key = card.get("category_id") or card.get("category") or "uncategorized"
         cards_by_category[str(key)].append(card)
+    category_keys = [
+        str(cat.get("category_id") or cat.get("category_name") or f"cat_{position + 1:03d}")
+        for position, cat in enumerate(categories)
+    ]
+    # Sections that own papers pick first (scarcest native pool first) so a
+    # category cannot have its own papers stolen by an empty-pool section;
+    # output order still follows the taxonomy order.
+    pick_order = sorted(
+        range(len(categories)),
+        key=lambda i: (
+            len(cards_by_category.get(category_keys[i], [])) == 0,
+            len(cards_by_category.get(category_keys[i], [])),
+            i,
+        ),
+    )
+
+    taken: set[str] = set()
+    quotas = _section_quotas(len(cards), len(categories))
+    owners: dict[str, set[int]] = defaultdict(set)
+    reuse_count: dict[str, int] = defaultdict(int)
+    overlap: dict[int, dict[int, int]] = defaultdict(lambda: defaultdict(int))
+    picks: dict[int, list[dict[str, Any]]] = {}
+    for position in pick_order:
+        selected = _pick_section_cards(
+            relevance[position], cards, taken, quotas[position], position, owners, reuse_count, overlap
+        )
+        picks[position] = selected
+        for card in selected:
+            paper_id = card["paper_id"]
+            for owner in owners[paper_id]:
+                overlap[position][owner] += 1
+                overlap[owner][position] += 1
+            owners[paper_id].add(position)
+            if paper_id in taken:
+                reuse_count[paper_id] += 1
+            taken.add(paper_id)
 
     sections: list[dict[str, Any]] = []
-    for index, category in enumerate(categories, start=1):
-        category_id = str(category.get("category_id") or category.get("category_name") or f"cat_{index:03d}")
-        selected = cards_by_category.get(category_id)
-        if not selected:
-            category_name = str(category.get("category_name") or category.get("name") or "")
-            selected = [card for card in cards if card.get("category") == category_name]
-        rotated = global_ranked[(index - 1) * 2 :] + global_ranked[: (index - 1) * 2]
-        selected = _dedupe_cards(_rank_cards(selected or [], evidence_by_paper) + rotated)[:5]
+    for position, category in enumerate(categories):
+        index = position + 1
+        selected = picks[position]
+        title = str(category.get("category_name") or category.get("name") or f"Theme {index}")
         claims = []
         for claim_index, card in enumerate(selected, start=1):
             paper_id = card["paper_id"]
@@ -171,23 +259,23 @@ def _build_section_claim_plan(
                     "risk_level": "low" if evidence_ids else "medium",
                 }
             )
-        selected_papers = [_selected_paper_entry(card) for card in selected]
         sections.append(
             {
                 "section_id": f"sec_{index:02d}",
-                "section_title": str(category.get("category_name") or category.get("name") or f"Theme {index}"),
+                "section_title": title,
                 "section_goal": str(category.get("description") or "Summarize citation-ready papers in this theme."),
                 "target_length_words": 450,
                 "allowed_paper_ids": [card["paper_id"] for card in selected],
-                "selected_papers": selected_papers,
-                "artifact_slots": _artifact_slots_for_section(index, str(category.get("category_name") or category.get("name") or "")),
+                "selected_papers": [_selected_paper_entry(card, evidence_by_paper) for card in selected],
+                "artifact_slots": _artifact_slots_for_section(index, title),
                 "claims": claims,
             }
         )
+
     cited = {pid for section in sections for pid in section.get("allowed_paper_ids", [])}
     remaining = [card for card in global_ranked if card.get("paper_id") not in cited]
     if remaining and len(cited) < min(8, len(cards)):
-        selected = remaining[:5]
+        selected = remaining[:SECTION_PAPERS]
         sections.append(
             {
                 "section_id": f"sec_{len(sections) + 1:02d}",
@@ -195,7 +283,7 @@ def _build_section_claim_plan(
                 "section_goal": "Use additional citation-ready papers to broaden coverage while staying within the whitelist.",
                 "target_length_words": 450,
                 "allowed_paper_ids": [card["paper_id"] for card in selected],
-                "selected_papers": [_selected_paper_entry(card) for card in selected],
+                "selected_papers": [_selected_paper_entry(card, evidence_by_paper) for card in selected],
                 "artifact_slots": [],
                 "claims": [
                     {
@@ -215,7 +303,7 @@ def _build_section_claim_plan(
             }
         )
     if not sections and cards:
-        selected = global_ranked[:5]
+        selected = global_ranked[:SECTION_PAPERS]
         sections.append(
             {
                 "section_id": "sec_01",
@@ -223,7 +311,7 @@ def _build_section_claim_plan(
                 "section_goal": "Summarize the available citation-ready papers.",
                 "target_length_words": 450,
                 "allowed_paper_ids": [card["paper_id"] for card in selected],
-                "selected_papers": [_selected_paper_entry(card) for card in selected],
+                "selected_papers": [_selected_paper_entry(card, evidence_by_paper) for card in selected],
                 "artifact_slots": _artifact_slots_for_section(1, "Citation-Ready Evidence"),
                 "claims": [
                     {
@@ -245,8 +333,124 @@ def _build_section_claim_plan(
     return sections
 
 
-def _selected_paper_entry(card: dict[str, Any]) -> dict[str, Any]:
+def _relevance_scorer() -> EmbeddingScorer:
+    """Scorer for section-to-paper fit.
+
+    Keyword overlap by default: deterministic and offline (unit tests and the
+    eval harness must never trigger an HF download here). `EVISURVEY_WRITER_EMBED=1`
+    opts real runs into the bge column of the same scorer.
+    """
+    if os.getenv("EVISURVEY_WRITER_EMBED", "0").lower() not in {"1", "true", "yes"}:
+        scorer = EmbeddingScorer()
+        scorer._failed = True  # same seam the relevance tests use: keyword column
+        return scorer
+    return EmbeddingScorer()
+
+
+def _category_text(category: dict[str, Any]) -> str:
+    keywords = " ".join(str(k) for k in category.get("keywords", []))
+    name = str(category.get("category_name") or category.get("name") or "")
+    return f"{name}. {category.get('description', '')} {keywords}".strip()
+
+
+def _card_text(card: dict[str, Any]) -> str:
+    fields = [card.get("title"), card.get("problem"), card.get("method"), card.get("contribution")]
+    return " ".join(str(field) for field in fields if field).strip()
+
+
+def _section_relevance_matrix(
+    categories: list[dict[str, Any]],
+    cards: list[dict[str, Any]],
+    scorer: EmbeddingScorer,
+) -> list[dict[str, float]]:
+    """relevance[category_index][paper_id] -> section-fit score (bge or keyword)."""
+    pairs = [(_category_text(cat), _card_text(card)) for cat in categories for card in cards]
+    scores = scorer.score_pairs(pairs) if pairs else []
+    matrix: list[dict[str, float]] = [{} for _ in categories]
+    cursor = 0
+    for cat_index in range(len(categories)):
+        for card in cards:
+            matrix[cat_index][card["paper_id"]] = float(scores[cursor])
+            cursor += 1
+    return matrix
+
+
+def _section_quotas(n_cards: int, n_sections: int) -> list[int]:
+    """Equal per-section share of the citation pool (every theme keeps a body)."""
+    if n_sections <= 0 or n_cards <= 0:
+        return [0] * max(0, n_sections)
+    base = min(SECTION_PAPERS, max(1, n_cards // n_sections))
+    quotas = [base] * n_sections
+    left = max(0, min(n_cards - sum(quotas), SECTION_PAPERS * n_sections - sum(quotas)))
+    for position in range(n_sections):
+        if left <= 0:
+            break
+        quotas[position] += 1
+        left -= 1
+    return quotas
+
+
+def _pick_section_cards(
+    relevance_row: dict[str, float],
+    cards: list[dict[str, Any]],
+    taken: set[str],
+    quota: int,
+    section_index: int,
+    owners: dict[str, set[int]],
+    reuse_count: dict[str, int],
+    overlap: dict[int, dict[int, int]],
+) -> list[dict[str, Any]]:
+    """Best-fit cards for one section: untaken first, then bounded reuse.
+
+    Order is relevance to this section, then global topic rank, so an off-topic
+    card can no longer displace a fitting one. When the untaken pool is dry the
+    section reuses already-claimed cards — at most REUSE_LIMIT shared papers
+    with any other section, which keeps the plan from either collapsing (old
+    global-top rotation) or emitting body sections with no papers at all.
+    """
+    if quota <= 0:
+        return []
+    by_id = {card["paper_id"]: card for card in cards}
+    free = [card for pid, card in by_id.items() if pid not in taken]
+    free.sort(
+        key=lambda card: (
+            -relevance_row.get(card["paper_id"], 0.0),
+            -card.get("topic_relevance_score", 0.0),
+            card.get("paper_id", ""),
+        )
+    )
+    picked = free[:quota]
+    picked_ids = {card["paper_id"] for card in picked}
+    if len(picked) < quota:
+        reused = [card for pid, card in by_id.items() if pid not in picked_ids]
+        reused.sort(
+            key=lambda card: (
+                reuse_count.get(card["paper_id"], 0),
+                -relevance_row.get(card["paper_id"], 0.0),
+                -card.get("topic_relevance_score", 0.0),
+                card.get("paper_id", ""),
+            )
+        )
+        for card in reused:
+            if len(picked) >= quota:
+                break
+            paper_id = card["paper_id"]
+            if any(overlap[section_index][owner] >= REUSE_LIMIT for owner in owners.get(paper_id, set())):
+                continue
+            picked.append(card)
+            picked_ids.add(paper_id)
+    return picked
+
+
+def _selected_paper_entry(card: dict[str, Any], evidence_by_paper: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     score = float(card.get("topic_relevance_score", 0.0))
+    snippets = []
+    for item in evidence_by_paper.get(card.get("paper_id"), []):
+        text = _shorten(item.get("text"), 240)
+        if text:
+            snippets.append(text)
+        if len(snippets) >= SECTION_EVIDENCE_SNIPPETS:
+            break
     return {
         "paper_id": card.get("paper_id"),
         "title": card.get("title", ""),
@@ -255,6 +459,7 @@ def _selected_paper_entry(card: dict[str, Any]) -> dict[str, Any]:
         "method": _field_or_claim(card, "method", "method"),
         "contribution": _field_or_claim(card, "contribution", "key_results"),
         "limitations": _field_or_claim(card, "limitations", "limitations"),
+        "evidence_snippets": snippets,
         "topic_relevance_score": round(score, 3),
         "selection_reason": _selection_reason(card),
     }
@@ -323,33 +528,17 @@ def _load_final_seed_data(root: Path) -> dict[str, Any]:
     return out
 
 
-def _dedupe_cards(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    seen = set()
-    out = []
-    for card in cards:
-        paper_id = card.get("paper_id")
-        if not paper_id or paper_id in seen:
-            continue
-        seen.add(paper_id)
-        out.append(card)
-    return out
-
-
 def _render_survey(
     topic: str,
     language: str,
     sections: list[dict[str, Any]],
     artifacts: list[dict[str, Any]],
     cards: list[dict[str, Any]],
+    evidence_by_paper: dict[str, list[dict[str, Any]]],
+    llm_chat: Callable | None = None,
 ) -> str:
     zh = language == "zh"
     title = f"# {topic or 'Grounded Survey'}"
-    ref_a = cards[0]["paper_id"] if cards else ""
-    ref_b = cards[1]["paper_id"] if len(cards) > 1 else ref_a
-    ref_c = cards[2]["paper_id"] if len(cards) > 2 else ref_a
-    cite_a = f" [{ref_a}]" if ref_a else ""
-    cite_b = f" [{ref_b}]" if ref_b else ""
-    cite_c = f" [{ref_c}]" if ref_c else ""
     lines = [
         title,
         "",
@@ -357,14 +546,14 @@ def _render_survey(
         (
             "This survey reviews representative work on world models, learned simulators, neural game engines, and interactive game intelligence. It emphasizes evidence-backed synthesis, clear technical roles, and traceable figures and tables."
             if not zh
-            else "本综述基于 CitationReadySet 中的论文、PaperCards、EvidenceStore 与可追溯派生图表生成，并在二阶段增强中加入 topic relevance 过滤、长段落模板写作、引用多样性和按章节嵌入的图表。"
+            else "本综述围绕世界模型、可学习模拟器、神经游戏引擎与交互式游戏智能，梳理代表性工作的方法、证据与局限，并给出可追溯的图表支撑。"
         ),
         "",
         "## Introduction" if not zh else "## 引言",
         (
             "World models shift game intelligence from direct interaction with fixed environments toward learned representations that can support planning, simulation, generation, and evaluation. This survey organizes the selected literature by technical function rather than by citation counts or venue prestige."
             if not zh
-            else "本文按 taxonomy、topic relevance 与 evidence richness 组织内容，不声称已经实现引用量、影响因子或最新论文排序；派生图表会尽量放在支撑其论证的章节附近。"
+            else "世界模型让游戏智能从与固定环境的直接交互，转向能够支撑规划、仿真、生成与评测的学习表示。本文按技术功能而非引用量组织所选文献，并把派生图表放在支撑其论证的章节附近。"
         ),
         "",
     ]
@@ -382,19 +571,20 @@ def _render_survey(
             ]
         )
 
-    for section in sections:
+    for index, section in enumerate(sections):
+        next_title = str(sections[index + 1].get("section_title", "")) if index + 1 < len(sections) else ""
         lines.extend([f"## {section['section_title']}", ""])
-        lines.extend(_build_section_text(section, zh))
+        lines.extend(_build_section_text(section, zh, next_title=next_title, llm_chat=llm_chat))
 
+    ranked = _rank_cards(cards, evidence_by_paper)
+    challenges = _evidence_bits(ranked, evidence_by_paper)
+    directions = _evidence_bits(ranked, evidence_by_paper, prefer_limitation=True)
+    closing = _field_bits(ranked, "contribution", "method", 2)
     lines.extend(
         [
             "## Open Challenges" if not zh else "## 开放挑战",
             "",
-            (
-            f"Important caveats remain. Learned world models can accumulate rollout errors, neural game engines must preserve controllability over time, and game-agent systems often rely on large-scale engineering that is difficult to compare directly across environments{cite_a}{cite_b}."
-                if not zh
-                else "当前证据支持保守综合；更完善的时间序列排序和高影响论文排序仍属于后续工作。"
-            ),
+            _open_challenges_text(challenges, zh),
             "",
             "Table 2 organizes the main evaluation protocols used across game intelligence, learned simulators, and interactive world models." if not zh else "",
             "" if not zh else "",
@@ -402,11 +592,7 @@ def _render_survey(
             "" if not zh else "",
             "## Future Directions" if not zh else "## 未来方向",
             "",
-            (
-            f"Future work should connect learned simulators with reliable control, transparent evaluation, and agent training loops that expose failure modes rather than hiding them behind visually convincing rollouts{cite_b}{cite_c}."
-                if not zh
-                else "后续应增强证据抽取、补充更可靠的排序信号，并提升派生图表的表达质量。"
-            ),
+            _future_directions_text(directions, zh),
             "",
             "Table 3 summarizes these future directions, and Figure 5 contrasts method families by their contribution and limitation profiles." if not zh else "",
             "" if not zh else "",
@@ -417,11 +603,7 @@ def _render_survey(
             "",
             "## Conclusion" if not zh else "## 结论",
             "",
-            (
-            f"The field is moving from agents that merely act in hand-built games toward systems that learn, generate, and evaluate interactive worlds. The most useful synthesis therefore compares how each paper models dynamics, supports control, scales interaction, and exposes limitations{cite_a}{cite_c}."
-                if not zh
-                else "Harness 化流程以可追溯、可验证和可复盘报告为核心优势，同时保留对人工调研深度的清醒边界。"
-            ),
+            _conclusion_text(closing, zh),
             "",
             "## References",
             "",
@@ -437,88 +619,245 @@ def _render_survey(
     return "\n".join(lines).strip() + "\n"
 
 
-def _build_section_text(section: dict[str, Any], zh: bool) -> list[str]:
+_LIMITATION_MARKERS = (
+    "limitation",
+    "however",
+    "remain",
+    "difficult",
+    "challenge",
+    "error",
+    "risk",
+    "fail",
+    "lack",
+    "cannot",
+    "require",
+)
+
+
+_PROBLEM_SHAPED_RE = re.compile(r"^(how (to|do|can|does)|what|why)\b", re.IGNORECASE)
+
+
+def _evidence_bits(
+    ranked: list[dict[str, Any]],
+    evidence_by_paper: dict[str, list[dict[str, Any]]],
+    limit: int = 4,
+    prefer_limitation: bool = False,
+) -> list[dict[str, str]]:
+    """One grounded statement per paper, taken from its evidence sentences.
+
+    Evidence stores often lead with the problem phrasing, so problem-shaped and
+    very short sentences are only used when nothing better exists.
+    `prefer_limitation` picks the boundary-flavoured sentence (or the card
+    limitation field) for the future-directions section.
+    """
+    bits = []
+    for card in ranked:
+        paper_id = card.get("paper_id")
+        if not paper_id:
+            continue
+        sentences = [
+            str(item.get("text", "")).strip()
+            for item in evidence_by_paper.get(paper_id, [])
+            if str(item.get("text", "")).strip()
+        ]
+        reportable = [
+            s for s in sentences if not _PROBLEM_SHAPED_RE.match(s) and len(s.split()) >= 8
+        ] or sentences
+        text = ""
+        if prefer_limitation:
+            marked = [s for s in reportable if any(marker in s.lower() for marker in _LIMITATION_MARKERS)]
+            if marked:
+                text = _shorten(marked[0], 200)
+            if not text:
+                text = _shorten(card.get("limitations"), 200)
+        if not text:
+            text = _shorten(reportable[0], 200)
+        if not text:
+            continue
+        bits.append({"paper_id": paper_id, "title": _shorten(card.get("title") or paper_id, 90), "text": text})
+        if len(bits) >= limit:
+            break
+    return bits
+
+
+def _field_bits(ranked: list[dict[str, Any]], field: str, fallback: str, limit: int) -> list[dict[str, str]]:
+    bits = []
+    for card in ranked:
+        paper_id = card.get("paper_id")
+        if not paper_id:
+            continue
+        text = _shorten(card.get(field), 200) or _shorten(card.get(fallback), 200)
+        if not text:
+            continue
+        bits.append({"paper_id": paper_id, "title": _shorten(card.get("title") or paper_id, 90), "text": text})
+        if len(bits) >= limit:
+            break
+    return bits
+
+
+_EVIDENCE_LEADS_ZH = ("证据显示，", "实验结果表明，", "报告的结果提示，")
+_LIMIT_TAILS_EN = (
+    "so future work should turn that boundary into a measurable comparison target",
+    "which is where follow-up systems can add the most value",
+    "and that gap is the natural next target for this line of work",
+)
+_LIMIT_TAILS_ZH = (
+    "后续工作应把这一边界变成可比较的测量对象",
+    "这正是后续系统最能创造增量的位置",
+    "也是该方向下一步最自然的目标",
+)
+
+
+def _open_challenges_text(bits: list[dict[str, str]], zh: bool) -> str:
+    if not bits:
+        return (
+            "The captured evidence does not yet support sharper open-challenge statements."
+            if not zh
+            else "所选论文的证据尚不足以支撑更强的开放挑战结论。"
+        )
+    if zh:
+        parts = []
+        for index, bit in enumerate(bits):
+            lead = _EVIDENCE_LEADS_ZH[index % len(_EVIDENCE_LEADS_ZH)]
+            parts.append(f"{bit['title']}：{lead}{bit['text']} [{bit['paper_id']}]。")
+        return "开放挑战集中在证据最薄的位置：" + " ".join(parts)
+    parts = [f"{bit['title']}: {bit['text']} [{bit['paper_id']}]." for bit in bits]
+    return "Open challenges concentrate where the captured evidence is thinnest. " + " ".join(parts)
+
+
+def _future_directions_text(bits: list[dict[str, str]], zh: bool) -> str:
+    if not bits:
+        return (
+            "Future directions follow from the limitation fields captured for the selected papers."
+            if not zh
+            else "未来方向取决于所选论文已记录的局限。"
+        )
+    parts = []
+    for index, bit in enumerate(bits):
+        if zh:
+            tail = _LIMIT_TAILS_ZH[index % len(_LIMIT_TAILS_ZH)]
+            parts.append(f"{bit['title']}：{bit['text']} [{bit['paper_id']}]，{tail}。")
+        else:
+            tail = _LIMIT_TAILS_EN[index % len(_LIMIT_TAILS_EN)]
+            parts.append(f"{bit['title']}: {bit['text']} [{bit['paper_id']}], {tail}.")
+    return " ".join(parts)
+
+
+def _conclusion_text(bits: list[dict[str, str]], zh: bool) -> str:
+    lead = (
+        "The field is moving from agents that merely act in hand-built games toward systems that learn, generate, and evaluate interactive worlds."
+        if not zh
+        else "整体来看，所选工作把游戏智能从手工环境中的行为学习，推向能够学习、生成并评测交互世界的系统。"
+    )
+    if not bits:
+        return lead
+    if zh:
+        body = "；".join(f"{bit['title']}：{bit['text']} [{bit['paper_id']}]" for bit in bits)
+        return f"{lead} 其中，{body}。"
+    body = " ".join(f"{bit['title']}: {bit['text']} [{bit['paper_id']}]." for bit in bits)
+    return f"{lead} {body}"
+
+
+def _build_section_text(
+    section: dict[str, Any],
+    zh: bool,
+    next_title: str = "",
+    llm_chat: Callable | None = None,
+) -> list[str]:
     title = str(section.get("section_title", "This section"))
     goal = str(section.get("section_goal", ""))
     papers = section.get("selected_papers", [])
-    paper_ids = [paper["paper_id"] for paper in papers if paper.get("paper_id")]
-    first_cite = paper_ids[0] if paper_ids else ""
-    second_cite = paper_ids[1] if len(paper_ids) > 1 else first_cite
-    cite_tail = f" [{first_cite}]" if first_cite else ""
-    second_tail = f" [{second_cite}]" if second_cite else ""
+    section_match = re.search(r"(\d+)$", str(section.get("section_id", "")))
+    section_index = int(section_match.group(1)) if section_match else 0
     lines: list[str] = []
 
+    llm_paragraphs: dict[str, str] | None = None
+    if llm_chat is not None:
+        try:
+            llm_paragraphs = _llm_section_paragraphs(section, llm_chat, zh)
+        except Exception as exc:  # LLM boundary: designed per-section degradation
+            logger.warning(
+                f"[writer] section {section.get('section_id')} LLM unusable -> template fallback: {exc}"
+            )
+
     if zh:
+        # Framing sentence: no citation, so it cannot create an unsupported one.
+        # Kept to one sentence: repeated section boilerplate is what pushed the
+        # eval-v2 section similarity to 0.952.
         lines.append(
-            f"{title} 这一部分关注的问题是：{goal or '如何把可引用论文中的方法、证据和局限组织成可验证的综述段落'}。"
-            f"在 World Models / GameCraft 语境下，它不是单独罗列论文，而是说明这些工作如何服务于交互环境建模、agent 学习、模拟器构建或游戏智能评测{cite_tail}。"
-            "本节只使用 CitationReadySet 中的论文，并优先选择 topic relevance 较高、且能由 PaperCards 或 EvidenceStore 支撑的工作。"
+            f"{title} 这一部分关注的问题是：{_clean_clause(goal) or '如何把该主题下论文的方法、证据与局限组织成可比较的综述段落'}。"
         )
         lines.append("")
         for slot in section.get("artifact_slots", []):
             if slot.get("placement") == "after_topic_paragraph":
                 lines.extend([f"![{slot.get('caption', slot['artifact_id'])}]({slot['artifact_id']})", ""])
 
-        evidence_sentences = []
-        for paper in papers[:5]:
-            pid = paper.get("paper_id")
-            if not pid:
-                continue
-            evidence_sentences.append(
-                f"《{paper.get('title') or pid}》处理的问题可概括为 {paper.get('problem') or '该主题下的核心建模问题'}；"
-                f"其方法侧重 {paper.get('method') or '论文中可确认的方法线索'}，主要贡献是 {paper.get('contribution') or '为该方向提供可引用证据'} [{pid}]。"
-            )
-        lines.append(" ".join(evidence_sentences))
+        if llm_paragraphs:
+            lines.append(llm_paragraphs["summary"])
+        else:
+            evidence_sentences = []
+            for paper in papers[:SECTION_PAPERS]:
+                pid = paper.get("paper_id")
+                if not pid:
+                    continue
+                evidence_sentences.append(
+                    f"《{paper.get('title') or pid}》处理的问题可概括为 {paper.get('problem') or '该主题下的核心建模问题'}；"
+                    f"其方法侧重 {paper.get('method') or '论文中可确认的方法线索'}，主要贡献是 {paper.get('contribution') or '为该方向提供可引用证据'} [{pid}]。"
+                )
+            lines.append(" ".join(evidence_sentences))
         lines.append("")
 
-        lines.append(
-            f"横向比较这些工作，可以看到它们共享一个共同目标：把游戏或交互环境从固定 benchmark 推向可学习、可模拟、可复用的模型化对象。"
-            f"差异在于，有的工作更强调 agent 训练和规划，有的工作更强调生成式环境表示，还有的工作更接近 benchmark 或系统工程。"
-            f"因此，本节不会把它们按引用量或影响因子排序，而是按 problem-method-contribution 的证据链比较其角色{second_tail}。"
-        )
+        lines.append(llm_paragraphs["comparison"] if llm_paragraphs else _template_comparison(papers, zh, section_index))
         lines.append("")
         for slot in section.get("artifact_slots", []):
             if slot.get("placement") == "after_comparison_paragraph":
                 lines.extend([f"![{slot.get('caption', slot['artifact_id'])}]({slot['artifact_id']})", ""])
 
-        limitation_bits = []
-        for paper in papers[:4]:
-            limitation = paper.get("limitations") or "公开证据不足以支持更强结论"
-            pid = paper.get("paper_id")
-            limitation_bits.append(f"{paper.get('title') or pid} 的边界是 {limitation} [{pid}]。")
-        lines.append(
-            "这些证据也提示需要保守表述。"
-            + " ".join(limitation_bits)
-            + " 因此，C 模块在这里采用降调写法：只说明论文卡片和证据片段支持的事实，不扩展到未验证的性能、影响力或最新性判断。"
-        )
+        if llm_paragraphs:
+            lines.append(llm_paragraphs["limitation"])
+        else:
+            limitation_bits = [
+                f"{paper.get('title') or paper.get('paper_id')} 的边界是 "
+                f"{paper.get('limitations') or '公开证据不足以支持更强结论'} [{paper.get('paper_id')}]。"
+                for paper in papers[:4]
+            ]
+            lines.append(" ".join(limitation_bits))
         lines.append("")
         for slot in section.get("artifact_slots", []):
             if slot.get("placement") == "after_limitation_paragraph":
                 lines.extend([f"![{slot.get('caption', slot['artifact_id'])}]({slot['artifact_id']})", ""])
 
-        lines.append(
-            f"从结构上看，{title} 与下一类问题的连接点在于：当模型能够描述环境、行动和反馈之后，综述需要继续追问这些模型如何被评测、如何与 agent 训练闭环结合，以及哪些图表能够帮助读者快速识别方法边界。"
-            "这也是本报告把正文论证、CitationReadySet、GeneratedArtifactBank 和 ReviewBoard 放在同一条 harness 链路中的原因。"
-        )
+        if next_title:
+            lines.append(
+                f"{title} 与下一节「{next_title}」的连接点在于：当模型能够描述环境、行动与反馈之后，"
+                "需要继续追问这些能力如何被评测，以及哪些图表能帮助读者快速识别方法边界。"
+            )
+        else:
+            lines.append(
+                f"{title} 是正文最后一个技术主题；后续章节把上述证据汇总为开放挑战与未来方向，并给出可追溯图表。"
+            )
         lines.append("")
         return lines
 
-    lines.append(
-        f"{title} focuses on {goal or 'a citation-ready research theme'}. "
-        f"In this survey, the section explains how the selected works contribute to interactive environment modeling, agent learning, simulation, or game intelligence evaluation{cite_tail}. "
-        "The discussion is limited to the selected literature and uses cautious language when evidence is sparse."
-    )
+    # Single framing sentence, uncited: repeated section boilerplate is what
+    # pushed the eval-v2 section similarity to 0.952.
+    lines.append(f"{title} focuses on {_clean_clause(goal) or 'a citation-ready research theme'}.")
     lines.append("")
     for slot in section.get("artifact_slots", []):
         if slot.get("placement") == "after_topic_paragraph":
             lines.extend([f"![{slot.get('caption', slot['artifact_id'])}]({slot['artifact_id']})", ""])
-    for paper in papers[:5]:
-        pid = paper.get("paper_id")
-        lines.append(
-            f"{paper.get('title') or pid} addresses {paper.get('problem') or 'a core modeling problem'}. "
-            f"Its method can be summarized as {paper.get('method') or 'the method described by the paper card'}, "
-            f"and its contribution is {paper.get('contribution') or 'citation-ready evidence for this theme'} [{pid}]."
-        )
+    if llm_paragraphs:
+        lines.append(llm_paragraphs["summary"])
+    else:
+        for paper in papers[:SECTION_PAPERS]:
+            pid = paper.get("paper_id")
+            lines.append(
+                f"{paper.get('title') or pid} addresses {paper.get('problem') or 'a core modeling problem'}. "
+                f"Its method can be summarized as {paper.get('method') or 'the method described by the paper card'}, "
+                f"and its contribution is {paper.get('contribution') or 'citation-ready evidence for this theme'} [{pid}]."
+            )
+    lines.append("")
+    lines.append(llm_paragraphs["comparison"] if llm_paragraphs else _template_comparison(papers, zh, section_index))
     lines.append("")
     # Per-section differentiated transitions
     _transition_map = {
@@ -528,34 +867,167 @@ def _build_section_text(section: dict[str, Any], zh: bool) -> list[str]:
         "game agent": "show how large-scale training changes what agents can do in complex games",
         "open-ended simulator": "provide shared environments where interactive intelligence can be compared",
     }
-    _bridge_map = {
-        "generative game world simulation": "The next section asks how such learned dynamics support planning and control.",
-        "planning and control": "The following section shifts from using learned models for action selection to generating interactive environments themselves.",
-        "neural game engine": "These neural environments lead naturally to the question of how agents are trained and evaluated inside complex games.",
-        "game agent": "The next step is to examine benchmarks and simulators that make these systems comparable.",
-        "open-ended simulator": "The final sections use this evidence base to summarize evaluation protocols and future directions.",
-    }
     section_key = next((k for k in _transition_map if k in title.lower()), "")
     transition = _transition_map.get(section_key, "share a common trajectory toward learnable, reusable, or generative environment models")
-    bridge = _bridge_map.get(section_key, "The next theme explores how the same evidence base supports evaluation and structured reporting.")
-    lines.append(
-        f"Taken together, this group {transition}{second_tail}."
-    )
+    lines.append(f"Taken together, this group {transition}.")
     lines.append("")
     for slot in section.get("artifact_slots", []):
         if slot.get("placement") == "after_comparison_paragraph":
             lines.extend([f"![{slot.get('caption', slot['artifact_id'])}]({slot['artifact_id']})", ""])
-    lines.append(
-        "The conservative reading is important: missing evidence, abstract-only parsing, or sparse limitations should weaken rather than strengthen the claim. "
-        + " ".join(
-            f"{paper.get('title') or paper.get('paper_id')} is limited by {paper.get('limitations') or 'the available evidence boundary'} [{paper.get('paper_id')}]."
-            for paper in papers[:4]
+    if llm_paragraphs:
+        lines.append(llm_paragraphs["limitation"])
+    else:
+        lines.append(
+            " ".join(
+                f"{paper.get('title') or paper.get('paper_id')} is limited by {paper.get('limitations') or 'the available evidence boundary'} [{paper.get('paper_id')}]."
+                for paper in papers[:4]
+            )
         )
-    )
     lines.append("")
-    lines.append(bridge)
+    if next_title:
+        lines.append(f"The next section, {next_title}, builds on this evidence base.")
+    else:
+        lines.append("The remaining sections summarize this evidence base into open challenges and future directions.")
     lines.append("")
     return lines
+
+
+_COMPARISON_CLOSERS_EN = (
+    "These differences decide whether each work serves planning, generation, or evaluation.",
+    "Read this way, the papers divide by what they optimize rather than by venue or year.",
+    "The contrast is technical: dynamics, interaction, and evaluation sit at different depths here.",
+)
+_COMPARISON_CLOSERS_ZH = (
+    "这些差异决定了它们分别服务于规划、生成还是评测。",
+    "由此看，这些工作的分野在于各自优化的对象，而非发表渠道或年份。",
+    "对照之下，动力学、交互与评测在本节处于不同层次。",
+)
+
+
+def _template_comparison(papers: list[dict[str, Any]], zh: bool, section_index: int = 0) -> str:
+    """Comparison paragraph built from the section's own card fields.
+
+    Replaces the section-invariant paragraph that made every section read alike;
+    the closing sentence rotates so neighbouring sections do not share it.
+    """
+    compared = [paper for paper in papers[:3] if paper.get("paper_id")]
+    if not compared:
+        return (
+            "No citation-ready paper could be assigned to this section, so it stays a placeholder rather than an unsourced claim."
+            if not zh
+            else "本节没有可指派的论文证据，因此保留为占位说明，不给出无来源结论。"
+        )
+    if zh:
+        parts = [
+            f"{paper.get('title') or paper.get('paper_id')} 以 {_shorten(paper.get('method'), 120) or '其报告的方法'} 为核心，"
+            f"贡献落在 {_shorten(paper.get('contribution'), 120) or '其报告的结果'} [{paper.get('paper_id')}]"
+            for paper in compared
+        ]
+        head = "横向比较，" if len(compared) > 1 else "本节覆盖的工作中，"
+        closer = _COMPARISON_CLOSERS_ZH[section_index % len(_COMPARISON_CLOSERS_ZH)]
+        return head + "；".join(parts) + "。" + closer
+    if len(compared) == 1:
+        paper = compared[0]
+        return (
+            f"{paper.get('title') or paper.get('paper_id')} is the only citation-ready work assigned here: "
+            f"its method is {_shorten(paper.get('method'), 120) or 'the reported method'} and its contribution is "
+            f"{_shorten(paper.get('contribution'), 120) or 'the reported result'} [{paper.get('paper_id')}]."
+        )
+    parts = [
+        f"{paper.get('title') or paper.get('paper_id')} centers on {_shorten(paper.get('method'), 120) or 'the reported method'} "
+        f"and contributes {_shorten(paper.get('contribution'), 120) or 'the reported result'} [{paper.get('paper_id')}]"
+        for paper in compared
+    ]
+    closer = _COMPARISON_CLOSERS_EN[section_index % len(_COMPARISON_CLOSERS_EN)]
+    return "Compared side by side, " + "; ".join(parts) + ". " + closer
+
+
+def _llm_section_paragraphs(section: dict[str, Any], llm_chat: Callable, zh: bool) -> dict[str, str]:
+    """Draft the three body paragraphs with the LLM; raise when the reply is unusable.
+
+    Anti-hallucination guard: the prompt carries only this section's card fields
+    plus evidence snippets, and any returned sentence that cites an id outside
+    the section whitelist or carries harness meta-talk is dropped. A paragraph
+    left empty by that filter makes the whole reply unusable.
+    """
+    papers = section.get("selected_papers", [])[:SECTION_PAPERS]
+    allowed = {str(paper.get("paper_id")) for paper in papers if paper.get("paper_id")}
+    paper_lines = [
+        " | ".join(
+            [
+                str(paper.get("paper_id")),
+                str(paper.get("title", "")),
+                str(paper.get("problem", "")),
+                str(paper.get("method", "")),
+                str(paper.get("contribution", "")),
+                str(paper.get("limitations", "")),
+                " ".join(str(s) for s in paper.get("evidence_snippets", [])),
+            ]
+        )
+        for paper in papers
+    ]
+    user = "\n".join(
+        [
+            "Section title: " + str(section.get("section_title", "")),
+            "Section goal: " + str(section.get("section_goal", "")),
+            "Papers (id | title | problem | method | contribution | limitation | evidence):",
+            *paper_lines,
+            "Write in Chinese (简体)." if zh else "Write in English.",
+            "Reply with exactly three paragraphs, each starting on its own line with one tag:",
+            "[SUMMARY] what these papers study and what each contributes; cite the id of every paper you describe.",
+            "[COMPARISON] how the papers differ in method and role; cite the ids you compare.",
+            "[LIMITATION] what the reported evidence does not establish; cite the ids you discuss.",
+            "Restate only the facts in the paper list above: no invented numbers, years, benchmarks, or paper names.",
+            f"Cite only with these bracketed ids: {sorted(allowed)}.",
+        ]
+    )
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You draft body paragraphs for an evidence-grounded academic survey. "
+                "Citations must use the supplied bracketed paper ids and nothing else."
+            ),
+        },
+        {"role": "user", "content": user},
+    ]
+    reply = llm_chat(messages, temperature=0.2, max_tokens=900)
+    if not isinstance(reply, str) or not reply.strip():
+        raise ValueError(f"empty LLM reply: {str(reply)[:120]}")
+    parsed = _parse_tagged_paragraphs(reply)
+    paragraphs: dict[str, str] = {}
+    for tag in _LLM_PARAGRAPH_TAGS:
+        body = _sanitize_llm_paragraph(parsed.get(tag, ""), allowed)
+        if not body:
+            raise ValueError(f"LLM reply has no usable [{tag}] paragraph")
+        paragraphs[tag] = body
+    return paragraphs
+
+
+def _parse_tagged_paragraphs(reply: str) -> dict[str, str]:
+    found: dict[str, list[str]] = defaultdict(list)
+    current: str | None = None
+    for raw in reply.splitlines():
+        line = raw.strip()
+        match = re.match(r"^\[([A-Za-z]+)\]\s*(.*)$", line)
+        if match and match.group(1).lower() in _LLM_PARAGRAPH_TAGS:
+            current = match.group(1).lower()
+            found[current].append(match.group(2))
+        elif current is not None and line:
+            found[current].append(line)
+    return {tag: " ".join(parts).strip() for tag, parts in found.items()}
+
+
+def _sanitize_llm_paragraph(text: str, allowed: set[str]) -> str:
+    keep = []
+    for sentence in _split_sentences(text):
+        if _contains_banned_phrase(sentence):
+            continue
+        citations = _extract_citations(sentence)
+        if citations and not citations <= allowed:
+            continue
+        keep.append(sentence.strip())
+    return " ".join(part for part in keep if part)
 
 
 def _build_timeline(task_id: str, categories: list[dict[str, Any]], cards: list[dict[str, Any]]) -> dict[str, Any]:
@@ -1365,6 +1837,20 @@ def _group_by(items: list[dict[str, Any]], key: str) -> dict[str, list[dict[str,
 def _extract_citations(markdown: str) -> set[str]:
     text_only = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", markdown)
     return {match.strip() for match in re.findall(r"\[([^\]]+)\]", text_only) if not match.startswith("http")}
+
+
+def _split_sentences(text: str) -> list[str]:
+    return [part for part in _SENTENCE_RE.split(text) if part.strip()]
+
+
+def _clean_clause(text: str) -> str:
+    """Drop trailing punctuation so a template sentence keeps a single full stop."""
+    return str(text or "").strip().rstrip(".,;、;。． ")
+
+
+def _contains_banned_phrase(text: str) -> bool:
+    folded = text.casefold()
+    return any(phrase in folded for phrase in BANNED_META_PHRASES)
 
 
 def _shorten(text: Any, limit: int) -> str:
