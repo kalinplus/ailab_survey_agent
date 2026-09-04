@@ -991,7 +991,7 @@ def _llm_section_paragraphs(section: dict[str, Any], llm_chat: Callable, zh: boo
             *paper_lines,
             "Write in Chinese (简体)." if zh else "Write in English.",
             "Reply with exactly three paragraphs, each starting on its own line with one tag:",
-            "[SUMMARY] what these papers study and what each contributes; cite the tag of every paper you describe.",
+            "[SUMMARY] for every paper, in order, one sentence built almost verbatim from its evidence text (light connective edits allowed), each sentence ending with that paper's tag.",
             "[COMPARISON] how the papers differ in method and role; cite the tags you compare.",
             "[LIMITATION] what the reported evidence does not establish; cite the tags you discuss.",
             "Restate only the facts in the paper list above: no invented numbers, years, benchmarks, or paper names.",
