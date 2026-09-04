@@ -1027,12 +1027,18 @@ def _llm_section_paragraphs(section: dict[str, Any], llm_chat: Callable, zh: boo
 
 def _map_alias_citations(text: str, alias_of: dict[str, str]) -> str:
     """Rewrite [P3]-style tags to real paper ids; unknown tags stay and are
-    dropped later by the whitelist filter."""
-    return re.sub(
-        r"\[(P\d+)\]",
-        lambda match: f"[{alias_of[match.group(1)]}]" if match.group(1) in alias_of else match.group(0),
-        text,
-    )
+    dropped later by the whitelist filter.
+
+    Models put the tag after the closing punctuation ("...scale. [P2]."),
+    which sentence splitters turn into a citation-only fragment; pull the tag
+    back inside the sentence so downstream verifiers can bind the claim."""
+    def _replace(match: re.Match[str]) -> str:
+        alias = match.group(1)
+        return f"[{alias_of[alias]}]" if alias in alias_of else match.group(0)
+
+    text = re.sub(r"\[(P\d+)\]", _replace, text)
+    text = re.sub(r"([.。!?！？])\s*\[(paper:[^\]]+)\]\s*\.?", r" [\2].", text)
+    return text
 
 
 def _parse_tagged_paragraphs(reply: str) -> dict[str, str]:

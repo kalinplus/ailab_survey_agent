@@ -35,7 +35,9 @@ def build_citation_ready_set(
             }
         )
 
-    ready_items.sort(key=lambda item: (item.get("year") or 0, item["paper_id"]))
+    # Newest first: with a cap below the pool size, whitelisting the oldest
+    # papers tanks the survey's freshness profile (S0 eval L0 regression).
+    ready_items.sort(key=lambda item: (item.get("year") or 0, item["paper_id"]), reverse=True)
     ready_items = ready_items[:max_core_papers]
     return {
         "task_id": task_id,
