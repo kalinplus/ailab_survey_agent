@@ -403,6 +403,9 @@ def execute_decisions(
     return md, evidence_store
 
 
+_ID_SHAPED_RE = re.compile(r"paper:|_|/")
+
+
 def _execute_one(action, params, record, md, evidence_store,
                  evidence_by_paper, allowed_ids, nli, sciverse_budget) -> tuple[str, str]:
     """Execute one validated action; returns (outcome, mutated markdown)."""
@@ -412,8 +415,19 @@ def _execute_one(action, params, record, md, evidence_store,
             if new_id not in allowed_ids:
                 return "invalid_action", md
             old_id = record["citation_id"]
+            # Academic numeric markers ([1], [31-36]) are not citation ids:
+            # remapping them onto a confabulated whitelist paper mangles the
+            # document (S0 round-2/3: blind global replaces spliced DOIs and
+            # rendered sections into surviving citations). Only id-shaped
+            # sources may remap; anything else goes to delete_claim.
+            if not _ID_SHAPED_RE.search(str(old_id)):
+                return "invalid_action", md
             sentences = [s for s in _sentences(md) if f"[{old_id}]" in s]
-            md = md.replace(f"[{old_id}]", f"[{new_id}]")
+            if not sentences:
+                return "invalid_action", md
+            for sentence in sentences:
+                remapped = sentence.replace(f"[{old_id}]", f"[{new_id}]", 1)
+                md = md.replace(sentence, remapped, 1)
             repaired = all(
                 _claim_status(_strip_citation(s), [e["text"] for e in evidence_by_paper.get(new_id, [])], nli)
                 != "unsupported" for s in sentences)
