@@ -1,6 +1,6 @@
 {
-  "task_id": "task_world_models_and_gamecraft_for_i_001",
-  "topic": "World Models and GameCraft for Interactive Game Intelligence",
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "topic": "World Models for Games: A Survey",
   "request_type": "knowledge_build",
   "inputs": {
     "task_request_path": "cache/task_request.json",
@@ -18,13 +18,13 @@
     "citation_index_path": "cache/citation_index.json"
   },
   "pipeline_config": {
-    "use_online_search": false,
+    "use_online_search": true,
     "use_seed_fallback": true,
     "use_mineru": false,
     "use_mock_mineru_if_failed": false,
-    "max_papers": 12,
-    "max_core_papers": 8,
-    "download_pdfs": false,
+    "max_papers": 60,
+    "max_core_papers": 15,
+    "download_pdfs": true,
     "extract_figures": true,
     "extract_tables": true,
     "extract_captions": true,

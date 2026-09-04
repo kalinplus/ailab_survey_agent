@@ -24,7 +24,7 @@
       "cache/",
       "logs/"
     ],
-    "timeout_seconds": 900.0,
+    "timeout_seconds": 3600.0,
     "max_result_chars": 6000
   },
   {
@@ -48,7 +48,7 @@
       "cache/generated_artifact_bank.json",
       "output/generated_assets/"
     ],
-    "timeout_seconds": 900.0,
+    "timeout_seconds": 3600.0,
     "max_result_chars": 6000
   },
   {
@@ -70,7 +70,7 @@
       "output/citation_result.json",
       "cache/claim_map.json"
     ],
-    "timeout_seconds": 900.0,
+    "timeout_seconds": 3600.0,
     "max_result_chars": 6000
   },
   {
@@ -89,7 +89,7 @@
     "allowed_write_paths": [
       "output/survey_revised.md"
     ],
-    "timeout_seconds": 900.0,
+    "timeout_seconds": 3600.0,
     "max_result_chars": 6000
   },
   {
@@ -111,7 +111,7 @@
     "allowed_write_paths": [
       "output/"
     ],
-    "timeout_seconds": 900.0,
+    "timeout_seconds": 3600.0,
     "max_result_chars": 6000
   }
 ]

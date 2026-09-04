@@ -1,5 +1,5 @@
 {
-  "task_id": "task_world_models_and_gamecraft_for_i_001",
+  "task_id": "task_world_models_for_games_a_survey_001",
   "artifacts": [
     {
       "artifact_id": "hero_banner",
@@ -21,24 +21,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "matplotlib_fallback",
@@ -66,24 +66,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "matplotlib_fallback",
@@ -111,24 +111,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "matplotlib",
@@ -156,24 +156,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "matplotlib",
@@ -201,24 +201,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "matplotlib",
@@ -253,24 +253,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "programmatic_markdown_table",
@@ -303,24 +303,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "programmatic_markdown_table",
@@ -353,24 +353,24 @@
         "cache/taxonomy.json"
       ],
       "source_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "supporting_papers": [
-        "world_models_2018",
-        "dreamerv3_2023",
-        "muzero_2020",
-        "gamengen_2024",
-        "genie_2024",
-        "alphastar_2019",
-        "dota2_2019",
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2302.01560",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1145/3746449"
       ],
       "provenance": "generated_by_c_from_verified_artifacts",
       "generation_method": "programmatic_markdown_table",

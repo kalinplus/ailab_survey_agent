@@ -1,161 +1,551 @@
 {
-  "task_id": "task_world_models_and_gamecraft_final_001",
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "citation_format": "[paper_id]",
   "allowed_paper_ids": [
-    "world_models_2018",
-    "dreamerv3_2023",
-    "muzero_2020",
-    "gamengen_2024",
-    "genie_2024",
-    "alphastar_2019",
-    "dota2_2019",
-    "generative_agents_2023",
-    "unisim_2024",
-    "diffusion_world_models_2024",
-    "gaia1_2023",
-    "minedojo_2022"
+    "paper:10.1007/s11704-024-40231-1",
+    "paper:10.5281/zenodo.19983308",
+    "paper:10.1109/cvpr52733.2024.01397",
+    "paper:10.48550/arxiv.2305.14992",
+    "paper:10.1145/3746449",
+    "paper:10.1287/mnsc.2023.4798",
+    "paper:10.48550/arxiv.2308.03688",
+    "paper:10.48550/arxiv.2302.01560",
+    "paper:10.48550/arxiv.2501.08325",
+    "paper:10.48550/arxiv.2309.17080",
+    "paper:10.48550/arxiv.2402.12348",
+    "paper:10.48550/arxiv.2309.09777",
+    "paper:10.48550/arxiv.2206.08853",
+    "paper:10.1109/cvpr52729.2023.01215",
+    "paper:10.1080/01621459.2023.2270750"
   ],
   "items": [
     {
-      "paper_id": "world_models_2018",
-      "title": "World Models",
+      "paper_id": "paper:10.1007/s11704-024-40231-1",
+      "title": "A survey on large language model based autonomous agents",
       "authors": [
-        "David Ha",
-        "Jurgen Schmidhuber"
+        "Lei Wang",
+        "Chen Ma",
+        "Xueyang Feng",
+        "Zeyu Zhang",
+        "Hao Yang",
+        "Jingsen Zhang",
+        "Zhiyuan Chen",
+        "Jiakai Tang",
+        "Xu Chen",
+        "Yankai Lin",
+        "Wayne Xin Zhao",
+        "Zhewei Wei",
+        "Ji-Rong Wen"
       ],
-      "year": 2018,
-      "venue": "NeurIPS"
+      "year": 2024,
+      "venue": "Frontiers of Computer Science",
+      "category": "",
+      "citation_count": 2188,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.1007/s11704-024-40231-1]",
+      "evidence_ids": [
+        "paper:10.1007/s11704-024-40231-1_agentic_300_p0_0",
+        "paper:10.1007/s11704-024-40231-1_agentic_301_p11_19727",
+        "paper:10.1007/s11704-024-40231-1_agentic_302_p0_1500",
+        "paper:10.1007/s11704-024-40231-1_agentic_303_p0_0",
+        "paper:10.1007/s11704-024-40231-1_agentic_304_p11_19727",
+        "paper:10.1007/s11704-024-40231-1_agentic_305_p2_14232",
+        "paper:10.1007/s11704-024-40231-1_agentic_306_p67_163785",
+        "paper:10.1007/s11704-024-40231-1_agentic_307_p2_14692",
+        "paper:10.1007/s11704-024-40231-1_agentic_308_p4_28764",
+        "paper:10.1007/s11704-024-40231-1_agentic_309_p8_35367",
+        "paper:10.1007/s11704-024-40231-1_agentic_310_p16_55975",
+        "paper:10.1007/s11704-024-40231-1_agentic_311_p0_746"
+      ]
     },
     {
-      "paper_id": "dreamerv3_2023",
-      "title": "DreamerV3: Mastering Diverse Domains through World Models",
+      "paper_id": "paper:10.5281/zenodo.19983308",
+      "title": "A Recurrent Latent Variable Model for Sequential Data",
       "authors": [
-        "Danijar Hafner",
-        "Jurgis Pasukonis",
-        "Jimmy Ba",
-        "Timothy Lillicrap"
+        "Jun‐Young Chung",
+        "Kyle Kastner",
+        "Laurent Dinh",
+        "Kratarth Goel",
+        "Aaron Courville",
+        "Yoshua Bengio"
+      ],
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
+      "category": "",
+      "citation_count": 132,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.5281/zenodo.19983308]",
+      "evidence_ids": [
+        "paper:10.5281/zenodo.19983308_agentic_612_p0_0",
+        "paper:10.5281/zenodo.19983308_agentic_613_p1_7543",
+        "paper:10.5281/zenodo.19983308_agentic_614_p2_15230",
+        "paper:10.5281/zenodo.19983308_agentic_615_p0_0",
+        "paper:10.5281/zenodo.19983308_agentic_616_p2_15230",
+        "paper:10.5281/zenodo.19983308_agentic_617_p1_7543",
+        "paper:10.5281/zenodo.19983308_agentic_618_p67_163785",
+        "paper:10.5281/zenodo.19983308_agentic_619_p2_14692",
+        "paper:10.5281/zenodo.19983308_agentic_620_p4_28764",
+        "paper:10.5281/zenodo.19983308_agentic_621_p8_35367",
+        "paper:10.5281/zenodo.19983308_agentic_622_p16_55975",
+        "paper:10.5281/zenodo.19983308_agentic_623_p0_746"
+      ]
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52733.2024.01397",
+      "title": "Driving Into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving",
+      "authors": [
+        "Yuqi Wang",
+        "Jiawei He",
+        "Lue Fan",
+        "Hongxin Li",
+        "Yuntao Chen",
+        "Zhaoxiang Zhang"
+      ],
+      "year": 2024,
+      "venue": "Computer Vision and Pattern Recognition",
+      "category": "",
+      "citation_count": 217,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.1109/cvpr52733.2024.01397]",
+      "evidence_ids": [
+        "paper:10.1109/cvpr52733.2024.01397_agentic_636_p0_2983",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_637_p0_1390",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_638_p0_1543",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_639_p0_2983",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_640_p3_15776",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_641_p0_3652",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_642_p67_163785",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_643_p2_14692",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_644_p4_28764",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_645_p8_35367",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_646_p16_55975",
+        "paper:10.1109/cvpr52733.2024.01397_agentic_647_p0_746"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2305.14992",
+      "title": "Reasoning with Language Model is Planning with World Model",
+      "authors": [
+        "Shibo Hao",
+        "Yi Gu",
+        "Haodi Ma",
+        "Joshua Jiahua Hong",
+        "Zhen Wang",
+        "Daisy Zhe Wang",
+        "Zhiting Hu"
       ],
       "year": 2023,
-      "venue": "arXiv"
+      "venue": "arXiv (Cornell University)",
+      "category": "",
+      "citation_count": 602,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.48550/arxiv.2305.14992]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2305.14992_agentic_564_p0_1767",
+        "paper:10.48550/arxiv.2305.14992_agentic_565_p0_1552",
+        "paper:10.48550/arxiv.2305.14992_agentic_566_p0_1450",
+        "paper:10.48550/arxiv.2305.14992_agentic_567_p1_5737",
+        "paper:10.48550/arxiv.2305.14992_agentic_568_p0_1767",
+        "paper:10.48550/arxiv.2305.14992_agentic_569_p0_1479",
+        "paper:10.48550/arxiv.2305.14992_agentic_570_p67_163785",
+        "paper:10.48550/arxiv.2305.14992_agentic_571_p2_14692",
+        "paper:10.48550/arxiv.2305.14992_agentic_572_p4_28764",
+        "paper:10.48550/arxiv.2305.14992_agentic_573_p8_35367",
+        "paper:10.48550/arxiv.2305.14992_agentic_574_p16_55975",
+        "paper:10.48550/arxiv.2305.14992_agentic_575_p0_746"
+      ]
     },
     {
-      "paper_id": "muzero_2020",
-      "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
+      "paper_id": "paper:10.1145/3746449",
+      "title": "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
       "authors": [
-        "Julian Schrittwieser",
-        "Ioannis Antonoglou",
-        "Thomas Hubert",
-        "Karen Simonyan",
-        "David Silver"
+        "Jingtao Ding",
+        "Yunke Zhang",
+        "Yu Shang",
+        "Y. Zhang",
+        "Zefang Zong",
+        "Jie Feng",
+        "Yuan Yuan",
+        "Hongyuan Su",
+        "Nian Li",
+        "Nicholas Sukiennik",
+        "Fengli Xu",
+        "Yong Li"
       ],
-      "year": 2020,
-      "venue": "Nature"
+      "year": 2025,
+      "venue": "ACM Computing Surveys",
+      "category": "",
+      "citation_count": 57,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.1145/3746449]",
+      "evidence_ids": [
+        "paper:10.1145/3746449_agentic_432_p2_9500",
+        "paper:10.1145/3746449_agentic_433_p1_6253",
+        "paper:10.1145/3746449_agentic_434_p0_427",
+        "paper:10.1145/3746449_agentic_435_p2_9500",
+        "paper:10.1145/3746449_agentic_436_p1_6253",
+        "paper:10.1145/3746449_agentic_437_p9_22121",
+        "paper:10.1145/3746449_agentic_438_p67_163785",
+        "paper:10.1145/3746449_agentic_439_p2_14692",
+        "paper:10.1145/3746449_agentic_440_p4_28764",
+        "paper:10.1145/3746449_agentic_441_p8_35367",
+        "paper:10.1145/3746449_agentic_442_p16_55975",
+        "paper:10.1145/3746449_agentic_443_p0_746"
+      ]
     },
     {
-      "paper_id": "gamengen_2024",
-      "title": "GameNGen: Diffusion Models Are Real-Time Game Engines",
+      "paper_id": "paper:10.1287/mnsc.2023.4798",
+      "title": "A Mean Field Games Model for Cryptocurrency Mining",
       "authors": [
-        "Dani Valevski",
-        "Yaniv Leviathan",
-        "Moab Arar",
-        "Shlomi Fruchter"
+        "Zongxi Li",
+        "A. Max Reppen",
+        "Ronnie Sircar"
       ],
-      "year": 2024,
-      "venue": "arXiv"
+      "year": 2025,
+      "venue": "Management Science, 2024, Vol 70, Issue 4, p2188",
+      "category": "",
+      "citation_count": 51,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.1287/mnsc.2023.4798]",
+      "evidence_ids": [
+        "paper:10.1287/mnsc.2023.4798_agentic_492_p0_0",
+        "paper:10.1287/mnsc.2023.4798_agentic_493_p10_30880",
+        "paper:10.1287/mnsc.2023.4798_agentic_494_p0_598",
+        "paper:10.1287/mnsc.2023.4798_agentic_495_p0_0",
+        "paper:10.1287/mnsc.2023.4798_agentic_496_p10_30880",
+        "paper:10.1287/mnsc.2023.4798_agentic_497_p0_598",
+        "paper:10.1287/mnsc.2023.4798_agentic_498_p67_163785",
+        "paper:10.1287/mnsc.2023.4798_agentic_499_p2_14692",
+        "paper:10.1287/mnsc.2023.4798_agentic_500_p4_28764",
+        "paper:10.1287/mnsc.2023.4798_agentic_501_p8_35367",
+        "paper:10.1287/mnsc.2023.4798_agentic_502_p16_55975",
+        "paper:10.1287/mnsc.2023.4798_agentic_503_p0_746"
+      ]
     },
     {
-      "paper_id": "genie_2024",
-      "title": "Genie: Generative Interactive Environments",
+      "paper_id": "paper:10.48550/arxiv.2308.03688",
+      "title": "AgentBench: Evaluating LLMs as Agents",
       "authors": [
-        "Tim Rocktaschel",
-        "Jack Parker-Holder",
-        "Sasha Salter",
-        "et al."
-      ],
-      "year": 2024,
-      "venue": "arXiv"
-    },
-    {
-      "paper_id": "alphastar_2019",
-      "title": "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning",
-      "authors": [
-        "Oriol Vinyals",
-        "Igor Babuschkin",
-        "Wojciech Czarnecki",
-        "et al."
-      ],
-      "year": 2019,
-      "venue": "Nature"
-    },
-    {
-      "paper_id": "dota2_2019",
-      "title": "Dota 2 with Large Scale Deep Reinforcement Learning",
-      "authors": [
-        "Christopher Berner",
-        "Greg Brockman",
-        "Brooke Chan",
-        "et al."
-      ],
-      "year": 2019,
-      "venue": "arXiv"
-    },
-    {
-      "paper_id": "generative_agents_2023",
-      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
-      "authors": [
-        "Joon Sung Park",
-        "Joseph O'Brien",
-        "Carrie Cai",
-        "et al."
+        "Xiao Liu",
+        "Hao Yu",
+        "Hanchen Zhang",
+        "Yifan Xu",
+        "Xuanyu Lei",
+        "Hanyu Lai",
+        "Yu‐Cheng Gu",
+        "Hangliang Ding",
+        "Kaiwen Men",
+        "Kejuan Yang",
+        "Shudan Zhang",
+        "Xiang Deng",
+        "Aohan Zeng",
+        "Zhengxiao Du",
+        "Chenhui Zhang",
+        "Sheng Shen",
+        "Tianjun Zhang",
+        "Yu Su",
+        "Huan Sun",
+        "Minlie Huang",
+        "Yuxiao Dong",
+        "Jie Tang"
       ],
       "year": 2023,
-      "venue": "UIST"
+      "venue": "arXiv (Cornell University)",
+      "category": "",
+      "citation_count": 369,
+      "survey_ref_count": 1,
+      "allowed_citation": "[paper:10.48550/arxiv.2308.03688]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2308.03688_agentic_600_p0_1977",
+        "paper:10.48550/arxiv.2308.03688_agentic_601_p0_1626",
+        "paper:10.48550/arxiv.2308.03688_agentic_602_p0_1211",
+        "paper:10.48550/arxiv.2308.03688_agentic_603_p0_1977",
+        "paper:10.48550/arxiv.2308.03688_agentic_604_p0_1833",
+        "paper:10.48550/arxiv.2308.03688_agentic_605_p0_2012",
+        "paper:10.48550/arxiv.2308.03688_agentic_606_p67_163785",
+        "paper:10.48550/arxiv.2308.03688_agentic_607_p2_14692",
+        "paper:10.48550/arxiv.2308.03688_agentic_608_p4_28764",
+        "paper:10.48550/arxiv.2308.03688_agentic_609_p8_35367",
+        "paper:10.48550/arxiv.2308.03688_agentic_610_p16_55975",
+        "paper:10.48550/arxiv.2308.03688_agentic_611_p0_746"
+      ]
     },
     {
-      "paper_id": "unisim_2024",
-      "title": "UniSim: Learning Interactive Real-World Simulators",
+      "paper_id": "paper:10.48550/arxiv.2302.01560",
+      "title": "Describe, Explain, Plan and Select: Interactive Planning with Large Language Models Enables Open-World Multi-Task Agents",
       "authors": [
-        "Jiannan Xiang",
-        "Kaiming He",
-        "et al."
+        "Zihao Wang",
+        "Shaofei Cai",
+        "Chen, Guanzhou",
+        "Anji Liu",
+        "Xiaojian Ma",
+        "Yitao Liang"
       ],
-      "year": 2024,
-      "venue": "arXiv"
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "category": "",
+      "citation_count": 359,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.48550/arxiv.2302.01560]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2302.01560_agentic_252_p0_755",
+        "paper:10.48550/arxiv.2302.01560_agentic_253_p9_42481",
+        "paper:10.48550/arxiv.2302.01560_agentic_254_p2_6918",
+        "paper:10.48550/arxiv.2302.01560_agentic_255_p0_755",
+        "paper:10.48550/arxiv.2302.01560_agentic_256_p2_6918",
+        "paper:10.48550/arxiv.2302.01560_agentic_257_p0_2808",
+        "paper:10.48550/arxiv.2302.01560_agentic_258_p67_163785",
+        "paper:10.48550/arxiv.2302.01560_agentic_259_p2_14692",
+        "paper:10.48550/arxiv.2302.01560_agentic_260_p4_28764",
+        "paper:10.48550/arxiv.2302.01560_agentic_261_p8_35367",
+        "paper:10.48550/arxiv.2302.01560_agentic_262_p16_55975",
+        "paper:10.48550/arxiv.2302.01560_agentic_263_p0_746"
+      ]
     },
     {
-      "paper_id": "diffusion_world_models_2024",
-      "title": "Diffusion World Models",
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
       "authors": [
-        "Eloi Alonso",
-        "Adam Jelley",
-        "Vincent Micheli",
-        "et al."
+        "Jiwen Yu",
+        "Yiran Qin",
+        "Xintao Wang",
+        "Pengfei Wan",
+        "Di Zhang",
+        "Xihui Liu"
       ],
-      "year": 2024,
-      "venue": "arXiv"
+      "year": 2025,
+      "venue": "arXiv.org",
+      "category": "",
+      "citation_count": 30,
+      "survey_ref_count": 1,
+      "allowed_citation": "[paper:10.48550/arxiv.2501.08325]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2501.08325_agentic_60_p1_12959",
+        "paper:10.48550/arxiv.2501.08325_agentic_61_p0_8620",
+        "paper:10.48550/arxiv.2501.08325_agentic_62_p18_74184",
+        "paper:10.48550/arxiv.2501.08325_agentic_63_p0_8620",
+        "paper:10.48550/arxiv.2501.08325_agentic_64_p1_10615",
+        "paper:10.48550/arxiv.2501.08325_agentic_65_p7_40945",
+        "paper:10.48550/arxiv.2501.08325_agentic_66_p67_163785",
+        "paper:10.48550/arxiv.2501.08325_agentic_67_p2_14692",
+        "paper:10.48550/arxiv.2501.08325_agentic_68_p4_28764",
+        "paper:10.48550/arxiv.2501.08325_agentic_69_p8_35367",
+        "paper:10.48550/arxiv.2501.08325_agentic_70_p16_55975",
+        "paper:10.48550/arxiv.2501.08325_agentic_71_p0_746"
+      ]
     },
     {
-      "paper_id": "gaia1_2023",
+      "paper_id": "paper:10.48550/arxiv.2309.17080",
       "title": "GAIA-1: A Generative World Model for Autonomous Driving",
       "authors": [
         "Anthony Hu",
         "Lloyd Russell",
         "Hudson Yeo",
-        "et al."
+        "Zak Murez",
+        "G. A. Fedoseev",
+        "Alex Kendall",
+        "Jamie Shotton",
+        "Gianluca Corrado"
       ],
       "year": 2023,
-      "venue": "arXiv"
+      "venue": "arXiv (Cornell University)",
+      "category": "",
+      "citation_count": 285,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.48550/arxiv.2309.17080]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2309.17080_agentic_24_p0_1768",
+        "paper:10.48550/arxiv.2309.17080_agentic_25_p0_1461",
+        "paper:10.48550/arxiv.2309.17080_agentic_26_p0_1966",
+        "paper:10.48550/arxiv.2309.17080_agentic_27_p0_1768",
+        "paper:10.48550/arxiv.2309.17080_agentic_28_p0_1372",
+        "paper:10.48550/arxiv.2309.17080_agentic_29_p7_34767",
+        "paper:10.48550/arxiv.2309.17080_agentic_30_p67_163785",
+        "paper:10.48550/arxiv.2309.17080_agentic_31_p2_14692",
+        "paper:10.48550/arxiv.2309.17080_agentic_32_p4_28764",
+        "paper:10.48550/arxiv.2309.17080_agentic_33_p8_35367",
+        "paper:10.48550/arxiv.2309.17080_agentic_34_p16_55975",
+        "paper:10.48550/arxiv.2309.17080_agentic_35_p0_746"
+      ]
     },
     {
-      "paper_id": "minedojo_2022",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "authors": [
+        "Jinhao Duan",
+        "Renming Zhang",
+        "James Diffenderfer",
+        "Bhavya Kailkhura",
+        "Lichao Sun",
+        "Elias Stengel-Eskin",
+        "Mohit Bansal",
+        "Tianlong Chen",
+        "Kaidi Xu"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "category": "",
+      "citation_count": 74,
+      "survey_ref_count": 1,
+      "allowed_citation": "[paper:10.48550/arxiv.2402.12348]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2402.12348_agentic_120_p0_2228",
+        "paper:10.48550/arxiv.2402.12348_agentic_121_p0_2657",
+        "paper:10.48550/arxiv.2402.12348_agentic_122_p0_1709",
+        "paper:10.48550/arxiv.2402.12348_agentic_123_p0_2657",
+        "paper:10.48550/arxiv.2402.12348_agentic_124_p0_1338",
+        "paper:10.48550/arxiv.2402.12348_agentic_125_p0_2228",
+        "paper:10.48550/arxiv.2402.12348_agentic_126_p67_163785",
+        "paper:10.48550/arxiv.2402.12348_agentic_127_p2_14692",
+        "paper:10.48550/arxiv.2402.12348_agentic_128_p4_28764",
+        "paper:10.48550/arxiv.2402.12348_agentic_129_p8_35367",
+        "paper:10.48550/arxiv.2402.12348_agentic_130_p16_55975",
+        "paper:10.48550/arxiv.2402.12348_agentic_131_p0_746"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2309.09777",
+      "title": "DriveDreamer: Towards Real-world-driven World Models for Autonomous Driving",
+      "authors": [
+        "Xiaofeng Wang",
+        "Zheng Zhu",
+        "Guan Huang",
+        "Xinze Chen",
+        "Zhu, Jiagang",
+        "Lu, Jiwen"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "category": "",
+      "citation_count": 177,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.48550/arxiv.2309.09777]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2309.09777_agentic_84_p0_2665",
+        "paper:10.48550/arxiv.2309.09777_agentic_85_p22_92568",
+        "paper:10.48550/arxiv.2309.09777_agentic_86_p3_13975",
+        "paper:10.48550/arxiv.2309.09777_agentic_87_p0_0",
+        "paper:10.48550/arxiv.2309.09777_agentic_88_p22_92568",
+        "paper:10.48550/arxiv.2309.09777_agentic_89_p0_1618",
+        "paper:10.48550/arxiv.2309.09777_agentic_90_p67_163785",
+        "paper:10.48550/arxiv.2309.09777_agentic_91_p2_14692",
+        "paper:10.48550/arxiv.2309.09777_agentic_92_p4_28764",
+        "paper:10.48550/arxiv.2309.09777_agentic_93_p8_35367",
+        "paper:10.48550/arxiv.2309.09777_agentic_94_p16_55975",
+        "paper:10.48550/arxiv.2309.09777_agentic_95_p0_746"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2206.08853",
       "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
       "authors": [
         "Linxi Fan",
         "Guanzhi Wang",
         "Yunfan Jiang",
-        "et al."
+        "Ajay Mandlekar",
+        "Yuncong Yang",
+        "Haoyi Zhu",
+        "Andrew Tang",
+        "De-An Huang",
+        "Yuke Zhu",
+        "Anima Anandkumar"
       ],
       "year": 2022,
-      "venue": "NeurIPS"
+      "venue": "arXiv (Cornell University)",
+      "category": "",
+      "citation_count": 400,
+      "survey_ref_count": 1,
+      "allowed_citation": "[paper:10.48550/arxiv.2206.08853]",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2206.08853_agentic_672_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_673_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_674_p0_1640",
+        "paper:10.48550/arxiv.2206.08853_agentic_675_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_676_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_677_p0_1154",
+        "paper:10.48550/arxiv.2206.08853_agentic_678_p67_163785",
+        "paper:10.48550/arxiv.2206.08853_agentic_679_p2_14692",
+        "paper:10.48550/arxiv.2206.08853_agentic_680_p4_28764",
+        "paper:10.48550/arxiv.2206.08853_agentic_681_p8_35367",
+        "paper:10.48550/arxiv.2206.08853_agentic_682_p16_55975",
+        "paper:10.48550/arxiv.2206.08853_agentic_683_p0_746"
+      ]
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52729.2023.01215",
+      "title": "Infinite Photorealistic Worlds Using Procedural Generation",
+      "authors": [
+        "Alexander Raistrick",
+        "Lahav Lipson",
+        "Zeyu Ma",
+        "Lingjie Mei",
+        "Mingzhe Wang",
+        "Yiming Zuo",
+        "Karhan Kayan",
+        "Hongyu Wen",
+        "Beining Han",
+        "Yihan Wang",
+        "Alejandro Newell",
+        "Hei Law",
+        "Ankit Goyal",
+        "Kaiyu Yang",
+        "Jia Deng"
+      ],
+      "year": 2023,
+      "venue": "Computer Vision and Pattern Recognition",
+      "category": "",
+      "citation_count": 121,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.1109/cvpr52729.2023.01215]",
+      "evidence_ids": [
+        "paper:10.1109/cvpr52729.2023.01215_agentic_108_p2_8438",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_109_p2_10442",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_110_p2_7133",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_111_p2_7133",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_112_p2_10442",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_113_p2_11358",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_114_p67_163785",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_115_p2_14692",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_116_p4_28764",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_117_p8_35367",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_118_p16_55975",
+        "paper:10.1109/cvpr52729.2023.01215_agentic_119_p0_746"
+      ]
+    },
+    {
+      "paper_id": "paper:10.1080/01621459.2023.2270750",
+      "title": "Latent Space Modeling of Hypergraph Data",
+      "authors": [
+        "Kathryn Turnbull",
+        "Simon Lunagómez",
+        "Christopher Nemeth",
+        "Edoardo M. Airoldi"
+      ],
+      "year": 2025,
+      "venue": "Journal of the American Statistical Association, 2024, Vol 119, Issue 548, p2634",
+      "category": "",
+      "citation_count": 12,
+      "survey_ref_count": 0,
+      "allowed_citation": "[paper:10.1080/01621459.2023.2270750]",
+      "evidence_ids": [
+        "paper:10.1080/01621459.2023.2270750_agentic_72_p1_2533",
+        "paper:10.1080/01621459.2023.2270750_agentic_73_p0_512",
+        "paper:10.1080/01621459.2023.2270750_agentic_74_p0_1727",
+        "paper:10.1080/01621459.2023.2270750_agentic_75_p1_2533",
+        "paper:10.1080/01621459.2023.2270750_agentic_76_p28_49224",
+        "paper:10.1080/01621459.2023.2270750_agentic_77_p0_1705",
+        "paper:10.1080/01621459.2023.2270750_agentic_78_p67_163785",
+        "paper:10.1080/01621459.2023.2270750_agentic_79_p2_14692",
+        "paper:10.1080/01621459.2023.2270750_agentic_80_p4_28764",
+        "paper:10.1080/01621459.2023.2270750_agentic_81_p8_35367",
+        "paper:10.1080/01621459.2023.2270750_agentic_82_p16_55975",
+        "paper:10.1080/01621459.2023.2270750_agentic_83_p0_746"
+      ]
     }
-  ]
+  ],
+  "rules": {
+    "only_these_citations_allowed": true,
+    "references_must_be_generated_from_paper_cards": true,
+    "claims_should_use_supporting_evidence_ids": true
+  }
 }

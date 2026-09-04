@@ -1,73 +1,61 @@
 {
-  "task_id": "t_final",
+  "task_id": "task_world_models_for_games_a_survey_001",
   "sections": [
     {
       "section_id": "sec_01",
-      "section_title": "Generative Game World Simulation",
-      "section_goal": "World models that learn compact dynamics for game-like or interactive environments.",
+      "section_title": "Latent Architectures for World Representation",
+      "section_goal": "Examines how game states and environments are encoded into latent spaces using techniques like VAEs, Transformers, and Diffusion models to capture essential dynamics while reducing dimensionality.",
       "target_length_words": 450,
       "allowed_paper_ids": [
-        "world_models_2018",
-        "diffusion_world_models_2024",
-        "gaia1_2023",
-        "alphastar_2019",
-        "generative_agents_2023"
+        "paper:10.1145/3746449",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.1109/cvpr52733.2024.01397"
       ],
       "selected_papers": [
         {
-          "paper_id": "world_models_2018",
-          "title": "World Models",
-          "year": 2018,
-          "problem": "How to learn compact spatial and temporal representations of game environments so that agents can train with fewer direct environment interactions.",
-          "method": "A variational autoencoder compresses observations, an MDN-RNN predicts latent dynamics, and a compact controller is optimized in latent space.",
-          "contribution": "The paper showed that agents can be trained inside learned models of game environments such as CarRacing and VizDoom.",
-          "limitations": "The demonstrations use relatively simple environments, and accumulated rollout error can weaken long-horizon planning.",
-          "topic_relevance_score": 0.883,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+          "paper_id": "paper:10.1145/3746449",
+          "title": "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
+          "year": 2025,
+          "problem": "The concept of world models has garnered significant attention due to advancements in multimodal large language models such as GPT-4 and video generation models such as Sora, which are central to the pursuit of artifici...",
+          "method": "The concept of world models has garnered significant attention due to advancements in multimodal large language models such as GPT-4 and video generation models such as Sora, whic...",
+          "contribution": "The concept of world models has garnered significant attention due to advancements in multimodal large language models such as GPT-4 and video generation models such as Sora, which are central to the pursuit of artifici...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "Joint Embedding Predictive Architectures (JEPAs) emphasize semantic-level consistency across states, for example, I-JEPA modeling stable and generalizable world representations from multimodal inputs [5]. Generative video world models (e.g...",
+            "World models are computational frameworks that primarily serving two interconnected purposes: building implicit internal representations of the environment and predicting future states. The concept originates from early AI research on ment..."
+          ],
+          "topic_relevance_score": 0.633,
+          "selection_reason": "Partially matches topic keywords and remains citation-ready."
         },
         {
-          "paper_id": "diffusion_world_models_2024",
-          "title": "Diffusion World Models",
+          "paper_id": "paper:10.48550/arxiv.2309.09777",
+          "title": "DriveDreamer: Towards Real-world-driven World Models for Autonomous Driving",
+          "year": 2023,
+          "problem": "World models, especially in autonomous driving, are trending and drawing extensive attention due to their capacity for comprehending driving environments. The established world model holds immense potential for the gene...",
+          "method": "World models, especially in autonomous driving, are trending and drawing extensive attention due to their capacity for comprehending driving environments. The established world mo...",
+          "contribution": "World models, especially in autonomous driving, are trending and drawing extensive attention due to their capacity for comprehending driving environments. The established world model holds immense potential for the gene...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "primarily due to their task-specific optimization and reliance on limited human-annotated training data. World models, which predict future environment states based on historical observations and ego actions, have gained increasing attenti...",
+            "In autonomous driving, large-scale pretrained generative models are increasingly utilized as world models to generate realistic images and video sequences of driving scenarios, thus enhancing training and evaluation of autonomous systems (..."
+          ],
+          "topic_relevance_score": 0.633,
+          "selection_reason": "Partially matches topic keywords and remains citation-ready."
+        },
+        {
+          "paper_id": "paper:10.1109/cvpr52733.2024.01397",
+          "title": "Driving Into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving",
           "year": 2024,
-          "problem": "How to use diffusion-style generative modeling for world dynamics and agent learning.",
-          "method": "The work uses diffusion models to represent or predict environment dynamics for model-based learning.",
-          "contribution": "It expands the design space of generative world models beyond recurrent latent dynamics.",
-          "limitations": "Diffusion rollouts can be expensive and must be assessed for temporal consistency.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "gaia1_2023",
-          "title": "GAIA-1: A Generative World Model for Autonomous Driving",
-          "year": 2023,
-          "problem": "How to learn a controllable generative world model for complex embodied environments.",
-          "method": "GAIA-1 models video, action, and scene context to generate plausible future driving observations.",
-          "contribution": "Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
-          "limitations": "Driving-focused results do not directly solve game intelligence evaluation and require domain-specific validation.",
-          "topic_relevance_score": 0.767,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "alphastar_2019",
-          "title": "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning",
-          "year": 2019,
-          "problem": "How to train agents for a complex real-time strategy game with partial observability and long-horizon decisions.",
-          "method": "AlphaStar combines supervised learning, reinforcement learning, and league-based multi-agent training.",
-          "contribution": "The work demonstrated grandmaster-level performance in StarCraft II and highlighted the value of competitive training ecosystems.",
-          "limitations": "The system relies on extensive engineering, training scale, and domain-specific interfaces.",
-          "topic_relevance_score": 1.0,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "generative_agents_2023",
-          "title": "Generative Agents: Interactive Simulacra of Human Behavior",
-          "year": 2023,
-          "problem": "How to create believable interactive agents that remember, plan, and act in a simulated social environment.",
-          "method": "The system combines memory streams, reflection, planning, and language-model-driven action selection.",
-          "contribution": "It illustrated how generative agents can populate interactive worlds with coherent behavior.",
-          "limitations": "Behavioral realism and evaluation remain difficult, and language-model outputs need guardrails.",
-          "topic_relevance_score": 1.0,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+          "problem": "In autonomous driving, predicting future events in advance and evaluating the foreseeable risks empowers autonomous vehicles to better plan their actions, enhancing safety and efficiency on the road. To this end, we pro...",
+          "method": "In autonomous driving, predicting future events in advance and evaluating the foreseeable risks empowers autonomous vehicles to better plan their actions, enhancing safety and eff...",
+          "contribution": "In autonomous driving, predicting future events in advance and evaluating the foreseeable risks empowers autonomous vehicles to better plan their actions, enhancing safety and efficiency on the road. To this end, we pro...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "Current autonomous driving systems typically divide the problem into four steps: perception, tracking, trajectory prediction, and path planning [4]. Trajectory prediction plays a pivotal role in autonomous driving. It serves not only as an...",
+            "Predicting the behaviour of other road users, including vehicles, is crucial for safe and informed decision-making in automated/autonomous vehicles (AVs). A vehicle's future behaviour is inherently multimodal and nondeterministic due to mu..."
+          ],
+          "topic_relevance_score": 0.45,
+          "selection_reason": "Citation-ready fallback with limited topic keyword evidence."
         }
       ],
       "artifact_slots": [
@@ -80,70 +68,42 @@
       "claims": [
         {
           "claim_id": "claim_sec1_001",
-          "claim": "World Models addresses How to learn compact spatial and temporal representations of game environments so that agents can train with fewer dire... with A variational autoencoder compresses observations, an MDN-RNN predicts latent dynamics, and a compact controller is optimized in latent spa..., and reports The paper showed that agents can be trained inside learned models of game environments such as CarRacing and VizDoom.",
+          "claim": "Understanding World or Predicting Future? A Comprehensive Survey of World Models is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "world_models_2018"
+            "paper:10.1145/3746449"
           ],
           "supporting_evidence": [
-            "ev_world_models_2018_problem",
-            "ev_world_models_2018_method",
-            "ev_world_models_2018_contribution"
+            "paper:10.1145/3746449_agentic_432_p2_9500",
+            "paper:10.1145/3746449_agentic_433_p1_6253",
+            "paper:10.1145/3746449_agentic_434_p0_427"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec1_002",
-          "claim": "Diffusion World Models addresses How to use diffusion-style generative modeling for world dynamics and agent learning. with The work uses diffusion models to represent or predict environment dynamics for model-based learning., and reports It expands the design space of generative world models beyond recurrent latent dynamics.",
+          "claim": "DriveDreamer: Towards Real-world-driven World Models for Autonomous Driving is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "diffusion_world_models_2024"
+            "paper:10.48550/arxiv.2309.09777"
           ],
           "supporting_evidence": [
-            "ev_diffusion_world_models_2024_problem",
-            "ev_diffusion_world_models_2024_method",
-            "ev_diffusion_world_models_2024_contribution"
+            "paper:10.48550/arxiv.2309.09777_agentic_84_p0_2665",
+            "paper:10.48550/arxiv.2309.09777_agentic_85_p22_92568",
+            "paper:10.48550/arxiv.2309.09777_agentic_86_p3_13975"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec1_003",
-          "claim": "GAIA-1: A Generative World Model for Autonomous Driving addresses How to learn a controllable generative world model for complex embodied environments. with GAIA-1 models video, action, and scene context to generate plausible future driving observations., and reports Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
+          "claim": "Driving Into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "gaia1_2023"
+            "paper:10.1109/cvpr52733.2024.01397"
           ],
           "supporting_evidence": [
-            "ev_gaia1_2023_problem",
-            "ev_gaia1_2023_method",
-            "ev_gaia1_2023_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec1_004",
-          "claim": "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning addresses How to train agents for a complex real-time strategy game with partial observability and long-horizon decisions. with AlphaStar combines supervised learning, reinforcement learning, and league-based multi-agent training., and reports The work demonstrated grandmaster-level performance in StarCraft II and highlighted the value of competitive training ecosystems.",
-          "supporting_papers": [
-            "alphastar_2019"
-          ],
-          "supporting_evidence": [
-            "ev_alphastar_2019_problem",
-            "ev_alphastar_2019_method",
-            "ev_alphastar_2019_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec1_005",
-          "claim": "Generative Agents: Interactive Simulacra of Human Behavior addresses How to create believable interactive agents that remember, plan, and act in a simulated social environment. with The system combines memory streams, reflection, planning, and language-model-driven action selection., and reports It illustrated how generative agents can populate interactive worlds with coherent behavior.",
-          "supporting_papers": [
-            "generative_agents_2023"
-          ],
-          "supporting_evidence": [
-            "ev_generative_agents_2023_problem",
-            "ev_generative_agents_2023_method",
-            "ev_generative_agents_2023_contribution"
+            "paper:10.1109/cvpr52733.2024.01397_agentic_636_p0_2983",
+            "paper:10.1109/cvpr52733.2024.01397_agentic_637_p0_1390",
+            "paper:10.1109/cvpr52733.2024.01397_agentic_638_p0_1543"
           ],
           "allowed_figures": [],
           "risk_level": "low"
@@ -152,70 +112,58 @@
     },
     {
       "section_id": "sec_02",
-      "section_title": "Planning and Control with Learned Models",
-      "section_goal": "Agents that use learned dynamics for planning, control, or policy learning.",
+      "section_title": "Procedural Content Generation Mechanisms",
+      "section_goal": "Investigates methods where world models generate game assets, levels, or narratives procedurally, often conditioned on player behavior or specific design constraints.",
       "target_length_words": 450,
       "allowed_paper_ids": [
-        "dreamerv3_2023",
-        "muzero_2020",
-        "world_models_2018",
-        "dota2_2019",
-        "minedojo_2022"
+        "paper:10.48550/arxiv.2305.14992",
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2302.01560"
       ],
       "selected_papers": [
         {
-          "paper_id": "dreamerv3_2023",
-          "title": "DreamerV3: Mastering Diverse Domains through World Models",
+          "paper_id": "paper:10.48550/arxiv.2305.14992",
+          "title": "Reasoning with Language Model is Planning with World Model",
           "year": 2023,
-          "problem": "How to make world-model reinforcement learning robust across diverse domains with minimal task-specific tuning.",
-          "method": "DreamerV3 learns a latent world model and trains actor-critic behavior from imagined trajectories.",
-          "contribution": "It broadened the empirical case for world-model agents across visual control and game-like domains.",
-          "limitations": "The approach still depends on learned model quality and careful evaluation across domains.",
-          "topic_relevance_score": 0.883,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+          "problem": "Large language models (LLMs) have shown remarkable reasoning capabilities, especially when prompted to generate intermediate reasoning steps (e.g., Chain-of-Thought, CoT). However, LLMs can still struggle with problems....",
+          "method": "Large language models (LLMs) have shown remarkable reasoning capabilities, especially when prompted to generate intermediate reasoning steps (e.g., Chain-of-Thought, CoT). However...",
+          "contribution": "Large language models (LLMs) have shown remarkable reasoning capabilities, especially when prompted to generate intermediate reasoning steps (e.g., Chain-of-Thought, CoT). However, LLMs can still struggle with problems....",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "Large Language Models (LLMs) [1-6] have demonstrated significant performance improvements through Chain-of-Thought (CoT) reasoning [7, 8], particularly on complex tasks [9] such as mathematics [10] and coding. CoT guides models to generate...",
+            "Large Language Models (LLMs) have demonstrated notable reasoning capabilities, often enhanced by techniques like Chain-of-Thought (CoT) prompting [1]. However, their performance often falters in tasks demanding complex, multi-step structur..."
+          ],
+          "topic_relevance_score": 0.45,
+          "selection_reason": "Citation-ready fallback with limited topic keyword evidence."
         },
         {
-          "paper_id": "muzero_2020",
-          "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
-          "year": 2020,
-          "problem": "How to combine planning with learned dynamics without requiring a hand-coded simulator model.",
-          "method": "MuZero learns representation, dynamics, and prediction functions and uses tree search over the learned model.",
-          "contribution": "The system achieved strong results in Atari and classic board games while learning the model used for planning.",
-          "limitations": "The planning machinery and training pipeline are computationally demanding.",
-          "topic_relevance_score": 0.72,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+          "paper_id": "paper:10.48550/arxiv.2309.17080",
+          "title": "GAIA-1: A Generative World Model for Autonomous Driving",
+          "year": 2023,
+          "problem": "Autonomous driving promises transformative improvements to transportation, but building systems capable of safely navigating the unstructured complexity of real-world scenarios remains challenging. A critical problem li...",
+          "method": "Autonomous driving promises transformative improvements to transportation, but building systems capable of safely navigating the unstructured complexity of real-world scenarios re...",
+          "contribution": "Autonomous driving promises transformative improvements to transportation, but building systems capable of safely navigating the unstructured complexity of real-world scenarios remains challenging. A critical problem li...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "With the rapid growth of intelligent transportation, autonomous driving (AD) is transforming the transportation sector. It promises improved road safety, reduced congestion, and support for smart cities [1], [2]. However, real-world roads...",
+            "Autonomous driving technologies have achieved significant advancements in recent years, promising substantial enhancements in transportation safety, efficiency, and reliability [6, 17, 22, 26]. Modern autonomous driving systems rely on sop..."
+          ],
+          "topic_relevance_score": 0.45,
+          "selection_reason": "Citation-ready fallback with limited topic keyword evidence."
         },
         {
-          "paper_id": "world_models_2018",
-          "title": "World Models",
-          "year": 2018,
-          "problem": "How to learn compact spatial and temporal representations of game environments so that agents can train with fewer direct environment interactions.",
-          "method": "A variational autoencoder compresses observations, an MDN-RNN predicts latent dynamics, and a compact controller is optimized in latent space.",
-          "contribution": "The paper showed that agents can be trained inside learned models of game environments such as CarRacing and VizDoom.",
-          "limitations": "The demonstrations use relatively simple environments, and accumulated rollout error can weaken long-horizon planning.",
-          "topic_relevance_score": 0.883,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "dota2_2019",
-          "title": "Dota 2 with Large Scale Deep Reinforcement Learning",
-          "year": 2019,
-          "problem": "How to train coordinated agents in a high-dimensional, long-horizon multiplayer game.",
-          "method": "OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training.",
-          "contribution": "The project showed that self-play can produce strong coordinated behavior in Dota 2.",
-          "limitations": "The training regime is compute-intensive and tied to a specific game abstraction.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "minedojo_2022",
-          "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
-          "year": 2022,
-          "problem": "How to benchmark and train open-ended embodied agents in a rich game environment.",
-          "method": "MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources.",
-          "contribution": "It provides a large open-ended game environment for embodied agent research.",
-          "limitations": "Minecraft-specific affordances and task design choices shape what can be concluded.",
-          "topic_relevance_score": 0.8,
+          "paper_id": "paper:10.48550/arxiv.2302.01560",
+          "title": "Describe, Explain, Plan and Select: Interactive Planning with Large Language Models Enables Open-World Multi-Task Agents",
+          "year": 2023,
+          "problem": "We investigate the challenge of task planning for multi-task embodied agents in open-world environments. Two main difficulties are identified: 1) executing plans in an open-world environment (e.g., Minecraft) necessitat...",
+          "method": "We investigate the challenge of task planning for multi-task embodied agents in open-world environments. Two main difficulties are identified: 1) executing plans in an open-world...",
+          "contribution": "We investigate the challenge of task planning for multi-task embodied agents in open-world environments. Two main difficulties are identified: 1) executing plans in an open-world environment (e.g., Minecraft) necessitat...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "# Abstract We investigate the challenge of task planning for multi-task embodied agents in open-world environments. Two main difficulties are identified: 1) executing plans in an open-world environment (e.g., Minecraft) necessitates accura...",
+            "We investigate the problem of planning in open worlds. We identify two major challenges unique to these environments: 1) long-term planning requires precise and multi-step reasoning, and 2) planning efficiency could be compromised since ca..."
+          ],
+          "topic_relevance_score": 0.75,
           "selection_reason": "Matches game / agent / world model keywords with strong relevance."
         }
       ],
@@ -234,70 +182,42 @@
       "claims": [
         {
           "claim_id": "claim_sec2_001",
-          "claim": "DreamerV3: Mastering Diverse Domains through World Models addresses How to make world-model reinforcement learning robust across diverse domains with minimal task-specific tuning. with DreamerV3 learns a latent world model and trains actor-critic behavior from imagined trajectories., and reports It broadened the empirical case for world-model agents across visual control and game-like domains.",
+          "claim": "Reasoning with Language Model is Planning with World Model is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "dreamerv3_2023"
+            "paper:10.48550/arxiv.2305.14992"
           ],
           "supporting_evidence": [
-            "ev_dreamerv3_2023_problem",
-            "ev_dreamerv3_2023_method",
-            "ev_dreamerv3_2023_contribution"
+            "paper:10.48550/arxiv.2305.14992_agentic_564_p0_1767",
+            "paper:10.48550/arxiv.2305.14992_agentic_565_p0_1552",
+            "paper:10.48550/arxiv.2305.14992_agentic_566_p0_1450"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec2_002",
-          "claim": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model addresses How to combine planning with learned dynamics without requiring a hand-coded simulator model. with MuZero learns representation, dynamics, and prediction functions and uses tree search over the learned model., and reports The system achieved strong results in Atari and classic board games while learning the model used for planning.",
+          "claim": "GAIA-1: A Generative World Model for Autonomous Driving is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "muzero_2020"
+            "paper:10.48550/arxiv.2309.17080"
           ],
           "supporting_evidence": [
-            "ev_muzero_2020_problem",
-            "ev_muzero_2020_method",
-            "ev_muzero_2020_contribution"
+            "paper:10.48550/arxiv.2309.17080_agentic_24_p0_1768",
+            "paper:10.48550/arxiv.2309.17080_agentic_25_p0_1461",
+            "paper:10.48550/arxiv.2309.17080_agentic_26_p0_1966"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec2_003",
-          "claim": "World Models addresses How to learn compact spatial and temporal representations of game environments so that agents can train with fewer dire... with A variational autoencoder compresses observations, an MDN-RNN predicts latent dynamics, and a compact controller is optimized in latent spa..., and reports The paper showed that agents can be trained inside learned models of game environments such as CarRacing and VizDoom.",
+          "claim": "Describe, Explain, Plan and Select: Interactive Planning with Large Language Models Enables Open-World Multi-Task Agents is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "world_models_2018"
+            "paper:10.48550/arxiv.2302.01560"
           ],
           "supporting_evidence": [
-            "ev_world_models_2018_problem",
-            "ev_world_models_2018_method",
-            "ev_world_models_2018_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec2_004",
-          "claim": "Dota 2 with Large Scale Deep Reinforcement Learning addresses How to train coordinated agents in a high-dimensional, long-horizon multiplayer game. with OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training., and reports The project showed that self-play can produce strong coordinated behavior in Dota 2.",
-          "supporting_papers": [
-            "dota2_2019"
-          ],
-          "supporting_evidence": [
-            "ev_dota2_2019_problem",
-            "ev_dota2_2019_method",
-            "ev_dota2_2019_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec2_005",
-          "claim": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge addresses How to benchmark and train open-ended embodied agents in a rich game environment. with MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources., and reports It provides a large open-ended game environment for embodied agent research.",
-          "supporting_papers": [
-            "minedojo_2022"
-          ],
-          "supporting_evidence": [
-            "ev_minedojo_2022_problem",
-            "ev_minedojo_2022_method",
-            "ev_minedojo_2022_contribution"
+            "paper:10.48550/arxiv.2302.01560_agentic_252_p0_755",
+            "paper:10.48550/arxiv.2302.01560_agentic_253_p9_42481",
+            "paper:10.48550/arxiv.2302.01560_agentic_254_p2_6918"
           ],
           "allowed_figures": [],
           "risk_level": "low"
@@ -306,70 +226,58 @@
     },
     {
       "section_id": "sec_03",
-      "section_title": "Neural Game Engines and Interactive Environments",
-      "section_goal": "Generative systems that synthesize controllable interactive environments.",
+      "section_title": "Internal Simulation and Planning Capabilities",
+      "section_goal": "Focuses on the ability of models to simulate future states, predict outcomes, and plan actions within the learned world model without interacting with the real environment, enabling model-based reinforcement learning.",
       "target_length_words": 450,
       "allowed_paper_ids": [
-        "genie_2024",
-        "gamengen_2024",
-        "dota2_2019",
-        "minedojo_2022",
-        "diffusion_world_models_2024"
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1287/mnsc.2023.4798",
+        "paper:10.48550/arxiv.2501.08325"
       ],
       "selected_papers": [
         {
-          "paper_id": "genie_2024",
-          "title": "Genie: Generative Interactive Environments",
+          "paper_id": "paper:10.1007/s11704-024-40231-1",
+          "title": "A survey on large language model based autonomous agents",
           "year": 2024,
-          "problem": "How to learn action-controllable interactive environments from video-scale data.",
-          "method": "Genie learns a latent action model and video generator to create controllable environments from visual examples.",
-          "contribution": "It connected generative video modeling with interactive environment construction for agents and players.",
-          "limitations": "Generated environments require careful evaluation of controllability, temporal coherence, and task semantics.",
+          "problem": "Autonomous agents have long been a research focus in academic and industry communities. Previous research often focuses on training agents with limited knowledge within isolated environments, which diverges significantl...",
+          "method": "Autonomous agents have long been a research focus in academic and industry communities. Previous research often focuses on training agents with limited knowledge within isolated e...",
+          "contribution": "Autonomous agents have long been a research focus in academic and industry communities. Previous research often focuses on training agents with limited knowledge within isolated environments, which diverges significantl...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "# A Survey on Large Language Model based Autonomous Agents Lei Wang, Chen Ma*, Xueyang Feng*, Zeyu Zhang, Hao Yang, Jingsen Zhang, Zhi-Yuan Chen, Jiakai Tang, Xu Chen(☑), Yankai Lin(☑), Wayne Xin Zhao, Zhewei Wei, Ji-Rong Wen Gaoling Schoo...",
+            "An autonomous agent is a system that interacts with its environment by perceiving its surroundings and taking actions over time to achieve specific goals (Wang et al., 2023). The development of such powerful agents has been a long-standing..."
+          ],
           "topic_relevance_score": 0.7,
           "selection_reason": "Matches game / agent / world model keywords with strong relevance."
         },
         {
-          "paper_id": "gamengen_2024",
-          "title": "GameNGen: Diffusion Models Are Real-Time Game Engines",
-          "year": 2024,
-          "problem": "How to generate interactive game frames in real time using learned generative dynamics.",
-          "method": "The system uses a diffusion model conditioned on previous frames and actions to produce playable game-video dynamics.",
-          "contribution": "It framed diffusion models as neural game engines capable of interactive visual simulation.",
-          "limitations": "Real-time generative play raises consistency, controllability, and evaluation challenges.",
-          "topic_relevance_score": 0.683,
-          "selection_reason": "Partially matches topic keywords and remains citation-ready."
-        },
-        {
-          "paper_id": "dota2_2019",
-          "title": "Dota 2 with Large Scale Deep Reinforcement Learning",
-          "year": 2019,
-          "problem": "How to train coordinated agents in a high-dimensional, long-horizon multiplayer game.",
-          "method": "OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training.",
-          "contribution": "The project showed that self-play can produce strong coordinated behavior in Dota 2.",
-          "limitations": "The training regime is compute-intensive and tied to a specific game abstraction.",
-          "topic_relevance_score": 0.8,
+          "paper_id": "paper:10.1287/mnsc.2023.4798",
+          "title": "A Mean Field Games Model for Cryptocurrency Mining",
+          "year": 2025,
+          "problem": "We propose a mean field game model to study the question of how centralization of reward and computational power occur in Bitcoin-like cryptocurrencies. Miners compete against each other for mining rewards by increasing...",
+          "method": "We propose a mean field game model to study the question of how centralization of reward and computational power occur in Bitcoin-like cryptocurrencies. Miners compete against eac...",
+          "contribution": "We propose a mean field game model to study the question of how centralization of reward and computational power occur in Bitcoin-like cryptocurrencies. Miners compete against each other for mining rewards by increasing...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "# A Mean Field Games Model for Cryptocurrency Mining Zongxi Li* A. Max Reppen† Ronnie Sircar* December 2019; revised January 14, 2022 # Abstract We propose a mean field game model to study the question of how centralization of reward and c...",
+            "2.4. Cryptocurrencies and Bitcoin Mining. Given the fact that the Bitcoin mania hits the financial markets on a recurrent basis, and because of the competitive nature of the mining process involving a large number or miners, it is no surpr..."
+          ],
+          "topic_relevance_score": 0.7,
           "selection_reason": "Matches game / agent / world model keywords with strong relevance."
         },
         {
-          "paper_id": "minedojo_2022",
-          "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
-          "year": 2022,
-          "problem": "How to benchmark and train open-ended embodied agents in a rich game environment.",
-          "method": "MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources.",
-          "contribution": "It provides a large open-ended game environment for embodied agent research.",
-          "limitations": "Minecraft-specific affordances and task design choices shape what can be concluded.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "diffusion_world_models_2024",
-          "title": "Diffusion World Models",
-          "year": 2024,
-          "problem": "How to use diffusion-style generative modeling for world dynamics and agent learning.",
-          "method": "The work uses diffusion models to represent or predict environment dynamics for model-based learning.",
-          "contribution": "It expands the design space of generative world models beyond recurrent latent dynamics.",
-          "limitations": "Diffusion rollouts can be expensive and must be assessed for temporal consistency.",
-          "topic_relevance_score": 0.8,
+          "paper_id": "paper:10.48550/arxiv.2501.08325",
+          "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+          "year": 2025,
+          "problem": "Generative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video genera...",
+          "method": "Generative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controll...",
+          "contribution": "Generative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present GameFactory, a framework for action-controlled scene-generalizable game video genera...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "In this work, we present GameFactory, a framework for action-controlled and scene-generalizable game video generation. To achieve action-controlled video generation, we firstly collect an action-annotated game video dataset GF-Minecraft. T...",
+            "![](dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg) # Abstract Generative videos have the potential to revolutionize game development by autonomously creating new content. In this paper, we present..."
+          ],
+          "topic_relevance_score": 0.75,
           "selection_reason": "Matches game / agent / world model keywords with strong relevance."
         }
       ],
@@ -377,70 +285,42 @@
       "claims": [
         {
           "claim_id": "claim_sec3_001",
-          "claim": "Genie: Generative Interactive Environments addresses How to learn action-controllable interactive environments from video-scale data. with Genie learns a latent action model and video generator to create controllable environments from visual examples., and reports It connected generative video modeling with interactive environment construction for agents and players.",
+          "claim": "A survey on large language model based autonomous agents is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "genie_2024"
+            "paper:10.1007/s11704-024-40231-1"
           ],
           "supporting_evidence": [
-            "ev_genie_2024_problem",
-            "ev_genie_2024_method",
-            "ev_genie_2024_contribution"
+            "paper:10.1007/s11704-024-40231-1_agentic_300_p0_0",
+            "paper:10.1007/s11704-024-40231-1_agentic_301_p11_19727",
+            "paper:10.1007/s11704-024-40231-1_agentic_302_p0_1500"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec3_002",
-          "claim": "GameNGen: Diffusion Models Are Real-Time Game Engines addresses How to generate interactive game frames in real time using learned generative dynamics. with The system uses a diffusion model conditioned on previous frames and actions to produce playable game-video dynamics., and reports It framed diffusion models as neural game engines capable of interactive visual simulation.",
+          "claim": "A Mean Field Games Model for Cryptocurrency Mining is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "gamengen_2024"
+            "paper:10.1287/mnsc.2023.4798"
           ],
           "supporting_evidence": [
-            "ev_gamengen_2024_problem",
-            "ev_gamengen_2024_method",
-            "ev_gamengen_2024_contribution"
+            "paper:10.1287/mnsc.2023.4798_agentic_492_p0_0",
+            "paper:10.1287/mnsc.2023.4798_agentic_493_p10_30880",
+            "paper:10.1287/mnsc.2023.4798_agentic_494_p0_598"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec3_003",
-          "claim": "Dota 2 with Large Scale Deep Reinforcement Learning addresses How to train coordinated agents in a high-dimensional, long-horizon multiplayer game. with OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training., and reports The project showed that self-play can produce strong coordinated behavior in Dota 2.",
+          "claim": "GameFactory: Creating New Games with Generative Interactive Videos is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "dota2_2019"
+            "paper:10.48550/arxiv.2501.08325"
           ],
           "supporting_evidence": [
-            "ev_dota2_2019_problem",
-            "ev_dota2_2019_method",
-            "ev_dota2_2019_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec3_004",
-          "claim": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge addresses How to benchmark and train open-ended embodied agents in a rich game environment. with MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources., and reports It provides a large open-ended game environment for embodied agent research.",
-          "supporting_papers": [
-            "minedojo_2022"
-          ],
-          "supporting_evidence": [
-            "ev_minedojo_2022_problem",
-            "ev_minedojo_2022_method",
-            "ev_minedojo_2022_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec3_005",
-          "claim": "Diffusion World Models addresses How to use diffusion-style generative modeling for world dynamics and agent learning. with The work uses diffusion models to represent or predict environment dynamics for model-based learning., and reports It expands the design space of generative world models beyond recurrent latent dynamics.",
-          "supporting_papers": [
-            "diffusion_world_models_2024"
-          ],
-          "supporting_evidence": [
-            "ev_diffusion_world_models_2024_problem",
-            "ev_diffusion_world_models_2024_method",
-            "ev_diffusion_world_models_2024_contribution"
+            "paper:10.48550/arxiv.2501.08325_agentic_60_p1_12959",
+            "paper:10.48550/arxiv.2501.08325_agentic_61_p0_8620",
+            "paper:10.48550/arxiv.2501.08325_agentic_62_p18_74184"
           ],
           "allowed_figures": [],
           "risk_level": "low"
@@ -449,70 +329,42 @@
     },
     {
       "section_id": "sec_04",
-      "section_title": "Game Agents and Multi-Agent Reinforcement Learning",
-      "section_goal": "Large-scale agents trained in complex games and multi-agent settings.",
+      "section_title": "World Model Evaluation Benchmarks",
+      "section_goal": "Covers the metrics, datasets, and standardized environments used to assess the fidelity, diversity, and utility of world models specifically within gaming contexts.",
       "target_length_words": 450,
       "allowed_paper_ids": [
-        "alphastar_2019",
-        "dota2_2019",
-        "diffusion_world_models_2024",
-        "unisim_2024",
-        "gaia1_2023"
+        "paper:10.48550/arxiv.2206.08853",
+        "paper:10.48550/arxiv.2402.12348"
       ],
       "selected_papers": [
         {
-          "paper_id": "alphastar_2019",
-          "title": "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning",
-          "year": 2019,
-          "problem": "How to train agents for a complex real-time strategy game with partial observability and long-horizon decisions.",
-          "method": "AlphaStar combines supervised learning, reinforcement learning, and league-based multi-agent training.",
-          "contribution": "The work demonstrated grandmaster-level performance in StarCraft II and highlighted the value of competitive training ecosystems.",
-          "limitations": "The system relies on extensive engineering, training scale, and domain-specific interfaces.",
-          "topic_relevance_score": 1.0,
+          "paper_id": "paper:10.48550/arxiv.2206.08853",
+          "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
+          "year": 2022,
+          "problem": "Autonomous agents have made great strides in specialist domains like Atari games and Go. However, they typically learn tabula rasa in isolated environments with limited and manually conceived objectives, thus failing to...",
+          "method": "Autonomous agents have made great strides in specialist domains like Atari games and Go. However, they typically learn tabula rasa in isolated environments with limited and manual...",
+          "contribution": "Autonomous agents have made great strides in specialist domains like Atari games and Go. However, they typically learn tabula rasa in isolated environments with limited and manually conceived objectives, thus failing to...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "Autonomous agents have made great strides in specialist domains like Atari games and Go. However, they typically learn tabula rasa in isolated environments with limited and manually conceived objectives, thus failing to generalize across a...",
+            "We open-source the simulation suite, knowledge bases, algorithm implementation, and pretrained models (https://minedojo.org) to promote research towards the goal of generally capable embodied agents. # 1 Introduction Developing autonomous..."
+          ],
+          "topic_relevance_score": 0.72,
           "selection_reason": "Matches game / agent / world model keywords with strong relevance."
         },
         {
-          "paper_id": "dota2_2019",
-          "title": "Dota 2 with Large Scale Deep Reinforcement Learning",
-          "year": 2019,
-          "problem": "How to train coordinated agents in a high-dimensional, long-horizon multiplayer game.",
-          "method": "OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training.",
-          "contribution": "The project showed that self-play can produce strong coordinated behavior in Dota 2.",
-          "limitations": "The training regime is compute-intensive and tied to a specific game abstraction.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "diffusion_world_models_2024",
-          "title": "Diffusion World Models",
+          "paper_id": "paper:10.48550/arxiv.2402.12348",
+          "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
           "year": 2024,
-          "problem": "How to use diffusion-style generative modeling for world dynamics and agent learning.",
-          "method": "The work uses diffusion models to represent or predict environment dynamics for model-based learning.",
-          "contribution": "It expands the design space of generative world models beyond recurrent latent dynamics.",
-          "limitations": "Diffusion rollouts can be expensive and must be assessed for temporal consistency.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "unisim_2024",
-          "title": "UniSim: Learning Interactive Real-World Simulators",
-          "year": 2024,
-          "problem": "How to learn interactive simulators that can support agents beyond a single fixed task.",
-          "method": "UniSim trains generative world simulators from broad visual interaction data.",
-          "contribution": "It positions learned simulators as reusable environments for interactive intelligence.",
-          "limitations": "General-purpose simulator quality depends on broad data coverage and robust interaction evaluation.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "gaia1_2023",
-          "title": "GAIA-1: A Generative World Model for Autonomous Driving",
-          "year": 2023,
-          "problem": "How to learn a controllable generative world model for complex embodied environments.",
-          "method": "GAIA-1 models video, action, and scene context to generate plausible future driving observations.",
-          "contribution": "Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
-          "limitations": "Driving-focused results do not directly solve game intelligence evaluation and require domain-specific validation.",
-          "topic_relevance_score": 0.767,
+          "problem": "As Large Language Models (LLMs) are integrated into critical real-world applications, their strategic and logical reasoning abilities are increasingly crucial. This paper evaluates LLMs' reasoning abilities in competiti...",
+          "method": "As Large Language Models (LLMs) are integrated into critical real-world applications, their strategic and logical reasoning abilities are increasingly crucial. This paper evaluate...",
+          "contribution": "As Large Language Models (LLMs) are integrated into critical real-world applications, their strategic and logical reasoning abilities are increasingly crucial. This paper evaluates LLMs' reasoning abilities in competiti...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "The remarkable advancements of Large Language Models (LLMs) have demonstrated their potential across a vast spectrum of applications. Beyond their well-established capabilities in natural language understanding and conversation, the fronti...",
+            "Large Language Models (LLMs) have demonstrated remarkable capabilities by their extensive general knowledge and powerful reasoning abilities [1, 51]. More than just a conversation, these models are increasingly proving invaluable as core c..."
+          ],
+          "topic_relevance_score": 0.7,
           "selection_reason": "Matches game / agent / world model keywords with strong relevance."
         }
       ],
@@ -526,70 +378,28 @@
       "claims": [
         {
           "claim_id": "claim_sec4_001",
-          "claim": "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning addresses How to train agents for a complex real-time strategy game with partial observability and long-horizon decisions. with AlphaStar combines supervised learning, reinforcement learning, and league-based multi-agent training., and reports The work demonstrated grandmaster-level performance in StarCraft II and highlighted the value of competitive training ecosystems.",
+          "claim": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "alphastar_2019"
+            "paper:10.48550/arxiv.2206.08853"
           ],
           "supporting_evidence": [
-            "ev_alphastar_2019_problem",
-            "ev_alphastar_2019_method",
-            "ev_alphastar_2019_contribution"
+            "paper:10.48550/arxiv.2206.08853_agentic_672_p0_474",
+            "paper:10.48550/arxiv.2206.08853_agentic_673_p0_1612",
+            "paper:10.48550/arxiv.2206.08853_agentic_674_p0_1640"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec4_002",
-          "claim": "Dota 2 with Large Scale Deep Reinforcement Learning addresses How to train coordinated agents in a high-dimensional, long-horizon multiplayer game. with OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training., and reports The project showed that self-play can produce strong coordinated behavior in Dota 2.",
+          "claim": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "dota2_2019"
+            "paper:10.48550/arxiv.2402.12348"
           ],
           "supporting_evidence": [
-            "ev_dota2_2019_problem",
-            "ev_dota2_2019_method",
-            "ev_dota2_2019_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec4_003",
-          "claim": "Diffusion World Models addresses How to use diffusion-style generative modeling for world dynamics and agent learning. with The work uses diffusion models to represent or predict environment dynamics for model-based learning., and reports It expands the design space of generative world models beyond recurrent latent dynamics.",
-          "supporting_papers": [
-            "diffusion_world_models_2024"
-          ],
-          "supporting_evidence": [
-            "ev_diffusion_world_models_2024_problem",
-            "ev_diffusion_world_models_2024_method",
-            "ev_diffusion_world_models_2024_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec4_004",
-          "claim": "UniSim: Learning Interactive Real-World Simulators addresses How to learn interactive simulators that can support agents beyond a single fixed task. with UniSim trains generative world simulators from broad visual interaction data., and reports It positions learned simulators as reusable environments for interactive intelligence.",
-          "supporting_papers": [
-            "unisim_2024"
-          ],
-          "supporting_evidence": [
-            "ev_unisim_2024_problem",
-            "ev_unisim_2024_method",
-            "ev_unisim_2024_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec4_005",
-          "claim": "GAIA-1: A Generative World Model for Autonomous Driving addresses How to learn a controllable generative world model for complex embodied environments. with GAIA-1 models video, action, and scene context to generate plausible future driving observations., and reports Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
-          "supporting_papers": [
-            "gaia1_2023"
-          ],
-          "supporting_evidence": [
-            "ev_gaia1_2023_problem",
-            "ev_gaia1_2023_method",
-            "ev_gaia1_2023_contribution"
+            "paper:10.48550/arxiv.2402.12348_agentic_120_p0_2228",
+            "paper:10.48550/arxiv.2402.12348_agentic_121_p0_2657",
+            "paper:10.48550/arxiv.2402.12348_agentic_122_p0_1709"
           ],
           "allowed_figures": [],
           "risk_level": "low"
@@ -598,141 +408,71 @@
     },
     {
       "section_id": "sec_05",
-      "section_title": "Open-Ended Simulators and Game Intelligence Benchmarks",
-      "section_goal": "Benchmarks and simulators that support open-ended embodied or game intelligence.",
+      "section_title": "Interactive and Controllable Generation Frameworks",
+      "section_goal": "Explores frameworks that enable real-time human-player interaction with the world model or allow designers to exert control over generated content and environmental dynamics.",
       "target_length_words": 450,
       "allowed_paper_ids": [
-        "generative_agents_2023",
-        "minedojo_2022",
-        "unisim_2024",
-        "gaia1_2023",
-        "muzero_2020"
+        "paper:10.48550/arxiv.2308.03688",
+        "paper:10.1080/01621459.2023.2270750"
       ],
       "selected_papers": [
         {
-          "paper_id": "generative_agents_2023",
-          "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+          "paper_id": "paper:10.48550/arxiv.2308.03688",
+          "title": "AgentBench: Evaluating LLMs as Agents",
           "year": 2023,
-          "problem": "How to create believable interactive agents that remember, plan, and act in a simulated social environment.",
-          "method": "The system combines memory streams, reflection, planning, and language-model-driven action selection.",
-          "contribution": "It illustrated how generative agents can populate interactive worlds with coherent behavior.",
-          "limitations": "Behavioral realism and evaluation remain difficult, and language-model outputs need guardrails.",
-          "topic_relevance_score": 1.0,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+          "problem": "The potential of Large Language Model (LLM) as agents has been widely acknowledged recently. Thus, there is an urgent need to quantitatively \\textit{evaluate LLMs as agents} on challenging tasks in interactive environme...",
+          "method": "The potential of Large Language Model (LLM) as agents has been widely acknowledged recently. Thus, there is an urgent need to quantitatively \\textit{evaluate LLMs as agents} on ch...",
+          "contribution": "The potential of Large Language Model (LLM) as agents has been widely acknowledged recently. Thus, there is an urgent need to quantitatively \\textit{evaluate LLMs as agents} on challenging tasks in interactive environme...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "# 1 Introduction Large Language Models (LLMs) have recently demonstrated remarkable potential as autonomous agents, extending beyond their traditional role as passive text generators (Achiam et al., 2023; Team et al., 2023; Zheng et al., 2...",
+            "Large language models (LLMs) have been widely adopted as core components of AI agents operating in real-world environments [1] [2]. By providing strong reasoning, planning, and language understanding capabilities, LLMs enable agents to int..."
+          ],
+          "topic_relevance_score": 0.633,
+          "selection_reason": "Partially matches topic keywords and remains citation-ready."
         },
         {
-          "paper_id": "minedojo_2022",
-          "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
-          "year": 2022,
-          "problem": "How to benchmark and train open-ended embodied agents in a rich game environment.",
-          "method": "MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources.",
-          "contribution": "It provides a large open-ended game environment for embodied agent research.",
-          "limitations": "Minecraft-specific affordances and task design choices shape what can be concluded.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "unisim_2024",
-          "title": "UniSim: Learning Interactive Real-World Simulators",
-          "year": 2024,
-          "problem": "How to learn interactive simulators that can support agents beyond a single fixed task.",
-          "method": "UniSim trains generative world simulators from broad visual interaction data.",
-          "contribution": "It positions learned simulators as reusable environments for interactive intelligence.",
-          "limitations": "General-purpose simulator quality depends on broad data coverage and robust interaction evaluation.",
-          "topic_relevance_score": 0.8,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "gaia1_2023",
-          "title": "GAIA-1: A Generative World Model for Autonomous Driving",
-          "year": 2023,
-          "problem": "How to learn a controllable generative world model for complex embodied environments.",
-          "method": "GAIA-1 models video, action, and scene context to generate plausible future driving observations.",
-          "contribution": "Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
-          "limitations": "Driving-focused results do not directly solve game intelligence evaluation and require domain-specific validation.",
-          "topic_relevance_score": 0.767,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
-        },
-        {
-          "paper_id": "muzero_2020",
-          "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
-          "year": 2020,
-          "problem": "How to combine planning with learned dynamics without requiring a hand-coded simulator model.",
-          "method": "MuZero learns representation, dynamics, and prediction functions and uses tree search over the learned model.",
-          "contribution": "The system achieved strong results in Atari and classic board games while learning the model used for planning.",
-          "limitations": "The planning machinery and training pipeline are computationally demanding.",
-          "topic_relevance_score": 0.72,
-          "selection_reason": "Matches game / agent / world model keywords with strong relevance."
+          "paper_id": "paper:10.1080/01621459.2023.2270750",
+          "title": "Latent Space Modeling of Hypergraph Data",
+          "year": 2025,
+          "problem": "The increasing prevalence of relational data describing interactions among a target population has motivated a wide literature on statistical network analysis. In many applications, interactions may involve more than tw...",
+          "method": "The increasing prevalence of relational data describing interactions among a target population has motivated a wide literature on statistical network analysis. In many application...",
+          "contribution": "The increasing prevalence of relational data describing interactions among a target population has motivated a wide literature on statistical network analysis. In many applications, interactions may involve more than tw...",
+          "limitations": "Detailed limitations require deeper paper parsing or manual review.",
+          "evidence_snippets": [
+            "Kathryn Turnbull<sup>a</sup>, Simón Lunagómez<sup>b</sup>, Christopher Nemeth<sup>a</sup>, and Edoardo Aïrolid<sup>c</sup> $^{a}$ Department of Mathematics and Statistics, Lancaster University, Lancaster, UK; $^{b}$ Departamento de Estadís...",
+            "Learning on graphs is a subject of great interest due to the abundance of relational data from real-world systems. Many of these systems involve higher-order interactions (super-dyadic) rather than mere pairwise (dyadic) relationships; exa..."
+          ],
+          "topic_relevance_score": 0.4,
+          "selection_reason": "Citation-ready fallback with limited topic keyword evidence."
         }
       ],
       "artifact_slots": [],
       "claims": [
         {
           "claim_id": "claim_sec5_001",
-          "claim": "Generative Agents: Interactive Simulacra of Human Behavior addresses How to create believable interactive agents that remember, plan, and act in a simulated social environment. with The system combines memory streams, reflection, planning, and language-model-driven action selection., and reports It illustrated how generative agents can populate interactive worlds with coherent behavior.",
+          "claim": "AgentBench: Evaluating LLMs as Agents is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "generative_agents_2023"
+            "paper:10.48550/arxiv.2308.03688"
           ],
           "supporting_evidence": [
-            "ev_generative_agents_2023_problem",
-            "ev_generative_agents_2023_method",
-            "ev_generative_agents_2023_contribution"
+            "paper:10.48550/arxiv.2308.03688_agentic_600_p0_1977",
+            "paper:10.48550/arxiv.2308.03688_agentic_601_p0_1626",
+            "paper:10.48550/arxiv.2308.03688_agentic_602_p0_1211"
           ],
           "allowed_figures": [],
           "risk_level": "low"
         },
         {
           "claim_id": "claim_sec5_002",
-          "claim": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge addresses How to benchmark and train open-ended embodied agents in a rich game environment. with MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources., and reports It provides a large open-ended game environment for embodied agent research.",
+          "claim": "Latent Space Modeling of Hypergraph Data is part of the citation-ready evidence base for this topic",
           "supporting_papers": [
-            "minedojo_2022"
+            "paper:10.1080/01621459.2023.2270750"
           ],
           "supporting_evidence": [
-            "ev_minedojo_2022_problem",
-            "ev_minedojo_2022_method",
-            "ev_minedojo_2022_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec5_003",
-          "claim": "UniSim: Learning Interactive Real-World Simulators addresses How to learn interactive simulators that can support agents beyond a single fixed task. with UniSim trains generative world simulators from broad visual interaction data., and reports It positions learned simulators as reusable environments for interactive intelligence.",
-          "supporting_papers": [
-            "unisim_2024"
-          ],
-          "supporting_evidence": [
-            "ev_unisim_2024_problem",
-            "ev_unisim_2024_method",
-            "ev_unisim_2024_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec5_004",
-          "claim": "GAIA-1: A Generative World Model for Autonomous Driving addresses How to learn a controllable generative world model for complex embodied environments. with GAIA-1 models video, action, and scene context to generate plausible future driving observations., and reports Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
-          "supporting_papers": [
-            "gaia1_2023"
-          ],
-          "supporting_evidence": [
-            "ev_gaia1_2023_problem",
-            "ev_gaia1_2023_method",
-            "ev_gaia1_2023_contribution"
-          ],
-          "allowed_figures": [],
-          "risk_level": "low"
-        },
-        {
-          "claim_id": "claim_sec5_005",
-          "claim": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model addresses How to combine planning with learned dynamics without requiring a hand-coded simulator model. with MuZero learns representation, dynamics, and prediction functions and uses tree search over the learned model., and reports The system achieved strong results in Atari and classic board games while learning the model used for planning.",
-          "supporting_papers": [
-            "muzero_2020"
-          ],
-          "supporting_evidence": [
-            "ev_muzero_2020_problem",
-            "ev_muzero_2020_method",
-            "ev_muzero_2020_contribution"
+            "paper:10.1080/01621459.2023.2270750_agentic_72_p1_2533",
+            "paper:10.1080/01621459.2023.2270750_agentic_73_p0_512",
+            "paper:10.1080/01621459.2023.2270750_agentic_74_p0_1727"
           ],
           "allowed_figures": [],
           "risk_level": "low"

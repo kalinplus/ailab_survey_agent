@@ -1,122 +1,162 @@
 {
-  "task_id": "task_world_models_and_gamecraft_for_i_001",
+  "task_id": "task_world_models_for_games_a_survey_001",
   "papers": [
     {
-      "paper_id": "paper:10.48550/arxiv.2402.15391",
-      "title": "Genie: Generative Interactive Environments",
+      "paper_id": "paper:10.1016/j.cma.2025.118394",
+      "title": "Latent space modeling of parametric and time-dependent PDEs using neural ODEs",
       "authors": [
-        "Jake Bruce",
-        "Michael J. Dennis",
-        "Ashley Edwards",
-        "Jack Parker-Holder",
-        "Yuge Shi",
-        "Edward Hughes",
-        "Matthew Lai",
-        "Aditi Mavalankar",
-        "Richie Steigerwald",
-        "Chris Apps",
-        "Yusuf Aytar",
-        "Sarah Bechtle",
-        "Feryal Behbahani",
-        "Stephanie Chan",
-        "Nicolas Heess",
-        "Lucy González",
-        "Simon Osindero",
-        "Sherjil Ozair",
-        "Scott Reed",
-        "Jingwei Zhang",
-        "Konrad Żołna",
-        "Jeff Clune",
-        "Nando de Freitas",
-        "Satinder Singh",
-        "Tim Rocktäschel"
+        "Alessandro Longhi",
+        "Danny Lathouwers",
+        "Zoltán Perkó"
       ],
-      "year": 2024,
-      "venue": "arXiv (Cornell University)",
-      "url": "https://arxiv.org/pdf/2402.15391",
-      "abstract": "We introduce Genie, the first generative interactive environment trained in an unsupervised manner from unlabelled Internet videos. The model can be prompted to generate an endless variety of action-controllable virtual worlds described through text, synthetic images, photographs, and even sketches. At 11B parameters, Genie can be considered a foundation world model. It is comprised of a spatiotemporal video tokenizer, an autoregressive dynamics model, and a simple and scalable latent action model. Genie enables users to act in the generated environments on a frame-by-frame basis despite training without any ground-truth action labels or other domain-specific requirements typically found in the world model literature. Further the resulting learned latent action space facilitates training agents to imitate behaviors from unseen videos, opening the path for training generalist agents of the future.",
+      "year": 2026,
+      "venue": "Computer Methods in Applied Mechanics and Engineering",
+      "url": "https://arxiv.org/pdf/2502.08683v1",
+      "abstract": "Partial Differential Equations (PDEs) are central to science and engineering. Since solving them is computationally expensive, a lot of effort has been put into approximating their solution operator via both traditional and recently increasingly Deep Learning (DL) techniques. In this paper, we propose an autoregressive and data-driven method using the analogy with classical numerical solvers for time-dependent, parametric and (typically) nonlinear PDEs. We present how Dimensionality Reduction (DR) can be coupled with Neural Ordinary Differential Equations (NODEs) in order to learn the solution operator of arbitrary PDEs accounting both for (continuous) time and parameter dependency. The idea of our work is that it is possible to map the high-fidelity (i.e., high-dimensional) PDE solution space into a reduced (low-dimensional) space, which subsequently exhibits dynamics governed by a (latent) Ordinary Differential Equation (ODE). Solving this (easier) ODE in the reduced space allows avoiding solving the PDE in the high-dimensional solution space, thus decreasing the computational burden for repeated calculations for e.g., uncertainty quantification or design optimization purposes. The main outcome of this work is the importance of exploiting DR as opposed to the recent trend of building large and complex architectures: we show that by leveraging DR we can deliver not only more accurate predictions, but also a considerably lighter and faster DL model compared to existing methodologies.",
       "keywords": [
-        "Generative grammar",
+        "Ode",
+        "Parametric statistics",
+        "Artificial neural network",
+        "Space (punctuation)",
+        "Partial differential equation",
+        "Parametric model",
+        "Partial differential equations",
+        "Surrogate modeling",
+        "Dimensionality reduction",
+        "Neural ordinary differential equations"
+      ],
+      "citation_count": 2,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/cog64752.2025.11114105",
+      "title": "IPCGRL: Language-Instructed Reinforcement Learning for Procedural Level Generation",
+      "authors": [
+        "In-Chang Baek",
+        "Sung-Hyun Kim",
+        "Seo-Young Lee",
+        "Dong-Hyeon Kim",
+        "Kyung-Joong Kim"
+      ],
+      "year": 2025,
+      "venue": "2025 IEEE Conference on Games (CoG)",
+      "url": "https://doi.org/10.1109/cog64752.2025.11114105",
+      "abstract": "Recent research has highlighted the significance of natural language in enhancing the controllability of generative models. While various efforts have been made to leverage natural language for content generation, research on deep reinforcement learning (DRL) agents utilizing text-based instructions for procedural content generation remains limited. In this paper, we propose IPCGRL, an instruction-based procedural content generation method via reinforcement learning, which incorporates a sentence embedding model. IPCGRL fine-tunes task-specific embedding representations to effectively compress game-level conditions. We evaluate IPCGRL in a two-dimensional level generation task and compare its performance with a general-purpose embedding method. The results indicate that IPCGRL achieves up to a 21.4 % improvement in controllability and a 17.2 % improvement in generalizability for unseen instructions with varied condition expressions within the same task. Furthermore, the proposed method extends the modality of conditional input, enabling a more flexible and expressive interaction framework for procedural content generation.",
+      "keywords": [
         "Computer science",
-        "Human–computer interaction",
-        "Generative Design",
+        "Reinforcement learning",
         "Artificial intelligence",
-        "Engineering"
+        "Human–computer interaction"
       ],
-      "citation_count": 210,
-      "source": "survey_expansion",
+      "citation_count": 3,
+      "source": "sciverse",
       "parse_status": "abstract_only",
-      "survey_ref_count": 3,
-      "survey_ref_hints": [
-        "genie_2024"
-      ]
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
     },
     {
-      "paper_id": "paper:10.48550/arxiv.2412.20404",
-      "title": "Open-Sora: Democratizing Efficient Video Production for All",
+      "paper_id": "paper:10.48550/arxiv.2309.17080",
+      "title": "GAIA-1: A Generative World Model for Autonomous Driving",
       "authors": [
-        "Z. Zheng",
-        "Xiangyu Peng",
-        "Tianji Yang",
-        "Shen, Chenhui",
-        "Sheung-Wai Li",
-        "Hongxin Liu",
-        "Yukun Zhou",
-        "Tianyi Li",
-        "Yang You"
-      ],
-      "year": 2024,
-      "venue": "arXiv.org",
-      "url": "https://arxiv.org/pdf/2412.20404",
-      "abstract": "Vision and language are the two foundational senses for humans, and they build up our cognitive ability and intelligence. While significant breakthroughs have been made in AI language ability, artificial visual intelligence, especially the ability to generate and simulate the world we see, is far lagging behind. To facilitate the development and accessibility of artificial visual intelligence, we created Open-Sora, an open-source video generation model designed to produce high-fidelity video content. Open-Sora supports a wide spectrum of visual generation tasks, including text-to-image generation, text-to-video generation, and image-to-video generation. The model leverages advanced deep learning architectures and training/inference techniques to enable flexible video synthesis, which could generate video content of up to 15 seconds, up to 720p resolution, and arbitrary aspect ratios. Specifically, we introduce Spatial-Temporal Diffusion Transformer (STDiT), an efficient diffusion framework for videos that decouples spatial and temporal attention. We also introduce a highly compressive 3D autoencoder to make representations compact and further accelerate training with an ad hoc training strategy. Through this initiative, we aim to foster innovation, creativity, and inclusivity within the community of AI content creation. By embracing the open-source principle, Open-Sora democratizes full access to all the training/inference/data preparation codes as well as model weights. All resources are publicly available at: https://github.com/hpcaitech/Open-Sora.",
-      "keywords": [
-        "Production (economics)",
-        "Computer science",
-        "Business",
-        "Economics",
-        "Microeconomics"
-      ],
-      "citation_count": 289,
-      "source": "survey_expansion",
-      "parse_status": "abstract_only",
-      "survey_ref_count": 2,
-      "survey_ref_hints": [
-        "sora_2024"
-      ]
-    },
-    {
-      "paper_id": "paper:10.48550/arxiv.2310.05036",
-      "title": "AvalonBench: Evaluating LLMs Playing the Game of Avalon",
-      "authors": [
-        "Jonathan Light",
-        "Min Cai",
-        "Sheng Shen",
-        "Ziniu Hu"
+        "Anthony Hu",
+        "Lloyd Russell",
+        "Hudson Yeo",
+        "Zak Murez",
+        "G. A. Fedoseev",
+        "Alex Kendall",
+        "Jamie Shotton",
+        "Gianluca Corrado"
       ],
       "year": 2023,
       "venue": "arXiv (Cornell University)",
-      "url": "https://arxiv.org/pdf/2310.05036",
-      "abstract": "In this paper, we explore the potential of Large Language Models (LLMs) Agents in playing the strategic social deduction game, Resistance Avalon. Players in Avalon are challenged not only to make informed decisions based on dynamically evolving game phases, but also to engage in discussions where they must deceive, deduce, and negotiate with other players. These characteristics make Avalon a compelling test-bed to study the decision-making and language-processing capabilities of LLM Agents. To facilitate research in this line, we introduce AvalonBench - a comprehensive game environment tailored for evaluating multi-agent LLM Agents. This benchmark incorporates: (1) a game environment for Avalon, (2) rule-based bots as baseline opponents, and (3) ReAct-style LLM agents with tailored prompts for each role. Notably, our evaluations based on AvalonBench highlight a clear capability gap. For instance, models like ChatGPT playing good-role got a win rate of 22.2% against rule-based bots playing evil, while good-role bot achieves 38.2% win rate in the same setting. We envision AvalonBench could be a good test-bed for developing more advanced LLMs (with self-playing) and agent frameworks that can effectively model the layered complexities of such game environments.",
+      "url": "https://arxiv.org/pdf/2309.17080",
+      "abstract": "Autonomous driving promises transformative improvements to transportation, but building systems capable of safely navigating the unstructured complexity of real-world scenarios remains challenging. A critical problem lies in effectively predicting the various potential outcomes that may emerge in response to the vehicle's actions as the world evolves. To address this challenge, we introduce GAIA-1 ('Generative AI for Autonomy'), a generative world model that leverages video, text, and action inputs to generate realistic driving scenarios while offering fine-grained control over ego-vehicle behavior and scene features. Our approach casts world modeling as an unsupervised sequence modeling problem by mapping the inputs to discrete tokens, and predicting the next token in the sequence. Emerging properties from our model include learning high-level structures and scene dynamics, contextual awareness, generalization, and understanding of geometry. The power of GAIA-1's learned representation that captures expectations of future events, combined with its ability to generate realistic samples, provides new possibilities for innovation in the field of autonomy, enabling enhanced and accelerated training of autonomous driving technology.",
       "keywords": [
-        "Negotiation",
-        "Test (biology)",
-        "Style (visual arts)",
+        "Generative grammar",
+        "Transformative learning",
         "Computer science",
-        "Benchmark (surveying)",
+        "Generative model",
+        "Representation (politics)",
+        "Sequence (biology)",
+        "Field (mathematics)",
+        "Artificial intelligence",
+        "Action (physics)",
+        "Autonomy",
+        "Security token",
+        "Generalization",
+        "Human–computer interaction",
         "Computer security",
-        "Video game",
-        "Political science",
-        "Law",
-        "Multimedia",
-        "Ecology"
+        "Psychology"
       ],
-      "citation_count": 16,
-      "source": "survey_expansion",
+      "citation_count": 285,
+      "source": "sciverse",
       "parse_status": "abstract_only",
-      "survey_ref_count": 2,
-      "survey_ref_hints": [
-        "avalonbench_2023"
-      ]
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1145/3649921.3650016",
+      "title": "On the Evaluation of Procedural Level Generation Systems",
+      "authors": [
+        "Oliver Withington",
+        "Michael Cook",
+        "Laurissa Tokarchuk"
+      ],
+      "year": 2024,
+      "venue": "International Conference on Foundations of Digital Games",
+      "url": "https://kclpure.kcl.ac.uk/ws/files/254531468/On_the_Evaluation_of_Level_PCG_Systems-CameraReady.pdf",
+      "abstract": "The evaluation of procedural content generation (PCG) systems for generating video game levels is a complex and contested topic. Ideally, the field would have access to robust, generalisable and widely accepted evaluation approaches that can be used to compare novel PCG systems to prior work, but consensus on how to evaluate novel systems is currently limited. We argue that the field can benefit from a structured analysis of how procedural level generation systems can be evaluated, and how these techniques are currently used by researchers. This analysis can then be used to both inform on the current state of affairs, and to provide data to justify changes to this practice. This work aims to provide this by first developing a novel taxonomy of PCG evaluation approaches, and then presenting the results of a survey of recent work in the field through the lens of this taxonomy. The results of this survey highlight several important weaknesses in current practice which we argue could be substantially mitigated by 1) promoting use of evaluation free system descriptions where appropriate, 2) promoting the development of diverse research frameworks, 3) promoting reuse of code and methodology wherever possible.",
+      "keywords": [
+        "Computer science",
+        "Procedural modeling",
+        "Artificial intelligence"
+      ],
+      "citation_count": 5,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2206.14244",
+      "title": "Masked World Models for Visual Control",
+      "authors": [
+        "Younggyo Seo",
+        "Danijar Hafner",
+        "Hao Liu",
+        "Fangchen Liu",
+        "Stephen James",
+        "Kimin Lee",
+        "Pieter Abbeel"
+      ],
+      "year": 2022,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2206.14244",
+      "abstract": "Visual model-based reinforcement learning (RL) has the potential to enable sample-efficient robot learning from visual observations. Yet the current approaches typically train a single model end-to-end for learning both visual representations and dynamics, making it difficult to accurately model the interaction between robots and small objects. In this work, we introduce a visual model-based RL framework that decouples visual representation learning and dynamics learning. Specifically, we train an autoencoder with convolutional layers and vision transformers (ViT) to reconstruct pixels given masked convolutional features, and learn a latent dynamics model that operates on the representations from the autoencoder. Moreover, to encode task-relevant information, we introduce an auxiliary reward prediction objective for the autoencoder. We continually update both autoencoder and dynamics model using online samples collected from environment interaction. We demonstrate that our decoupling approach achieves state-of-the-art performance on a variety of visual robotic tasks from Meta-world and RLBench, e.g., we achieve 81.7% success rate on 50 visual robotic manipulation tasks from Meta-world, while the baseline achieves 67.9%. Code is available on the project website: https://sites.google.com/view/mwm-rl.",
+      "keywords": [
+        "Autoencoder",
+        "Computer science",
+        "Reinforcement learning",
+        "Artificial intelligence",
+        "Feature learning",
+        "Representation (politics)",
+        "Machine learning",
+        "ENCODE",
+        "Robot",
+        "Decoupling (probability)",
+        "Code (set theory)",
+        "Deep learning",
+        "Computer vision",
+        "Engineering"
+      ],
+      "citation_count": 141,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
     },
     {
       "paper_id": "paper:10.48550/arxiv.2501.08325",
@@ -148,6 +188,144 @@
       "survey_ref_hints": [
         "gamefactory_2025"
       ]
+    },
+    {
+      "paper_id": "paper:10.1080/01621459.2023.2270750",
+      "title": "Latent Space Modeling of Hypergraph Data",
+      "authors": [
+        "Kathryn Turnbull",
+        "Simon Lunagómez",
+        "Christopher Nemeth",
+        "Edoardo M. Airoldi"
+      ],
+      "year": 2025,
+      "venue": "Journal of the American Statistical Association, 2024, Vol 119, Issue 548, p2634",
+      "url": "https://www.tandfonline.com/doi/pdf/10.1080/01621459.2023.2270750?needAccess=true",
+      "abstract": "The increasing prevalence of relational data describing interactions among a target population has motivated a wide literature on statistical network analysis. In many applications, interactions may involve more than two members of the population and this data is more appropriately represented by a hypergraph. In this article, we present a model for hypergraph data that extends the well-established latent space approach for graphs and, by drawing a connection to constructs from computational topology, we develop a model whose likelihood is inexpensive to compute. A delayed acceptance MCMC scheme is proposed to obtain posterior samples and we rely on Bookstein coordinates to remove the identifiability issues associated with the latent representation. We theoretically examine the degree distribution of hypergraphs generated under our framework and, through simulation, we investigate the flexibility of our model and consider estimation of predictive distributions. Finally, we explore the application of our model to two real-world datasets. for this article are available online.",
+      "keywords": [
+        "Identifiability",
+        "Hypergraph",
+        "Representation (politics)",
+        "Computer science",
+        "Theoretical computer science",
+        "Population",
+        "Data mining",
+        "Flexibility (engineering)",
+        "Mathematics",
+        "Machine learning",
+        "Statistics"
+      ],
+      "citation_count": 12,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2309.09777",
+      "title": "DriveDreamer: Towards Real-world-driven World Models for Autonomous Driving",
+      "authors": [
+        "Xiaofeng Wang",
+        "Zheng Zhu",
+        "Guan Huang",
+        "Xinze Chen",
+        "Zhu, Jiagang",
+        "Lu, Jiwen"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2309.09777v2",
+      "abstract": "World models, especially in autonomous driving, are trending and drawing extensive attention due to their capacity for comprehending driving environments. The established world model holds immense potential for the generation of high-quality driving videos, and driving policies for safe maneuvering. However, a critical limitation in relevant research lies in its predominant focus on gaming environments or simulated settings, thereby lacking the representation of real-world driving scenarios. Therefore, we introduce DriveDreamer, a pioneering world model entirely derived from real-world driving scenarios. Regarding that modeling the world in intricate driving scenes entails an overwhelming search space, we propose harnessing the powerful diffusion model to construct a comprehensive representation of the complex environment. Furthermore, we introduce a two-stage training pipeline. In the initial phase, DriveDreamer acquires a deep understanding of structured traffic constraints, while the subsequent stage equips it with the ability to anticipate future states. The proposed DriveDreamer is the first world model established from real-world driving scenarios. We instantiate DriveDreamer on the challenging nuScenes benchmark, and extensive experiments verify that DriveDreamer empowers precise, controllable video generation that faithfully captures the structural constraints of real-world traffic scenarios. Additionally, DriveDreamer enables the generation of realistic and reasonable driving policies, opening avenues for interaction and practical applications.",
+      "keywords": [
+        "Computer science",
+        "Pipeline (software)",
+        "Construct (python library)",
+        "Benchmark (surveying)",
+        "Representation (politics)",
+        "Quality (philosophy)",
+        "Artificial intelligence",
+        "Focus (optics)",
+        "Human–computer interaction"
+      ],
+      "citation_count": 177,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1038/s41598-026-48234-7",
+      "title": "Multi-task procedural content generation with reinforcement learning",
+      "authors": [
+        "Aylin Nekahdari",
+        "Elaheh Daei Kouzehkonani",
+        "Nima Saeedi",
+        "Kimia Shirini",
+        "Sina Samadi Gharehveran"
+      ],
+      "year": 2026,
+      "venue": "Scientific reports",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13265952/pdf/41598_2026_Article_48234.pdf",
+      "abstract": "This paper presents a multi-task language-based framework for procedural content generation through reinforcement learning, which aims to improve the semantic alignment between linguistic commands and quantitative game surface features. While most previous methods in PCGRL have relied on numerical conditioning, the proposed approach, using a DeBERTa encoder and a multi-objective training scheme including regression, contrastive alignment, and hybrid learning, attempts to extract meaningful, generalizable, and structured representations of natural commands. To evaluate this framework, a structured dataset consisting of over 14,000 command-level pairs in the Super Mario environment is designed, which allows for the examination of single-task, collective, combinatorial, paraphrase, and extra-domain generalization. Experimental results show that the proposed model outperforms BERT-based methods in command following, semantic stability, and structural diversity of generated levels. The findings show that separating the semantic components of language and multi-objective training can be an effective step towards producing controllable, interpretable content that is aligned with human intent in PCGRL systems.",
+      "keywords": [
+        "Multi-task learning",
+        "Procedural content generation",
+        "Reinforcement learning",
+        "Super Mario levels",
+        "Reinforcement",
+        "Content (measure theory)",
+        "Error-driven learning",
+        "Variety (cybernetics)"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52729.2023.01215",
+      "title": "Infinite Photorealistic Worlds Using Procedural Generation",
+      "authors": [
+        "Alexander Raistrick",
+        "Lahav Lipson",
+        "Zeyu Ma",
+        "Lingjie Mei",
+        "Mingzhe Wang",
+        "Yiming Zuo",
+        "Karhan Kayan",
+        "Hongyu Wen",
+        "Beining Han",
+        "Yihan Wang",
+        "Alejandro Newell",
+        "Hei Law",
+        "Ankit Goyal",
+        "Kaiyu Yang",
+        "Jia Deng"
+      ],
+      "year": 2023,
+      "venue": "Computer Vision and Pattern Recognition",
+      "url": "https://doi.org/10.1109/cvpr52729.2023.01215",
+      "abstract": "We introduce Infinigen, a procedural generator of photorealistic 3D scenes of the natural world. Infinigen is entirely procedural: every asset, from shape to texture, is generated from scratch via randomized mathematical rules, using no external source and allowing infinite variation and composition. Infinigen offers broad coverage of objects and scenes in the natural world including plants, animals, terrains, and natural phenomena such as fire, cloud, rain, and snow. Infinigen can be used to generate unlimited, diverse training data for a wide range of computer vision tasks including object detection, semantic segmentation, optical flow, and 3D reconstruction. We expect Infinigen to be a useful resource for computer vision research and beyond. Please visit infinigen.org for videos, code and pre-generated data.",
+      "keywords": [
+        "Computer science",
+        "Terrain",
+        "Computer vision",
+        "Procedural modeling",
+        "Generator (circuit theory)",
+        "Artificial intelligence",
+        "Object (grammar)",
+        "Segmentation",
+        "Computer graphics (images)",
+        "Range (aeronautics)",
+        "Geography",
+        "Cartography"
+      ],
+      "citation_count": 121,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
     },
     {
       "paper_id": "paper:10.48550/arxiv.2402.12348",
@@ -183,6 +361,161 @@
       ]
     },
     {
+      "paper_id": "paper:10.48550/arxiv.2509.18580",
+      "title": "Adaptive Bayesian Joint Latent Space Modeling via Cumulative Shrinkage",
+      "authors": [
+        "Bin Lv",
+        "Yincai Tang",
+        "Siliang Zhang"
+      ],
+      "year": 2026,
+      "venue": "ArXiv.org",
+      "url": "https://arxiv.org/pdf/2509.18580v2",
+      "abstract": "Network models are increasingly vital in psychometrics for analyzing relational data, which are often accompanied by high-dimensional node attributes. Joint latent space models (JLSM) provide an elegant framework for integrating these data sources by assuming a shared underlying latent representation; however, a persistent methodological challenge is determining the dimension of the latent space, as existing methods typically require pre-specification or rely on computationally intensive post-hoc procedures. The key innovation of this work is a cumulative ordered spike-and-slab (COSS) prior, which we incorporate within a Bayesian joint latent space modeling framework. This prior enables the latent dimension to be inferred automatically and simultaneously with all model parameters. We develop an efficient Markov Chain Monte Carlo (MCMC) algorithm for posterior computation. Theoretically, we establish that the posterior distribution concentrates on the true latent dimension and that parameter estimates achieve Hellinger consistency at a near-optimal rate that adapts to the unknown dimensionality. Through extensive simulations and three real-data applications, we demonstrate the method's superior performance in both dimension recovery and parameter estimation. Our work offers a principled, computationally efficient, and theoretically grounded solution for adaptive dimension selection in psychometric network models.",
+      "keywords": [
+        "Dimension (graph theory)",
+        "Markov chain Monte Carlo",
+        "Latent variable model",
+        "Consistency (knowledge bases)",
+        "Latent variable",
+        "Bayesian probability",
+        "Latent class model",
+        "Posterior probability",
+        "Model selection",
+        "Probabilistic logic"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1145/3664647.3681129",
+      "title": "Controllable Procedural Generation of Landscapes",
+      "authors": [
+        "Jiahong Liu",
+        "Shao-Kui Zhang",
+        "Chuyue Zhang",
+        "Song–Hai Zhang"
+      ],
+      "year": 2024,
+      "venue": "ACM Multimedia",
+      "url": "https://doi.org/10.1145/3664647.3681129",
+      "abstract": "Landscapes, recognized for their indispensable role in large-scale scenes, are experiencing growing demand. However, the manual modeling of such content is labor-intensive and lacks efficiency. Procedural Content Generation (PCG) techniques enable the rapid generation of diverse landscape elements. Nevertheless, ordinary users may encounter difficulties controlling these methods for desired results. In this paper, we introduce a controllable framework for procedurally generating landscapes. We integrate state-of-the-art Large Language Models (LLMs) to enhance user accessibility and control. By converting plain text inputs into parameters through LLMs, our framework allows ordinary users to generate a batch of plausible landscapes tailored to their specifications. A parameter-controlled PCG procedure is designed to leverage optimization techniques and employ rule-based refinements. It achieves harmonious layering in terrains, zoning, and roads while enabling aesthetic arrangement of vegetation and artificial elements. Extensive experiments demonstrate our framework's effectiveness in generating landscapes comparable to those crafted by experienced architects. Our framework has the potential to enhance the productivity of landscape designers significantly.",
+      "keywords": [
+        "Procedural modeling",
+        "Computer science",
+        "Computer graphics (images)"
+      ],
+      "citation_count": 4,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2311.16038",
+      "title": "OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving",
+      "authors": [
+        "Wenzhao Zheng",
+        "Weiliang Chen",
+        "Yuanhui Huang",
+        "Borui Zhang",
+        "Yueqi Duan",
+        "Jiwen Lu"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2311.16038v1",
+      "abstract": "Understanding how the 3D scene evolves is vital for making decisions in autonomous driving. Most existing methods achieve this by predicting the movements of object boxes, which cannot capture more fine-grained scene information. In this paper, we explore a new framework of learning a world model, OccWorld, in the 3D Occupancy space to simultaneously predict the movement of the ego car and the evolution of the surrounding scenes. We propose to learn a world model based on 3D occupancy rather than 3D bounding boxes and segmentation maps for three reasons: 1) expressiveness. 3D occupancy can describe the more fine-grained 3D structure of the scene; 2) efficiency. 3D occupancy is more economical to obtain (e.g., from sparse LiDAR points). 3) versatility. 3D occupancy can adapt to both vision and LiDAR. To facilitate the modeling of the world evolution, we learn a reconstruction-based scene tokenizer on the 3D occupancy to obtain discrete scene tokens to describe the surrounding scenes. We then adopt a GPT-like spatial-temporal generative transformer to generate subsequent scene and ego tokens to decode the future occupancy and ego trajectory. Extensive experiments on the widely used nuScenes benchmark demonstrate the ability of OccWorld to effectively model the evolution of the driving scenes. OccWorld also produces competitive planning results without using instance and map supervision. Code: https://github.com/wzzheng/OccWorld.",
+      "keywords": [
+        "Occupancy",
+        "Computer science",
+        "Occupancy grid mapping",
+        "Artificial intelligence",
+        "Bounding overwatch",
+        "Computer vision",
+        "Lidar",
+        "Benchmark (surveying)",
+        "Generative model",
+        "Code (set theory)",
+        "3d model",
+        "Object (grammar)",
+        "Segmentation",
+        "Generative grammar",
+        "Robot",
+        "Geography",
+        "Cartography",
+        "Mobile robot",
+        "Engineering"
+      ],
+      "citation_count": 111,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2602.18943",
+      "title": "High Dimensional Procedural Content Generation",
+      "authors": [
+        "Kaijie Xu",
+        "Clark Verbrugge"
+      ],
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2602.18943v1",
+      "abstract": "Procedural content generation (PCG) has made substantial progress in shaping static 2D/3D geometry, while most methods treat gameplay mechanics as auxiliary and optimize only over space. We argue that this limits controllability and expressivity, and formally introduce High-Dimensional PCG (HDPCG): a framework that elevates non-geometric gameplay dimensions to first-class coordinates of a joint state space. We instantiate HDPCG along two concrete directions. Direction-Space augments geometry with a discrete layer dimension and validates reachability in 4D (x,y,z,l), enabling unified treatment of 2.5D/3.5D mechanics such as gravity inversion and parallel-world switching. Direction-Time augments geometry with temporal dynamics via time-expanded graphs, capturing action semantics and conflict rules. For each direction, we present three general, practicable algorithms with a shared pipeline of abstract skeleton generation, controlled grounding, high-dimensional validation, and multi-metric evaluation. Large-scale experiments across diverse settings validate the integrity of our problem formulation and the effectiveness of our methods on playability, structure, style, robustness, and efficiency. Beyond quantitative results, Unity-based case studies recreate playable scenarios that accord with our metrics. We hope HDPCG encourages a shift in PCG toward general representations and the generation of gameplay-relevant dimensions beyond geometry, paving the way for controllable, verifiable, and extensible level generation.",
+      "keywords": [
+        "Controllability",
+        "Reachability",
+        "Semantics (computer science)",
+        "Dimension (graph theory)",
+        "Inversion (geology)",
+        "Pipeline (software)",
+        "State (computer science)",
+        "Action (physics)"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48448/p8x8-vd53",
+      "title": "WorldWeaver: Procedural World Generation for Text Adventure Games using Large Language Models",
+      "authors": [
+        "Association for Computational Linguistics 2024",
+        "Agarwal, Ishita",
+        "Chandrawat, Samarth",
+        "Jain, Hardik",
+        "Jin, Meiqing",
+        "Kaul, Manvi",
+        "Ramakrishnan, Shriya"
+      ],
+      "year": 2024,
+      "venue": "Underline Science Inc.",
+      "url": "https://doi.org/10.48448/p8x8-vd53",
+      "abstract": "Text-based adventure game generation has attracted considerable interest since the advancements in large language models. However, even state-of-the-art (SOTA) large language models (LLMs) face challenges in generating semantically and logically coherent content, and often fail to align with human intentions. In our work, we propose a approach for enhancing content coherence, additionally allowing humans in the loop to better match their intentions. Specifically, we generate game components, including locations, characters, items, actions, and blocks, and integrate these components with semantic and logical constraints. Meanwhile, human game creators can intervene and modify the components to suit their preferences. Evaluation results demonstrate that our procedural world-generation approach both enriches the content and satisfies semantic and logical requirements compared to the SOTA LLMs. Moreover, the human-in-the-loop feature gives game creators more control over generated content.",
+      "keywords": [
+        "Adventure",
+        "Logical conjunction",
+        "Feature (linguistics)",
+        "Face (sociological concept)",
+        "Game design",
+        "Human language",
+        "Natural language generation",
+        "Semantics (computer science)"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
       "paper_id": "paper:10.1016/j.jclepro.2024.142949",
       "title": "Cradle-to-cradle business model tool: Innovating circular business models for startups",
       "authors": [
@@ -210,6 +543,131 @@
       "survey_ref_hints": [
         "cradle_2024"
       ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2602.04682",
+      "title": "Covariate Selection for Joint Latent Space Modeling of Sparse Network Data",
+      "authors": [
+        "Emma G. Crenshaw",
+        "Yuhua Zhang",
+        "Jukka-Pekka Onnela"
+      ],
+      "year": 2026,
+      "venue": "Open MIND",
+      "url": "https://arxiv.org/pdf/2602.04682v1",
+      "abstract": "Network data are increasingly common in the social sciences and infectious disease epidemiology. Analyses often link network structure to node-level covariates, but existing methods falter with sparse networks and high-dimensional node features. We propose a joint latent space modeling framework for sparse networks with high-dimensional binary node covariates that performs covariate selection while accounting for uncertainty in estimated latent positions. Building on joint latent space models that couple edges and node variables through shared latent positions, we introduce a group lasso screening step and incorporate a measurement-error-aware stabilization term to mitigate bias from using estimated latent positions as predictors. We establish prediction error rates for the covariate component both when latent positions are treated as observed and when they are estimated with bounded error; under uniform control across $q$ covariates and $n$ nodes, the rate is of order $O(\\log q / n)$ up to an additional term due to latent position estimation error. Our method addresses three challenges: (1) incorporating information from isolated nodes, which are common in sparse networks but often ignored; (2) selecting relevant covariates from high-dimensional spaces; and (3) accounting for uncertainty in estimated latent positions. Simulations show predictive performance remains stable as covariate sparsity grows, while naive approaches degrade. We illustrate how the method can support efficient study design using household social networks from 75 Indian villages, where an emulated pilot study screens a large covariate battery and substantially reduces required subsequent data collection without sacrificing network predictive accuracy.",
+      "keywords": [
+        "Covariate",
+        "Node (physics)",
+        "Lasso (programming language)",
+        "Latent variable",
+        "Latent class model",
+        "Latent variable model",
+        "Term (time)",
+        "Selection (genetic algorithm)"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2026.3713793",
+      "title": "Human-Aligned Procedural Level Generation Reinforcement Learning via Text-Level-Sketch Shared Representation",
+      "authors": [
+        "In-Chang Baek",
+        "Seoyoung Lee",
+        "Sung-Hyun Kim",
+        "Geumhwan Hwang",
+        "KyungJoong Kim"
+      ],
+      "year": 2026,
+      "venue": null,
+      "url": "https://arxiv.org/pdf/2508.09860v2",
+      "abstract": "Human-aligned AI is a critical component of co-creativity, as it enables models to accurately interpret human intent and generate controllable outputs that align with design goals in collaborative content creation. This direction is especially relevant in procedural content generation via reinforcement learning (PCGRL), which is intended to serve as a tool for human designers. However, existing systems often fall short of exhibiting human-centered behavior, limiting the practical utility of AI-driven generation tools in real-world design workflows. In this paper, we propose VIPCGRL (Vision-Instruction PCGRL), a novel deep reinforcement learning framework that incorporates three modalities-text, level, and sketches-to extend control modality and enhance human-likeness. We introduce a shared embedding space trained via quadruple contrastive learning across modalities and human-AI styles, and align the policy using an auxiliary reward based on embedding similarity. Experimental results show that VIPCGRL outperforms existing baselines in human-likeness, as validated by both quantitative metrics and human evaluations. The code and dataset are available at https://github.com/bic4907/VIPCGRL.",
+      "keywords": [],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2607.15550",
+      "title": "SeerGuard: A Safety Framework for Mobile GUI Agents via World Model Prediction",
+      "authors": [
+        "Xue Yu",
+        "Bo Yuan",
+        "Pengshuai Yang",
+        "Kailin Zhao",
+        "Hong Hu",
+        "Junlan Feng"
+      ],
+      "year": 2026,
+      "venue": null,
+      "url": "https://arxiv.org/pdf/2607.15550v1",
+      "abstract": "Mobile graphical user interface (GUI) agents have demonstrated remarkable capabilities in automating complex tasks, yet they introduce critical safety risks where a single erroneous action can lead to irreversible consequences. Existing safety mechanisms are primarily reactive, lacking the ability to assess risks before execution. In this paper, we introduce SeerGuard, a consequence-aware safety framework designed to mitigate these risks through pre-execution instruction-level screening and action-level risk assessment. Specifically, the action-level assessment analyzes agent-proposed actions within current GUI states, anticipating likely outcomes to identify risks before they are executed. To enable these capabilities, we construct a unified safety-augmented world model (SAWM) via multi-task learning, integrating semantic next-state prediction with safety risk assessment. Extensive experiments demonstrate that SeerGuard generalizes effectively across diverse mobile GUI agents. On Qwen3-VL-8B-Instruct, it increases the safety-utility score from $0.191$ to $0.596$ at $\\omega=0.8$ and reduces the risk-cost score from $0.347$ to $0.130$ at $\\alpha=0.8$. Further analyses on our SAWM validate the effectiveness of the instruction-level screening, alongside the capability of action risk assessment and next-state prediction.",
+      "keywords": [],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1609/aiide.v20i1.31877",
+      "title": "Procedural Content Generation in Games: A Survey with Insights on Emerging LLM Integration",
+      "authors": [
+        "Mahdi Farrokhi Maleki",
+        "Richard Zhao"
+      ],
+      "year": 2024,
+      "venue": "Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment",
+      "url": "https://arxiv.org/pdf/2410.15644v1",
+      "abstract": "Procedural Content Generation (PCG) is defined as the automatic creation of game content using algorithms. PCG has a long history in both the game industry and the academic world. It can increase player engagement and ease the work of game designers. While recent advances in deep learning approaches in PCG have enabled researchers and practitioners to create more sophisticated content, it is the arrival of Large Language Models (LLMs) that truly disrupted the trajectory of PCG advancement.This survey explores the differences between various algorithms used for PCG, including search-based methods, machine learning-based methods, other frequently used methods (e.g., noise functions), and the newcomer, LLMs. We also provide a detailed discussion on combined methods. Furthermore, we compare these methods based on the type of content they generate and the publication dates of their respective papers. Finally, we identify gaps in the existing academic work and suggest possible directions for future research.",
+      "keywords": [
+        "Content (measure theory)",
+        "Computer science",
+        "Psychology",
+        "Mathematics"
+      ],
+      "citation_count": 25,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2302.01560",
+      "title": "Describe, Explain, Plan and Select: Interactive Planning with Large Language Models Enables Open-World Multi-Task Agents",
+      "authors": [
+        "Zihao Wang",
+        "Shaofei Cai",
+        "Chen, Guanzhou",
+        "Anji Liu",
+        "Xiaojian Ma",
+        "Yitao Liang"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2302.01560",
+      "abstract": "We investigate the challenge of task planning for multi-task embodied agents in open-world environments. Two main difficulties are identified: 1) executing plans in an open-world environment (e.g., Minecraft) necessitates accurate and multi-step reasoning due to the long-term nature of tasks, and 2) as vanilla planners do not consider how easy the current agent can achieve a given sub-task when ordering parallel sub-goals within a complicated plan, the resulting plan could be inefficient or even infeasible. To this end, we propose \"$\\underline{D}$escribe, $\\underline{E}$xplain, $\\underline{P}$lan and $\\underline{S}$elect\" ($\\textbf{DEPS}$), an interactive planning approach based on Large Language Models (LLMs). DEPS facilitates better error correction on initial LLM-generated $\\textit{plan}$ by integrating $\\textit{description}$ of the plan execution process and providing self-$\\textit{explanation}$ of feedback when encountering failures during the extended planning phases. Furthermore, it includes a goal $\\textit{selector}$, which is a trainable module that ranks parallel candidate sub-goals based on the estimated steps of completion, consequently refining the initial plan. Our experiments mark the milestone of the first zero-shot multi-task agent that can robustly accomplish 70+ Minecraft tasks and nearly double the overall performances. Further testing reveals our method's general effectiveness in popularly adopted non-open-ended domains as well (i.e., ALFWorld and tabletop manipulation). The ablation and exploratory studies detail how our design beats the counterparts and provide a promising update on the $\\texttt{ObtainDiamond}$ grand challenge with our approach. The code is released at https://github.com/CraftJarvis/MC-Planner.",
+      "keywords": [
+        "Computer science",
+        "Task (project management)",
+        "Plan (archaeology)",
+        "Process (computing)",
+        "Artificial intelligence",
+        "Human–computer interaction",
+        "Programming language",
+        "Systems engineering"
+      ],
+      "citation_count": 359,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
     },
     {
       "paper_id": "paper:10.48550/arxiv.2506.17201",
@@ -249,27 +707,166 @@
       ]
     },
     {
-      "paper_id": "paper:10.1109/comst.2025.3527641",
-      "title": "Mobile Edge Intelligence for Large Language Models: A Contemporary Survey",
+      "paper_id": "paper:10.1016/j.media.2024.103309",
+      "title": "Establishing group-level brain structural connectivity incorporating anatomical knowledge under latent space modeling",
       "authors": [
-        "Guanqiao Qu",
-        "Qiyuan Chen",
-        "Wei Wei",
-        "Zheng Lin",
-        "Xianhao Chen",
-        "Kaibin Huang"
+        "Selena Wang",
+        "Y.S. Wang",
+        "Frederick H. Xu",
+        "Li Shen",
+        "Yize Zhao"
       ],
       "year": 2025,
-      "venue": "IEEE Communications Surveys & Tutorials",
-      "url": "https://doi.org/10.1109/comst.2025.3527641",
-      "abstract": "On-device large language models (LLMs), referring to running LLMs on edge devices, have raised considerable interest since they are more cost-effective, latency-efficient, and privacy-preserving compared with the cloud paradigm. Nonetheless, the performance of on-device LLMs is intrinsically constrained by resource limitations on edge devices. Sitting between cloud and on-device AI, mobile edge intelligence (MEI) presents a viable solution by provisioning AI capabilities at the edge of mobile networks. This article provides a contemporary survey on harnessing MEI for LLMs. We begin by illustrating several killer applications to demonstrate the urgent need for deploying LLMs at the network edge. Next, we present the preliminaries of LLMs and MEI, followed by resource-efficient LLM techniques. We then present an architectural overview of MEI for LLMs (MEI4LLM), outlining its core components and how it supports the deployment of LLMs. Subsequently, we delve into various aspects of MEI4LLM, extensively covering edge LLM caching and delivery, edge LLM training, and edge LLM inference. Finally, we identify future research opportunities. We hope this article inspires researchers in the field to leverage mobile edge computing to facilitate LLM deployment, thereby unleashing the potential of LLMs across various privacy-and delay-sensitive applications.",
+      "venue": "Med Image Anal",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11609031/pdf/nihms-2018744.pdf",
+      "abstract": "Brain structural connectivity, capturing the white matter fiber tracts among brain regions inferred by diffusion MRI (dMRI), provides a unique characterization of brain anatomical organization. One fundamental question to address with structural connectivity is how to properly summarize and perform statistical inference for a group-level connectivity architecture, for instance, under different sex groups, or disease cohorts. Existing analyses commonly summarize group-level brain connectivity by a simple entry-wise sample mean or median across individual brain connectivity matrices. However, such a heuristic approach fully ignores the associations among structural connections and the topological properties of brain networks. In this project, we propose a latent space-based generative network model to estimate group-level brain connectivity. Within our modeling framework, we incorporate the anatomical information of brain regions as the attributes of nodes to enhance the plausibility of our estimation and improve biological interpretation. We name our method the attributes-informed brain connectivity (ABC) model, which compared with existing group-level connectivity estimations, (1) offers an interpretable latent space representation of the group-level connectivity, (2) incorporates the anatomical knowledge of nodes and tests its co-varying relationship with connectivity and (3) quantifies the uncertainty and evaluates the likelihood of the estimated group-level effects against chance. We devise a novel Bayesian MCMC algorithm to estimate the model. We evaluate the performance of our model through extensive simulations. By applying the ABC model to study brain structural connectivity stratified by sex among Alzheimer's Disease (AD) subjects and healthy controls incorporating the anatomical attributes (volume, thickness and area) on nodes, our method shows superior predictive power on out-of-sample structural connectivity and identifies meaningful sex-specific network neuromarkers for AD.",
+      "keywords": [
+        "Inference",
+        "Computer science",
+        "Generative model",
+        "Artificial intelligence",
+        "Machine learning",
+        "Statistical inference",
+        "Bayesian inference",
+        "Bayesian probability",
+        "Pattern recognition (psychology)",
+        "Generative grammar",
+        "Mathematics",
+        "Statistics",
+        "Anatomical structure",
+        "Brain network analysis",
+        "Latent space modeling",
+        "[\"Anatomical structure\",\"Brain network analysis\",\"Latent space modeling.\"]",
+        "Latent space modeling."
+      ],
+      "citation_count": 4,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1609/aaai.v38i9.28865",
+      "title": "Procedural Level Generation with Diffusion Models from a Single Example",
+      "authors": [
+        "Shiqi Dai",
+        "Xuanyu Zhu",
+        "Naiqi Li",
+        "Tao Dai",
+        "Zhi Wang"
+      ],
+      "year": 2024,
+      "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/download/28865/29644",
+      "abstract": "Level generation is a central focus of Procedural Content Generation (PCG), yet deep learning-based approaches are limited by scarce training data, i.e., human-designed levels. Despite being a dominant framework, Generative Adversarial Networks (GANs) exhibit a substantial quality gap between generated and human-authored levels, alongside rising training costs, particularly with increasing token complexity. In this paper, we introduce a diffusion-based generative model that learns from just one example. Our approach involves two core components: 1) an efficient yet expressive level representation, and 2) a latent denoising network with constrained receptive fields. To start with, our method utilizes token semantic labels, similar to word embeddings, to provide dense representations. This strategy not only surpasses one-hot encoding in representing larger game levels but also improves stability and accelerates convergence in latent diffusion. In addition, we adapt the denoising network architecture to confine the receptive field to localized patches of the data, aiming to facilitate single-example learning. Extensive experiments demonstrate that our model is capable of generating stylistically congruent samples of arbitrary sizes compared to manually designed levels. It suits a wide range of level structures with fewer artifacts than GAN-based approaches. The source code is available at https://github.com/shiqi-dai/diffusioncraft.",
+      "keywords": [
+        "Diffusion",
+        "Computer science",
+        "Physics",
+        "Thermodynamics"
+      ],
+      "citation_count": 6,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1007/s11704-024-40231-1",
+      "title": "A survey on large language model based autonomous agents",
+      "authors": [
+        "Lei Wang",
+        "Chen Ma",
+        "Xueyang Feng",
+        "Zeyu Zhang",
+        "Hao Yang",
+        "Jingsen Zhang",
+        "Zhiyuan Chen",
+        "Jiakai Tang",
+        "Xu Chen",
+        "Yankai Lin",
+        "Wayne Xin Zhao",
+        "Zhewei Wei",
+        "Ji-Rong Wen"
+      ],
+      "year": 2024,
+      "venue": "Frontiers of Computer Science",
+      "url": "https://link.springer.com/content/pdf/10.1007/s11704-024-40231-1.pdf",
+      "abstract": "Autonomous agents have long been a research focus in academic and industry communities. Previous research often focuses on training agents with limited knowledge within isolated environments, which diverges significantly from human learning processes, and makes the agents hard to achieve human-like decisions. Recently, through the acquisition of vast amounts of Web knowledge, large language models (LLMs) have shown potential in human-level intelligence, leading to a surge in research on LLM-based autonomous agents. In this paper, we present a comprehensive survey of these studies, delivering a systematic review of LLM-based autonomous agents from a holistic perspective. We first discuss the construction of LLM-based autonomous agents, proposing a unified framework that encompasses much of previous work. Then, we present a overview of the diverse applications of LLM-based autonomous agents in social science, natural science, and engineering. Finally, we delve into the evaluation strategies commonly used for LLM-based autonomous agents. Based on the previous studies, we also present several challenges and future directions in this field.",
       "keywords": [
         "Computer science",
-        "Enhanced Data Rates for GSM Evolution",
-        "Data science",
-        "Artificial intelligence"
+        "Artificial intelligence",
+        "large_language_model",
+        "autonomous_agent",
+        "human-level_intelligence"
       ],
-      "citation_count": 115,
+      "citation_count": 2188,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2407.17572",
+      "title": "CityX: Controllable Procedural Content Generation for Unbounded 3D Cities",
+      "authors": [
+        "Zhang, Shougao",
+        "Mengqi Zhou",
+        "Yuxi Wang",
+        "Chuanchen Luo",
+        "Rongyu Wang",
+        "Yiwei Li",
+        "Zhaoxiang Zhang",
+        "Junran Peng"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2407.17572v4",
+      "abstract": "Urban areas, as the primary human habitat in modern civilization, accommodate a broad spectrum of social activities. With the surge of embodied intelligence, recent years have witnessed an increasing presence of physical agents in urban areas, such as autonomous vehicles and delivery robots. As a result, practitioners significantly value crafting authentic, simulation-ready 3D cities to facilitate the training and verification of such agents. However, this task is quite challenging. Current generative methods fall short in either diversity, controllability, or fidelity. In this work, we resort to the procedural content generation (PCG) technique for high-fidelity generation. It assembles superior assets according to empirical rules, ultimately leading to industrial-grade outcomes. To ensure diverse and self contained creation, we design a management protocol to accommodate extensive PCG plugins with distinct functions and interfaces. Based on this unified PCG library, we develop a multi-agent framework to transform multi-modal instructions, including OSM, semantic maps, and satellite images, into executable programs. The programs coordinate relevant plugins to construct the 3D city consistent with the control condition. A visual feedback scheme is introduced to further refine the initial outcomes. Our method, named CityX, demonstrates its superiority in creating diverse, controllable, and realistic 3D urban scenes. The synthetic scenes can be seamlessly deployed as a real-time simulator and an infinite data generator for embodied intelligence research. Our project page: https://cityx-lab.github.io.",
+      "keywords": [
+        "Content (measure theory)",
+        "Computer science",
+        "Procedural modeling",
+        "Business",
+        "Mathematics",
+        "Computer graphics (images)",
+        "Mathematical analysis"
+      ],
+      "citation_count": 12,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2605.03941",
+      "title": "iWorld-Bench: A Benchmark for Interactive World Models with a Unified Action Generation Framework",
+      "authors": [
+        "Jianjie Fang",
+        "Yingshan Lei",
+        "Qin Wan",
+        "Ziyou Wang",
+        "Yuchao Huang",
+        "Yongyan Xu",
+        "Baining Zhao",
+        "Weichen Zhang",
+        "Chen Gao",
+        "Xinlei Chen",
+        "Yong Li"
+      ],
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://doi.org/10.48550/arxiv.2605.03941",
+      "abstract": "Achieving Artificial General Intelligence (AGI) requires agents that learn and interact adaptively, with interactive world models providing scalable environments for perception, reasoning, and action. Yet current research still lacks large-scale datasets and unified benchmarks to evaluate their physical interaction capabilities. To address this, we propose iWorld-Bench, a comprehensive benchmark for training and testing world models on interaction-related abilities such as distance perception and memory. We construct a diverse dataset with 330k video clips and select 2.1k high-quality samples covering varied perspectives, weather, and scenes. As existing world models differ in interaction modalities, we introduce an Action Generation Framework to unify evaluation and design six task types, generating 4.9k test samples. These tasks jointly assess model performance across visual generation, trajectory following, and memory. Evaluating 14 representative world models, we identify key limitations and provide insights for future research. The iWorld-Bench model leaderboard is publicly available at iWorld-Bench.com.",
+      "keywords": [
+        "Benchmark (surveying)",
+        "Key (lock)",
+        "Scalability",
+        "Construct (python library)",
+        "Task (project management)",
+        "Action (physics)"
+      ],
+      "citation_count": 0,
       "source": "sciverse",
       "parse_status": "abstract_only",
       "survey_ref_count": 0,
@@ -302,67 +899,165 @@
       ]
     },
     {
-      "paper_id": "paper:10.1136/bmjebm-2025-113825",
-      "title": "Reporting guideline for the use of Generative Artificial intelligence tools in MEdical Research: the GAMER Statement",
+      "paper_id": "paper:10.1109/icra57147.2024.10611243",
+      "title": "DeformNet: Latent Space Modeling and Dynamics Prediction for Deformable Object Manipulation",
       "authors": [
-        "Xufei Luo",
-        "Yih Chung Tham",
-        "Mauro Giuffrè",
-        "Robert Ranisch",
-        "Mohammad Daher",
-        "Kyle Lam",
-        "Alexander Viktor Eriksen",
-        "Che-Wei Hsu",
-        "Akihiko Ozaki",
-        "Fábio Ynoe de Moraes",
-        "Sahil Khanna",
-        "Kuan‐Pin Su",
-        "Emir Begagić",
-        "Zhaoxiang Bian",
-        "Yaolong Chen",
-        "Janne Estill"
+        "Chenchang Li",
+        "Zihao Ai",
+        "Tong Wu",
+        "Xiaosa Li",
+        "Wenbo Ding",
+        "Huazhe Xu"
       ],
-      "year": 2025,
-      "venue": "BMJ evidence-based medicine",
-      "url": "https://findresearcher.sdu.dk/ws/files/300004273/390.full.pdf",
-      "abstract": "Objectives Generative artificial intelligence (GAI) tools can enhance the quality and efficiency of medical research, but their improper use may result in plagiarism, academic fraud and unreliable findings. Transparent reporting of GAI use is essential, yet existing guidelines from journals and institutions are inconsistent, with no standardised principles. Design and setting International online Delphi study. Participants International experts in medicine and artificial intelligence. Main outcome measures The primary outcome measure is the consensus level of the Delphi expert panel on the items of inclusion criteria for GAMER (Rreporting guideline for the use of Generative Artificial intelligence tools in MEdical Research). Results The development process included a scoping review, two Delphi rounds and virtual meetings. 51 experts from 26 countries participated in the process (44 in the Delphi survey). The final checklist comprises nine reporting items: general declaration, GAI tool specifications, prompting techniques, tool’s role in the study, declaration of new GAI model(s) developed, artificial intelligence-assisted sections in the manuscript, content verification, data privacy and impact on conclusions. Conclusion GAMER provides universal and standardised guideline for GAI use in medical research, ensuring transparency, integrity and quality.",
+      "year": 2024,
+      "venue": "IEEE International Conference on Robotics and Automation",
+      "url": "https://doi.org/10.1109/icra57147.2024.10611243",
+      "abstract": "Manipulating deformable objects is a ubiquitous task in household environments, demanding adequate representation and accurate dynamics prediction due to the objects’ infinite degrees of freedom. This work proposes DeformNet, which utilizes latent space modeling with a learned 3D representation model to tackle these challenges effectively. The proposed representation model combines a PointNet encoder and a conditional neural radiance field (NeRF), facilitating a thorough acquisition of object deformations and variations in lighting conditions. To model the complex dynamics, we employ a recurrent state-space model (RSSM) that accurately predicts the transformation of the latent representation over time. Extensive simulation experiments with diverse objectives demonstrate the generalization capabilities of DeformNet for various deformable object manipulation tasks, even in the presence of previously unseen goals. Finally, we deploy DeformNet on an actual UR5 robotic arm to demonstrate its capability in real-world scenarios.",
       "keywords": [
-        "Declaration",
-        "Delphi method",
-        "Checklist",
-        "Transparency (behavior)",
-        "Delphi",
         "Computer science",
-        "Guideline",
+        "Dynamics (music)",
+        "Space (punctuation)",
+        "Object (grammar)",
         "Artificial intelligence",
-        "Medical education",
-        "Psychology",
-        "Data science",
-        "Medicine",
-        "Computer security"
+        "Computer vision",
+        "Physics"
       ],
-      "citation_count": 49,
+      "citation_count": 12,
       "source": "sciverse",
       "parse_status": "abstract_only",
       "survey_ref_count": 0,
       "survey_ref_hints": []
     },
     {
-      "paper_id": "paper:10.56726/irjmets42512",
-      "title": "ARTIFICIAL INTELLIGENCE FOR THE REAL WORLD",
+      "paper_id": "paper:10.1109/tg.2022.3175795",
+      "title": "Procedural Level Generation for Sokoban via Deep Learning: An Experimental Study",
       "authors": [
-        "Rajeev Ronanki",
-        "Andrew Nguyen"
+        "Yahia Zakaria",
+        "Magda B. Fayek",
+        "Mayada Hadhoud"
       ],
       "year": 2023,
-      "venue": "International Research Journal of Modernization in Engineering Technology and Science",
-      "url": "https://doi.org/10.56726/irjmets42512",
-      "abstract": "Artificial intelligence (A.I.) is a multidisciplinary field aimed at automating tasks that currently need human intelligence.Despite its lack of general familiarity, artificial intelligence (AI) is a technology that is revolutionizing every aspect of life.This article aims to educate laypeople about AI and encourage them to utilize it as a tool in many disciplines to rethink how we combine data, analyze it, and make choices.We quickly covered what artificial intelligence (AI) is, how it works, and how it may be applied in our daily lives in this article.",
+      "venue": "IEEE Transactions on Games",
+      "url": "https://doi.org/10.1109/tg.2022.3175795",
+      "abstract": "Deep learning for procedural level generation has been explored in many recent works, however, experimental comparisons with previous works are rare and usually limited to the work they extend upon. The goal of this article is to conduct an experimental study on four recent deep learning procedural level generators for Sokoban to explore their strengths and weaknesses. The methods will be bootstrapping conditional generative models, controllable and uncontrollable procedural content generation via reinforcement learning (PCGRL), and generative playing networks. We will propose some modifications to either adapt the methods to the task or improve their performance. For the bootstrapping method, we propose using diversity sampling to improve the solution diversity, training with auxiliary targets to enhance the models’ quality and sampling conditions from Gaussian mixture models (GMMs) to improve the sample quality. The results show that the generated solutions are more diverse by at least 16% when diversity sampling is used during training. It also shows that training with auxiliary targets and sampling conditions from GMMs can be used to increase the playability percentage. In our experiments, PCGRL shows superior quality and diversity, while the bootstrapped long-short term memory generators exhibit the least control confusion.",
       "keywords": [
         "Computer science",
-        "Artificial intelligence"
+        "Bootstrapping (finance)",
+        "Sampling (signal processing)",
+        "Artificial intelligence",
+        "Machine learning",
+        "Reinforcement learning",
+        "Sample (material)",
+        "Quality (philosophy)",
+        "Diversity (politics)",
+        "Generative grammar",
+        "Mathematics",
+        "Econometrics"
       ],
-      "citation_count": 1694,
+      "citation_count": 23,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2506.16565",
+      "title": "Reimagination with Test-time Observation Interventions: Distractor-Robust World Model Predictions for Visual Model Predictive Control",
+      "authors": [
+        "Chen, Yuxin",
+        "Wei, Jianglan",
+        "Xu, Chenfeng",
+        "Li, Boyi",
+        "Tomizuka, Masayoshi",
+        "Bajcsy, Andrea",
+        "Tian, Ran"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2506.16565",
+      "abstract": "World models enable robots to \"imagine\" future observations given current observations and planned actions, and have been increasingly adopted as generalized dynamics models to facilitate robot learning. Despite their promise, these models remain brittle when encountering novel visual distractors such as objects and background elements rarely seen during training. Specifically, novel distractors can corrupt action outcome predictions, causing downstream failures when robots rely on the world model imaginations for planning or action verification. In this work, we propose Reimagination with Observation Intervention (ReOI), a simple yet effective test-time strategy that enables world models to predict more reliable action outcomes in open-world scenarios where novel and unanticipated visual distractors are inevitable. Given the current robot observation, ReOI first detects visual distractors by identifying which elements of the scene degrade in physically implausible ways during world model prediction. Then, it modifies the current observation to remove these distractors and bring the observation closer to the training distribution. Finally, ReOI \"reimagines\" future outcomes with the modified observation and reintroduces the distractors post-hoc to preserve visual consistency for downstream planning and verification. We validate our approach on a suite of robotic manipulation tasks in the context of action verification, where the verifier needs to select desired action plans based on predictions from a world model. Our results show that ReOI is robust to both in-distribution and out-of-distribution visual distractors. Notably, it improves task success rates by up to 3x in the presence of novel distractors, significantly outperforming action verification that relies on world model predictions without imagination interventions.",
+      "keywords": [
+        "Action (physics)",
+        "Context (archaeology)",
+        "Robot",
+        "Task (project management)",
+        "Downstream (manufacturing)",
+        "Consistency (knowledge bases)",
+        "Computational model"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.4114/intartif.vol24iss68pp33-36",
+      "title": "Procedural Content Generation for General Video Game Level Generation",
+      "authors": [
+        "Adeel Zafar",
+        "Hasan Mujtaba",
+        "Omer Beg"
+      ],
+      "year": 2025,
+      "venue": "Inteligencia Artificial: Revista Iberoamericana de Inteligencia Artificial, 2021, Vol 24, Issue 68, p33",
+      "url": "https://journal.iberamia.org/index.php/intartif/article/download/681/277",
+      "abstract": "With the passage of time, video games are becoming more complex, and their development incurs greater time and cost. The creation of video gaming content such as levels, maps, textures and so on represent a large part of the overall cost of game development. Procedural Content Generation (PCG) is a method of generating content via a pseudo-random process. Level generation has been the most significant and oldest problem in the PCG domain. The majority of the PCG level generators are specific to a particular game, content is generated only for a suited single type and these generators are evaluated mostly by computational metrics, user studies and fitness functions. Considering, the grand goal of general Artificial Intelligence, it would be beneficial to sculpt solutions that are applicable to a general set of problems. For the level generation problem, this can be achieved by constructing a level generator that generates levels for a set of games and not explicitly for a single game. In this research, we have created four different types of generators for the GVG-LG framework. The generators follow a distinct path and are able to solve multiple problems related to PCG including dynamic difficulty adjustment, creation of intelligent controllers, creating aesthetically appealing levels and using patterns as objectives for level generation. In addition, we evaluated all the generators using a variety of techniques. The experimental results show promising results and represent our attempt at general video game level generation.",
+      "keywords": [
+        "Video game",
+        "Content (measure theory)",
+        "Computer science",
+        "Multimedia",
+        "Mathematics"
+      ],
+      "citation_count": 1,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2606.16993",
+      "title": "DreamX-World 1.0: A General-Purpose Interactive World Model",
+      "authors": [
+        "DreamX Team",
+        "Yancheng Bai",
+        "Rui Chen",
+        "Xi Chu",
+        "Rujing Dang",
+        "Hao Dou",
+        "Bingjie Gao",
+        "Qiwen Gu",
+        "Siyu Hong",
+        "Jiachen Lei",
+        "Geng Li",
+        "Jifan Li",
+        "Ruimin Lin",
+        "Qingfeng Shi",
+        "Bingze Song",
+        "L G Sun",
+        "Jing Tang",
+        "Ruitian Tian",
+        "Jun Wang",
+        "Jiahong Wu",
+        "P Zhang",
+        "Shen Zhang",
+        "Jiashu Zhu"
+      ],
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2606.16993v1",
+      "abstract": "DreamX-World 1.0 is a general-purpose interactive text/image-to-video world model for controllable long-horizon generation. It supports camera navigation, revisits to previously observed regions, and promptable events across photorealistic, game-style, and stylized domains. Our data engine combines camera-accurate Unreal Engine rendering, action-rich gameplay recordings, and real-world videos with recovered camera geometry. For camera control, we introduce E-PRoPE, a lightweight variant of projective positional encoding that retains PRoPE's projective camera geometry while applying camera-aware attention to spatially reduced tokens. We convert a bidirectional video generator into a few-step autoregressive world model using causal forcing, DMD-style distillation, and long-rollout training. Training on self-generated long-horizon contexts exposes the model to its own generated history and reduces the style and color drift that accumulates across autoregressive chunks. Memory-Conditioned Scene Persistence retrieves earlier views through camera-geometry-based retrieval, while residual recycling makes the conditioning path less sensitive to imperfect memory latents. Event Instruction Tuning adds composable event control, and reinforcement learning alignment recovers camera control and visual quality after distillation. With mixed-precision DiT execution, residual reuse, 75\\%-pruned VAE decoding, and asynchronous pipeline parallelism, DreamX-World 1.0 reaches up to 16\\,FPS on eight RTX\\,5090 GPUs. On our 5-second basic evaluation, DreamX-World 1.0 achieves a camera-control score of 73.75 and an overall score of 84.76, outperforming HY-WorldPlay 1.5 and LingBot-World in overall score, which achieve 80.79 and 80.45, respectively.",
+      "keywords": [
+        "Event (particle physics)",
+        "Stylized fact",
+        "Autoregressive model",
+        "Pipeline (software)",
+        "Residual",
+        "Generator (circuit theory)",
+        "Scripting language"
+      ],
+      "citation_count": 0,
       "source": "sciverse",
       "parse_status": "abstract_only",
       "survey_ref_count": 0,
@@ -401,6 +1096,778 @@
       "survey_ref_hints": [
         "dreamerv3_2023"
       ]
+    },
+    {
+      "paper_id": "paper:10.1007/978-3-032-16645-6_3",
+      "title": "Latent Space Modeling of Lexical Networks",
+      "authors": [
+        "C. Donnan Gravelle",
+        "Patricia J. Brooks"
+      ],
+      "year": 2026,
+      "venue": "Studies in computational intelligence",
+      "url": "https://doi.org/10.1007/978-3-032-16645-6_3",
+      "abstract": "",
+      "keywords": [
+        "Vocabulary",
+        "Lexicon",
+        "Similarity (geometry)",
+        "Mental lexicon",
+        "Cognition",
+        "Semantics (computer science)",
+        "Word (group theory)",
+        "Latent semantic analysis",
+        "Concreteness",
+        "Measure (data warehouse)"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/cog64752.2025.11114175",
+      "title": "Controllable Procedural Generation of Race Track Surroundings for Iterative Level Design",
+      "authors": [
+        "Petr Šimůnek",
+        "David Šosvald",
+        "Martin Kahoun",
+        "Vojtěch Černý"
+      ],
+      "year": 2025,
+      "venue": "2025 IEEE Conference on Games (CoG)",
+      "url": "https://doi.org/10.1109/cog64752.2025.11114175",
+      "abstract": "Modern racing games often take place on race tracks with huge surroundings, including forests, fields, cities, or mountains. While not being important to the racing itself, the surroundings must be present, dense, and detailed to enhance the gameplay feel, and must be performance-optimized for a smooth gaming experience. Creating these surroundings manually is a very laborious task, even for a skilled level designer. Also, manual design makes it prohibitively expensive to modify the track layout later. This makes the surroundings an ideal candidate for procedural content generation, which is nowadays extensively used in many areas of video game level design. In this paper, we present a method for controllable track surroundings generation. It generates a one square kilometer map in a matter of minutes, orders of magnitude faster than the manual process. It features several different biomes, various types of assets and vegetation, and can be further extended using custom assets. The generated race tracks and their surroundings are easily adjustable, making the level design iterative and easier to perfect.",
+      "keywords": [
+        "Computer science",
+        "Race (biology)",
+        "Track (disk drive)",
+        "Procedural modeling",
+        "Human–computer interaction",
+        "Artificial intelligence",
+        "Gender studies",
+        "Sociology"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1145/3746449",
+      "title": "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
+      "authors": [
+        "Jingtao Ding",
+        "Yunke Zhang",
+        "Yu Shang",
+        "Y. Zhang",
+        "Zefang Zong",
+        "Jie Feng",
+        "Yuan Yuan",
+        "Hongyuan Su",
+        "Nian Li",
+        "Nicholas Sukiennik",
+        "Fengli Xu",
+        "Yong Li"
+      ],
+      "year": 2025,
+      "venue": "ACM Computing Surveys",
+      "url": "https://doi.org/10.1145/3746449",
+      "abstract": "The concept of world models has garnered significant attention due to advancements in multimodal large language models such as GPT-4 and video generation models such as Sora, which are central to the pursuit of artificial general intelligence. This survey offers a comprehensive review of the literature on world models. Generally, world models are regarded as tools for either understanding the present state of the world or predicting its future dynamics. This review presents a systematic categorization of world models, emphasizing two primary functions: (1) constructing internal representations to understand the mechanisms of the world, and (2) predicting future states to simulate and guide decision-making. Initially, we examine the current progress in these two categories. We then explore the application of world models in key domains, including autonomous driving, robotics, and social simulacra, with a focus on how each domain utilizes these aspects. Finally, we outline key challenges and provide insights into potential future research directions. We summarize the representative papers along with their code repositories in https://github.com/tsinghua-fib-lab/World-Model.",
+      "keywords": [
+        "Computer science",
+        "Data science"
+      ],
+      "citation_count": 57,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2025.3530419",
+      "title": "Procedural Content Generation for Cooperative Games—A Systematic Review",
+      "authors": [
+        "José Bernardo Rocha",
+        "Rui Prada"
+      ],
+      "year": 2025,
+      "venue": "IEEE Transactions on Games",
+      "url": "https://doi.org/10.1109/tg.2025.3530419",
+      "abstract": "In this article, we conduct a systematic review on procedural content generation (PCG) for cooperative games. Our main goal was exploring the state of the art in this area of research, and, in particular, its application to level generation for cooperative games. Another objective was determining how generating content for cooperative games could be different from generating content for other types of games. Our results showed a lack of research in this particular application of PCG. Despite this, we found a variety of use cases of PCG for cooperative games, most of them related to autonomous generation and co-creative and mixed-initiative design. In addition, we found a variety of methods and techniques being used to generate levels for cooperative games that covered the broad categories we used to condense this information. Concerning the differences between generating content for cooperative games and generating content for other types of games, the studies we found suggested that PCG for cooperative games should take into account the design specificities of cooperative games—the types of tasks, cooperative game design patterns and game mechanics used to incentivize and support cooperative gameplay.",
+      "keywords": [
+        "Content (measure theory)",
+        "Computer science",
+        "Mathematics"
+      ],
+      "citation_count": 1,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1145/3402942.3409599",
+      "title": "Procedural Generation of Interactive Stories using Language Models",
+      "authors": [
+        "Jonas Freiknecht",
+        "Wolfgang Effelsberg"
+      ],
+      "year": 2020,
+      "venue": "International Conference on Foundations of Digital Games",
+      "url": "https://doi.org/10.1145/3402942.3409599",
+      "abstract": "In this paper we introduce an architecture, an implementation and an evaluation of a system for the automatic creation of interactive stories for games. Our goal is to algorithmically create a branched story for the entire game; in each game run a different variant is generated. The architecture uses natural language processing (NLP) to generate meaningful stories. For NLP we use a statistical language model based on a neural network (Generative Pretrained Transformer, GPT-2). The basic architecture generates stories with too many characters which tend to get incoherent for longer texts, so we add a component restricting the number of persons and improving the consistency. The system is initialized with a hand-written game introduction that defines the main characters and the inventory; it also sets the goals for the game. From that text the remainder of the game story is generated algorithmically. We have fully implemented our system, and we report initial, encouraging experimental results.",
+      "keywords": [
+        "Computer science",
+        "Architecture",
+        "Transformer",
+        "Artificial intelligence",
+        "Natural language processing",
+        "Consistency (knowledge bases)",
+        "Generative grammar",
+        "Natural language",
+        "Component (thermodynamics)",
+        "Language model",
+        "Video game",
+        "Programming language",
+        "Multimedia"
+      ],
+      "citation_count": 39,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.52202/079017-0885",
+      "title": "GTBench: Uncovering the Strategic Reasoning Capabilities of LLMs via Game-Theoretic Evaluations",
+      "authors": [
+        "Mohit Bansal",
+        "Tianlong Chen",
+        "James Diffenderfer",
+        "Jinhao Duan",
+        "Bhavya Kailkhura",
+        "Elias Stengel-Eskin",
+        "Lichao Sun",
+        "Kaidi Xu",
+        "Renming Zhang"
+      ],
+      "year": 2024,
+      "venue": null,
+      "url": "https://doi.org/10.52202/079017-0885",
+      "abstract": "",
+      "keywords": [
+        "Strategic planning",
+        "Key (lock)",
+        "Motivated reasoning",
+        "Process (computing)",
+        "Government (linguistics)"
+      ],
+      "citation_count": 6,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "gtbench_2024"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2510.00233",
+      "title": "Differentiable Autoencoding Neural Operator for Interpretable and Integrable Latent Space Modeling",
+      "authors": [
+        "Siva Viknesh",
+        "Amirhossein Arzani"
+      ],
+      "year": 2025,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2510.00233",
+      "abstract": "Scientific machine learning has enabled the extraction of physical insights from high-dimensional spatiotemporal flow data using linear and nonlinear dimensionality reduction techniques. Despite these advances, achieving interpretability within the latent space remains a challenge. To address this, we propose the DIfferentiable Autoencoding Neural Operator (DIANO), a deterministic autoencoding neural operator framework that constructs physically interpretable latent spaces for both dimensional and geometric reduction, with the provision to enforce differential governing equations directly within the latent space. Built upon neural operators, DIANO compresses high-dimensional input functions into a low-dimensional latent space via spatial coarsening through an encoding neural operator and subsequently reconstructs the original inputs using a decoding neural operator through spatial refinement. We assess DIANO's latent space interpretability and performance in dimensionality reduction against baseline models, including the Convolutional Neural Operator and standard autoencoders. Furthermore, a fully differentiable partial differential equation (PDE) solver is developed and integrated within the latent space, enabling the temporal advancement of both high- and low-fidelity PDEs, thereby embedding physical priors into the latent dynamics. We further investigate various PDE formulations, including the 2D unsteady advection-diffusion and the 3D Pressure-Poisson equation, to examine their influence on shaping the latent flow representations. Benchmark problems considered include flow past a 2D cylinder, flow through a 2D symmetric stenosed artery, and a 3D patient-specific coronary artery. These case studies demonstrate DIANO's capability to solve PDEs within a latent space that facilitates both dimensional and geometrical reduction while allowing latent interpretability.",
+      "keywords": [
+        "Interpretability",
+        "Operator (biology)",
+        "Differentiable function",
+        "Solver",
+        "Partial differential equation",
+        "Dimensionality reduction",
+        "Benchmark (surveying)",
+        "Artificial neural network",
+        "Pattern recognition (psychology)"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2024.3392670",
+      "title": "Procedural Level Generation in Educational Games From Natural Language Instruction",
+      "authors": [
+        "Vikram Kumaran",
+        "Dan Carpenter",
+        "Jonathan Rowe",
+        "Bradford Mott",
+        "James C. Lester"
+      ],
+      "year": 2024,
+      "venue": "IEEE Transactions on Games",
+      "url": "https://doi.org/10.1109/tg.2024.3392670",
+      "abstract": "In the evolving field of mixed-initiative game design, where procedural content generation plays a pivotal role, establishing a comprehensive approach that empowers nontechnical designers to actively shape content generation is essential. Recent developments in large language models (LLMs) significantly alter the landscape of automated text-based content generation. These models offer a significant advantage in mixed-initiative procedural level generation by providing designers with intuitive, natural language (NL) interfaces. The framework presented in this article interprets NL inputs, detailing level design constraints and optimization goals, to aid in the cooperative development of game levels for a strategy game aimed at environmental sustainability education. It enables designers to articulate their vision concerning the problem domain, goal metrics, and desired difficulty level through a textual description. By utilizing LLMs, the framework extracts semantic constraints and optimization objectives, which are then used to generate candidate game levels. The efficacy of these levels is assessed by game-playing agents trained through advanced deep reinforcement learning methods, ensuring alignment with the designer's original specifications. We further evaluate our framework with both experts and nonexperts in designing levels for our strategy game. Their detailed responses confirm that our framework effectively translates NL descriptions into playable game levels, accurately capturing the designers' intended objectives.",
+      "keywords": [
+        "Computer science",
+        "Natural (archaeology)",
+        "Educational game",
+        "Mathematics education",
+        "Psychology",
+        "Multimedia",
+        "History"
+      ],
+      "citation_count": 4,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1287/mnsc.2023.4798",
+      "title": "A Mean Field Games Model for Cryptocurrency Mining",
+      "authors": [
+        "Zongxi Li",
+        "A. Max Reppen",
+        "Ronnie Sircar"
+      ],
+      "year": 2025,
+      "venue": "Management Science, 2024, Vol 70, Issue 4, p2188",
+      "url": "https://openurl.ebsco.com/contentitem/doi%3A10.1287%252Fmnsc.2023.4798?sid=ebsco:ebsco.com:search&id=ebsco:doi:10.1287%2Fmnsc.2023.4798&bquery=Bitcoin&page=8&link_origin=&searchDescription=&limiters=RV:N,DT:2015-&sortBy=date",
+      "abstract": "We propose a mean field game model to study the question of how centralization of reward and computational power occur in Bitcoin-like cryptocurrencies. Miners compete against each other for mining rewards by increasing their computational power. This leads to a novel mean field game of jump intensity control, which we solve explicitly for miners maximizing exponential utility and handle numerically in the case of miners with power utilities. We show that the heterogeneity of their initial wealth distribution leads to greater imbalance of the reward distribution, and increased wealth heterogeneity over time, or a “rich get richer” effect. This concentration phenomenon is aggravated by a higher Bitcoin mining reward and reduced by competition. Additionally, an advantaged miner with cost advantages such as access to cheaper electricity, contributes a significant amount of computational power in equilibrium, unaffected by competition from less efficient miners. Hence, cost efficiency can also result in the type of centralization seen among miners of cryptocurrencies. This paper was accepted by Kay Giesecke, finance. Funding: A. M. Reppen is partly supported by the Swiss National Science Foundation [Grant SNF 181815]. Supplemental Material: The data files are available at https://doi.org/10.1287/mnsc.2023.4798 .",
+      "keywords": [
+        "Cryptocurrency",
+        "Competition (biology)",
+        "Field (mathematics)",
+        "Jump",
+        "Distribution (mathematics)",
+        "Economics",
+        "Game theory",
+        "Computer science",
+        "Microeconomics",
+        "Econometrics",
+        "Mathematics",
+        "Computer security"
+      ],
+      "citation_count": 51,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1145/3723498.3723748",
+      "title": "Game Balance Through Procedural Content Generation",
+      "authors": [
+        "Mathias Babin",
+        "Michael Katchabaw"
+      ],
+      "year": 2025,
+      "venue": "International Conference on Foundations of Digital Games",
+      "url": "https://dl.acm.org/doi/pdf/10.1145/3723498.3723748",
+      "abstract": "This preliminary work explores procedural content generation as a method for improving game balance. Traditionally, achieving balance requires designers to fine-tune parameters to ensure interactions between game elements promotes equitable gameplay. Rather than directly modifying existing elements, we propose generating new elements that influence these interactions, restoring equilibrium in otherwise unbalanced systems. As a case study, we utilize Pokémon’s turn-based RPG combat system, which is defined by inherent type, move, and stat advantages. Our approach trains a reinforcement learning agent to generate new Pokémon that, when introduced, balances the win rates across all existing Pokémon.",
+      "keywords": [
+        "Balance (ability)",
+        "Computer science",
+        "Physical medicine and rehabilitation",
+        "Medicine"
+      ],
+      "citation_count": 1,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2607.14076",
+      "title": "From Pixels to States: Rethinking Interactive World Models as Game Engines",
+      "authors": [
+        "Zhen Li",
+        "Zian Meng",
+        "Shuwei Shi",
+        "Mingliang Zhai",
+        "Jiaming Tan",
+        "Chuanhao Li",
+        "Kaipeng Zhang"
+      ],
+      "year": 2026,
+      "venue": null,
+      "url": "https://arxiv.org/pdf/2607.14076v1",
+      "abstract": "Building interactive worlds that respond coherently to player actions has long been a shared goal of computer graphics, games, and artificial intelligence. Recent video generative models provide a data-driven route toward this goal by predicting future observations conditioned on user actions, and are increasingly regarded as potential next-generation game engines. Realizing a genuinely interactive game world, however, requires interaction outcomes that follow rules over evolving game conditions, consequences that persist over long horizons, and a generation loop that operates in real time. Conventional game engines realize these properties through a recurrent action-state-observation loop, in which player actions update an explicit game state according to predefined rules and observations are rendered from the resulting state. Taking this loop as an organizing lens, this paper examines interactive game world modeling along four dimensions: player action control, game state dynamics, state-observation persistence, and real-time interactive generation. For each dimension, we start from the capabilities required by an interactive game world, group existing approaches into representative families, and discuss the strengths and trade-offs of each family. Complementing this analysis, we present a scalable data engine for Black Myth: Wukong that collects over 90 hours of gameplay with frame-aligned player actions, ground-truth game states, and visual observations, together with structured and semantic annotations, as a resource for state-aware game world modeling. We hope this paper offers a clear picture of where the field stands and fosters progress toward interactive game worlds.",
+      "keywords": [],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "title": "AvalonBench: Evaluating LLMs Playing the Game of Avalon",
+      "authors": [
+        "Jonathan Light",
+        "Min Cai",
+        "Sheng Shen",
+        "Ziniu Hu"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2310.05036",
+      "abstract": "In this paper, we explore the potential of Large Language Models (LLMs) Agents in playing the strategic social deduction game, Resistance Avalon. Players in Avalon are challenged not only to make informed decisions based on dynamically evolving game phases, but also to engage in discussions where they must deceive, deduce, and negotiate with other players. These characteristics make Avalon a compelling test-bed to study the decision-making and language-processing capabilities of LLM Agents. To facilitate research in this line, we introduce AvalonBench - a comprehensive game environment tailored for evaluating multi-agent LLM Agents. This benchmark incorporates: (1) a game environment for Avalon, (2) rule-based bots as baseline opponents, and (3) ReAct-style LLM agents with tailored prompts for each role. Notably, our evaluations based on AvalonBench highlight a clear capability gap. For instance, models like ChatGPT playing good-role got a win rate of 22.2% against rule-based bots playing evil, while good-role bot achieves 38.2% win rate in the same setting. We envision AvalonBench could be a good test-bed for developing more advanced LLMs (with self-playing) and agent frameworks that can effectively model the layered complexities of such game environments.",
+      "keywords": [
+        "Negotiation",
+        "Test (biology)",
+        "Style (visual arts)",
+        "Computer science",
+        "Benchmark (surveying)",
+        "Computer security",
+        "Video game",
+        "Political science",
+        "Law",
+        "Multimedia",
+        "Ecology"
+      ],
+      "citation_count": 16,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 2,
+      "survey_ref_hints": [
+        "avalonbench_2023"
+      ]
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2502.12128",
+      "title": "LaM-SLidE: Latent Space Modeling of Spatial Dynamical Systems via Linked Entities",
+      "authors": [
+        "Florian Sestak",
+        "Artur P. Toshev",
+        "Andreas Fürst",
+        "Günter Klambauer",
+        "Andreas Mayr",
+        "J. Brandstetter"
+      ],
+      "year": 2025,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2502.12128v5",
+      "abstract": "Generative models are spearheading recent progress in deep learning, showcasing strong promise for trajectory sampling in dynamical systems as well. However, whereas latent space modeling paradigms have transformed image and video generation, similar approaches are more difficult for most dynamical systems. Such systems -- from chemical molecule structures to collective human behavior -- are described by interactions of entities, making them inherently linked to connectivity patterns, entity conservation, and the traceability of entities over time. Our approach, LaM-SLidE (Latent Space Modeling of Spatial Dynamical Systems via Linked Entities), bridges the gap between: (1) keeping the traceability of individual entities in a latent system representation, and (2) leveraging the efficiency and scalability of recent advances in image and video generation, where pre-trained encoder and decoder enable generative modeling directly in latent space. The core idea of LaM-SLidE is the introduction of identifier representations (IDs) that enable the retrieval of entity properties and entity composition from latent system representations, thus fostering traceability. Experimentally, across different domains, we show that LaM-SLidE performs favorably in terms of speed, accuracy, and generalizability. Code is available at https://github.com/ml-jku/LaM-SLidE .",
+      "keywords": [
+        "Space (punctuation)",
+        "Computer science",
+        "Geography"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/cog57401.2023.10333195",
+      "title": "End-to-End Procedural Level Generation in Educational Games with Natural Language Instruction",
+      "authors": [
+        "Vikram Kumaran",
+        "Dan Carpenter",
+        "Jonathan Rowe",
+        "Bradford Mott",
+        "James C. Lester"
+      ],
+      "year": 2023,
+      "venue": "2023 IEEE Conference on Games (CoG)",
+      "url": "https://doi.org/10.1109/cog57401.2023.10333195",
+      "abstract": "As the role of procedural content generation in mixed-initiative game design continues to grow, it is crucial to develop an end-to-end approach that enables non-technical designers to artfully guide content generation. Recent advances in large language models, such as GPT-4, are rapidly transforming the landscape of automated generation of text-based content. Large language models have significant potential for mixed-initiative procedural level generation by providing natural language interfaces for designers. This paper presents an end-to-end procedural level generation framework that interprets natural language descriptions of level design constraints and optimization objectives to facilitate the collaborative creation of game levels for a strategy game focused on environmental sustainability education. The framework enables designers to specify a problem domain, goal metrics, and target difficulty via natural language description. It then employs large language models for the semantic extraction of constraints and optimization targets to drive the generation of candidate levels. Generated game levels are evaluated via game-playing agents trained with deep reinforcement learning techniques to ensure the game levels meet the level designer’s specifications. Manual evaluation by authors shows that the proposed framework can effectively transform designers’ natural language descriptions into fully playable game levels that reflect their intended design objectives.",
+      "keywords": [
+        "Computer science",
+        "Natural language",
+        "Natural language generation",
+        "Domain (mathematical analysis)",
+        "Game design",
+        "Human–computer interaction",
+        "Natural language understanding",
+        "Multimedia",
+        "Artificial intelligence"
+      ],
+      "citation_count": 13,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2305.14992",
+      "title": "Reasoning with Language Model is Planning with World Model",
+      "authors": [
+        "Shibo Hao",
+        "Yi Gu",
+        "Haodi Ma",
+        "Joshua Jiahua Hong",
+        "Zhen Wang",
+        "Daisy Zhe Wang",
+        "Zhiting Hu"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2305.14992",
+      "abstract": "Large language models (LLMs) have shown remarkable reasoning capabilities, especially when prompted to generate intermediate reasoning steps (e.g., Chain-of-Thought, CoT). However, LLMs can still struggle with problems that are easy for humans, such as generating action plans for executing tasks in a given environment, or performing complex math, logical, and commonsense reasoning. The deficiency stems from the key fact that LLMs lack an internal $\\textit{world model}$ to predict the world $\\textit{state}$ (e.g., environment status, intermediate variable values) and simulate long-term outcomes of actions. This prevents LLMs from performing deliberate planning akin to human brains, which involves exploring alternative reasoning paths, anticipating future states and rewards, and iteratively refining existing reasoning steps. To overcome the limitations, we propose a new LLM reasoning framework, $\\underline{R}$easoning vi$\\underline{a}$ $\\underline{P}$lanning $\\textbf{(RAP)}$. RAP repurposes the LLM as both a world model and a reasoning agent, and incorporates a principled planning algorithm (based on Monto Carlo Tree Search) for strategic exploration in the vast reasoning space. During reasoning, the LLM (as agent) incrementally builds a reasoning tree under the guidance of the LLM (as world model) and task-specific rewards, and obtains a high-reward reasoning path efficiently with a proper balance between exploration $\\textit{vs.}$ exploitation. We apply RAP to a variety of challenging reasoning problems including plan generation, math reasoning, and logical inference. Empirical results on these tasks demonstrate the superiority of RAP over various strong baselines, including CoT and least-to-most prompting with self-consistency. RAP on LLAMA-33B surpasses CoT on GPT-4 with 33% relative improvement in a plan generation setting.",
+      "keywords": [
+        "Deductive reasoning",
+        "Computer science",
+        "Commonsense reasoning",
+        "Inference",
+        "Reasoning system",
+        "Consistency (knowledge bases)",
+        "Tree (set theory)",
+        "Action (physics)",
+        "Key (lock)",
+        "Abductive reasoning",
+        "Artificial intelligence",
+        "Task (project management)",
+        "Cognitive science",
+        "Psychology",
+        "Mathematics",
+        "Management",
+        "Economics"
+      ],
+      "citation_count": 602,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/cog60054.2024.10645619",
+      "title": "ChatPCG: Large Language Model-Driven Reward Design for Procedural Content Generation",
+      "authors": [
+        "In-Chang Baek",
+        "Taehee Park",
+        "Jin-Ha Noh",
+        "Cheong-mok Bae",
+        "Kyung-Joong Kim"
+      ],
+      "year": 2024,
+      "venue": "2024 IEEE Conference on Games (CoG)",
+      "url": "https://doi.org/10.1109/cog60054.2024.10645619",
+      "abstract": "Driven by the rapid growth of machine learning, recent advances in game artificial intelligence (AI) have significantly impacted productivity across various gaming genres. Reward design plays a pivotal role in training game AI models, wherein researchers implement concepts of specific reward functions. However, despite the presence of AI, the reward design process predominantly remains in the domain of human experts, as it is heavily reliant on their creativity and engineering skills. Therefore, this paper proposes ChatPCG, a large language model (LLM)-driven reward design framework. It leverages humanlevel insights, coupled with game expertise, to generate rewards tailored to specific game features automatically. Moreover, ChatPCG is integrated with deep reinforcement learning, demonstrating its potential for multiplayer game content generation tasks. The results suggest that the proposed LLM exhibits the capability to comprehend game mechanics and content generation tasks, enabling tailored content generation for a specified game. This study not only highlights the potential for improving accessibility in content generation but also aims to streamline the game AI development process.",
+      "keywords": [
+        "Computer science",
+        "Language model",
+        "Procedural modeling",
+        "Content (measure theory)",
+        "Natural language processing",
+        "Artificial intelligence"
+      ],
+      "citation_count": 8,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2608.09449",
+      "title": "Sekai2: From World Exploration to Interactive World Modeling",
+      "authors": [
+        "Kang He",
+        "Wenshuo Peng",
+        "Zihui Gao",
+        "Jiaming Tan",
+        "Kaipeng Zhang",
+        "Yongtao Ge"
+      ],
+      "year": 2026,
+      "venue": null,
+      "url": "https://arxiv.org/pdf/2608.09449v2",
+      "abstract": "Video world models must capture how scenes evolve over time and across viewpoints. Training them for long-horizon generation and camera control therefore benefits from long videos paired with camera trajectories and temporally grounded semantics. Existing corpora rarely offer the three together: large-scale web video provides broad visual diversity but no trajectories or time-aligned text, while pose-annotated datasets are typically short-range or reconstruction-oriented. We introduce Sekai2, a multi-source real-world video dataset that carries the world-exploration footage of Sekai toward interactive world modeling. The release contains 128,892 clips totaling 2,826 hours from 10,428 source videos across 113 countries or regions, and is deliberately weighted toward sustained observation: under a common 120-second decomposition, 43,594 segments reach the full two minutes and account for 51.4% of all footage. Every clip includes a released camera trajectory and hierarchical annotations disentangling subject motion, environment dynamics, static scene content, and camera behavior, resulting in 649,597 temporally grounded segments. Crucially, we further introduce 982 panoramic sequences captured along non-linear trajectories with loops and revisits. These revisits provide repeated observations of the same locations across time and viewpoints, offering essential supervision for learning persistent scene representations, long-term spatial memory, and geometrically consistent world models. Corpus-scale analyses demonstrate complete pose-and-caption coverage, broad geographic and semantic diversity, varied camera trajectories, and highly non-redundant temporal descriptions. Together, these properties make Sekai2 a scalable resource for long-horizon video generation, camera-controllable synthesis, and interactive world-model pre-training.",
+      "keywords": [],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2308.03688",
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "authors": [
+        "Xiao Liu",
+        "Hao Yu",
+        "Hanchen Zhang",
+        "Yifan Xu",
+        "Xuanyu Lei",
+        "Hanyu Lai",
+        "Yu‐Cheng Gu",
+        "Hangliang Ding",
+        "Kaiwen Men",
+        "Kejuan Yang",
+        "Shudan Zhang",
+        "Xiang Deng",
+        "Aohan Zeng",
+        "Zhengxiao Du",
+        "Chenhui Zhang",
+        "Sheng Shen",
+        "Tianjun Zhang",
+        "Yu Su",
+        "Huan Sun",
+        "Minlie Huang",
+        "Yuxiao Dong",
+        "Jie Tang"
+      ],
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2308.03688v3",
+      "abstract": "The potential of Large Language Model (LLM) as agents has been widely acknowledged recently. Thus, there is an urgent need to quantitatively \\textit{evaluate LLMs as agents} on challenging tasks in interactive environments. We present AgentBench, a multi-dimensional benchmark that consists of 8 distinct environments to assess LLM-as-Agent's reasoning and decision-making abilities. Our extensive test over \\num API-based and open-sourced (OSS) LLMs shows that, while top commercial LLMs present a strong ability of acting as agents in complex environments, there is a significant disparity in performance between them and many OSS competitors that are no larger than 70B. We identify the typical reasons of failures in environments and LLMs, showing that poor long-term reasoning, decision-making, and instruction following abilities are the main obstacles for developing usable LLM agents. Improving instruction following and training on high quality multi-round alignment data could improve agent performance. And different from existing assumptions, training on code present ambivalent impacts on different agent tasks. Datasets, environments, and an integrated evaluation package for AgentBench are released at https://github.com/THUDM/AgentBench.",
+      "keywords": [
+        "Competitor analysis",
+        "Computer science",
+        "Quality (philosophy)",
+        "Benchmark (surveying)",
+        "USable",
+        "Data science",
+        "Business",
+        "World Wide Web",
+        "Marketing",
+        "Geography"
+      ],
+      "citation_count": 369,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "agentbench_2023"
+      ]
+    },
+    {
+      "paper_id": "paper:10.5281/zenodo.19983308",
+      "title": "A Recurrent Latent Variable Model for Sequential Data",
+      "authors": [
+        "Jun‐Young Chung",
+        "Kyle Kastner",
+        "Laurent Dinh",
+        "Kratarth Goel",
+        "Aaron Courville",
+        "Yoshua Bengio"
+      ],
+      "year": 2026,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/1506.02216.pdf",
+      "abstract": "In this paper, we explore the inclusion of latent random variables into the hidden state of a recurrent neural network (RNN) by combining the elements of the variational autoencoder. We argue that through the use of high-level latent random variables, the variational RNN (VRNN) can model the kind of variability observed in highly structured sequential data such as natural speech. We empirically evaluate the proposed model against other related sequential models on four speech datasets and one handwriting dataset. Our results show the important roles that latent random variables can play in the RNN dynamics.",
+      "keywords": [
+        "Latent variable",
+        "Autoencoder",
+        "Recurrent neural network",
+        "Computer science",
+        "Artificial intelligence",
+        "Hidden variable theory",
+        "Latent variable model",
+        "State variable",
+        "Machine learning",
+        "Artificial neural network",
+        "Pattern recognition (psychology)"
+      ],
+      "citation_count": 132,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/bts-i2c63534.2024.10941760",
+      "title": "Hybrid Approach for Procedural Level Generation for 2D Platformer Game",
+      "authors": [
+        "Jos Timanta Tarigan",
+        "Erick Yudha Pratama Sukku",
+        "Sri Melvani Hardi"
+      ],
+      "year": 2024,
+      "venue": "2024 Beyond Technology Summit on Informatics International Conference (BTS-I2C)",
+      "url": "https://doi.org/10.1109/bts-i2c63534.2024.10941760",
+      "abstract": "This research proposes a hybrid approach for a procedural level generation for our 2D platformer game. The method integrates manual level creation and procedural algorithm to generate a complete level for 2D rouge-like platformer game including the overall structure of the level, corridors, enemies, obstacles, and items. The proposed method also allowed user-input parameters that define requirement for the level such as difficulty, room numbers, enemy and item spawn probability. We developed the proposed method and implemented the system in our game, Lost Labyrinth Rouge's Odyssey. We implemented the system specifically to fit the mechanic and rules of our game. To test the performance of the system to develop a level, we performed a usability test by inviting users to play the game multiple times. The result and feedback from the respondents show that most the system was able to generate a good playability for a 2D platformer dungeon game.",
+      "keywords": [
+        "Computer science",
+        "Procedural modeling",
+        "Artificial intelligence"
+      ],
+      "citation_count": 1,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52733.2024.01397",
+      "title": "Driving Into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving",
+      "authors": [
+        "Yuqi Wang",
+        "Jiawei He",
+        "Lue Fan",
+        "Hongxin Li",
+        "Yuntao Chen",
+        "Zhaoxiang Zhang"
+      ],
+      "year": 2024,
+      "venue": "Computer Vision and Pattern Recognition",
+      "url": "https://doi.org/10.1109/cvpr52733.2024.01397",
+      "abstract": "In autonomous driving, predicting future events in advance and evaluating the foreseeable risks empowers autonomous vehicles to better plan their actions, enhancing safety and efficiency on the road. To this end, we propose Drive-Wm, the first driving world model compatible with existing end-to-end planning models. Through a joint spatial-temporal modeling facilitated by view factorization, our model generates high-fidelity multiview videos in driving scenes. Building on its powerful generation ability, we showcase the potential of applying the world model for safe driving planning for the first time. Particularly, our Drive-Wm enables driving into multiple futures based on distinct driving maneuvers, and determines the optimal trajectory according to the image-based rewards. Evaluation on real-world driving datasets verifies that our method could generate high-quality, consistent, and controllable multiview videos, opening up possibilities for real-world simulations and safe planning.",
+      "keywords": [
+        "Computer science",
+        "Computer vision",
+        "Artificial intelligence"
+      ],
+      "citation_count": 217,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2407.09013",
+      "title": "Procedural Content Generation via Generative Artificial Intelligence",
+      "authors": [
+        "Xinyu Mao",
+        "Wanli Yu",
+        "Kazunori D Yamada",
+        "Michael R. Zielewski"
+      ],
+      "year": 2024,
+      "venue": "arXiv.org",
+      "url": "https://arxiv.org/pdf/2407.09013",
+      "abstract": "The attempt to utilize machine learning in PCG has been made in the past. In this survey paper, we investigate how generative artificial intelligence (AI), which saw a significant increase in interest in the mid-2010s, is being used for PCG. We review applications of generative AI for the creation of various types of content, including terrains, items, and even storylines. While generative AI is effective for PCG, one significant issues it faces is that building high-performance generative AI requires vast amounts of training data. Because content generally highly customized, domain-specific training data is scarce, and straightforward approaches to generative AI models may not work well. For PCG research to advance further, issues related to limited training data must be overcome. Thus, we also give special consideration to research that addresses the challenges posed by limited training data.",
+      "keywords": [
+        "Generative grammar",
+        "Content (measure theory)",
+        "Artificial intelligence",
+        "Computer science",
+        "Mathematics"
+      ],
+      "citation_count": 7,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2019.2931044",
+      "title": "A Multifaceted Surrogate Model for Search-Based Procedural Content Generation",
+      "authors": [
+        "Daniel Karavolos",
+        "Antonios Liapis",
+        "Georgios N. Yannakakis"
+      ],
+      "year": 2019,
+      "venue": "IEEE Transactions on Games",
+      "url": "https://doi.org/10.1109/tg.2019.2931044",
+      "abstract": "This paper proposes a framework for the procedural generation of level and ruleset components of games via a surrogate model that assesses their quality and complementarity. The surrogate model combines level and ruleset elements as input and gameplay outcomes as output, thus constructing a mapping between three different facets of games. Using this model as a surrogate for expensive gameplay simulations, a search-based generator can adapt content toward a target gameplay outcome. Using a shooter game as the target domain, this paper explores how parameters of the players' character classes can be mapped to both the level's representation and the gameplay outcomes of balance and match duration. The surrogate model is built on a deep learning architecture, trained on a large corpus of randomly generated sets of levels, classes, and simulations from game playing agents. Results show that a search-based generative approach can adapt character classes, levels, or both toward designer-specified targets. The model can thus act as a design assistant or be integrated in a mixed-initiative tool. Most importantly, the combination of three game facets into the model allows it to identify the synergies between levels, rules, and gameplay and orchestrate the generation of the former two toward desired outcomes.",
+      "keywords": [
+        "procedural content generation (PCG)",
+        "Weapons",
+        "surrogate model",
+        "Deep learning",
+        "Computational modeling",
+        "search-based PCG",
+        "Adaptation models",
+        "Generators",
+        "shooter games",
+        "Games",
+        "Measurement",
+        "Computer science",
+        "Surrogate model",
+        "Complementarity (molecular biology)",
+        "Character (mathematics)",
+        "Generative model",
+        "Representation (politics)",
+        "Generative grammar",
+        "Human–computer interaction",
+        "Game design",
+        "Artificial intelligence",
+        "Outcome (game theory)",
+        "Domain (mathematical analysis)",
+        "Machine learning",
+        "Mathematics"
+      ],
+      "citation_count": 24,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2206.08853",
+      "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
+      "authors": [
+        "Linxi Fan",
+        "Guanzhi Wang",
+        "Yunfan Jiang",
+        "Ajay Mandlekar",
+        "Yuncong Yang",
+        "Haoyi Zhu",
+        "Andrew Tang",
+        "De-An Huang",
+        "Yuke Zhu",
+        "Anima Anandkumar"
+      ],
+      "year": 2022,
+      "venue": "arXiv (Cornell University)",
+      "url": "https://arxiv.org/pdf/2206.08853v2",
+      "abstract": "Autonomous agents have made great strides in specialist domains like Atari games and Go. However, they typically learn tabula rasa in isolated environments with limited and manually conceived objectives, thus failing to generalize across a wide spectrum of tasks and capabilities. Inspired by how humans continually learn and adapt in the open world, we advocate a trinity of ingredients for building generalist agents: 1) an environment that supports a multitude of tasks and goals, 2) a large-scale database of multimodal knowledge, and 3) a flexible and scalable agent architecture. We introduce MineDojo, a new framework built on the popular Minecraft game that features a simulation suite with thousands of diverse open-ended tasks and an internet-scale knowledge base with Minecraft videos, tutorials, wiki pages, and forum discussions. Using MineDojo's data, we propose a novel agent learning algorithm that leverages large pre-trained video-language models as a learned reward function. Our agent is able to solve a variety of open-ended tasks specified in free-form language without any manually designed dense shaping reward. We open-source the simulation suite, knowledge bases, algorithm implementation, and pretrained models (https://minedojo.org) to promote research towards the goal of generally capable embodied agents.",
+      "keywords": [
+        "Suite",
+        "Computer science",
+        "Embodied cognition",
+        "Scalability",
+        "Variety (cybernetics)",
+        "Scale (ratio)",
+        "The Internet",
+        "Architecture",
+        "World Wide Web",
+        "Multitude",
+        "Exploit",
+        "Function (biology)",
+        "Human–computer interaction",
+        "Artificial intelligence",
+        "Data science",
+        "Multimedia",
+        "Database"
+      ],
+      "citation_count": 400,
+      "source": "survey_expansion",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 1,
+      "survey_ref_hints": [
+        "minedojo_2022"
+      ]
+    },
+    {
+      "paper_id": "paper:10.1109/icstcc66753.2025.11240246",
+      "title": "Evaluating Latent Space Modeling in BiLSTM Autoencoders for Time Series Anomaly Detection",
+      "authors": [
+        "Andrei-Alexandru Mariciuc",
+        "Lavinia Ferariu"
+      ],
+      "year": 2025,
+      "venue": null,
+      "url": "https://doi.org/10.1109/icstcc66753.2025.11240246",
+      "abstract": "The importance of anomaly detection in time-series data is widely acknowledged in diverse sectors such as industrial processes, healthcare systems, and financial markets. Solutions to this problem are diverse but can be broadly classified as either classical statistical methods or more recent machine learning techniques that leverage data to detect anomalies. The primary goal of this paper was to examine the strengths and weaknesses of a specific type of anomaly detection that relies on data reconstruction using autoencoders. To this end, we sought to evaluate the relative performance of various latent space modelling strategies employing a consistent BiLSTM architecture for the encoding and decoding components. The results indicate that reducing the latent space dimensionality without additional structural modifications leads to degraded performance. This degradation is more pronounced in deterministic methods compared to stochastic methods, which demonstrate better generalisation capabilities even at smaller latent space sizes. Additionally, the study reveals that incorporating a GAN-based methodology into reconstruction methods does not significantly enhance performance but can help when the design is cohesive. Also, when an appropriate threshold is selected, reconstruction methods achieve a high degree of reliability in minimising false negatives, where anomalies are incorrectly classified as normal.",
+      "keywords": [
+        "Anomaly detection",
+        "Leverage (statistics)",
+        "Curse of dimensionality",
+        "Reliability (semiconductor)",
+        "Time series",
+        "Pattern recognition (psychology)",
+        "Outlier",
+        "Space (punctuation)",
+        "Encoding (memory)"
+      ],
+      "citation_count": 0,
+      "source": "sciverse",
+      "parse_status": "abstract_only",
+      "survey_ref_count": 0,
+      "survey_ref_hints": []
     }
   ]
 }

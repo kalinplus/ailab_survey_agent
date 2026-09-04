@@ -1,113 +1,122 @@
 {
-  "task_id": "task_world_models_and_gamecraft_for_i_001",
+  "task_id": "task_world_models_for_games_a_survey_001",
   "events": [
     {
-      "year": 2018,
-      "category_id": "cat_world_models",
-      "category_name": "Generative Game World Simulation",
-      "paper_ids": [
-        "world_models_2018"
-      ],
-      "summary": "The paper showed that agents can be trained inside learned models of game environments such as CarRacing and VizDoom."
-    },
-    {
-      "year": 2019,
-      "category_id": "cat_game_agents",
-      "category_name": "Game Agents and Multi-Agent Reinforcement Learning",
-      "paper_ids": [
-        "alphastar_2019"
-      ],
-      "summary": "The work demonstrated grandmaster-level performance in StarCraft II and highlighted the value of competitive training ecosystems."
-    },
-    {
-      "year": 2019,
-      "category_id": "cat_game_agents",
-      "category_name": "Game Agents and Multi-Agent Reinforcement Learning",
-      "paper_ids": [
-        "dota2_2019"
-      ],
-      "summary": "The project showed that self-play can produce strong coordinated behavior in Dota 2."
-    },
-    {
-      "year": 2020,
-      "category_id": "cat_planning",
-      "category_name": "Planning and Control with Learned Models",
-      "paper_ids": [
-        "muzero_2020"
-      ],
-      "summary": "The system achieved strong results in Atari and classic board games while learning the model used for planning."
-    },
-    {
       "year": 2022,
-      "category_id": "cat_simulators",
-      "category_name": "Open-Ended Simulators and Game Intelligence Benchmarks",
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "minedojo_2022"
+        "paper:10.48550/arxiv.2206.08853"
       ],
-      "summary": "It provides a large open-ended game environment for embodied agent research."
+      "summary": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge"
     },
     {
       "year": 2023,
-      "category_id": "cat_planning",
-      "category_name": "Planning and Control with Learned Models",
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "dreamerv3_2023"
+        "paper:10.48550/arxiv.2302.01560"
       ],
-      "summary": "It broadened the empirical case for world-model agents across visual control and game-like domains."
+      "summary": "Describe, Explain, Plan and Select: Interactive Planning with Large Language Models Enables Open-World Multi-Task Agents"
     },
     {
       "year": 2023,
-      "category_id": "cat_world_models",
-      "category_name": "Generative Game World Simulation",
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "gaia1_2023"
+        "paper:10.48550/arxiv.2305.14992"
       ],
-      "summary": "Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation."
+      "summary": "Reasoning with Language Model is Planning with World Model"
     },
     {
       "year": 2023,
-      "category_id": "cat_simulators",
-      "category_name": "Open-Ended Simulators and Game Intelligence Benchmarks",
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "generative_agents_2023"
+        "paper:10.48550/arxiv.2308.03688"
       ],
-      "summary": "It illustrated how generative agents can populate interactive worlds with coherent behavior."
+      "summary": "AgentBench: Evaluating LLMs as Agents"
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2309.09777"
+      ],
+      "summary": "DriveDreamer: Towards Real-world-driven World Models for Autonomous Driving"
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2309.17080"
+      ],
+      "summary": "GAIA-1: A Generative World Model for Autonomous Driving"
     },
     {
       "year": 2024,
-      "category_id": "cat_world_models",
-      "category_name": "Generative Game World Simulation",
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "diffusion_world_models_2024"
+        "paper:10.1007/s11704-024-40231-1"
       ],
-      "summary": "It expands the design space of generative world models beyond recurrent latent dynamics."
+      "summary": "A survey on large language model based autonomous agents"
     },
     {
       "year": 2024,
-      "category_id": "cat_neural_engines",
-      "category_name": "Neural Game Engines and Interactive Environments",
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "gamengen_2024"
+        "paper:10.1109/cvpr52733.2024.01397"
       ],
-      "summary": "It framed diffusion models as neural game engines capable of interactive visual simulation."
+      "summary": "Driving Into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving"
     },
     {
       "year": 2024,
-      "category_id": "cat_neural_engines",
-      "category_name": "Neural Game Engines and Interactive Environments",
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "genie_2024"
+        "paper:10.48550/arxiv.2402.12348"
       ],
-      "summary": "It connected generative video modeling with interactive environment construction for agents and players."
+      "summary": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations"
     },
     {
-      "year": 2024,
-      "category_id": "cat_simulators",
-      "category_name": "Open-Ended Simulators and Game Intelligence Benchmarks",
+      "year": 2025,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
       "paper_ids": [
-        "unisim_2024"
+        "paper:10.1080/01621459.2023.2270750"
       ],
-      "summary": "It positions learned simulators as reusable environments for interactive intelligence."
+      "summary": "Latent Space Modeling of Hypergraph Data"
+    },
+    {
+      "year": 2025,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1145/3746449"
+      ],
+      "summary": "Understanding World or Predicting Future? A Comprehensive Survey of World Models"
+    },
+    {
+      "year": 2025,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1287/mnsc.2023.4798"
+      ],
+      "summary": "A Mean Field Games Model for Cryptocurrency Mining"
+    },
+    {
+      "year": 2025,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2501.08325"
+      ],
+      "summary": "GameFactory: Creating New Games with Generative Interactive Videos"
     }
   ]
 }

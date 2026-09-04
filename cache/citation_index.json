@@ -1,41 +1,353 @@
 {
-  "task_id": "task_world_models_and_gamecraft_final_001",
+  "task_id": "task_world_models_for_games_a_survey_001",
   "citations": [
     {
-      "paper_id": "world_models_2018"
+      "paper_id": "paper:10.1016/j.cma.2025.118394",
+      "bibtex_key": null,
+      "title": "Latent space modeling of parametric and time-dependent PDEs using neural ODEs",
+      "year": 2026
     },
     {
-      "paper_id": "dreamerv3_2023"
+      "paper_id": "paper:10.1109/cog64752.2025.11114105",
+      "bibtex_key": null,
+      "title": "IPCGRL: Language-Instructed Reinforcement Learning for Procedural Level Generation",
+      "year": 2025
     },
     {
-      "paper_id": "muzero_2020"
+      "paper_id": "paper:10.48550/arxiv.2309.17080",
+      "bibtex_key": null,
+      "title": "GAIA-1: A Generative World Model for Autonomous Driving",
+      "year": 2023
     },
     {
-      "paper_id": "gamengen_2024"
+      "paper_id": "paper:10.1145/3649921.3650016",
+      "bibtex_key": null,
+      "title": "On the Evaluation of Procedural Level Generation Systems",
+      "year": 2024
     },
     {
-      "paper_id": "genie_2024"
+      "paper_id": "paper:10.48550/arxiv.2206.14244",
+      "bibtex_key": null,
+      "title": "Masked World Models for Visual Control",
+      "year": 2022
     },
     {
-      "paper_id": "alphastar_2019"
+      "paper_id": "paper:10.48550/arxiv.2501.08325",
+      "bibtex_key": null,
+      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+      "year": 2025
     },
     {
-      "paper_id": "dota2_2019"
+      "paper_id": "paper:10.1080/01621459.2023.2270750",
+      "bibtex_key": null,
+      "title": "Latent Space Modeling of Hypergraph Data",
+      "year": 2025
     },
     {
-      "paper_id": "generative_agents_2023"
+      "paper_id": "paper:10.48550/arxiv.2309.09777",
+      "bibtex_key": null,
+      "title": "DriveDreamer: Towards Real-world-driven World Models for Autonomous Driving",
+      "year": 2023
     },
     {
-      "paper_id": "unisim_2024"
+      "paper_id": "paper:10.1038/s41598-026-48234-7",
+      "bibtex_key": null,
+      "title": "Multi-task procedural content generation with reinforcement learning",
+      "year": 2026
     },
     {
-      "paper_id": "diffusion_world_models_2024"
+      "paper_id": "paper:10.1109/cvpr52729.2023.01215",
+      "bibtex_key": null,
+      "title": "Infinite Photorealistic Worlds Using Procedural Generation",
+      "year": 2023
     },
     {
-      "paper_id": "gaia1_2023"
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "bibtex_key": null,
+      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "year": 2024
     },
     {
-      "paper_id": "minedojo_2022"
+      "paper_id": "paper:10.48550/arxiv.2509.18580",
+      "bibtex_key": null,
+      "title": "Adaptive Bayesian Joint Latent Space Modeling via Cumulative Shrinkage",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.1145/3664647.3681129",
+      "bibtex_key": null,
+      "title": "Controllable Procedural Generation of Landscapes",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2311.16038",
+      "bibtex_key": null,
+      "title": "OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2602.18943",
+      "bibtex_key": null,
+      "title": "High Dimensional Procedural Content Generation",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.48448/p8x8-vd53",
+      "bibtex_key": null,
+      "title": "WorldWeaver: Procedural World Generation for Text Adventure Games using Large Language Models",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.1016/j.jclepro.2024.142949",
+      "bibtex_key": null,
+      "title": "Cradle-to-cradle business model tool: Innovating circular business models for startups",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2602.04682",
+      "bibtex_key": null,
+      "title": "Covariate Selection for Joint Latent Space Modeling of Sparse Network Data",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2026.3713793",
+      "bibtex_key": null,
+      "title": "Human-Aligned Procedural Level Generation Reinforcement Learning via Text-Level-Sketch Shared Representation",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2607.15550",
+      "bibtex_key": null,
+      "title": "SeerGuard: A Safety Framework for Mobile GUI Agents via World Model Prediction",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.1609/aiide.v20i1.31877",
+      "bibtex_key": null,
+      "title": "Procedural Content Generation in Games: A Survey with Insights on Emerging LLM Integration",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2302.01560",
+      "bibtex_key": null,
+      "title": "Describe, Explain, Plan and Select: Interactive Planning with Large Language Models Enables Open-World Multi-Task Agents",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2506.17201",
+      "bibtex_key": null,
+      "title": "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1016/j.media.2024.103309",
+      "bibtex_key": null,
+      "title": "Establishing group-level brain structural connectivity incorporating anatomical knowledge under latent space modeling",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1609/aaai.v38i9.28865",
+      "bibtex_key": null,
+      "title": "Procedural Level Generation with Diffusion Models from a Single Example",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.1007/s11704-024-40231-1",
+      "bibtex_key": null,
+      "title": "A survey on large language model based autonomous agents",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2407.17572",
+      "bibtex_key": null,
+      "title": "CityX: Controllable Procedural Content Generation for Unbounded 3D Cities",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2605.03941",
+      "bibtex_key": null,
+      "title": "iWorld-Bench: A Benchmark for Interactive World Models with a Unified Action Generation Framework",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "bibtex_key": null,
+      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.1109/icra57147.2024.10611243",
+      "bibtex_key": null,
+      "title": "DeformNet: Latent Space Modeling and Dynamics Prediction for Deformable Object Manipulation",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2022.3175795",
+      "bibtex_key": null,
+      "title": "Procedural Level Generation for Sokoban via Deep Learning: An Experimental Study",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2506.16565",
+      "bibtex_key": null,
+      "title": "Reimagination with Test-time Observation Interventions: Distractor-Robust World Model Predictions for Visual Model Predictive Control",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.4114/intartif.vol24iss68pp33-36",
+      "bibtex_key": null,
+      "title": "Procedural Content Generation for General Video Game Level Generation",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2606.16993",
+      "bibtex_key": null,
+      "title": "DreamX-World 1.0: A General-Purpose Interactive World Model",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2310.17805",
+      "bibtex_key": null,
+      "title": "Reward Scale Robustness for Proximal Policy Optimization via DreamerV3 Tricks",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.1109/cog64752.2025.11114175",
+      "bibtex_key": null,
+      "title": "Controllable Procedural Generation of Race Track Surroundings for Iterative Level Design",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1145/3746449",
+      "bibtex_key": null,
+      "title": "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2025.3530419",
+      "bibtex_key": null,
+      "title": "Procedural Content Generation for Cooperative Games—A Systematic Review",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1145/3402942.3409599",
+      "bibtex_key": null,
+      "title": "Procedural Generation of Interactive Stories using Language Models",
+      "year": 2020
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2510.00233",
+      "bibtex_key": null,
+      "title": "Differentiable Autoencoding Neural Operator for Interpretable and Integrable Latent Space Modeling",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2024.3392670",
+      "bibtex_key": null,
+      "title": "Procedural Level Generation in Educational Games From Natural Language Instruction",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.1287/mnsc.2023.4798",
+      "bibtex_key": null,
+      "title": "A Mean Field Games Model for Cryptocurrency Mining",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1145/3723498.3723748",
+      "bibtex_key": null,
+      "title": "Game Balance Through Procedural Content Generation",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2607.14076",
+      "bibtex_key": null,
+      "title": "From Pixels to States: Rethinking Interactive World Models as Game Engines",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "bibtex_key": null,
+      "title": "AvalonBench: Evaluating LLMs Playing the Game of Avalon",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2502.12128",
+      "bibtex_key": null,
+      "title": "LaM-SLidE: Latent Space Modeling of Spatial Dynamical Systems via Linked Entities",
+      "year": 2025
+    },
+    {
+      "paper_id": "paper:10.1109/cog57401.2023.10333195",
+      "bibtex_key": null,
+      "title": "End-to-End Procedural Level Generation in Educational Games with Natural Language Instruction",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2305.14992",
+      "bibtex_key": null,
+      "title": "Reasoning with Language Model is Planning with World Model",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.1109/cog60054.2024.10645619",
+      "bibtex_key": null,
+      "title": "ChatPCG: Large Language Model-Driven Reward Design for Procedural Content Generation",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2608.09449",
+      "bibtex_key": null,
+      "title": "Sekai2: From World Exploration to Interactive World Modeling",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2308.03688",
+      "bibtex_key": null,
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "year": 2023
+    },
+    {
+      "paper_id": "paper:10.5281/zenodo.19983308",
+      "bibtex_key": null,
+      "title": "A Recurrent Latent Variable Model for Sequential Data",
+      "year": 2026
+    },
+    {
+      "paper_id": "paper:10.1109/bts-i2c63534.2024.10941760",
+      "bibtex_key": null,
+      "title": "Hybrid Approach for Procedural Level Generation for 2D Platformer Game",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.1109/cvpr52733.2024.01397",
+      "bibtex_key": null,
+      "title": "Driving Into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2407.09013",
+      "bibtex_key": null,
+      "title": "Procedural Content Generation via Generative Artificial Intelligence",
+      "year": 2024
+    },
+    {
+      "paper_id": "paper:10.1109/tg.2019.2931044",
+      "bibtex_key": null,
+      "title": "A Multifaceted Surrogate Model for Search-Based Procedural Content Generation",
+      "year": 2019
+    },
+    {
+      "paper_id": "paper:10.48550/arxiv.2206.08853",
+      "bibtex_key": null,
+      "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
+      "year": 2022
+    },
+    {
+      "paper_id": "paper:10.1109/icstcc66753.2025.11240246",
+      "bibtex_key": null,
+      "title": "Evaluating Latent Space Modeling in BiLSTM Autoencoders for Time Series Anomaly Detection",
+      "year": 2025
     }
   ]
 }

@@ -1,189 +1,335 @@
 {
-  "task_id": "task_world_models_and_gamecraft_for_i_001",
+  "task_id": "task_world_models_for_games_a_survey_001",
   "entries": [
     {
-      "claim_text": "In this survey, the section explains how the selected works contribute to interactive environment modeling, agent learning, simulation, or game intelligence evaluation",
-      "cited_paper_id": "world_models_2018",
-      "status": "supported",
-      "evidence_ids": [
-        "ev_world_models_2018_problem",
-        "ev_world_models_2018_method",
-        "ev_world_models_2018_contribution",
-        "ev_world_models_2018_limitations"
-      ],
-      "confidence": 0.9
-    },
-    {
-      "claim_text": "!(publication_timeline)\n\nWorld Models addresses How to learn compact spatial and temporal representations of game environments so that agents can train with fewer direct environment interactions",
-      "cited_paper_id": "Publication years of the selected representative papers.",
+      "claim_text": "Two main difficulties are identif",
+      "cited_paper_id": "paper:10.48550/arxiv.2302.01560",
       "status": "unsupported",
-      "evidence_ids": [],
-      "confidence": 0.0
-    },
-    {
-      "claim_text": "Taken together, this group push beyond static game engines toward reusable learned dynamics",
-      "cited_paper_id": "diffusion_world_models_2024",
-      "status": "supported",
       "evidence_ids": [
-        "ev_diffusion_world_models_2024_problem",
-        "ev_diffusion_world_models_2024_method",
-        "ev_diffusion_world_models_2024_contribution",
-        "ev_diffusion_world_models_2024_limitations"
+        "paper:10.48550/arxiv.2302.01560_agentic_252_p0_755",
+        "paper:10.48550/arxiv.2302.01560_agentic_253_p9_42481",
+        "paper:10.48550/arxiv.2302.01560_agentic_254_p2_6918",
+        "paper:10.48550/arxiv.2302.01560_agentic_255_p0_755",
+        "paper:10.48550/arxiv.2302.01560_agentic_256_p2_6918",
+        "paper:10.48550/arxiv.2302.01560_agentic_257_p0_2808",
+        "paper:10.48550/arxiv.2302.01560_agentic_258_p67_163785",
+        "paper:10.48550/arxiv.2302.01560_agentic_259_p2_14692",
+        "paper:10.48550/arxiv.2302.01560_agentic_260_p4_28764",
+        "paper:10.48550/arxiv.2302.01560_agentic_261_p8_35367",
+        "paper:10.48550/arxiv.2302.01560_agentic_262_p16_55975",
+        "paper:10.48550/arxiv.2302.01560_agentic_263_p0_746"
       ],
-      "confidence": 0.9
+      "confidence": 0.586
     },
     {
-      "claim_text": "In this survey, the section explains how the selected works contribute to interactive environment modeling, agent learning, simulation, or game intelligence evaluation",
-      "cited_paper_id": "dreamerv3_2023",
-      "status": "supported",
+      "claim_text": "To achieve action-controlled v",
+      "cited_paper_id": "paper:10.48550/arxiv.2501.08325",
+      "status": "weak",
       "evidence_ids": [
-        "ev_dreamerv3_2023_problem",
-        "ev_dreamerv3_2023_method",
-        "ev_dreamerv3_2023_contribution",
-        "ev_dreamerv3_2023_limitations"
+        "paper:10.48550/arxiv.2501.08325_agentic_60_p1_12959",
+        "paper:10.48550/arxiv.2501.08325_agentic_61_p0_8620",
+        "paper:10.48550/arxiv.2501.08325_agentic_62_p18_74184",
+        "paper:10.48550/arxiv.2501.08325_agentic_63_p0_8620",
+        "paper:10.48550/arxiv.2501.08325_agentic_64_p1_10615",
+        "paper:10.48550/arxiv.2501.08325_agentic_65_p7_40945",
+        "paper:10.48550/arxiv.2501.08325_agentic_66_p67_163785",
+        "paper:10.48550/arxiv.2501.08325_agentic_67_p2_14692",
+        "paper:10.48550/arxiv.2501.08325_agentic_68_p4_28764",
+        "paper:10.48550/arxiv.2501.08325_agentic_69_p8_35367",
+        "paper:10.48550/arxiv.2501.08325_agentic_70_p16_55975",
+        "paper:10.48550/arxiv.2501.08325_agentic_71_p0_746"
       ],
-      "confidence": 0.9
+      "confidence": 1.0
     },
     {
-      "claim_text": "!(taxonomy_overview)\n\nDreamerV3: Mastering Diverse Domains through World Models addresses How to make world-model reinforcement learning robust across diverse domains with minimal task-specific tuning",
-      "cited_paper_id": "Distribution of selected papers across the survey taxonomy.",
+      "claim_text": "However, they typically learn tabula rasa in isolated enviro",
+      "cited_paper_id": "paper:10.48550/arxiv.2206.08853",
       "status": "unsupported",
-      "evidence_ids": [],
-      "confidence": 0.0
-    },
-    {
-      "claim_text": "Taken together, this group show how learned models can support both search-based planning and policy learning",
-      "cited_paper_id": "muzero_2020",
-      "status": "supported",
       "evidence_ids": [
-        "ev_muzero_2020_problem",
-        "ev_muzero_2020_method",
-        "ev_muzero_2020_contribution",
-        "ev_muzero_2020_limitations"
+        "paper:10.48550/arxiv.2206.08853_agentic_672_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_673_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_674_p0_1640",
+        "paper:10.48550/arxiv.2206.08853_agentic_675_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_676_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_677_p0_1154",
+        "paper:10.48550/arxiv.2206.08853_agentic_678_p67_163785",
+        "paper:10.48550/arxiv.2206.08853_agentic_679_p2_14692",
+        "paper:10.48550/arxiv.2206.08853_agentic_680_p4_28764",
+        "paper:10.48550/arxiv.2206.08853_agentic_681_p8_35367",
+        "paper:10.48550/arxiv.2206.08853_agentic_682_p16_55975",
+        "paper:10.48550/arxiv.2206.08853_agentic_683_p0_746"
       ],
-      "confidence": 0.9
+      "confidence": 0.574
     },
     {
-      "claim_text": "!(representative_systems)\n\nThe conservative reading is important: missing evidence, abstract-only parsing, or sparse limitations should weaken rather than strengthen the claim",
-      "cited_paper_id": "Representative papers organized by method, contribution, and limitation.",
+      "claim_text": "unresolved",
+      "cited_paper_id": "paper:10.48550/arxiv.2309.09777",
       "status": "unsupported",
-      "evidence_ids": [],
-      "confidence": 0.0
-    },
-    {
-      "claim_text": "In this survey, the section explains how the selected works contribute to interactive environment modeling, agent learning, simulation, or game intelligence evaluation",
-      "cited_paper_id": "genie_2024",
-      "status": "supported",
       "evidence_ids": [
-        "ev_genie_2024_problem",
-        "ev_genie_2024_method",
-        "ev_genie_2024_contribution",
-        "ev_genie_2024_limitations"
+        "paper:10.48550/arxiv.2309.09777_agentic_84_p0_2665",
+        "paper:10.48550/arxiv.2309.09777_agentic_85_p22_92568",
+        "paper:10.48550/arxiv.2309.09777_agentic_86_p3_13975",
+        "paper:10.48550/arxiv.2309.09777_agentic_87_p0_0",
+        "paper:10.48550/arxiv.2309.09777_agentic_88_p22_92568",
+        "paper:10.48550/arxiv.2309.09777_agentic_89_p0_1618",
+        "paper:10.48550/arxiv.2309.09777_agentic_90_p67_163785",
+        "paper:10.48550/arxiv.2309.09777_agentic_91_p2_14692",
+        "paper:10.48550/arxiv.2309.09777_agentic_92_p4_28764",
+        "paper:10.48550/arxiv.2309.09777_agentic_93_p8_35367",
+        "paper:10.48550/arxiv.2309.09777_agentic_94_p16_55975",
+        "paper:10.48550/arxiv.2309.09777_agentic_95_p0_746",
+        "paper:10.48550/arxiv.2309.09777_repair_702_p0",
+        "paper:10.48550/arxiv.2309.09777_repair_703_p1",
+        "paper:10.48550/arxiv.2309.09777_repair_704_p2"
       ],
-      "confidence": 0.9
+      "confidence": 0.509
     },
     {
-      "claim_text": "Taken together, this group move from hand-authored simulation toward generated interactive environments",
-      "cited_paper_id": "gamengen_2024",
-      "status": "supported",
-      "evidence_ids": [
-        "ev_gamengen_2024_problem",
-        "ev_gamengen_2024_method",
-        "ev_gamengen_2024_contribution",
-        "ev_gamengen_2024_limitations"
-      ],
-      "confidence": 0.9
-    },
-    {
-      "claim_text": "In this survey, the section explains how the selected works contribute to interactive environment modeling, agent learning, simulation, or game intelligence evaluation",
-      "cited_paper_id": "alphastar_2019",
-      "status": "supported",
-      "evidence_ids": [
-        "ev_alphastar_2019_problem",
-        "ev_alphastar_2019_method",
-        "ev_alphastar_2019_contribution",
-        "ev_alphastar_2019_limitations"
-      ],
-      "confidence": 0.9
-    },
-    {
-      "claim_text": "Taken together, this group show how large-scale training changes what agents can do in complex games",
-      "cited_paper_id": "dota2_2019",
-      "status": "supported",
-      "evidence_ids": [
-        "ev_dota2_2019_problem",
-        "ev_dota2_2019_method",
-        "ev_dota2_2019_contribution",
-        "ev_dota2_2019_limitations"
-      ],
-      "confidence": 0.9
-    },
-    {
-      "claim_text": "!(evaluation_protocol_matrix)\n\nThe conservative reading is important: missing evidence, abstract-only parsing, or sparse limitations should weaken rather than strengthen the claim",
-      "cited_paper_id": "Evaluation protocols grouped by what they measure and where they can mislead.",
+      "claim_text": "; GAIA-1: A Generative World Model for Autonomous Driving centers on Autonomous driving promises transformative improvements to transportation, but building systems capable of safely navig",
+      "cited_paper_id": "paper:10.48550/arxiv.2305.14992",
       "status": "unsupported",
-      "evidence_ids": [],
-      "confidence": 0.0
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2305.14992_agentic_564_p0_1767",
+        "paper:10.48550/arxiv.2305.14992_agentic_565_p0_1552",
+        "paper:10.48550/arxiv.2305.14992_agentic_566_p0_1450",
+        "paper:10.48550/arxiv.2305.14992_agentic_567_p1_5737",
+        "paper:10.48550/arxiv.2305.14992_agentic_568_p0_1767",
+        "paper:10.48550/arxiv.2305.14992_agentic_569_p0_1479",
+        "paper:10.48550/arxiv.2305.14992_agentic_570_p67_163785",
+        "paper:10.48550/arxiv.2305.14992_agentic_571_p2_14692",
+        "paper:10.48550/arxiv.2305.14992_agentic_572_p4_28764",
+        "paper:10.48550/arxiv.2305.14992_agentic_573_p8_35367",
+        "paper:10.48550/arxiv.2305.14992_agentic_574_p16_55975",
+        "paper:10.48550/arxiv.2305.14992_agentic_575_p0_746",
+        "paper:10.48550/arxiv.2305.14992_repair_705_p0",
+        "paper:10.48550/arxiv.2305.14992_repair_706_p1",
+        "paper:10.48550/arxiv.2305.14992_repair_707_p2",
+        "paper:10.48550/arxiv.2305.14992_repair_708_p0",
+        "paper:10.48550/arxiv.2305.14992_repair_709_p1",
+        "paper:10.48550/arxiv.2305.14992_repair_710_p2"
+      ],
+      "confidence": 0.248
     },
     {
-      "claim_text": "In this survey, the section explains how the selected works contribute to interactive environment modeling, agent learning, simulation, or game intelligence evaluation",
-      "cited_paper_id": "generative_agents_2023",
+      "claim_text": "; Describe, Explain, Plan and Select: Interactive Planning with Large Language Models Enables Open-World Multi-Task Agents centers on We investigate the challenge of task planning for multi-task embodied agents in open-world environments",
+      "cited_paper_id": "paper:10.48550/arxiv.2309.17080",
       "status": "supported",
       "evidence_ids": [
-        "ev_generative_agents_2023_problem",
-        "ev_generative_agents_2023_method",
-        "ev_generative_agents_2023_contribution",
-        "ev_generative_agents_2023_limitations"
+        "paper:10.48550/arxiv.2309.17080_agentic_24_p0_1768",
+        "paper:10.48550/arxiv.2309.17080_agentic_25_p0_1461",
+        "paper:10.48550/arxiv.2309.17080_agentic_26_p0_1966",
+        "paper:10.48550/arxiv.2309.17080_agentic_27_p0_1768",
+        "paper:10.48550/arxiv.2309.17080_agentic_28_p0_1372",
+        "paper:10.48550/arxiv.2309.17080_agentic_29_p7_34767",
+        "paper:10.48550/arxiv.2309.17080_agentic_30_p67_163785",
+        "paper:10.48550/arxiv.2309.17080_agentic_31_p2_14692",
+        "paper:10.48550/arxiv.2309.17080_agentic_32_p4_28764",
+        "paper:10.48550/arxiv.2309.17080_agentic_33_p8_35367",
+        "paper:10.48550/arxiv.2309.17080_agentic_34_p16_55975",
+        "paper:10.48550/arxiv.2309.17080_agentic_35_p0_746"
       ],
-      "confidence": 0.9
+      "confidence": 1.0
     },
     {
-      "claim_text": "Taken together, this group provide shared environments where interactive intelligence can be compared",
-      "cited_paper_id": "minedojo_2022",
-      "status": "supported",
+      "claim_text": "unresolved",
+      "cited_paper_id": "paper:10.48550/arxiv.2305.14992",
+      "status": "unsupported",
       "evidence_ids": [
-        "ev_minedojo_2022_problem",
-        "ev_minedojo_2022_method",
-        "ev_minedojo_2022_contribution",
-        "ev_minedojo_2022_limitations"
+        "paper:10.48550/arxiv.2305.14992_agentic_564_p0_1767",
+        "paper:10.48550/arxiv.2305.14992_agentic_565_p0_1552",
+        "paper:10.48550/arxiv.2305.14992_agentic_566_p0_1450",
+        "paper:10.48550/arxiv.2305.14992_agentic_567_p1_5737",
+        "paper:10.48550/arxiv.2305.14992_agentic_568_p0_1767",
+        "paper:10.48550/arxiv.2305.14992_agentic_569_p0_1479",
+        "paper:10.48550/arxiv.2305.14992_agentic_570_p67_163785",
+        "paper:10.48550/arxiv.2305.14992_agentic_571_p2_14692",
+        "paper:10.48550/arxiv.2305.14992_agentic_572_p4_28764",
+        "paper:10.48550/arxiv.2305.14992_agentic_573_p8_35367",
+        "paper:10.48550/arxiv.2305.14992_agentic_574_p16_55975",
+        "paper:10.48550/arxiv.2305.14992_agentic_575_p0_746",
+        "paper:10.48550/arxiv.2305.14992_repair_705_p0",
+        "paper:10.48550/arxiv.2305.14992_repair_706_p1",
+        "paper:10.48550/arxiv.2305.14992_repair_707_p2",
+        "paper:10.48550/arxiv.2305.14992_repair_708_p0",
+        "paper:10.48550/arxiv.2305.14992_repair_709_p1",
+        "paper:10.48550/arxiv.2305.14992_repair_710_p2"
       ],
-      "confidence": 0.9
+      "confidence": 0.509
     },
     {
-      "claim_text": "Learned world models can accumulate rollout errors, neural game engines must preserve controllability over time, and game-agent systems often rely on large-scale engineering that is difficult to compare directly across environments",
-      "cited_paper_id": "world_models_2018",
-      "status": "supported",
+      "claim_text": "; A Mean Field Games Model for Cryptocurrency Mining centers on We propose a mean field game model to study the question of how centralization of reward and computational power occur",
+      "cited_paper_id": "paper:10.1007/s11704-024-40231-1",
+      "status": "unsupported",
       "evidence_ids": [
-        "ev_world_models_2018_problem",
-        "ev_world_models_2018_method",
-        "ev_world_models_2018_contribution",
-        "ev_world_models_2018_limitations"
+        "paper:10.1007/s11704-024-40231-1_agentic_300_p0_0",
+        "paper:10.1007/s11704-024-40231-1_agentic_301_p11_19727",
+        "paper:10.1007/s11704-024-40231-1_agentic_302_p0_1500",
+        "paper:10.1007/s11704-024-40231-1_agentic_303_p0_0",
+        "paper:10.1007/s11704-024-40231-1_agentic_304_p11_19727",
+        "paper:10.1007/s11704-024-40231-1_agentic_305_p2_14232",
+        "paper:10.1007/s11704-024-40231-1_agentic_306_p67_163785",
+        "paper:10.1007/s11704-024-40231-1_agentic_307_p2_14692",
+        "paper:10.1007/s11704-024-40231-1_agentic_308_p4_28764",
+        "paper:10.1007/s11704-024-40231-1_agentic_309_p8_35367",
+        "paper:10.1007/s11704-024-40231-1_agentic_310_p16_55975",
+        "paper:10.1007/s11704-024-40231-1_agentic_311_p0_746"
       ],
-      "confidence": 0.9
+      "confidence": 0.457
     },
     {
-      "claim_text": "Evaluation Protocol Matrix for Game Intelligence](evaluation_protocol_matrix)\n\n## Future Directions\n\nFuture work should connect learned simulators with reliable control, transparent evaluation, and agent training loops that expose failure modes rather than hiding them behind visually convincing rollouts",
-      "cited_paper_id": "dreamerv3_2023",
-      "status": "supported",
+      "claim_text": "; GameFactory: Creating New Games with Generative Interactive Videos centers on Generative videos have the potential to revolutionize game development by autonomously creating new content",
+      "cited_paper_id": "paper:10.1287/mnsc.2023.4798",
+      "status": "unsupported",
       "evidence_ids": [
-        "ev_dreamerv3_2023_problem",
-        "ev_dreamerv3_2023_method",
-        "ev_dreamerv3_2023_contribution",
-        "ev_dreamerv3_2023_limitations"
+        "paper:10.1287/mnsc.2023.4798_agentic_492_p0_0",
+        "paper:10.1287/mnsc.2023.4798_agentic_493_p10_30880",
+        "paper:10.1287/mnsc.2023.4798_agentic_494_p0_598",
+        "paper:10.1287/mnsc.2023.4798_agentic_495_p0_0",
+        "paper:10.1287/mnsc.2023.4798_agentic_496_p10_30880",
+        "paper:10.1287/mnsc.2023.4798_agentic_497_p0_598",
+        "paper:10.1287/mnsc.2023.4798_agentic_498_p67_163785",
+        "paper:10.1287/mnsc.2023.4798_agentic_499_p2_14692",
+        "paper:10.1287/mnsc.2023.4798_agentic_500_p4_28764",
+        "paper:10.1287/mnsc.2023.4798_agentic_501_p8_35367",
+        "paper:10.1287/mnsc.2023.4798_agentic_502_p16_55975",
+        "paper:10.1287/mnsc.2023.4798_agentic_503_p0_746",
+        "paper:10.1287/mnsc.2023.4798_repair_696_p0",
+        "paper:10.1287/mnsc.2023.4798_repair_697_p1",
+        "paper:10.1287/mnsc.2023.4798_repair_698_p2",
+        "paper:10.1287/mnsc.2023.4798_repair_711_p0",
+        "paper:10.1287/mnsc.2023.4798_repair_712_p1",
+        "paper:10.1287/mnsc.2023.4798_repair_713_p2"
       ],
-      "confidence": 0.9
+      "confidence": 0.444
     },
     {
-      "claim_text": "The most useful synthesis therefore compares how each paper models dynamics, supports control, scales interaction, and exposes limitations",
-      "cited_paper_id": "world_models_2018",
+      "claim_text": "The two works respond to that premise with standardized gaming settings of different kinds, an open-ended embodied simulation suite on one side and competitive game-theoretic evaluations on the other",
+      "cited_paper_id": "paper:10.48550/arxiv.2206.08853",
+      "status": "unsupported",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2206.08853_agentic_672_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_673_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_674_p0_1640",
+        "paper:10.48550/arxiv.2206.08853_agentic_675_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_676_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_677_p0_1154",
+        "paper:10.48550/arxiv.2206.08853_agentic_678_p67_163785",
+        "paper:10.48550/arxiv.2206.08853_agentic_679_p2_14692",
+        "paper:10.48550/arxiv.2206.08853_agentic_680_p4_28764",
+        "paper:10.48550/arxiv.2206.08853_agentic_681_p8_35367",
+        "paper:10.48550/arxiv.2206.08853_agentic_682_p16_55975",
+        "paper:10.48550/arxiv.2206.08853_agentic_683_p0_746"
+      ],
+      "confidence": 0.597
+    },
+    {
+      "claim_text": "; Latent Space Modeling of Hypergraph Data centers on The increasing prevalence of relational data describing interactions among a target population has motivated a wide lit",
+      "cited_paper_id": "paper:10.48550/arxiv.2308.03688",
+      "status": "unsupported",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2308.03688_agentic_600_p0_1977",
+        "paper:10.48550/arxiv.2308.03688_agentic_601_p0_1626",
+        "paper:10.48550/arxiv.2308.03688_agentic_602_p0_1211",
+        "paper:10.48550/arxiv.2308.03688_agentic_603_p0_1977",
+        "paper:10.48550/arxiv.2308.03688_agentic_604_p0_1833",
+        "paper:10.48550/arxiv.2308.03688_agentic_605_p0_2012",
+        "paper:10.48550/arxiv.2308.03688_agentic_606_p67_163785",
+        "paper:10.48550/arxiv.2308.03688_agentic_607_p2_14692",
+        "paper:10.48550/arxiv.2308.03688_agentic_608_p4_28764",
+        "paper:10.48550/arxiv.2308.03688_agentic_609_p8_35367",
+        "paper:10.48550/arxiv.2308.03688_agentic_610_p16_55975",
+        "paper:10.48550/arxiv.2308.03688_agentic_611_p0_746",
+        "paper:10.48550/arxiv.2308.03688_repair_714_p0",
+        "paper:10.48550/arxiv.2308.03688_repair_715_p1",
+        "paper:10.48550/arxiv.2308.03688_repair_716_p2"
+      ],
+      "confidence": 0.579
+    },
+    {
+      "claim_text": "; Reasoning with Language Model is Planning with World Model: Large Language Models (LLMs) have demonstrated notable reasoning capabilities, often enhanced by techniques like Chain-of-Thought (CoT) prompting",
+      "cited_paper_id": "paper:10.1145/3746449",
+      "status": "unsupported",
+      "evidence_ids": [
+        "paper:10.1145/3746449_agentic_432_p2_9500",
+        "paper:10.1145/3746449_agentic_433_p1_6253",
+        "paper:10.1145/3746449_agentic_434_p0_427",
+        "paper:10.1145/3746449_agentic_435_p2_9500",
+        "paper:10.1145/3746449_agentic_436_p1_6253",
+        "paper:10.1145/3746449_agentic_437_p9_22121",
+        "paper:10.1145/3746449_agentic_438_p67_163785",
+        "paper:10.1145/3746449_agentic_439_p2_14692",
+        "paper:10.1145/3746449_agentic_440_p4_28764",
+        "paper:10.1145/3746449_agentic_441_p8_35367",
+        "paper:10.1145/3746449_agentic_442_p16_55975",
+        "paper:10.1145/3746449_agentic_443_p0_746",
+        "paper:10.1145/3746449_repair_699_p0",
+        "paper:10.1145/3746449_repair_700_p1",
+        "paper:10.1145/3746449_repair_701_p2",
+        "paper:10.1145/3746449_repair_717_p0",
+        "paper:10.1145/3746449_repair_718_p1",
+        "paper:10.1145/3746449_repair_719_p2"
+      ],
+      "confidence": 0.549
+    },
+    {
+      "claim_text": "It promises improved road safety, reduced congestion, and support for smart cit...)",
+      "cited_paper_id": "paper:10.48550/arxiv.2309.17080",
       "status": "supported",
       "evidence_ids": [
-        "ev_world_models_2018_problem",
-        "ev_world_models_2018_method",
-        "ev_world_models_2018_contribution",
-        "ev_world_models_2018_limitations"
+        "paper:10.48550/arxiv.2309.17080_agentic_24_p0_1768",
+        "paper:10.48550/arxiv.2309.17080_agentic_25_p0_1461",
+        "paper:10.48550/arxiv.2309.17080_agentic_26_p0_1966",
+        "paper:10.48550/arxiv.2309.17080_agentic_27_p0_1768",
+        "paper:10.48550/arxiv.2309.17080_agentic_28_p0_1372",
+        "paper:10.48550/arxiv.2309.17080_agentic_29_p7_34767",
+        "paper:10.48550/arxiv.2309.17080_agentic_30_p67_163785",
+        "paper:10.48550/arxiv.2309.17080_agentic_31_p2_14692",
+        "paper:10.48550/arxiv.2309.17080_agentic_32_p4_28764",
+        "paper:10.48550/arxiv.2309.17080_agentic_33_p8_35367",
+        "paper:10.48550/arxiv.2309.17080_agentic_34_p16_55975",
+        "paper:10.48550/arxiv.2309.17080_agentic_35_p0_746"
       ],
-      "confidence": 0.9
+      "confidence": 1.0
+    },
+    {
+      "claim_text": "Two main difficulties are identified: 1) executing plans in an open-world environme...)",
+      "cited_paper_id": "paper:10.48550/arxiv.2302.01560",
+      "status": "unsupported",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2302.01560_agentic_252_p0_755",
+        "paper:10.48550/arxiv.2302.01560_agentic_253_p9_42481",
+        "paper:10.48550/arxiv.2302.01560_agentic_254_p2_6918",
+        "paper:10.48550/arxiv.2302.01560_agentic_255_p0_755",
+        "paper:10.48550/arxiv.2302.01560_agentic_256_p2_6918",
+        "paper:10.48550/arxiv.2302.01560_agentic_257_p0_2808",
+        "paper:10.48550/arxiv.2302.01560_agentic_258_p67_163785",
+        "paper:10.48550/arxiv.2302.01560_agentic_259_p2_14692",
+        "paper:10.48550/arxiv.2302.01560_agentic_260_p4_28764",
+        "paper:10.48550/arxiv.2302.01560_agentic_261_p8_35367",
+        "paper:10.48550/arxiv.2302.01560_agentic_262_p16_55975",
+        "paper:10.48550/arxiv.2302.01560_agentic_263_p0_746"
+      ],
+      "confidence": 0.555
+    },
+    {
+      "claim_text": "However, they typically learn tabula rasa in isolated environments with limited and manually conceived objecti...)",
+      "cited_paper_id": "paper:10.48550/arxiv.2206.08853",
+      "status": "supported",
+      "evidence_ids": [
+        "paper:10.48550/arxiv.2206.08853_agentic_672_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_673_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_674_p0_1640",
+        "paper:10.48550/arxiv.2206.08853_agentic_675_p0_474",
+        "paper:10.48550/arxiv.2206.08853_agentic_676_p0_1612",
+        "paper:10.48550/arxiv.2206.08853_agentic_677_p0_1154",
+        "paper:10.48550/arxiv.2206.08853_agentic_678_p67_163785",
+        "paper:10.48550/arxiv.2206.08853_agentic_679_p2_14692",
+        "paper:10.48550/arxiv.2206.08853_agentic_680_p4_28764",
+        "paper:10.48550/arxiv.2206.08853_agentic_681_p8_35367",
+        "paper:10.48550/arxiv.2206.08853_agentic_682_p16_55975",
+        "paper:10.48550/arxiv.2206.08853_agentic_683_p0_746"
+      ],
+      "confidence": 0.618
     }
   ]
 }

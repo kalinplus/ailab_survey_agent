@@ -1,52 +1,125 @@
 {
-  "task_id": "task_world_models_and_gamecraft_final_001",
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "topic": "World Models for Games: A Survey",
+  "taxonomy_version": "v1",
+  "refine_history": [
+    "prelimiminary",
+    "refined",
+    "final"
+  ],
   "categories": [
     {
-      "category_id": "cat_world_models",
-      "category_name": "Generative Game World Simulation",
-      "description": "World models that learn compact dynamics for game-like or interactive environments.",
+      "category_id": "cat_001",
+      "category_name": "Latent Architectures for World Representation",
+      "description": "Examines how game states and environments are encoded into latent spaces using techniques like VAEs, Transformers, and Diffusion models to capture essential dynamics while reducing dimensionality.",
+      "related_aspects": [],
       "paper_ids": [
-        "world_models_2018",
-        "diffusion_world_models_2024",
-        "gaia1_2023"
-      ]
+        "paper:10.1016/j.cma.2025.118394",
+        "paper:10.48550/arxiv.2309.17080",
+        "paper:10.48550/arxiv.2206.14244",
+        "paper:10.1080/01621459.2023.2270750",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2509.18580",
+        "paper:10.48550/arxiv.2311.16038",
+        "paper:10.48448/p8x8-vd53",
+        "paper:10.1016/j.jclepro.2024.142949",
+        "paper:10.48550/arxiv.2602.04682",
+        "paper:10.1109/tg.2026.3713793",
+        "paper:10.48550/arxiv.2607.15550",
+        "paper:10.1016/j.media.2024.103309",
+        "paper:10.48550/arxiv.2605.03941",
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.1109/icra57147.2024.10611243",
+        "paper:10.48550/arxiv.2506.16565",
+        "paper:10.48550/arxiv.2310.17805",
+        "paper:10.48550/arxiv.2510.00233",
+        "paper:10.1287/mnsc.2023.4798",
+        "paper:10.48550/arxiv.2310.05036",
+        "paper:10.48550/arxiv.2502.12128",
+        "paper:10.48550/arxiv.2308.03688",
+        "paper:10.5281/zenodo.19983308",
+        "paper:10.1109/cvpr52733.2024.01397",
+        "paper:10.48550/arxiv.2206.08853",
+        "paper:10.1109/icstcc66753.2025.11240246"
+      ],
+      "stage_order": 0,
+      "paper_count": 27,
+      "adjustment_note": ""
     },
     {
-      "category_id": "cat_planning",
-      "category_name": "Planning and Control with Learned Models",
-      "description": "Agents that use learned dynamics for planning, control, or policy learning.",
+      "category_id": "cat_002",
+      "category_name": "Procedural Content Generation Mechanisms",
+      "description": "Investigates methods where world models generate game assets, levels, or narratives procedurally, often conditioned on player behavior or specific design constraints.",
+      "related_aspects": [],
       "paper_ids": [
-        "dreamerv3_2023",
-        "muzero_2020"
-      ]
+        "paper:10.1109/cog64752.2025.11114105",
+        "paper:10.1145/3649921.3650016",
+        "paper:10.1038/s41598-026-48234-7",
+        "paper:10.1109/cvpr52729.2023.01215",
+        "paper:10.48550/arxiv.2602.18943",
+        "paper:10.1609/aiide.v20i1.31877",
+        "paper:10.1609/aaai.v38i9.28865",
+        "paper:10.48550/arxiv.2407.17572",
+        "paper:10.1109/tg.2022.3175795",
+        "paper:10.4114/intartif.vol24iss68pp33-36",
+        "paper:10.1109/cog64752.2025.11114175",
+        "paper:10.1109/tg.2025.3530419",
+        "paper:10.1145/3402942.3409599",
+        "paper:10.1109/tg.2024.3392670",
+        "paper:10.1145/3723498.3723748",
+        "paper:10.1109/cog57401.2023.10333195",
+        "paper:10.1109/cog60054.2024.10645619",
+        "paper:10.1109/bts-i2c63534.2024.10941760",
+        "paper:10.48550/arxiv.2407.09013",
+        "paper:10.1109/tg.2019.2931044"
+      ],
+      "stage_order": 0,
+      "paper_count": 20,
+      "adjustment_note": ""
     },
     {
-      "category_id": "cat_neural_engines",
-      "category_name": "Neural Game Engines and Interactive Environments",
-      "description": "Generative systems that synthesize controllable interactive environments.",
+      "category_id": "cat_003",
+      "category_name": "Internal Simulation and Planning Capabilities",
+      "description": "Focuses on the ability of models to simulate future states, predict outcomes, and plan actions within the learned world model without interacting with the real environment, enabling model-based reinforcement learning.",
+      "related_aspects": [],
       "paper_ids": [
-        "gamengen_2024",
-        "genie_2024"
-      ]
+        "paper:10.48550/arxiv.2302.01560"
+      ],
+      "stage_order": 0,
+      "paper_count": 1,
+      "adjustment_note": ""
     },
     {
-      "category_id": "cat_game_agents",
-      "category_name": "Game Agents and Multi-Agent Reinforcement Learning",
-      "description": "Large-scale agents trained in complex games and multi-agent settings.",
+      "category_id": "cat_004",
+      "category_name": "World Model Evaluation Benchmarks",
+      "description": "Covers the metrics, datasets, and standardized environments used to assess the fidelity, diversity, and utility of world models specifically within gaming contexts.",
+      "related_aspects": [],
       "paper_ids": [
-        "alphastar_2019",
-        "dota2_2019"
-      ]
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.48550/arxiv.2606.16993",
+        "paper:10.1145/3746449",
+        "paper:10.48550/arxiv.2607.14076",
+        "paper:10.48550/arxiv.2305.14992",
+        "paper:10.48550/arxiv.2608.09449"
+      ],
+      "stage_order": 0,
+      "paper_count": 7,
+      "adjustment_note": ""
     },
     {
-      "category_id": "cat_simulators",
-      "category_name": "Open-Ended Simulators and Game Intelligence Benchmarks",
-      "description": "Benchmarks and simulators that support open-ended embodied or game intelligence.",
+      "category_id": "cat_005",
+      "category_name": "Interactive and Controllable Generation Frameworks",
+      "description": "Explores frameworks that enable real-time human-player interaction with the world model or allow designers to exert control over generated content and environmental dynamics.",
+      "related_aspects": [],
       "paper_ids": [
-        "generative_agents_2023",
-        "unisim_2024",
-        "minedojo_2022"
-      ]
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1145/3664647.3681129",
+        "paper:10.48550/arxiv.2506.17201"
+      ],
+      "stage_order": 0,
+      "paper_count": 3,
+      "adjustment_note": ""
     }
   ]
 }
