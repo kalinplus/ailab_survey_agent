@@ -17,6 +17,12 @@
 
 ## Log
 
+### 2026-09-04（深夜二：lint 误伤修正——round 4/5 引用消失的真因）
+
+- round 5"gate passed 但 0 引用"的空转通过根因：lint 的整行括号计数把 card 字段里合法的散括号（数学区间 `[0,1]`、引用标记）也判不平衡，从最后一个 `[`（恰是合法引用）截断 → 连坐删除。round 4/5 两轮引用消失同源。
+- 修复 `492e9c7`：lint 只处理行尾未闭合的引用开括号（`\[(paper:|P\d)[^\]\n]*$`）+ 断裂组剔除，不再整行计数。三情形单测验证。
+- S0 第六轮进行中（DOI 归一化救援 + lint 精度同时生效）。
+
 ### 2026-09-04（夜三：S0 第三轮——remap 盲替换是文档损坏的真凶）
 
 - 第三轮结果：无重复节 ✓、正文零断裂括号 ✓、但 gate fixpoint（invalid=5）、claim_map 0 条、fallback 8 次（GLM 空回复仍有 7 次——effort=low 未在 writer 路径生效？待查 `HEAVY_LLM_THINKING_EFFORT` 是否传到了 `_writer_llm_chat` 的 client）。
