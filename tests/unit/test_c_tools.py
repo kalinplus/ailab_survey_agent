@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 
 from harness.agents.relevance import EmbeddingScorer, keyword_overlap
+from harness.citation_prelock import build_citation_ready_set
 from scripts.build_final_seed_papers import build_final_seed_data, write_final_seed_files
 from tools import render_report, revise_survey, write_survey
 from tools.clients.llm_fake import FakeLLMClient
@@ -16,6 +17,75 @@ def _write_json(path: Path, data):
 def _citations(markdown: str) -> set[str]:
     text_only = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", markdown)
     return set(re.findall(r"\[([^\]]+)\]", text_only))
+
+
+# --- citation prelock (spec T1 slice 3: recency x influence selection) -------------
+
+
+def _prelock_cards():
+    """Mixed pool: two canonical staples (2018 / 2021) plus fresh low-impact hits."""
+    return {
+        "task_id": "t",
+        "paper_cards": [
+            {"paper_id": "p_world_models", "title": "World Models", "year": 2018,
+             "citation_count": 5000, "survey_ref_count": 3},
+            {"paper_id": "p_dreamerv3", "title": "DreamerV3", "year": 2021,
+             "citation_count": 800, "survey_ref_count": 2},
+            {"paper_id": "p_fresh_cited", "title": "Fresh Cited World Model", "year": 2025,
+             "citation_count": 2, "survey_ref_count": 0},
+            {"paper_id": "p_fresh_uncited", "title": "Fresh Uncited World Model", "year": 2026,
+             "citation_count": 0, "survey_ref_count": 0},
+        ],
+    }
+
+
+def _citation_index(card_ids):
+    return {"task_id": "t", "citations": [{"paper_id": pid} for pid in card_ids]}
+
+
+def _prelock(card_ids, cap):
+    return build_citation_ready_set(
+        task_id="t",
+        paper_cards=_prelock_cards(),
+        citation_index=_citation_index(card_ids),
+        evidence_store={"task_id": "t", "evidence": []},
+        max_core_papers=cap,
+    )
+
+
+def test_prelock_keeps_classic_high_influence_paper_when_cap_binds():
+    """Spec T1 acceptance 3: canonical staples must not be pushed out of the whitelist
+    by a pure newest-first cut (they are the first casualties of that order)."""
+    all_ids = ["p_world_models", "p_dreamerv3", "p_fresh_cited", "p_fresh_uncited"]
+    assert _prelock(all_ids, 2)["allowed_paper_ids"] == ["p_dreamerv3", "p_fresh_cited"]
+    assert _prelock(all_ids, 3)["allowed_paper_ids"][:2] == ["p_dreamerv3", "p_fresh_cited"]
+    assert "p_world_models" in _prelock(all_ids, 3)["allowed_paper_ids"]
+
+
+def test_prelock_selection_matches_legacy_set_when_pool_below_cap():
+    """pool <= cap: the whitelisted set is unchanged, now ordered by the blend."""
+    all_ids = ["p_world_models", "p_dreamerv3", "p_fresh_cited", "p_fresh_uncited"]
+    result = _prelock(all_ids, 10)
+    assert set(result["allowed_paper_ids"]) == set(all_ids)
+    assert result["allowed_paper_ids"] == [
+        "p_dreamerv3", "p_fresh_cited", "p_world_models", "p_fresh_uncited",
+    ]
+
+
+def test_prelock_degrades_to_recency_without_influence_signals():
+    """Legacy bundles carry no citation_count/survey_ref_count: pure recency order."""
+    cards = {"task_id": "t", "paper_cards": [
+        {"paper_id": "p_old", "title": "Old", "year": 2018},
+        {"paper_id": "p_new", "title": "New", "year": 2025},
+    ]}
+    result = build_citation_ready_set(
+        task_id="t",
+        paper_cards=cards,
+        citation_index=_citation_index(["p_old", "p_new"]),
+        evidence_store={"task_id": "t", "evidence": []},
+        max_core_papers=1,
+    )
+    assert result["allowed_paper_ids"] == ["p_new"]
 
 
 def _minimal_inputs(tmp_path: Path):

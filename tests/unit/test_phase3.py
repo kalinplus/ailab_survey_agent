@@ -81,6 +81,57 @@ def test_dedup_seed_id_stable():
     assert result[0].paper_id.startswith("seed:")
 
 
+def test_dedup_collapses_same_title_with_different_ids():
+    """Spec T1 acceptance 2: preprint and published versions have different DOIs but
+    the same title, so title identity must collapse them to one corpus entry."""
+    ps = [
+        _to_retrieved({
+            "unique_id": "paper:10.48550/arxiv.2301.04104",
+            "title": "DreamerV3: Mastering Diverse Domains through World Models",
+            "publication_published_year": 2023,
+        }),
+        _to_retrieved({
+            "unique_id": "paper:10.1038/s41586-024-08406-2",
+            "title": "DreamerV3: Mastering Diverse Domains through World Models!",
+            "publication_published_year": 2025,
+            "citation_count": 30,
+        }),
+    ]
+    result = dedup(ps)
+    assert len(result) == 1
+    assert result[0].year == 2023  # first seen wins
+
+
+def test_dedup_merges_survey_ref_signal_across_title_duplicates():
+    ps = [
+        RetrievedPaper(paper_id="paper:a", title="World Models", citation_count=5),
+        RetrievedPaper(paper_id="paper:b", title="world  models",
+                       survey_ref_count=3, survey_ref_hints=["ha_2018"]),
+    ]
+    result = dedup(ps)
+    assert len(result) == 1
+    assert result[0].paper_id == "paper:a"
+    assert result[0].survey_ref_count == 3
+    assert result[0].survey_ref_hints == ["ha_2018"]
+
+
+def test_title_key_strips_punctuation_case_and_version_tail():
+    from tools.phases.phase3_paper_retriever import _title_key
+
+    assert _title_key("DreamerV3: Mastering Diverse Domains") == _title_key("dreamerv3 mastering diverse domains")
+    assert _title_key("World Models (v2)") == _title_key("world models")
+    assert _title_key("") == ""
+
+
+def test_dedup_keeps_similar_but_distinct_titles():
+    """Exact normalized equality only — near-miss titles are different papers."""
+    ps = [
+        _to_retrieved({"unique_id": "p1", "title": "World Models"}),
+        _to_retrieved({"unique_id": "p2", "title": "World Model"}),
+    ]
+    assert len(dedup(ps)) == 2
+
+
 # --- seed fallback ---
 
 
@@ -220,12 +271,34 @@ def test_influence_search_uses_banded_filters_and_freshness_boost():
         "t", [{"keywords": ["wm"]}], [], RecordingSV(), FakeMU(), FakeCleaner(),
         [], PipelineConfig(use_seed_fallback=False, use_influence_score=True),
     )
-    assert len(calls) == 3
+    assert len(calls) == 4  # 1 query x 3 influence bands + 1 landmark variant
     assert calls[0]["page_size"] == 15
     assert calls[0]["impact_boost"] == "MILD"
     assert calls[0]["freshness_boost"] == "MILD"
     assert calls[1]["filters"][-1] == {"field": "citation_count", "operator": "FILTER_OP_GTE", "value": 5}
     assert calls[2]["filters"][-1] == {"field": "citation_count", "operator": "FILTER_OP_GTE", "value": 20}
+
+
+def test_landmark_query_runs_without_year_window_or_freshness_boost():
+    from tools.models.requests import PipelineConfig
+
+    calls = []
+
+    class RecordingSV:
+        def meta_search(self, query, **kw):
+            calls.append({"query": query, **kw})
+            return {"results": []}
+
+    run(
+        "t", [{"aspect_id": "aspect_001", "aspect_name": "World Models", "keywords": ["wm"]}],
+        [], RecordingSV(), FakeMU(), FakeCleaner(),
+        [], PipelineConfig(use_seed_fallback=False),
+    )
+    landmark = calls[-1]
+    assert landmark["query"] == "World Models survey"
+    assert landmark["filters"] == []  # no year window: pre-2018 staples stay reachable
+    assert landmark["impact_boost"] == "MILD"
+    assert "freshness_boost" not in landmark
 
 
 def test_influence_disabled_keeps_single_broad_search_without_freshness_boost():
@@ -242,13 +315,14 @@ def test_influence_disabled_keeps_single_broad_search_without_freshness_boost():
         "t", [{"keywords": ["wm"]}], [], RecordingSV(), FakeMU(), FakeCleaner(),
         [], PipelineConfig(use_seed_fallback=False, use_influence_score=False),
     )
-    assert len(calls) == 1
+    assert len(calls) == 2  # 1 broad query + 1 landmark variant
     assert calls[0]["page_size"] == 25
     assert "freshness_boost" not in calls[0]
     assert calls[0]["filters"] == [
         {"field": "publication_published_year", "operator": "FILTER_OP_GTE", "value": 2018},
         {"field": "publication_published_year", "operator": "FILTER_OP_LTE", "value": 2026},
     ]
+    assert calls[1]["filters"] == []
 
 
 def test_rank_by_influence_balances_source_rank_citations_and_recency():
@@ -582,7 +656,7 @@ def test_breadth_knobs_widen_corpus_monotonically(monkeypatch):
     widest = len(rp.papers)
 
     assert 0 < baseline < wider_page < widest
-    assert widest == 5 * 3 * 40  # 5 aspects x 3 queries x page_size 40, all unique hits
+    assert widest == 5 * (3 + 1) * 40  # 5 aspects x (3 queries + 1 landmark) x page_size 40
 
 
 def test_breadth_knobs_reach_meta_search(monkeypatch):
@@ -591,14 +665,14 @@ def test_breadth_knobs_reach_meta_search(monkeypatch):
 
     sv = BreadthSV()
     run("t", _breadth_aspects(1), [], sv, FakeMU(), FakeCleaner(), [], _breadth_cfg())
-    assert len(sv.calls) == 3  # 1 query x 3 influence bands
+    assert len(sv.calls) == 4  # 1 query x 3 influence bands + 1 landmark variant
     assert sv.calls[0]["page_size"] == 15
 
     monkeypatch.setenv("EVISURVEY_MAX_QUERIES_PER_ASPECT", "3")
     monkeypatch.setenv("EVISURVEY_META_PAGE_SIZE", "40")
     wide_sv = BreadthSV()
     run("t", _breadth_aspects(1), [], wide_sv, FakeMU(), FakeCleaner(), [], _breadth_cfg())
-    assert len(wide_sv.calls) == 9  # 3 queries x 3 influence bands
+    assert len(wide_sv.calls) == 10  # 3 queries x 3 influence bands + 1 landmark variant
     assert {call["page_size"] for call in wide_sv.calls} == {40}
 
 
@@ -621,7 +695,7 @@ def test_max_corpus_keeps_corpus_when_cap_not_binding(monkeypatch):
 
     rp, _ = run("t", _breadth_aspects(), [], BreadthSV(pool=4), FakeMU(), FakeCleaner(), [], _breadth_cfg())
 
-    assert len(rp.papers) == 5 * 3 * 4  # nothing trimmed, no reordering side effect
+    assert len(rp.papers) == 5 * (3 + 1) * 4  # nothing trimmed, no reordering side effect
 
 
 def test_relevance_threshold_knob_is_monotone(monkeypatch):

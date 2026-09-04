@@ -64,7 +64,10 @@ def build_card(parsed, retrieved_map, llm, aspects, threshold=0.6):
     return PaperCard(
         paper_id=parsed.paper_id, title=parsed.title,
         authors=getattr(meta, "authors", []), year=getattr(meta, "year", None),
-        venue=getattr(meta, "venue", None), matched_aspects=[], card_type="deep",
+        venue=getattr(meta, "venue", None),
+        citation_count=getattr(meta, "citation_count", 0),
+        survey_ref_count=getattr(meta, "survey_ref_count", 0),
+        matched_aspects=[], card_type="deep",
         problem="", method="", contribution="", limitations="",
         evidence_ids=[], figure_ids=[], table_ids=[], possible_claims=claims,
         bibtex_key=None)
@@ -86,7 +89,9 @@ def build_shallow_card(retrieved, llm, aspects, threshold=0.6):
     return PaperCard(
         paper_id=retrieved.paper_id, title=retrieved.title,
         authors=retrieved.authors, year=retrieved.year,
-        venue=retrieved.venue, matched_aspects=[], card_type="shallow",
+        venue=retrieved.venue, citation_count=retrieved.citation_count,
+        survey_ref_count=retrieved.survey_ref_count,
+        matched_aspects=[], card_type="shallow",
         problem="", method="", contribution="", limitations="",
         evidence_ids=[], figure_ids=[], table_ids=[], possible_claims=claims,
         bibtex_key=None)

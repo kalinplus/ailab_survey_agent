@@ -56,6 +56,8 @@ class PaperCard(BaseModel):
     authors: list[str] = []
     year: int | None = None
     venue: str | None = None
+    citation_count: int = 0
+    survey_ref_count: int = 0
     matched_aspects: list[dict] = []
     category_id: str | None = None
     category: str = ""

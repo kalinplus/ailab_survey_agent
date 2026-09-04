@@ -60,6 +60,44 @@ def test_build_expansion_candidates_aggregates_survey_refs():
     assert genie["survey_ref_count"] == 2
 
 
+def test_expansion_candidates_are_bib_sourced_and_high_frequency_first():
+    """Spec T1 acceptance 1: survey reference lists become source=bib candidates,
+    ordered by how many seed surveys cite them."""
+    analyzed = [
+        {"paper_id": "sv1", "referenced_paper_ids": ["world_models_2018", "dreamerv3_2023"]},
+        {"paper_id": "sv2", "referenced_paper_ids": ["world_models_2018", "muzero_2020"]},
+    ]
+    expansion = build_expansion_candidates(analyzed)
+    assert [c["source"] for c in expansion] == ["bib"] * len(expansion)
+    assert [c["paper_id_hint"] for c in expansion] == [
+        "world_models_2018", "dreamerv3_2023", "muzero_2020",
+    ]
+    assert expansion[0]["survey_ref_count"] == 2
+
+
+def test_analyze_surveys_extracts_reference_metadata():
+    """Bib candidates carry title/authors/year; id hints keep their parsed year."""
+    surveys = [{"paper_id": "sv1", "title": "T", "year": 2024, "meta_data": {
+        "taxonomy_skeleton": [], "key_sections": [],
+        "top_referenced_papers": [
+            {"paper_id": "ha_2018", "title": "World Models", "authors": ["David Ha"], "year": 2018},
+            "dreamerv3_2023",
+            {"title": "MuZero", "authors": ["Julian Schrittwieser"], "year": 2020},
+            "  ",
+        ]}}]
+    analyzed = analyze_surveys(surveys)
+    assert analyzed[0]["referenced_paper_ids"] == ["ha_2018", "dreamerv3_2023", "muzero_2020"]
+    entries = analyzed[0]["reference_entries"]
+    assert entries[0] == {
+        "paper_id_hint": "ha_2018", "title": "World Models", "authors": ["David Ha"], "year": 2018,
+    }
+    assert entries[1] == {
+        "paper_id_hint": "dreamerv3_2023", "title": "", "authors": [], "year": 2023,
+    }
+    assert entries[2]["paper_id_hint"] == "muzero_2020"
+    assert entries[2]["authors"] == ["Julian Schrittwieser"]
+
+
 def test_paper_id_fallback():
     llm = _make_llm()
     surveys_no_pid = [{"title": "Survey On World Models", "year": 2024,

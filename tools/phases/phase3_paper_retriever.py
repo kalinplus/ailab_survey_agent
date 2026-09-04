@@ -129,18 +129,34 @@ def _generate_search_queries(keywords: list[str], llm) -> list[str]:
         return [raw]
 
 
+def _title_key(title: str) -> str:
+    """Version-insensitive title identity: lowercase, punctuation-free, no "v2" tail.
+
+    Same-work duplicates (preprint vs. published version) often carry different DOIs,
+    so paper_id alone cannot collapse them.
+    """
+    tokens = re.sub(r"[^a-z0-9]+", " ", title.lower()).split()
+    while tokens and re.fullmatch(r"v\d+", tokens[-1]):
+        tokens.pop()
+    return " ".join(tokens)
+
+
 def dedup(papers: list[RetrievedPaper]) -> list[RetrievedPaper]:
-    seen, out = {}, []
+    seen, titles, out = {}, {}, []
     for p in papers:
-        key = p.paper_id
-        if key in seen:
-            existing = seen[key]
+        existing = seen.get(p.paper_id)
+        title_key = _title_key(p.title)
+        if existing is None and title_key:
+            existing = titles.get(title_key)
+        if existing is not None:
             existing.survey_ref_count = max(existing.survey_ref_count, p.survey_ref_count)
             for hint in p.survey_ref_hints:
                 if hint not in existing.survey_ref_hints:
                     existing.survey_ref_hints.append(hint)
             continue
-        seen[key] = p
+        seen[p.paper_id] = p
+        if title_key:
+            titles[title_key] = p
         out.append(p)
     return out
 
@@ -255,6 +271,20 @@ def _expand_aspect_queries(keywords: list[str], queries: list[str], max_queries:
         if len(out) >= max_queries:
             break
     return out
+
+
+def _landmark_query(aspect: dict) -> str:
+    """One landmark-flavored variant per aspect: survey framing, no year window.
+
+    Aspect keyword queries only reach fresh work; the field's canonical staples
+    (World Models, Dreamer, MuZero) predate the 2018 window and surface through
+    citation-boosted survey phrasing instead.
+    """
+    base = str(aspect.get("aspect_name") or "").strip()
+    if not base:
+        keywords = [str(k).strip() for k in aspect.get("keywords", []) if str(k).strip()]
+        base = keywords[0] if keywords else ""
+    return f"{base} survey".strip()
 
 
 def _aspect_label(aspect: dict, index: int) -> str:
@@ -515,31 +545,39 @@ def run(
         else:
             queries = [" ".join(keywords)]
         queries = _expand_aspect_queries(keywords, queries, knob_queries)
+        landmark = _landmark_query(a)
         relevance_aspects.append({"keywords": queries})
         aspect_terms[label] = list(keywords) + list(queries)
-        for query in queries:
-            for filters in filter_sets:
-                try:
-                    kwargs = {
-                        "query": query,
-                        "filters": filters,
-                        "impact_boost": "MILD",
-                        "page_size": knob_page_size,
-                    }
-                    if pipeline_config.use_influence_score:
-                        kwargs["freshness_boost"] = "MILD"
-                    res = sciverse.meta_search(**kwargs)
-                    hits = res.get("results", [])
-                    logger.info(f"[P3] meta_search q={query!r} filters={filters} -> {len(hits)} hits")
-                    for hit in hits:
-                        paper = _to_retrieved(hit)
-                        first_seen_rank.setdefault(paper.paper_id, len(retrieved))
-                        labels = aspect_of.setdefault(paper.paper_id, [])
-                        if label not in labels:
-                            labels.append(label)
-                        retrieved.append(paper)
-                except Exception as e:
-                    logger.warning(f"[P3] meta_search failed q={query!r} filters={filters}: {e}")
+        # (query, filters, freshness-biased): the landmark variant runs with no year
+        # window and no freshness boost — influence only. Its query text stays out of
+        # the pooled relevance terms so it cannot activate a prefilter that the
+        # aspect's own keywords would leave inert.
+        searches = [(query, filters, True) for query in queries for filters in filter_sets]
+        if landmark:
+            searches.append((landmark, [], False))
+        for query, filters, freshness_biased in searches:
+            try:
+                kwargs = {
+                    "query": query,
+                    "filters": filters,
+                    "impact_boost": "MILD",
+                    "page_size": knob_page_size,
+                }
+                if pipeline_config.use_influence_score and freshness_biased:
+                    kwargs["freshness_boost"] = "MILD"
+                res = sciverse.meta_search(**kwargs)
+                hits = res.get("results", [])
+                variant = "landmark " if not freshness_biased else ""
+                logger.info(f"[P3] meta_search {variant}q={query!r} filters={filters} -> {len(hits)} hits")
+                for hit in hits:
+                    paper = _to_retrieved(hit)
+                    first_seen_rank.setdefault(paper.paper_id, len(retrieved))
+                    labels = aspect_of.setdefault(paper.paper_id, [])
+                    if label not in labels:
+                        labels.append(label)
+                    retrieved.append(paper)
+            except Exception as e:
+                logger.warning(f"[P3] meta_search failed q={query!r} filters={filters}: {e}")
     # 3. seed fallback if empty
     if not retrieved and pipeline_config.use_seed_fallback:
         logger.warning(f"[P3] empty retrieval -> seed fallback ({len(seed_papers)} papers)")

@@ -1,4 +1,5 @@
 import logging
+import re
 from pydantic import BaseModel
 from tools.models.common import paper_id_from_seed
 
@@ -24,6 +25,52 @@ Survey taxonomies: {survey_skels}
 Merge, dedupe, fix gaps. Return ONLY JSON: {{"categories":[{{"name":str,"description":str,"incorporated_from":[str]}}]}}"""
 
 
+def _hint_year(hint: str) -> int | None:
+    parts = hint.split("_")
+    if parts and len(parts[-1]) == 4 and parts[-1].isdigit():
+        return int(parts[-1])
+    return None
+
+
+def _int_year(year) -> int | None:
+    if isinstance(year, int):
+        return year
+    if isinstance(year, float):
+        return int(year)
+    text = str(year or "").strip()
+    return int(text) if text.isdigit() else None
+
+
+def _hint_from_title(title: str, year) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "_", title.lower()).strip("_")
+    parsed_year = _int_year(year)
+    return f"{slug}_{parsed_year}" if slug and parsed_year else slug
+
+
+def _reference_entry(ref) -> dict | None:
+    """Normalize one seed-survey reference into a searchable bib entry.
+
+    References arrive either as id hints ("dreamerv3_2023") or as structured
+    entries ({paper_id/paper_id_hint, title, authors, year}); the hint is the
+    grouping/search key, title/authors/year are the citation metadata.
+    """
+    if isinstance(ref, dict):
+        title = " ".join(str(ref.get("title") or "").split())
+        hint = str(ref.get("paper_id_hint") or ref.get("paper_id") or "").strip()
+        if not title and not hint:
+            return None
+        return {
+            "paper_id_hint": hint or _hint_from_title(title, ref.get("year")),
+            "title": title,
+            "authors": [str(a).strip() for a in (ref.get("authors") or []) if str(a).strip()],
+            "year": _int_year(ref.get("year")),
+        }
+    hint = str(ref).strip()
+    if not hint:
+        return None
+    return {"paper_id_hint": hint, "title": "", "authors": [], "year": _hint_year(hint)}
+
+
 def analyze_surveys(surveys: list[dict], mineru=None, cleaner=None) -> list[dict]:
     out = []
     seen = set()
@@ -34,24 +81,48 @@ def analyze_surveys(surveys: list[dict], mineru=None, cleaner=None) -> list[dict
         seen.add(paper_id)
         meta = s.get("meta_data", {})
         skel = meta.get("taxonomy_skeleton", [])
-        refs = meta.get("top_referenced_papers", [])
+        entries: dict[str, dict] = {}
+        for raw_ref in meta.get("top_referenced_papers", []):
+            entry = _reference_entry(raw_ref)
+            if entry:
+                entries.setdefault(entry["paper_id_hint"], entry)
         out.append({
             "paper_id": paper_id,
             "taxonomy_skeleton": skel,
             "key_sections": meta.get("key_sections", []),
-            "referenced_paper_ids": refs,
+            "referenced_paper_ids": list(entries),
+            "reference_entries": list(entries.values()),
             "key_claims": [],
         })
     return out
 
 
 def build_expansion_candidates(analyzed_surveys: list[dict]) -> list[dict]:
+    """Turn the seed surveys' own reference lists into bib-sourced search targets.
+
+    These references are the field's pseudo-gold: a paper cited by more seed
+    surveys is more canonical, so survey_ref_count orders the list.
+    """
     candidates = {}
     for survey in analyzed_surveys:
         survey_id = survey["paper_id"]
-        for paper_id_hint in dict.fromkeys(survey["referenced_paper_ids"]):
-            item = candidates.setdefault(paper_id_hint, {
-                "paper_id_hint": paper_id_hint,
+        entries = survey.get("reference_entries")
+        if entries is None:
+            # Legacy callers pass bare hints; one citation per survey counts once.
+            per_survey: dict[str, dict] = {}
+            for hint in survey["referenced_paper_ids"]:
+                entry = _reference_entry(hint)
+                if entry:
+                    per_survey.setdefault(entry["paper_id_hint"], entry)
+            entries = list(per_survey.values())
+        for entry in entries:
+            hint = entry["paper_id_hint"]
+            item = candidates.setdefault(hint, {
+                "paper_id_hint": hint,
+                "title": entry["title"],
+                "authors": list(entry["authors"]),
+                "year": entry["year"],
+                "source": "bib",
                 "source_survey": survey_id,
                 "source_surveys": [],
                 "survey_ref_count": 0,
