@@ -18,15 +18,20 @@
 
 ## Next
 
-### 下一轮迭代 bucket（按评测证据排序，待用户挑）
+### T1 搜索引导与白名单选择（worktree 并行中）
 
-- **冗余**：OC×FD 0.961——`_evidence_bits` 同源导致两节内容几乎相同，需要差异化数据源或合并为一节；Abstract×Intro 0.898。
-- **评测器格式耦合**：L1 cited=2 / L0 正文节零引用是 GLM 句尾挂引用所致（已修 `e007ac7`），但评测器的 cited-sentence 判定也应对 citation-only fragment 做归一化，否则永远低估。
-- **claim_map 提取薄**：30 引用只提出 2-8 条参与验证——generation 侧 verify 覆盖薄，靠评测 L1.5 兜底；考虑把 claim mapper 的引用提取升级为多引用/跨行鲁棒。
-- **gold 对齐回退**：system-in-gold 0.583→0.118，60 篇广度语料 vs gold 338 篇重合度低——P2/P3 的 EN 主题 aspects 与 gold 综述参考表错位，需要相关性引导的检索或 gold-free 的覆盖度量。
-- **L3 元话语残留**：judge 仍点名 meta-commentary——repair agent 改写句可能引入新的元话语，禁词表可加入 repair 输出侧。
-- **MinerU 图表链路**（用户指示暂缓）：`/agent/parse/url` 秒回 200 零轮询 → parsed=0。
-- **P2 taxonomy 随机性**：4 轮 run 类目数 26/4/~2/4 波动大，考虑温度/种子固定或模板化。
+- 任务目标：种子综述 bib 驱动 expansion + landmark 查询族 + 标题模糊去重 + 白名单 recency×influence 混合。spec：`specs/T1-搜索引导与白名单选择.md`
+- 验收条件：unit（fake API）四条全过；真跑（S0 下轮）in-gold ≥0.3、staples 命中非空
+
+### T2 评测度量 gold-free 改造（worktree 并行中）
+
+- 任务目标：seed-bib recall / canonical hit@N / 多样性指标替换 gold 主位 + 评测器 citation-only 归一化。spec：`specs/T2-评测度量goldfree改造.md`；canonical 清单已备 `cache/canonical_papers.json`（20 篇）
+- 验收条件：unit 四条全过；回放尝试 5 工件 L1 cited 句 ≥15
+
+### T3 写作变化性（worktree 并行中）
+
+- 任务目标：正文 moves 菜单驱动（按主张组织）、引用风格混合、OC/FD 数据源分离、Abstract/Intro 差异化。spec：`specs/T3-写作变化性.md`（吸收学术写作研究：Waterloo/Monash/Purdue OWL、Mensch & Kording 2017）
+- 验收条件：unit 五条全过（跨节句唯一、OC∩FD 证据集为空、两种引用形态绑定、Abstract 带引用）；真跑 L0 max sim<0.8
 
 ## Log
 
