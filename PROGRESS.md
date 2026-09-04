@@ -22,6 +22,15 @@
 
 ## Log
 
+### 2026-09-04（下午：S0 真跑 4 轮迭代——LLM 写作 × NLI × 修复回路的三重冲突诊断与修复）
+
+- S0 尝试 1 失败：P5.2 agentic backfill 在语料 60 下 692 次搜索 ~18min，超 `TOOL_TIMEOUT_SECONDS=900`，主进程死而 worker 线程活到写完 bundle——假象"跑完"。教训：长真跑命令里不要加 `; echo`（吞退出码）。
+- S0 尝试 2 完成但产物回退（正文 4 节被修复回路吃光）。诊断三重根因：① writer LLM 把 id 裸写进句子且 DOI 内插空格（27 bare vs 8 合法括号），括号白名单过滤看不见 → 全成未引用 claim；② NLI 对 zh LLM 转述 12/15 判 unsupported；③ claim mapper 把 `![caption](id)` 的方括号当引用（cited_paper_id 竟是 caption 文本）→ 垃圾 claim → delete-repair 掏空正文。citation_ready_set 的 `[:max_core_papers]` 硬截是"84 引用 3 唯一 id"的上游机制，`--max-core-papers 15` 放开。
+- 修复 commit `98ec405`：writer prompt 改 [Pn] 别名（模型永远见不到可改坏的 id，解析后映射回真实 id）+ 裸 id/DOI 残段句级丢弃 + `HEAVY_LLM_*` env 三元组（writer/修复走 GLM `glm-5.3-flash`，open.bigmodel.cn OpenAI 兼容端点；GLM 是常思考模型，max_tokens 要给足、`thinking` 不支持 disabled）+ claim mapper 剥 embed 行。Intern 留给简单判断任务。
+- 尝试 3（en + GLM）：structural invalid=0（别名方案生效，零真泄漏）、gate 到 fixpoint、coverage 1.02——但 GLM 带引用句 4/4 被 NLI 判 unsupported，正文仍被吃到只剩 1 节。结论：NLI 杀转述、亲近引用；claim_map 只提出 4 条（GLM 段内引用稀疏）。
+- 尝试 4 进行中：SUMMARY 段改"近乎逐字拼装 evidence snippet + 挂 tag"（评测陷阱 memory 的镜像：verbatim 句过 sentence-window NLI）+ 开 `EVISURVEY_REPAIR_AGENT=1`（关节2 remap/rewrite/backfill 替代 delete-only，正是为 unsupported 设计的机制；`EVISURVEY_NLI_DEVICE=cpu` 防 MPS OOM）。
+- 遗留：P2 taxonomy Intern 随机性大（26/4/~2 类目跨 run）；MinerU `/agent/parse/url` 秒回 200 零轮询 → parsed=0（图表链路断，用户指示先放下）；P1 coverage LLM 偶发 JSON 前缀泄漏（有降级）。覆盖闸盲区：retention 以 round 0 为基线，测"相对变矮"测不了"绝对太矮"。
+
 ### 2026-09-04（S1+S2 双 worktree 并行派发第二轮：合并完成）
 
 - 第二轮双任务并行：S1 检索广度与来源深度（`specs/检索广度与来源深度.md`）+ S2 写作端混合内核（`specs/写作端混合内核.md`，用户拍板混合内核：骨架模板+正文 LLM grounded+模板兜底）。spec 先行提交（`f9943a8`）规避上轮 worktree 基点坑，派发提示写明先 `git merge --ff-only main`——本轮零基点摩擦。
