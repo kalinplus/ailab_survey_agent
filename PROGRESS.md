@@ -21,6 +21,13 @@
 
 ## Log
 
+### 2026-09-04（夜：S0 第二轮回退取证——"重复节"是引用提取的假象）
+
+- 机制（取证 agent `91eede4` 字节级闭环）：writer 输出的某个句子里有一个**未闭合的 `[`**（`_shorten` 截断切断了引用括号）→ 引用提取器把 1535 字符的多段落块读成一个"citation id" → repair 删不掉（句子匹配找不到完整 `[id]`，记 invalid_action）→ `_replace_references` 的 `title or paper_id` 兜底把该块当 id+title **打印两遍**（25022→29628 的 +4606 字符对账吻合）。"重复节"实为引用列表条目内嵌的标题文本，writer/revise 主体流程从未动过节。
+- 修复三连：`91eede4`（repair 逐动作后置条件：节集合变化 / References 后内容变化 / 新白名单外 id → 还原为 invalid_action 单动作失败）+ `_replace_references` 只列已验证卡 + `33b35e9`（`_shorten` 不得留下未平衡括号，源头消灭）。
+- 教训归档：文本截断/拼接工具必须保证括号平衡；提取器面对畸形输入的吞块行为要靠下游不变式兜底（repair 后置条件正是干这个的）。
+- S0 第三轮进行中（GLM effort=low + 6000 预算 + repair 不变式 + 括号平衡全部生效）。
+
 ### 2026-09-04（晚三：T3 合并，三路并行全闭环）
 
 - T3 合并（`6a8bbd8`，378 unit passed）：固定三段骨架 → moves 菜单（按主张分组/让论文互相对话/缺口收尾）；author-prominent + information-prominent 引用风格混用（滞留 tag 归位正则泛化 `_STRANDED_TAGS_RE`）；删 `_evidence_bits`，OC/FD 从 `_limitation_pool` 对半切（构造性不相交）；跨节句子台账 `_fresh_text`（任何句全文只出现一次）；Abstract/Intro 分离（锚点引用 + taxonomy roadmap）。离线真实数据冒烟：全文跨节零重复句、OC×FD 掉出相似度 top8。
