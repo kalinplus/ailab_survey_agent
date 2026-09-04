@@ -80,7 +80,9 @@ _PLACEMENT_INDEX = {
     "after_limitation_paragraph": -1,
 }
 
-_SENTENCE_RE = re.compile(r"(?<=[.!?。！？])\s*")
+_SENTENCE_RE = re.compile(r"(?<=[.!?。！？])\s+")
+# \s+ not \s*: a zero-width split shreds DOIs ("10." | "48550/...") so every
+# citation in an LLM sentence got fragmented and dropped by the guards.
 
 POSITIVE_KEYWORDS = [
     "game",
@@ -1633,14 +1635,29 @@ def _map_alias_citations(text: str, alias_of: dict[str, str]) -> str:
 
 
 def _sanitize_llm_paragraph(text: str, allowed: set[str]) -> str:
+    # Compact space-broken recalled DOIs BEFORE sentence splitting: the split
+    # would otherwise cut "10. 48550/arxiv." into orphan fragments that dodge
+    # both the leak guards and the whitelist check (every LLM path funnels
+    # through here; the tail sections do not alias-map, so this is the one
+    # point that sees all of them).
+    text = re.sub(
+        r"\[(paper:[^\]]+)\]",
+        lambda m: "[" + re.sub(r"\s+", "", m.group(1)) + "]",
+        text,
+    )
     keep = []
     for sentence in _split_sentences(text):
-        if _contains_banned_phrase(sentence):
-            continue
-        if _LEAKED_ID_RE.search(sentence) or _LEAKED_ID_FRAGMENT_RE.match(sentence):
-            continue
         citations = _extract_citations(sentence)
         if citations and not citations <= allowed:
+            continue
+        # Leak/fragment guards judge the citation-free residue: a well-formed
+        # bracket citation contains "paper:<digits>" and must NOT trip the
+        # bare-id guard (that ordering silently dropped every LLM-drafted
+        # citation between 98ec405 and this fix).
+        residue = re.sub(r"\[[^\]]*\]", "", sentence)
+        if _contains_banned_phrase(residue):
+            continue
+        if _LEAKED_ID_RE.search(residue) or _LEAKED_ID_FRAGMENT_RE.match(residue):
             continue
         keep.append(sentence.strip())
     return " ".join(part for part in keep if part)
