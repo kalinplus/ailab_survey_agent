@@ -6,7 +6,9 @@ Four layers (specs/评测体系v2-离线四层改造.md):
   L1   NLI citation quality on (sentence, citation) pairs
   L1.5 uncited-claim verification via SciVerse agentic-search + NLI
        (--skip-uncited to stay offline; resumable through the claim cache)
-  L2'  corpus-grounded coverage over the P5 taxonomy (+ optional gold control)
+  L2'  corpus-grounded coverage over the P5 taxonomy (+ gold-free reference quality:
+       seed-bib recall / canonical hit@N / corpus diversity; the gold control is
+       reported as a labeled secondary diagnostic)
   L3   DeepSurvey three-dimension academic-value judge
 plus the repair-joint A/B table.
 Writes output/survey_eval_report.json + output/survey_eval_report.md.
@@ -30,12 +32,15 @@ from harness.json_io import read_json, write_json  # noqa: E402
 from tools.evaluate_survey import (  # noqa: E402
     ab_comparison,
     academic_value,
+    canonical_hits,
     citation_quality,
     corpus_coverage,
+    corpus_diversity,
     deterministic_profile,
     overall_unsupported_rate,
     reference_coverage,
     render_md,
+    seed_bib_coverage,
     uncited_claims,
 )
 from tools.models.artifacts import EvidenceStore  # noqa: E402
@@ -86,6 +91,13 @@ def main() -> None:
     ap.add_argument("--figure-bank", default="cache/final_figure_bank.json")
     ap.add_argument("--table-bank", default="cache/final_table_bank.json")
     ap.add_argument("--gold-refs", default="cache/gold_refs.json")
+    ap.add_argument("--seed-bibs", default="cache/seed_survey_bibs.json",
+                    help="seed surveys' union bibliography "
+                         "(scripts/build_seed_survey_bibs.py); missing file -> block skipped")
+    ap.add_argument("--canonical", default="cache/canonical_papers.json",
+                    help="curated landmark papers; missing file -> block skipped")
+    ap.add_argument("--canonical-k", type=int, default=10,
+                    help="N for the canonical hit@N line (list order is the curator's)")
     ap.add_argument("--ab-report", default="output/repair_ab_report.json")
     ap.add_argument("--uncited-cache", default="output/uncited_claim_cache.json")
     ap.add_argument("--skip-judge", action="store_true", help="skip L3 academic value")
@@ -141,7 +153,40 @@ def main() -> None:
          f"weighted_depth={cc['weighted_citation_depth']} "
          f"utilization={cc['corpus_utilization']}")
 
-    # Layer 2 (gold control) — reference recall against a real survey
+    # Layer 2 (gold-free, primary) — seed-bib recall / canonical hits / diversity
+    seed_path = ROOT / args.seed_bibs
+    if seed_path.exists():
+        sb = seed_bib_coverage(pool, read_json(seed_path))
+        report["seed_bib_coverage"] = sb
+        _log(f"Layer 2: seed_bib_recall={sb['seed_bib_recall']} "
+             f"({sb['n_matched_entries']}/{sb['n_seed_bibs']} union entries) "
+             f"in_seed_bib_rate={sb['in_seed_bib_rate']}")
+    else:
+        report["seed_bib_coverage"] = {
+            "status": "skipped",
+            "reason": f"{args.seed_bibs} not found (generate with "
+                      "scripts/build_seed_survey_bibs.py)",
+        }
+        _log(f"Layer 2 seed-bib skipped: {seed_path} not found")
+
+    canonical_path = ROOT / args.canonical
+    if canonical_path.exists():
+        ch = canonical_hits(pool, read_json(canonical_path), k=args.canonical_k)
+        report["canonical_hits"] = ch
+        _log(f"Layer 2: canonical hit@{ch['k']}={ch['hit_at_k_rate']} "
+             f"hit_rate={ch['hit_rate']} ({ch['n_hits']}/{ch['n_canonical']})")
+    else:
+        report["canonical_hits"] = {
+            "status": "skipped", "reason": f"{args.canonical} not found"}
+        _log(f"Layer 2 canonical skipped: {canonical_path} not found")
+
+    report["corpus_diversity"] = corpus_diversity(taxonomy_categories, pool)
+    dv = report["corpus_diversity"]
+    _log(f"Layer 2: diversity aspects={dv['n_aspects']} venues={dv['n_venues']} "
+         f"years={dv['years'][0] if dv['years'] else None}..{dv['years'][-1] if dv['years'] else None} "
+         f"unassigned={dv['n_unassigned_papers']}")
+
+    # Layer 2 (gold control, secondary diagnostic) — recall against one real survey
     gold_path = ROOT / args.gold_refs
     if gold_path.exists():
         gold = read_json(gold_path)
@@ -149,10 +194,10 @@ def main() -> None:
         rc = reference_coverage(titles, gold, scorer=None if args.skip_fuzzy else scorer)
         rc["fuzzy"] = not args.skip_fuzzy
         report["reference_coverage"] = rc
-        _log(f"Layer 2: reference_recall={rc['reference_recall']} "
+        _log(f"Layer 2 gold control: reference_recall={rc['reference_recall']} "
              f"(exact={rc['exact_matches']} fuzzy={rc['fuzzy_matches']} / {rc['n_gold_refs']})")
     else:
-        _log(f"Layer 2 skipped: {gold_path} not found")
+        _log(f"Layer 2 gold control skipped: {gold_path} not found")
 
     # Layer 1.5 — uncited-claim verification (external retrieval, resumable)
     if args.skip_uncited:
@@ -195,10 +240,13 @@ def main() -> None:
         "nli_model": nli_name,
         "judge_model": None if args.skip_judge else load_config().intern_model_name,
         "layers": "L0 deterministic / L1 citation quality / L1.5 uncited claims / "
-                  "L2' corpus coverage (+gold control) / L3 academic value",
+                  "L2' corpus coverage + gold-free reference quality (seed-bib recall, "
+                  "canonical hit@N, corpus diversity) / L3 academic value",
         "note": "Layer 1 is pair-level (every citation per sentence); evaluator shares "
                 "the NLIVerifier infrastructure with the generation-side claim mapper "
-                "but runs independently on the final artifact.",
+                "but runs independently on the final artifact. Gold reference recall is a "
+                "secondary diagnostic only: one gold survey's reference list is not ground "
+                "truth and its size caps recall for a breadth-first corpus.",
     }
 
     out_json = ROOT / f"{args.out}.json"

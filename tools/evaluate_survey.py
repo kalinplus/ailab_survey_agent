@@ -4,7 +4,9 @@ Layers (specs/评测体系v2-离线四层改造.md):
   L0   deterministic profile: freshness / structure / redundancy (no LLM, no network)
   L1   citation quality: AutoSurvey/ALCE-style NLI metrics on (sentence, citation) pairs
   L1.5 uncited-claim verification: SciVerse agentic-search + NLI (skippable, resumable)
-  L2'  corpus-grounded coverage over the P5 taxonomy (+ optional gold-reference recall)
+  L2'  corpus-grounded coverage over the P5 taxonomy (+ gold-free reference quality:
+       seed-bib recall / canonical hit@N / corpus diversity; the single-survey gold
+       recall stays as a labeled secondary diagnostic)
   L3   academic value: DeepSurvey-Bench three-dimension judge
 
 Standalone audit tool over existing run artifacts (output/survey.md,
@@ -45,12 +47,29 @@ def _is_citation(cited_id: str, known_ids: set[str] | None) -> bool:
     return cited_id.startswith("paper:") or (known_ids is not None and cited_id in known_ids)
 
 
-def _iter_sentence_claims(md: str, known_ids: set[str] | None = None):
-    """Yield (sentence_index, claim_text, citation_ids) per cited sentence."""
-    for i, sentence in enumerate(_sentences(md)):
+def _sentence_units(md: str, known_ids: set[str] | None = None) -> list[tuple[str, list[str]]]:
+    """(claim_text, citation_ids) per logical sentence.
+
+    Models drop the tag after the closing period ('...scale. [paper:x].'), which
+    sentence splitting turns into a citation-only fragment; that fragment is
+    merged back into the preceding sentence so its citations bind to the claim
+    they annotate instead of being dropped (and the preceding sentence miscounted
+    as uncited)."""
+    units: list[list] = []
+    for sentence in _sentences(md):
         cites = [c for c in _CITATION.findall(sentence) if _is_citation(c, known_ids)]
         text = _CITATION.sub("", sentence).strip().rstrip(".。").strip()
-        if cites and text:
+        if not text and cites and units and units[-1][0]:
+            units[-1][1].extend(cites)
+        elif text:
+            units.append([text, cites])
+    return [(text, cites) for text, cites in units]
+
+
+def _iter_sentence_claims(md: str, known_ids: set[str] | None = None):
+    """Yield (unit_index, claim_text, citation_ids) per cited sentence."""
+    for i, (text, cites) in enumerate(_sentence_units(md, known_ids)):
+        if cites:
             yield i, text, cites
 
 
@@ -109,7 +128,7 @@ def citation_quality(survey_md: str, evidence_store, nli) -> dict:
         by_paper.setdefault(e.paper_id, []).append(e)
     known_ids = set(by_paper)
 
-    sentences = _sentences(survey_md)
+    sentences = _sentence_units(survey_md, known_ids)
     n_cited_sentences = 0
     n_recalled_sentences = 0
     pairs: list[dict] = []
@@ -259,6 +278,158 @@ def reference_coverage(
         "missed_count": total - matched_count,
         "matched_titles": sorted(matched.values()),
         "system_in_gold_rate": round(len(system_matched) / len(system_norm), 3) if system_norm else 0.0,
+    }
+
+
+# ── gold-free reference quality (primary slot) ─────────────────────
+#
+# A single gold survey's reference list is a biased denominator for a
+# breadth-first corpus (338 gold refs cap reference_recall near 0.15 for a
+# 51-paper corpus) and is not ground truth, so the measures below carry the
+# report and reference_coverage stays as a labeled secondary diagnostic.
+
+
+def seed_bib_coverage(papers: list[dict], seed_bibs: dict) -> dict:
+    """Recall against the seed surveys' union bibliography instead of one gold
+    survey. seed_bibs is cache/seed_survey_bibs.json (built by
+    scripts/build_seed_survey_bibs.py from the artifact P2 already reads).
+
+    seed_bib_recall = corpus ∩ union / |union|; in_seed_bib_rate = distinct
+    corpus papers hit / |corpus|. A corpus paper matches an entry on normalized
+    title or paper id, so entries without a resolvable title still count.
+    """
+    entries = seed_bibs.get("entries", [])
+    corpus = [(_normalize_title(p.get("title") or ""), _norm_pid(p.get("paper_id") or ""))
+              for p in papers]
+    matched: list[str] = []
+    missed: list[str] = []
+    matched_papers: set[int] = set()
+    for entry in entries:
+        entry_title = _normalize_title(entry["title"]) if entry.get("title") else ""
+        entry_id = _norm_pid(entry["id"]) if entry.get("id") else ""
+        hit = {i for i, (title, pid) in enumerate(corpus)
+               if (entry_title and title == entry_title) or (entry_id and pid == entry_id)}
+        label = entry.get("title") or entry.get("id") or "?"
+        (matched if hit else missed).append(label)
+        matched_papers |= hit
+    return {
+        "n_surveys": seed_bibs.get("n_surveys"),
+        "n_seed_bibs": len(entries),
+        "n_corpus_papers": len(papers),
+        "n_matched_entries": len(matched),
+        "n_matched_papers": len(matched_papers),
+        "seed_bib_recall": round(len(matched) / len(entries), 3) if entries else 0.0,
+        "in_seed_bib_rate": round(len(matched_papers) / len(papers), 3) if papers else 0.0,
+        "matched": matched,
+        "missed": missed,
+    }
+
+
+def canonical_hits(papers: list[dict], canonical: dict, k: int = 10) -> dict:
+    """hit@N over the hand-curated landmark list (cache/canonical_papers.json):
+    how many of the topic's canonical papers the corpus contains. List order is
+    the curator's, so hits_at_k reads only the first k entries.
+
+    Matching is exact equality on normalized labels — canonical title/alias vs
+    the corpus title and its colon-separated parts ("DreamerV3: Mastering
+    ..." carries the alias as its head). Never a substring test: "World models"
+    must not match "Daydreamer: World models for physical robot learning"."""
+    entries = canonical.get("papers", [])
+    corpus_labels = []
+    for p in papers:
+        title = str(p.get("title") or "")
+        labels = {_normalize_title(part) for part in (title, *title.split(":"))}
+        labels.discard("")
+        corpus_labels.append(labels)
+    flags: list[bool] = []
+    matched: list[str] = []
+    missed: list[str] = []
+    for entry in entries:
+        labels = [_normalize_title(entry[key]) for key in ("title", "alias")
+                  if entry.get(key)]
+        hit = any(label in paper_labels for label in labels for paper_labels in corpus_labels)
+        flags.append(hit)
+        (matched if hit else missed).append(entry.get("alias") or entry.get("title") or "?")
+    n = len(entries)
+    head = min(k, n)
+    return {
+        "n_canonical": n,
+        "n_corpus_papers": len(papers),
+        "n_hits": sum(flags),
+        "hit_rate": round(sum(flags) / n, 3) if n else 0.0,
+        "k": head,
+        "hits_at_k": sum(flags[:head]),
+        "hit_at_k_rate": round(sum(flags[:head]) / head, 3) if head else 0.0,
+        "matched": matched,
+        "missing": missed,
+    }
+
+
+def _percentiles(values: list[float]) -> dict | None:
+    """p25 / p50 / p75 (inclusive interpolation); None when nothing to rank."""
+    if not values:
+        return None
+    if len(values) == 1:
+        only = round(values[0], 3)
+        return {"p25": only, "p50": only, "p75": only}
+    q1, q2, q3 = statistics.quantiles(values, n=4, method="inclusive")
+    return {"p25": round(q1, 3), "p50": round(q2, 3), "p75": round(q3, 3)}
+
+
+def _diversity_row(aspect_id: str, aspect_name: str, members: list[dict]) -> dict:
+    years = sorted(int(p["year"]) for p in members if p.get("year"))
+    # venue identity is case-insensitive ("NeurIPS" == "neurips"); first spelling wins
+    venue_map: dict[str, str] = {}
+    for p in members:
+        if p.get("venue"):
+            name = str(p["venue"]).strip()
+            venue_map.setdefault(name.lower(), name)
+    venues = [venue_map[key] for key in sorted(venue_map)]
+    citations = [float(p["citation_count"]) for p in members
+                 if isinstance(p.get("citation_count"), (int, float))
+                 and not isinstance(p.get("citation_count"), bool)]
+    return {
+        "aspect_id": aspect_id,
+        "aspect_name": aspect_name,
+        "n_papers": len(members),
+        "years": years,
+        "year_spread": (years[-1] - years[0]) if years else None,
+        "year_median": _median(years),
+        "n_venues": len(venues),
+        "venues": venues,
+        "citation_percentiles": _percentiles(citations),
+    }
+
+
+def corpus_diversity(categories: list, papers: list[dict]) -> dict:
+    """Corpus diversity per aspect: year distribution, distinct venues and
+    citation-count percentiles. Aspects are the P5 taxonomy categories; papers
+    are paper cards. citation_count only exists on retrieval cards, so the
+    percentiles are None when the corpus carries none."""
+    by_id = {_norm_pid(p.get("paper_id") or ""): p for p in papers}
+    assigned: set[str] = set()
+    rows: list[dict] = []
+    for cat in (_category_fields(c) for c in categories):
+        members = []
+        for pid in cat["paper_ids"]:
+            key = _norm_pid(pid)
+            if key in by_id:
+                members.append(by_id[key])
+                assigned.add(key)
+        rows.append(_diversity_row(cat["category_id"], cat["category_name"], members))
+    unassigned = [p for key, p in by_id.items() if key not in assigned]
+    overall = _diversity_row("all", "all corpus papers", papers)
+    return {
+        "n_aspects": len(rows),
+        "n_papers": len(papers),
+        "n_unassigned_papers": len(unassigned),
+        "years": overall["years"],
+        "year_spread": overall["year_spread"],
+        "year_median": overall["year_median"],
+        "n_venues": overall["n_venues"],
+        "venues": overall["venues"],
+        "citation_percentiles": overall["citation_percentiles"],
+        "aspects": rows,
     }
 
 
@@ -556,10 +727,8 @@ def _iter_uncited_claims(md: str, known_ids: set[str]):
     for title, body in _split_sections(md):
         if not _is_body_section(title):
             continue
-        for sentence in _sentences(body):
-            cites = [c for c in _CITATION.findall(sentence) if _is_citation(c, known_ids)]
-            text = _CITATION.sub("", sentence).strip().rstrip(".。").strip()
-            if not cites and text:
+        for text, cites in _sentence_units(body, known_ids):
+            if not cites:
                 yield text
 
 
@@ -713,6 +882,10 @@ def _fmt(value) -> str:
     return "n/a" if value is None else str(value)
 
 
+def _fmt_pct(pct: dict | None) -> str:
+    return f"{pct['p25']}/{pct['p50']}/{pct['p75']}" if pct else "n/a"
+
+
 def render_md(report: dict) -> str:
     """Human-readable summary: Deterministic Profile → Faithfulness →
     Coverage → Academic Value → A/B table."""
@@ -791,8 +964,71 @@ def render_md(report: dict) -> str:
 
     cc = report.get("corpus_coverage")
     rc = report.get("reference_coverage")
-    if cc or rc:
+    sb = report.get("seed_bib_coverage")
+    ch = report.get("canonical_hits")
+    dv = report.get("corpus_diversity")
+    if cc or rc or sb or ch or dv:
         lines += ["## Block 3 — Coverage", ""]
+        if sb or ch or dv:
+            lines += ["Gold-free reference quality (primary):", "",
+                      "| metric | value |", "|---|---|"]
+            if isinstance(sb, dict) and sb.get("status") == "skipped":
+                lines.append(f"| Seed-bib recall | skipped — {sb.get('reason')} |")
+            elif sb:
+                lines += [
+                    f"| Seed-bib recall | {sb['seed_bib_recall']} "
+                    f"({sb['n_matched_entries']}/{sb['n_seed_bibs']} union entries from "
+                    f"{_fmt(sb.get('n_surveys'))} seed surveys) |",
+                    f"| In-seed-bib rate | {sb['in_seed_bib_rate']} "
+                    f"({sb['n_matched_papers']}/{sb['n_corpus_papers']} corpus papers) |",
+                ]
+            if isinstance(ch, dict) and ch.get("status") == "skipped":
+                lines.append(f"| Canonical hit@N | skipped — {ch.get('reason')} |")
+            elif ch:
+                lines += [
+                    f"| Canonical hit@{ch['k']} | {ch['hit_at_k_rate']} "
+                    f"({ch['hits_at_k']}/{ch['k']}) |",
+                    f"| Canonical hit rate | {ch['hit_rate']} "
+                    f"({ch['n_hits']}/{ch['n_canonical']}) |",
+                ]
+            if dv:
+                lines.append(
+                    f"| Corpus diversity | {dv['n_papers']} papers over {dv['n_aspects']} aspects, "
+                    f"{dv['n_venues']} venues, years "
+                    f"{dv['years'][0] if dv['years'] else 'n/a'}–"
+                    f"{dv['years'][-1] if dv['years'] else 'n/a'} "
+                    f"(median {_fmt(dv['year_median'])}), citations p25/p50/p75 "
+                    f"{_fmt_pct(dv['citation_percentiles'])} |")
+            lines.append("")
+            if ch and ch.get("matched"):
+                lines += ["Canonical hits: " + ", ".join(ch["matched"])]
+            if ch and ch.get("missing"):
+                lines += ["Canonical missing: " + ", ".join(ch["missing"])]
+            if isinstance(sb, dict) and sb.get("missed"):
+                shown = sb["missed"][:10]
+                tail = f" (+{len(sb['missed']) - len(shown)} more)" if len(sb["missed"]) > len(shown) else ""
+                lines += [f"Seed-bib missed ({len(sb['missed'])}/{sb['n_seed_bibs']}): "
+                          f"{', '.join(shown)}{tail}"]
+            if dv:
+                lines += [
+                    "",
+                    "| aspect | papers | years | venues | citations p25/p50/p75 |",
+                    "|---|---|---|---|---|",
+                ]
+                lines += [
+                    f"| {r['aspect_name']} | {r['n_papers']} | "
+                    f"{r['years'][0] if r['years'] else 'n/a'}–"
+                    f"{r['years'][-1] if r['years'] else 'n/a'} | {r['n_venues']} | "
+                    f"{_fmt_pct(r['citation_percentiles'])} |"
+                    for r in dv["aspects"]
+                ]
+                if dv.get("n_unassigned_papers"):
+                    lines += [
+                        "",
+                        f"Note: {dv['n_unassigned_papers']} corpus papers are in no taxonomy "
+                        "category, so they appear in the totals above but in no aspect row.",
+                    ]
+            lines.append("")
         if cc:
             lines += [
                 f"Corpus-grounded coverage **{cc['category_coverage_rate']}** "
@@ -821,7 +1057,9 @@ def render_md(report: dict) -> str:
             lines.append("")
         if rc:
             lines += [
-                f"Gold survey control: **{rc['gold_source_title']}** ({rc['n_gold_refs']} refs). "
+                f"Gold survey control (secondary diagnostic — caveat: a single gold survey's "
+                f"reference list is not ground truth, and its size caps recall for a "
+                f"breadth-first corpus): **{rc['gold_source_title']}** ({rc['n_gold_refs']} refs). "
                 f"Reference recall **{rc['reference_recall']}** "
                 f"(exact {rc['exact_matches']} + substring {rc.get('substring_matches', 0)} "
                 f"+ fuzzy {rc['fuzzy_matches']}); "

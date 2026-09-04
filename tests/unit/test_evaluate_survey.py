@@ -13,10 +13,13 @@ from tools.evaluate_survey import (
     ab_comparison,
     reference_coverage,
     academic_value,
+    canonical_hits,
     corpus_coverage,
+    corpus_diversity,
     deterministic_profile,
     overall_unsupported_rate,
     render_md,
+    seed_bib_coverage,
     uncited_claims,
 )
 from tools.models.artifacts import Category, EvidenceStore, Evidence, Taxonomy
@@ -84,6 +87,35 @@ class TestExtractClaimPairs:
         assert extract_claim_pairs(md, known_ids={"world_models_2018"}) == [
             ("Seed style claim", "world_models_2018")
         ]
+
+    def test_trailing_citation_fragment_merges_into_previous_sentence(self):
+        """The model places the tag after the closing period, so sentence
+        splitting yields a citation-only fragment that used to be dropped and
+        its claim miscounted as uncited."""
+        md = "Reward scale improves sharply. [paper:x]."
+        assert extract_claim_pairs(md) == [("Reward scale improves sharply", "paper:x")]
+
+    def test_trailing_fragment_carries_every_citation(self):
+        md = "Reward scale improves sharply. [paper:x] [paper:y]."
+        assert extract_claim_pairs(md) == [
+            ("Reward scale improves sharply", "paper:x"),
+            ("Reward scale improves sharply", "paper:y"),
+        ]
+
+    def test_trailing_fragment_chinese_period(self):
+        md = "世界模型规模持续提升。 [paper:1]。"
+        assert extract_claim_pairs(md) == [("世界模型规模持续提升", "paper:1")]
+
+    def test_leading_fragment_without_previous_sentence_dropped(self):
+        assert extract_claim_pairs("[paper:x]. Real claim [paper:y].") == [
+            ("Real claim", "paper:y")
+        ]
+
+    def test_non_citation_bracket_fragment_not_merged(self):
+        """A caption-like bracket is not a citation: it neither binds nor
+        resurrects the preceding sentence as a cited claim."""
+        md = "No citations in this paragraph. [Future Matrix]."
+        assert extract_claim_pairs(md) == []
 
 
 # ── citation_quality: recall / precision / coverage ────────────────
@@ -185,6 +217,22 @@ class TestCitationQuality:
         res = citation_quality(md, es, NLIStub("entailment", 0.85))
         assert res["n_cited_sentences"] == 1
         assert res["n_pairs"] == 1
+
+    def test_trailing_fragment_counts_as_one_cited_sentence(self):
+        """Fragment merge: 1 cited sentence (not 0), and the merged citation is
+        judged against the claim it annotates."""
+        md = "Reward scale improves sharply. [paper:1]. Pure filler sentence."
+        es = _es(Evidence(evidence_id="e1", paper_id="paper:1", text="the reward scale matters"))
+        res = citation_quality(md, es, NLIStub("entailment", 0.85))
+        assert res["n_sentences"] == 2
+        assert res["n_cited_sentences"] == 1
+        assert res["citation_coverage"] == 0.5
+        assert res["pairs"] == [{
+            "claim_text": "Reward scale improves sharply",
+            "cited_paper_id": "paper:1",
+            "status": "supported",
+            "confidence": 0.85,
+        }]
 
     def test_long_evidence_is_split_into_sentence_windows(self):
         """Cross-encoder NLI fails on long-passage premises (a verbatim quote
@@ -319,6 +367,152 @@ class TestReferenceCoverage:
         res = reference_coverage(["A Paper", "Not In Gold"], self._gold("A Paper"))
         assert res["n_system_titles"] == 2
         assert res["system_in_gold_rate"] == 0.5
+
+
+# ── gold-free reference quality: seed bibs / canonical / diversity ──
+
+SEED_BIBS = {
+    "source": "cache/surveys.json",
+    "n_surveys": 2,
+    "entries": [
+        {"id": "world_models_2018", "title": "World Models", "survey_ref_count": 2},
+        {"id": "genie_2024", "title": "Genie: Generative Interactive Environments"},
+        {"id": "muzero_2020", "title": None},  # no resolvable title -> id match only
+        {"id": "sora_2024", "title": "Is Sora a World Simulator?"},
+    ],
+}
+
+SEED_CORPUS = [
+    {"paper_id": "world_models_2018", "title": "World Models"},
+    {"paper_id": "paper:10.1", "title": "GENIE — Generative Interactive Environments!"},
+    {"paper_id": "muzero_2020", "title": "Mastering Atari, Go, Chess and Shogi"},
+    {"paper_id": "paper:9.9", "title": "Unrelated Paper"},
+]
+
+
+class TestSeedBibCoverage:
+    def test_recall_and_in_seed_bib_rate_hand_computed(self):
+        res = seed_bib_coverage(SEED_CORPUS, SEED_BIBS)
+        assert res["n_seed_bibs"] == 4 and res["n_corpus_papers"] == 4
+        assert res["n_surveys"] == 2
+        # hit: world_models_2018 (title+id), genie_2024 (title), muzero_2020 (id)
+        assert res["n_matched_entries"] == 3
+        assert res["seed_bib_recall"] == 0.75            # 3 of 4 union entries
+        # distinct corpus papers hit: indices 0, 1, 2
+        assert res["n_matched_papers"] == 3
+        assert res["in_seed_bib_rate"] == 0.75           # 3 of 4 corpus papers
+        assert res["missed"] == ["Is Sora a World Simulator?"]
+        assert sorted(res["matched"]) == ["Genie: Generative Interactive Environments",
+                                          "World Models", "muzero_2020"]
+
+    def test_two_entries_hitting_one_paper_do_not_inflate_corpus_rate(self):
+        bibs = {"n_surveys": 1, "entries": [
+            {"id": "world_models_2018", "title": "World Models"},
+            {"id": "duplicate_2018", "title": "World Models"},
+        ]}
+        res = seed_bib_coverage([{"paper_id": "world_models_2018", "title": "World Models"}], bibs)
+        assert res["seed_bib_recall"] == 1.0             # both entries hit
+        assert res["n_matched_papers"] == 1
+        assert res["in_seed_bib_rate"] == 1.0            # 1 distinct paper of 1
+
+    def test_empty_sides_do_not_divide_by_zero(self):
+        res = seed_bib_coverage([], SEED_BIBS)
+        assert res["seed_bib_recall"] == 0.0 and res["in_seed_bib_rate"] == 0.0
+        empty = seed_bib_coverage(SEED_CORPUS, {"entries": []})
+        assert empty["seed_bib_recall"] == 0.0 and empty["in_seed_bib_rate"] == 0.0
+
+
+CANONICAL = {"papers": [
+    {"title": "World Models", "authors": ["David Ha"], "year": 2018},
+    {"title": "Genie: Generative Interactive Environments", "alias": "Genie", "year": 2024},
+    {"title": "Cosmos world foundation model platform", "alias": "Cosmos", "year": 2025},
+]}
+
+
+class TestCanonicalHits:
+    def test_hits_and_hit_at_n_hand_computed(self):
+        corpus = [{"title": "World Models"}, {"title": "genie generative interactive environments"}]
+        res = canonical_hits(corpus, CANONICAL, k=2)
+        assert res["n_canonical"] == 3 and res["n_corpus_papers"] == 2
+        assert res["n_hits"] == 2 and res["hit_rate"] == 0.667     # 2 of 3 landmarks
+        assert res["k"] == 2
+        assert res["hits_at_k"] == 2 and res["hit_at_k_rate"] == 1.0  # first 2 both hit
+        assert res["matched"] == ["World Models", "Genie"]          # alias label wins
+        assert res["missing"] == ["Cosmos"]
+
+    def test_k_beyond_list_length_is_clamped(self):
+        res = canonical_hits([{"title": "World Models"}], CANONICAL, k=10)
+        assert res["k"] == 3
+        assert res["hits_at_k"] == 1 and res["hit_at_k_rate"] == 0.333
+        assert res["hit_rate"] == 0.333
+
+    def test_alias_match_only(self):
+        corpus = [{"title": "Learning universal predictors"}]
+        canonical = {"papers": [{"title": "UniSim", "alias": "Learning universal predictors"}]}
+        res = canonical_hits(corpus, canonical, k=1)
+        assert res["n_hits"] == 1 and res["matched"] == ["Learning universal predictors"]
+
+    def test_alias_as_colon_prefix_of_corpus_title(self):
+        """Corpus cards carry the alias as a head: 'DreamerV3: Mastering Diverse
+        Domains through World Models' is the landmark titled 'Mastering Diverse
+        Domains through World Models' (alias DreamerV3)."""
+        corpus = [{"title": "DreamerV3: Mastering Diverse Domains through World Models"}]
+        canonical = {"papers": [{"title": "Mastering Diverse Domains through World Models",
+                                 "alias": "DreamerV3"}]}
+        res = canonical_hits(corpus, canonical, k=1)
+        assert res["n_hits"] == 1 and res["matched"] == ["DreamerV3"]
+
+    def test_no_substring_match_for_short_canonical_titles(self):
+        """A short canonical title must not match a longer corpus title that
+        merely contains it."""
+        corpus = [{"title": "Daydreamer: World models for physical robot learning"}]
+        canonical = {"papers": [{"title": "World Models"}]}
+        res = canonical_hits(corpus, canonical, k=1)
+        assert res["n_hits"] == 0 and res["missing"] == ["World Models"]
+
+
+DIVISION_CATS = [Category(category_id="c1", category_name="Latent dynamics",
+                          description="d", paper_ids=["paper:a", "paper:c", "paper:zz"])]
+
+
+class TestCorpusDiversity:
+    def test_per_aspect_years_venues_and_citation_percentiles(self):
+        papers = [
+            {"paper_id": "paper:a", "title": "A", "year": 2024, "venue": "NeurIPS",
+             "citation_count": 10},
+            {"paper_id": "paper:b", "title": "B", "year": 2022, "venue": "neurips",
+             "citation_count": 30},
+            {"paper_id": "paper:c", "title": "C", "year": 2018, "venue": "arXiv"},
+        ]
+        res = corpus_diversity(DIVISION_CATS, papers)
+        assert res["n_aspects"] == 1 and res["n_papers"] == 3
+        assert res["n_unassigned_papers"] == 1          # paper:b in no category
+        assert res["years"] == [2018, 2022, 2024]
+        assert res["year_spread"] == 6 and res["year_median"] == 2022.0
+        assert res["n_venues"] == 2                     # NeurIPS == neurips
+        assert res["venues"] == ["arXiv", "NeurIPS"]    # case-insensitive sort
+        assert res["citation_percentiles"] == {"p25": 15.0, "p50": 20.0, "p75": 25.0}
+        row = res["aspects"][0]
+        assert row["aspect_name"] == "Latent dynamics"
+        assert row["n_papers"] == 2 and row["years"] == [2018, 2024]
+        assert row["year_spread"] == 6 and row["year_median"] == 2021.0
+        assert row["venues"] == ["arXiv", "NeurIPS"]
+        # only paper:a carries a citation_count inside this aspect
+        assert row["citation_percentiles"] == {"p25": 10.0, "p50": 10.0, "p75": 10.0}
+
+    def test_aspect_row_without_data_is_all_none(self):
+        res = corpus_diversity(DIVISION_CATS, [
+            {"paper_id": "paper:a", "title": "A", "year": 2024, "venue": "NeurIPS"}])
+        row = res["aspects"][0]
+        assert row["years"] == [2024] and row["year_spread"] == 0
+        assert row["citation_percentiles"] is None
+
+    def test_no_categories_reports_totals_only(self):
+        res = corpus_diversity([], PAPERS)
+        assert res["n_aspects"] == 0
+        assert res["years"] == [2018, 2024, 2025, 2026] and res["n_venues"] == 0
+        assert res["n_unassigned_papers"] == 4
+        assert res["citation_percentiles"] is None
 
 
 # ── fixtures shared by the four-layer tests ────────────────────────
@@ -605,6 +799,17 @@ class TestUncitedClaims:
         assert overall_unsupported_rate(citation_quality("No claims at all.", UNCITED_STORE,
                                                          NLIStub("contradiction", 0.9)), None) is None
 
+    def test_trailing_fragment_not_miscounted_as_uncited(self):
+        """The sentence a trailing tag belongs to must move to the cited side,
+        not stay behind as a bogus uncited claim."""
+        md = ("## Intro\n\nDiffusion policies scale well to new games. [paper:a].\n\n"
+              "## References\n\n- paper:a: Alpha (2024).\n")
+        stub = SciverseStub()
+        res = uncited_claims(md, UNCITED_STORE, FakeNLIModel({"diffusion": "entailment"}),
+                             stub, max_claims=5)
+        assert res["n_uncited_total"] == 0
+        assert stub.calls == []
+
 
 # ── academic_value: DeepSurvey three-dimension judge ───────────────
 
@@ -759,6 +964,75 @@ class TestRenderMd:
         assert "bad claim" in md
 
 
+def _gold_free_blocks() -> dict:
+    """Hand-built Block-3 gold-free payloads matching the real metric shapes."""
+    return {
+        "seed_bib_coverage": {
+            "n_surveys": 7, "n_seed_bibs": 23, "n_corpus_papers": 12,
+            "n_matched_entries": 6, "n_matched_papers": 6,
+            "seed_bib_recall": 0.261, "in_seed_bib_rate": 0.5,
+            "matched": ["World Models", "Genie: Generative Interactive Environments"],
+            "missed": [f"missing_{i}" for i in range(17)],
+        },
+        "canonical_hits": {
+            "n_canonical": 20, "n_corpus_papers": 12, "n_hits": 6, "hit_rate": 0.3,
+            "k": 10, "hits_at_k": 3, "hit_at_k_rate": 0.3,
+            "matched": ["World Models", "Genie"], "missing": ["Cosmos", "Agent57"],
+        },
+        "corpus_diversity": {
+            "n_aspects": 5, "n_papers": 12, "n_unassigned_papers": 1,
+            "years": [2018, 2024], "year_spread": 6, "year_median": 2023.0,
+            "n_venues": 4, "venues": ["Nature", "NeurIPS", "arXiv"],
+            "citation_percentiles": None,
+            "aspects": [{
+                "aspect_id": "cat_world_models", "aspect_name": "Latent dynamics",
+                "n_papers": 3, "years": [2018, 2024], "year_spread": 6,
+                "year_median": 2021.0, "n_venues": 2, "venues": ["NeurIPS", "arXiv"],
+                "citation_percentiles": None,
+            }],
+        },
+    }
+
+
+class TestRenderGoldFree:
+    def _md(self, **overrides):
+        report = {**_full_report(), **_gold_free_blocks()}
+        report.update(overrides)
+        return render_md(report)
+
+    def test_gold_free_slot_precedes_gold_control(self):
+        md = self._md()
+        assert md.index("Gold-free reference quality") < md.index("Gold survey control")
+        assert "caveat" in md and "secondary diagnostic" in md
+
+    def test_numbers_and_hit_lists_rendered(self):
+        md = self._md()
+        assert "| Seed-bib recall | 0.261 (6/23 union entries from 7 seed surveys) |" in md
+        assert "| In-seed-bib rate | 0.5 (6/12 corpus papers) |" in md
+        assert "| Canonical hit@10 | 0.3 (3/10) |" in md
+        assert "| Canonical hit rate | 0.3 (6/20) |" in md
+        assert "| Corpus diversity | 12 papers over 5 aspects, 4 venues, years " \
+               "2018–2024 (median 2023.0), citations p25/p50/p75 n/a |" in md
+        assert "| Latent dynamics | 3 | 2018–2024 | 2 | n/a |" in md
+        assert "Canonical hits: World Models, Genie" in md
+        assert "Canonical missing: Cosmos, Agent57" in md
+        assert "Seed-bib missed (17/23): missing_0" in md and "(+7 more)" in md
+        assert "1 corpus papers are in no taxonomy" in md
+
+    def test_missing_artifacts_render_as_skipped(self):
+        md = self._md(
+            seed_bib_coverage={"status": "skipped",
+                               "reason": "cache/seed_survey_bibs.json not found"},
+            canonical_hits={"status": "skipped",
+                            "reason": "cache/canonical_papers.json not found"},
+        )
+        assert "| Seed-bib recall | skipped — cache/seed_survey_bibs.json not found |" in md
+        assert "| Canonical hit@N | skipped — cache/canonical_papers.json not found |" in md
+        assert "Canonical hits:" not in md and "Seed-bib missed" not in md
+        # diversity needs no artifact, so it still reports
+        assert "| Corpus diversity |" in md
+
+
 # ── scripts/run_survey_eval.py wiring ──────────────────────────────
 
 
@@ -805,6 +1079,8 @@ def _argv(paths, out, extra):
         "--figure-bank", str(paths["figures"]),
         "--table-bank", str(paths["tables"]),
         "--gold-refs", str(paths["survey"].parent / "missing_gold.json"),
+        "--seed-bibs", str(paths["survey"].parent / "missing_seed_bibs.json"),
+        "--canonical", str(paths["survey"].parent / "missing_canonical.json"),
         "--ab-report", str(paths["survey"].parent / "missing_ab.json"),
         "--out", str(out),
     ] + extra
@@ -858,5 +1134,134 @@ class TestRunSurveyEvalScript:
         proc = subprocess.run([sys.executable, str(EVAL_SCRIPT), "--help"],
                               capture_output=True, text=True, cwd=str(ROOT))
         assert proc.returncode == 0
-        for flag in ("--skip-uncited", "--max-uncited-claims", "--cov-threshold", "--skip-judge"):
+        for flag in ("--skip-uncited", "--max-uncited-claims", "--cov-threshold", "--skip-judge",
+                     "--seed-bibs", "--canonical", "--canonical-k"):
             assert flag in proc.stdout
+
+
+class TestGoldFreeWiring:
+    """scripts/run_survey_eval.py: gold-free blocks + backward-compatible skips."""
+
+    def _run(self, tmp_path, monkeypatch, extra):
+        paths = _write_artifacts(tmp_path)
+        mod = _load_script()
+        monkeypatch.delenv("EVISURVEY_REAL_NLI", raising=False)
+        monkeypatch.setattr(mod, "_embed_scorer", _kw_scorer)
+        monkeypatch.setattr(sys, "argv", _argv(paths, tmp_path / "report",
+                                               ["--skip-judge", "--skip-uncited"] + extra))
+        mod.main()
+        return (json.loads((tmp_path / "report.json").read_text(encoding="utf-8")),
+                (tmp_path / "report.md").read_text(encoding="utf-8"))
+
+    def test_missing_artifacts_report_skipped(self, tmp_path, monkeypatch):
+        report, md = self._run(tmp_path, monkeypatch, [])
+        assert report["seed_bib_coverage"]["status"] == "skipped"
+        assert "build_seed_survey_bibs.py" in report["seed_bib_coverage"]["reason"]
+        assert report["canonical_hits"]["status"] == "skipped"
+        # diversity needs no artifact of its own
+        dv = report["corpus_diversity"]
+        assert dv["n_aspects"] == 2 and dv["n_unassigned_papers"] == 1  # paper:b in no category
+        assert dv["years"] == [2018, 2024, 2025, 2026] and dv["n_venues"] == 0
+        assert "| Seed-bib recall | skipped —" in md
+        assert "Gold-free reference quality" in md
+        # no gold artifact -> no gold block at all
+        assert "reference_coverage" not in report
+        assert "Gold survey control" not in md
+
+    def test_metrics_wired_from_files(self, tmp_path, monkeypatch):
+        seed_bibs = tmp_path / "seed_bibs.json"
+        seed_bibs.write_text(json.dumps({
+            "n_surveys": 3,
+            "entries": [{"id": "paper:a", "title": "Alpha World Models"},
+                        {"id": "paper:zz", "title": "Zeta Missing"}],
+        }), encoding="utf-8")
+        canonical = tmp_path / "canonical.json"
+        canonical.write_text(json.dumps({"papers": [
+            {"title": "Delta Robots"}, {"title": "Epsilon Never", "alias": "Eps"},
+        ]}), encoding="utf-8")
+        report, md = self._run(tmp_path, monkeypatch, [
+            "--seed-bibs", str(seed_bibs), "--canonical", str(canonical), "--canonical-k", "1"])
+        sb = report["seed_bib_coverage"]
+        assert sb["seed_bib_recall"] == 0.5 and sb["in_seed_bib_rate"] == 0.25
+        assert sb["n_surveys"] == 3 and sb["matched"] == ["Alpha World Models"]
+        ch = report["canonical_hits"]
+        assert ch["k"] == 1 and ch["hits_at_k"] == 1 and ch["hit_at_k_rate"] == 1.0
+        assert ch["hit_rate"] == 0.5 and ch["missing"] == ["Eps"]
+        assert "| Seed-bib recall | 0.5 (1/2 union entries from 3 seed surveys) |" in md
+        assert "Canonical missing: Eps" in md
+        assert "| Latent dynamics | 2 | 2018–2024 | 0 | n/a |" in md
+
+
+BUILD_SCRIPT = ROOT / "scripts" / "build_seed_survey_bibs.py"
+
+
+def _load_build_script():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("build_seed_survey_bibs_under_test", BUILD_SCRIPT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+class TestBuildSeedSurveyBibsScript:
+    """Union bibliography built from the seed survey artifact P2 already consumes."""
+
+    def _write(self, tmp_path, surveys, card_files):
+        surveys_path = tmp_path / "surveys.json"
+        surveys_path.write_text(json.dumps(surveys), encoding="utf-8")
+        card_paths = []
+        for name, payload in card_files:
+            path = tmp_path / name
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            card_paths.append(str(path))
+        return surveys_path, card_paths
+
+    def test_union_dedup_and_title_resolution(self, tmp_path, monkeypatch):
+        mod = _load_build_script()
+        surveys = [
+            {"paper_id": "seed:1", "title": "Survey One",
+             "meta_data": {"top_referenced_papers": ["world_models_2018", "genie_2024"]}},
+            {"paper_id": "seed:2", "title": "Survey Two",
+             "meta_data": {"top_referenced_papers": ["world_models_2018", "unknown_1999"]}},
+        ]
+        cards = {
+            # both an exact-id card and a hint back-link exist: the exact id wins
+            "cards_a.json": {"paper_cards": [
+                {"paper_id": "world_models_2018", "title": "World Models",
+                 "year": 2018, "venue": "NeurIPS"},
+            ]},
+            "cards_b.json": {"papers": [
+                {"paper_id": "paper:10.1", "title": "Genie: Generative Interactive Environments",
+                 "year": 2024, "survey_ref_hints": ["genie_2024", "world_models_2018"]},
+            ]},
+        }
+        surveys_path, card_paths = self._write(tmp_path, surveys, list(cards.items()))
+        out = tmp_path / "seed_survey_bibs.json"
+        monkeypatch.setattr(sys, "argv", [
+            "build_seed_survey_bibs.py", "--surveys", str(surveys_path),
+            "--out", str(out), "--cards", *[str(p) for p in card_paths]])
+        mod.main()
+
+        artifact = json.loads(out.read_text(encoding="utf-8"))
+        assert artifact["n_surveys"] == 2 and artifact["n_survey_refs"] == 4
+        assert artifact["n_title_resolved"] == 2
+        entries = {e["id"]: e for e in artifact["entries"]}
+        assert set(entries) == {"world_models_2018", "genie_2024", "unknown_1999"}
+        world = entries["world_models_2018"]
+        assert world["title"] == "World Models"
+        assert world["resolved_from"] == "cards_a.json"   # exact id beats the hint back-link
+        assert world["survey_ref_count"] == 2
+        assert world["surveys"] == ["Survey One", "Survey Two"]
+        genie = entries["genie_2024"]
+        assert genie["title"] == "Genie: Generative Interactive Environments"
+        assert genie["resolved_from"] == "cards_b.json" and genie["survey_ref_count"] == 1
+        orphan = entries["unknown_1999"]                  # stays id-only for id matching
+        assert orphan["title"] is None and orphan["resolved_from"] is None
+
+    def test_missing_surveys_artifact_fails_fast(self, tmp_path, monkeypatch):
+        mod = _load_build_script()
+        monkeypatch.setattr(sys, "argv", [
+            "build_seed_survey_bibs.py", "--surveys", str(tmp_path / "nope.json"),
+            "--out", str(tmp_path / "out.json")])
+        with pytest.raises(SystemExit):
+            mod.main()
