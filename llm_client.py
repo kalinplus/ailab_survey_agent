@@ -27,11 +27,13 @@ class InternS2Client:
         base_url: str | None = None,
         model_name: str | None = None,
         min_interval: float = 2.1,
+        thinking_effort: str | None = None,
     ) -> None:
         self.config = config
         self.api_key = api_key if api_key else config.intern_api_key
         self.base_url = (base_url or config.intern_api_base_url).rstrip("/")
         self.model_name = model_name or config.intern_model_name
+        self.thinking_effort = thinking_effort
         self._last_call: float = 0.0
         self._min_interval: float = min_interval
 
@@ -57,6 +59,10 @@ class InternS2Client:
         }
         if thinking_mode:
             payload["thinking_mode"] = thinking_mode
+        if self.thinking_effort:
+            # GLM-style reasoning endpoints: cap hidden thinking so the budget
+            # survives to visible content (empty replies when reasoning eats it).
+            payload["thinking"] = {"type": "enabled", "effort": self.thinking_effort}
         if response_format:
             payload["response_format"] = response_format
         if max_tokens is not None:
@@ -127,6 +133,7 @@ def heavy_llm_client(config: AppConfig) -> InternS2Client:
         base_url=base_url,
         model_name=(os.getenv("HEAVY_LLM_MODEL") or "").strip() or None,
         min_interval=float(os.getenv("HEAVY_LLM_MIN_INTERVAL") or 2.1),
+        thinking_effort=(os.getenv("HEAVY_LLM_THINKING_EFFORT") or "").strip() or None,
     )
 
 

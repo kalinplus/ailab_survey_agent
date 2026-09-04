@@ -1515,7 +1515,7 @@ def _llm_section_body(section: dict[str, Any], llm_chat: Callable, zh: bool, see
     ]
     # Generous budget: reasoning models spend completion tokens on hidden
     # thinking before the visible content, so 3 short paragraphs need headroom.
-    reply = llm_chat(messages, temperature=0.3, max_tokens=3000)
+    reply = llm_chat(messages, temperature=0.3, max_tokens=6000)
     if not isinstance(reply, str) or not reply.strip():
         raise ValueError(f"empty LLM reply: {str(reply)[:120]}")
     paragraphs = []

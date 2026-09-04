@@ -129,9 +129,9 @@ def _make_llm_json_chat(cfg):
 
     def chat(messages):
         try:
-            return client.json_chat(messages, temperature=0.1, max_tokens=3000)
+            return client.json_chat(messages, temperature=0.1, max_tokens=6000)
         except Exception:
-            content = client.chat(messages, temperature=0.1, max_tokens=3000)
+            content = client.chat(messages, temperature=0.1, max_tokens=6000)
             extracted = _extract_json_object(content)
             if extracted is None:
                 raise ValueError("model reply contained no JSON object")
