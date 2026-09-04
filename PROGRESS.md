@@ -5,11 +5,16 @@
 
 ## Current
 
-### S0 第四轮（等待触发）
+### S0 第七轮已完成：引用健康但 gate 未过（NLI 严格性回到主位）
 
-- 前置：第三轮暴露的修复链全部落地（见 Log 夜二/夜三条目），380 单测绿。
-- 配置同第三轮 + 注意清 `output/repair_log.json`（跨 run 累积，轮次编号会续——已知问题，见 Log）。
-- 验收条件同第三轮：gate passed / 无重复节 / 零白名单外 id / 四层评测（`--seed-bibs --canonical`）出 A/B。
+- 结果：**30 引用 / 13 唯一 / 31K chars / 零白名单外 / 零重复节 / claim_map 提取 15 条**——切分器根因修复（`dfabf5d`）完全生效，是迄今最健康的产物。但 claim_map 15 条中 11 条 unsupported，repair 预算耗尽（gate=repair_budget_exhausted, coverage 1.093）。
+- 四层评测（含 T2 新指标 seed-bibs/canonical）进行中，完成后与基线 1.667 / 尝试 5 出 A/B。
+- 已知问题（按优先级）：
+  1. **NLI 杀 LLM 转述**：claim_map 15 条 11 条 unsupported——切分修复后问题回到 round-2 时代的本质，需要再压转述率（prompt 近引用强度）或调 repair 的 rewrite 策略
+  2. **GLM 时延不可控**：repair/writer 调用偶发 18 分钟级间隔（300s 超时 × 重试循环），LLM 路径 wall-clock 失控
+  3. P2 taxonomy 类目数跨 run 不稳（26/4/~2/4/5）
+  4. MinerU parsed=0 图表链路（用户指示暂缓）
+- 仓库卫生：提交历史已去除全部 Claude 署名 trailer（本地重写，远端 origin/main 在 0b909d0，推送需 force——由用户决定）；`.env`（含 GLM key）保持未提交，勿入库。
 
 ## Next
 
