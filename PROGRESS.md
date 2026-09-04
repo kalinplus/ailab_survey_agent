@@ -5,20 +5,28 @@
 
 ## Current
 
-### S0 第七轮已完成：引用健康但 gate 未过（NLI 严格性回到主位）
+### S0 第七轮四层评测完成：L3 1.667→3.0，各层首次全面向好（2026-09-04 深夜）
 
-- 结果：**30 引用 / 13 唯一 / 31K chars / 零白名单外 / 零重复节 / claim_map 提取 15 条**——切分器根因修复（`dfabf5d`）完全生效，是迄今最健康的产物。但 claim_map 15 条中 11 条 unsupported，repair 预算耗尽（gate=repair_budget_exhausted, coverage 1.093）。
-- 四层评测（含 T2 新指标 seed-bibs/canonical）进行中，完成后与基线 1.667 / 尝试 5 出 A/B。
-- 已知问题（按优先级）：
-  1. **NLI 杀 LLM 转述**：claim_map 15 条 11 条 unsupported——切分修复后问题回到 round-2 时代的本质，需要再压转述率（prompt 近引用强度）或调 repair 的 rewrite 策略
-  2. **GLM 时延不可控**：repair/writer 调用偶发 18 分钟级间隔（300s 超时 × 重试循环），LLM 路径 wall-clock 失控
-  3. P2 taxonomy 类目数跨 run 不稳（26/4/~2/4/5）
-  4. MinerU parsed=0 图表链路（用户指示暂缓）
-- 仓库卫生：提交历史已去除全部 Claude 署名 trailer（本地重写，远端 origin/main 在 0b909d0，推送需 force——由用户决定）；`.env`（含 GLM key）保持未提交，勿入库。
+- 评测报告：`output/survey_eval_report.md`（含 T2 新指标）。产物：30 引用/13 唯一/31K/10 节零重复。
+- L1：unsupported 0.022；recall 0.759 / precision 0.733（29 个被引句的**真实样本**，不再是 2 句空转）；0 条 unsupported 引用对。
+- L2'：citation depth/utilization 0→0.224；gold-free 主指标上线：seed-bib recall 0.304、canonical 命中 3/20、多样性 58 篇/24 venue/2019-2026；gold 降级次要诊断（in-gold 0.103 符合预期）。
+- L0：freshness offset 0.0（白名单混合排序生效）；CV 0.72；冗余 max 0.917（仍>0.8，Intro×Benchmarks）。
+- L3：**3.0/5**（1.667→3.0，三维均 3）。rationale：结构清晰，但内容薄——"abstract snippets / placeholder text / requires deeper parsing"（P5 哨兵串漏进正文）、未来方向模板化。
+- 已知问题（下一轮优先级）：
+  1. **P5 哨兵串泄漏**："Detailed limitations require deeper paper parsing" 出现在正文 → L3 明确点名；P5 建卡时占位 limitation 不应进散文
+  2. **canonical staples 缺失**：Dreamer 系/MuZero/World Models 仍不在语料——T1 bib 候选有了但未存活到 whitelist（8/15）；检索引导需再迭代
+  3. **NLI 严格性**：生成侧 claim_map 15 条 11 条 unsupported（评测侧同文档 0 条 unsupported 对——两侧切分/归一不一致，需对齐）
+  4. 冗余 max 0.917（Intro 路线图 × 正文节）；GLM 时延；P2 taxonomy 随机性；MinerU 暂缓
+- 仓库卫生：Claude 署名 trailer 已全部从本地历史移除（远端 origin/main 在 0b909d0，同步需 force push，由用户执行）；`.env`（GLM key）保持未提交。
 
 ## Next
 
-（无排队任务）
+### 下一轮迭代（评测证据排序）
+
+- P5 哨兵串/占位 limitation 不进散文（writer+repair 输入侧过滤，或 P5 不落占位串）
+- canonical staples 入语料：bib 候选 → whitelist 的存活链路排查（blend 权重？相关预过滤误杀？）
+- 生成侧 claim_mapper 与评测器切分/归一对齐（15 条 11 unsupported vs 0 条 unsupported 对的分歧）
+- Intro/Abstract 冗余（路线图句与节内容重叠）
 
 ## Log
 
