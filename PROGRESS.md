@@ -25,6 +25,13 @@
 - 已知问题（下轮处理）：① `repair_log.json` 跨 run 累积、轮次编号续算（fresh run 从 round 7 开始）——`_next_repair_round` 读旧日志；② writer fallback 的 GLM 空回复在 effort=low 后仍有 7 次，怀疑 writer 的 client 没吃到 thinking_effort；③ claim_map 提取 0 条需单独查（可能又是吞块/格式耦合）。
 - 教训：文档级 `str.replace` 必须带 count + 锚点验证；LLM 会把编号引用 remap 到臆断论文，decision 层要有形态预过滤。
 
+### 2026-09-04（深夜：S0 第四轮——lint 生效但暴露 GLM 的系统性 id 幻觉）
+
+- 第四轮：无重复节 ✓、零断裂括号残留 ✓（lint 工作正常），但产出近乎无引用的综述（全文仅 `[11]` `[1]` 两个垃圾编号）——lint 按设计删除了 GLM 写的断裂 id，**删光了引用**。root cause 升级认知：`glm-5.3-flash` 会从预训练记忆**自发写出真实 DOI**（StreamDiffusion 的 arXiv 号一字不差）并空格断裂——别名方案挡不住模型自己记得的 id。
+- 修复 `1b5e0cd`：`_map_alias_citations` 汇合点统一归一化——`[paper:...]` 组内去空白压回紧凑形，白名单校验**救活**引用而非删句；非白名单 id 仍由 sanitize 丢弃。memory 已更新此教训。
+- 三项待办全部完成：repair_log 按 task 隔离（`bf50ffd`）、thinking_effort 确认到位（GLM 方差用 6000 预算兜底）、claim_map 0 提取根因=断裂括号（lint 封类）。
+- S0 第五轮进行中。
+
 ### 2026-09-04（夜：S0 第二轮回退取证——"重复节"是引用提取的假象）
 
 - 机制（取证 agent `91eede4` 字节级闭环）：writer 输出的某个句子里有一个**未闭合的 `[`**（`_shorten` 截断切断了引用括号）→ 引用提取器把 1535 字符的多段落块读成一个"citation id" → repair 删不掉（句子匹配找不到完整 `[id]`，记 invalid_action）→ `_replace_references` 的 `title or paper_id` 兜底把该块当 id+title **打印两遍**（25022→29628 的 +4606 字符对账吻合）。"重复节"实为引用列表条目内嵌的标题文本，writer/revise 主体流程从未动过节。
