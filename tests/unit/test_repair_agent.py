@@ -340,6 +340,8 @@ def test_revise_delegation_and_fallback(tmp_path, monkeypatch):
     import types
 
     fake_cfg = types.SimpleNamespace(root_dir=root, intern_api_key="fake-key",
+                                     intern_api_base_url="https://intern.example/api/v1",
+                                     intern_model_name="intern-s2-preview",
                                      sciverse_api_base_url="https://api.sciverse.space",
                                      sciverse_api_token="")
     monkeypatch.setattr(revise, "load_config", lambda: fake_cfg)
