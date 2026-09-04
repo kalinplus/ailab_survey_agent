@@ -5,21 +5,25 @@
 
 ## Current
 
-### S0 第二轮真跑（T1+T2+T3 已合并）
+### S0 第四轮（等待触发）
 
-- 任务目标：三路合并后交付级重跑，用 T2 新指标出四层 A/B（vs 尝试 5）。
-- 配置：`REQUEST_TIMEOUT_SECONDS=300 TOOL_TIMEOUT_SECONDS=3600` + 广度旋钮（4/50/60/2）+ `EVISURVEY_WRITER_LLM=1 EVISURVEY_REPAIR_AGENT=1 EVISURVEY_NLI_DEVICE=cpu EVISURVEY_REAL_NLI=1` + en + `--max-papers 60 --max-core-papers 15`
-- 验收条件：
-  - in-gold ≥0.3 / seed-bib 指标显著非零且方向可解释
-  - L1 cited 句 ≥15（归一化生效）
-  - L0 max sim<0.8（T3 目标；Abstract×Intro 短框架段可能仍 >0.9，如实记录）
-  - gate 保持 passed、正文节全带引用
+- 前置：第三轮暴露的修复链全部落地（见 Log 夜二/夜三条目），380 单测绿。
+- 配置同第三轮 + 注意清 `output/repair_log.json`（跨 run 累积，轮次编号会续——已知问题，见 Log）。
+- 验收条件同第三轮：gate passed / 无重复节 / 零白名单外 id / 四层评测（`--seed-bibs --canonical`）出 A/B。
 
 ## Next
 
 （无排队任务）
 
 ## Log
+
+### 2026-09-04（夜三：S0 第三轮——remap 盲替换是文档损坏的真凶）
+
+- 第三轮结果：无重复节 ✓、正文零断裂括号 ✓、但 gate fixpoint（invalid=5）、claim_map 0 条、fallback 8 次（GLM 空回复仍有 7 次——effort=low 未在 writer 路径生效？待查 `HEAVY_LLM_THINKING_EFFORT` 是否传到了 `_writer_llm_chat` 的 client）。
+- 深挖 invalid=5：巨型 pid 拼接串**再次出现**且含**不属于本轮 taxonomy 的节名**（Procedural Content Generation / Benchmark Construction——旧 run 的渲染文本）→ 追到 `output/repair_log.json` 第 6 轮（上一轮 run 的残留日志）：`remap_citation -> repaired` 把学术编号 `[1]/[2]/[3]/[31–36]` 用**无 count 的全局 `md.replace`** 换成 GLM 臆断的白名单 id（理由全是 confabulation）。
+- 修复三连：`46e0051` remap 三守卫（id 形态 / 句内锚点存在 / 逐句替换）+ `a949972` writer 模板 pid 守卫（含空白即跳过）+ `22ec140` 同上的首版（过严，被单测桩教育后放宽）。
+- 已知问题（下轮处理）：① `repair_log.json` 跨 run 累积、轮次编号续算（fresh run 从 round 7 开始）——`_next_repair_round` 读旧日志；② writer fallback 的 GLM 空回复在 effort=low 后仍有 7 次，怀疑 writer 的 client 没吃到 thinking_effort；③ claim_map 提取 0 条需单独查（可能又是吞块/格式耦合）。
+- 教训：文档级 `str.replace` 必须带 count + 锚点验证；LLM 会把编号引用 remap 到臆断论文，decision 层要有形态预过滤。
 
 ### 2026-09-04（夜：S0 第二轮回退取证——"重复节"是引用提取的假象）
 
