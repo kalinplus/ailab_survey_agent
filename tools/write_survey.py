@@ -1321,7 +1321,9 @@ def _build_section_text(
     return lines
 
 
-_VALID_PID_RE = re.compile(r"^paper:[\w./-]+$")
+def _pid_ok(pid: Any) -> bool:
+    """Corrupted pids carry rendered multi-paragraph text; the signature is whitespace."""
+    return isinstance(pid, str) and bool(pid) and not any(ch.isspace() for ch in pid)
 
 
 def _template_summary(papers: list[dict[str, Any]], zh: bool, section_index: int, seen: set[str]) -> str:
@@ -1330,7 +1332,7 @@ def _template_summary(papers: list[dict[str, Any]], zh: bool, section_index: int
     sentences = []
     for offset, paper in enumerate(papers[:SECTION_PAPERS]):
         pid = paper.get("paper_id")
-        if not pid or not _VALID_PID_RE.match(str(pid)):
+        if not _pid_ok(pid):
             # A pid that is not a single-line DOI form has been corrupted
             # upstream (S0 round-3: a pid spliced with rendered sections);
             # formatting it would put multi-paragraph text inside [ ].
@@ -1353,7 +1355,7 @@ def _template_limitations(papers: list[dict[str, Any]], zh: bool, section_index:
     sentences = []
     for offset, paper in enumerate(papers[:4]):
         pid = paper.get("paper_id")
-        if not pid or not _VALID_PID_RE.match(str(pid)):
+        if not _pid_ok(pid):
             logger.warning(f"[writer] skip limitation sentence for malformed paper_id: {str(pid)[:80]!r}")
             continue
         sentences.append(
