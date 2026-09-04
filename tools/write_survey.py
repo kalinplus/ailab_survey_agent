@@ -2493,9 +2493,10 @@ def _lint_citation_brackets(md: str) -> str:
         if line.lstrip().startswith("!["):
             out_lines.append(line)
             continue
-        while line.count("[") > line.count("]"):
-            cut = line.rfind("[")
-            line = line[:cut].rstrip()
+        # Only a TRAILING unclosed citation opener is a leak (card fields can
+        # legitimately hold stray brackets like [0, 1]; whole-line bracket
+        # counting ate valid citations next to them in S0 round-5).
+        line = re.sub(r"\[(?:paper:|P\d)[^\]\n]*$", "", line)
         # Drop whitespace-bearing id-shaped bracket groups (cannot be valid
         # paper ids); legit multi-word links like [some text](url) are kept.
         line = re.sub(r"\[(?:paper:[^\]]*|P\d[^\]]*)\s[^\]]*\]", "", line)
