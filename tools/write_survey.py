@@ -1321,13 +1321,20 @@ def _build_section_text(
     return lines
 
 
+_VALID_PID_RE = re.compile(r"^paper:[\w./-]+$")
+
+
 def _template_summary(papers: list[dict[str, Any]], zh: bool, section_index: int, seen: set[str]) -> str:
     """Claim-per-paper paragraph; the reporting frame rotates by section index."""
     frames = _SUMMARY_FRAMES_ZH if zh else _SUMMARY_FRAMES_EN
     sentences = []
     for offset, paper in enumerate(papers[:SECTION_PAPERS]):
         pid = paper.get("paper_id")
-        if not pid:
+        if not pid or not _VALID_PID_RE.match(str(pid)):
+            # A pid that is not a single-line DOI form has been corrupted
+            # upstream (S0 round-3: a pid spliced with rendered sections);
+            # formatting it would put multi-paragraph text inside [ ].
+            logger.warning(f"[writer] skip summary sentence for malformed paper_id: {str(pid)[:80]!r}")
             continue
         values = {
             "title": paper.get("title") or pid,
@@ -1346,7 +1353,8 @@ def _template_limitations(papers: list[dict[str, Any]], zh: bool, section_index:
     sentences = []
     for offset, paper in enumerate(papers[:4]):
         pid = paper.get("paper_id")
-        if not pid:
+        if not pid or not _VALID_PID_RE.match(str(pid)):
+            logger.warning(f"[writer] skip limitation sentence for malformed paper_id: {str(pid)[:80]!r}")
             continue
         sentences.append(
             frames[(section_index - 1 + offset) % len(frames)].format(
