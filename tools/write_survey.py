@@ -48,6 +48,13 @@ BANNED_META_PHRASES = [
 
 _LLM_PARAGRAPH_TAGS = ("summary", "comparison", "limitation")
 
+# A bare paper id in prose (the S0 failure mode: space-broken DOIs the model
+# paraphrased out of the prompt) can never be legitimate survey text. Sentence
+# splitting cuts such ids mid-DOI, so the orphan continuation fragments
+# ("1016/j. fake must vanish.") need their own guard.
+_LEAKED_ID_RE = re.compile(r"paper\s*:\s*\d", re.IGNORECASE)
+_LEAKED_ID_FRAGMENT_RE = re.compile(r"^\s*\d{2,}\s*[/.]")
+
 _SENTENCE_RE = re.compile(r"(?<=[.!?。！？])\s*")
 
 POSITIVE_KEYWORDS = [
@@ -171,11 +178,11 @@ def _writer_llm_chat(cfg) -> Callable | None:
     """`.chat` callable for the hybrid writer, or None when it stays template-only."""
     if os.getenv("EVISURVEY_WRITER_LLM", "0").lower() not in {"1", "true", "yes"}:
         return None
-    from llm_client import InternS2Client
+    from llm_client import heavy_llm_client
 
-    client = InternS2Client(cfg)
+    client = heavy_llm_client(cfg)
     if not client.is_configured():
-        logger.warning("[writer] EVISURVEY_WRITER_LLM on but INTERN_API_KEY missing -> template path")
+        logger.warning("[writer] EVISURVEY_WRITER_LLM on but no LLM key configured -> template path")
         return None
     return client.chat
 
@@ -946,39 +953,50 @@ def _llm_section_paragraphs(section: dict[str, Any], llm_chat: Callable, zh: boo
     """Draft the three body paragraphs with the LLM; raise when the reply is unusable.
 
     Anti-hallucination guard: the prompt carries only this section's card fields
-    plus evidence snippets, and any returned sentence that cites an id outside
-    the section whitelist or carries harness meta-talk is dropped. A paragraph
-    left empty by that filter makes the whole reply unusable.
+    plus evidence snippets, identified by short [Pn] aliases — real ids never
+    reach the model, so it cannot mangle them into bare, space-broken DOIs.
+    Returned [Pn] tags map back to real ids; any sentence citing an unknown
+    tag, an id outside the section whitelist, or a bare leaked id is dropped.
+    A paragraph left empty by that filter makes the whole reply unusable.
     """
     papers = section.get("selected_papers", [])[:SECTION_PAPERS]
     allowed = {str(paper.get("paper_id")) for paper in papers if paper.get("paper_id")}
-    paper_lines = [
-        " | ".join(
-            [
-                str(paper.get("paper_id")),
-                str(paper.get("title", "")),
-                str(paper.get("problem", "")),
-                str(paper.get("method", "")),
-                str(paper.get("contribution", "")),
-                str(paper.get("limitations", "")),
-                " ".join(str(s) for s in paper.get("evidence_snippets", [])),
-            ]
+    alias_of: dict[str, str] = {}
+    paper_lines = []
+    for index, paper in enumerate(papers, start=1):
+        paper_id = str(paper.get("paper_id"))
+        if not paper.get("paper_id"):
+            continue
+        alias = f"P{index}"
+        alias_of[alias] = paper_id
+        paper_lines.append(
+            " | ".join(
+                [
+                    alias,
+                    str(paper.get("title", "")),
+                    str(paper.get("problem", "")),
+                    str(paper.get("method", "")),
+                    str(paper.get("contribution", "")),
+                    str(paper.get("limitations", "")),
+                    " ".join(str(s) for s in paper.get("evidence_snippets", [])),
+                ]
+            )
         )
-        for paper in papers
-    ]
+    tag_list = " ".join(f"[{alias}]" for alias in alias_of)
     user = "\n".join(
         [
             "Section title: " + str(section.get("section_title", "")),
             "Section goal: " + str(section.get("section_goal", "")),
-            "Papers (id | title | problem | method | contribution | limitation | evidence):",
+            "Papers (tag | title | problem | method | contribution | limitation | evidence):",
             *paper_lines,
             "Write in Chinese (简体)." if zh else "Write in English.",
             "Reply with exactly three paragraphs, each starting on its own line with one tag:",
-            "[SUMMARY] what these papers study and what each contributes; cite the id of every paper you describe.",
-            "[COMPARISON] how the papers differ in method and role; cite the ids you compare.",
-            "[LIMITATION] what the reported evidence does not establish; cite the ids you discuss.",
+            "[SUMMARY] what these papers study and what each contributes; cite the tag of every paper you describe.",
+            "[COMPARISON] how the papers differ in method and role; cite the tags you compare.",
+            "[LIMITATION] what the reported evidence does not establish; cite the tags you discuss.",
             "Restate only the facts in the paper list above: no invented numbers, years, benchmarks, or paper names.",
-            f"Cite only with these bracketed ids: {sorted(allowed)}.",
+            "Refer to papers by their titles in prose, and cite them only with the bracketed tags — never copy any internal paper id, DOI, or URL into the text.",
+            f"Cite only with these bracketed tags: {tag_list}",
         ]
     )
     messages = [
@@ -986,22 +1004,35 @@ def _llm_section_paragraphs(section: dict[str, Any], llm_chat: Callable, zh: boo
             "role": "system",
             "content": (
                 "You draft body paragraphs for an evidence-grounded academic survey. "
-                "Citations must use the supplied bracketed paper ids and nothing else."
+                "Citations must use the supplied bracketed paper tags and nothing else."
             ),
         },
         {"role": "user", "content": user},
     ]
-    reply = llm_chat(messages, temperature=0.2, max_tokens=900)
+    # Generous budget: reasoning models spend completion tokens on hidden
+    # thinking before the visible content, so 3 short paragraphs need headroom.
+    reply = llm_chat(messages, temperature=0.2, max_tokens=3000)
     if not isinstance(reply, str) or not reply.strip():
         raise ValueError(f"empty LLM reply: {str(reply)[:120]}")
     parsed = _parse_tagged_paragraphs(reply)
     paragraphs: dict[str, str] = {}
     for tag in _LLM_PARAGRAPH_TAGS:
-        body = _sanitize_llm_paragraph(parsed.get(tag, ""), allowed)
+        body = _map_alias_citations(parsed.get(tag, ""), alias_of)
+        body = _sanitize_llm_paragraph(body, allowed)
         if not body:
             raise ValueError(f"LLM reply has no usable [{tag}] paragraph")
         paragraphs[tag] = body
     return paragraphs
+
+
+def _map_alias_citations(text: str, alias_of: dict[str, str]) -> str:
+    """Rewrite [P3]-style tags to real paper ids; unknown tags stay and are
+    dropped later by the whitelist filter."""
+    return re.sub(
+        r"\[(P\d+)\]",
+        lambda match: f"[{alias_of[match.group(1)]}]" if match.group(1) in alias_of else match.group(0),
+        text,
+    )
 
 
 def _parse_tagged_paragraphs(reply: str) -> dict[str, str]:
@@ -1022,6 +1053,8 @@ def _sanitize_llm_paragraph(text: str, allowed: set[str]) -> str:
     keep = []
     for sentence in _split_sentences(text):
         if _contains_banned_phrase(sentence):
+            continue
+        if _LEAKED_ID_RE.search(sentence) or _LEAKED_ID_FRAGMENT_RE.match(sentence):
             continue
         citations = _extract_citations(sentence)
         if citations and not citations <= allowed:

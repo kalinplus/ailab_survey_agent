@@ -123,9 +123,9 @@ def _next_repair_round(root: Path) -> int:
 
 
 def _make_llm_json_chat(cfg):
-    from llm_client import InternS2Client, _extract_json_object
+    from llm_client import heavy_llm_client, _extract_json_object
 
-    client = InternS2Client(cfg)
+    client = heavy_llm_client(cfg)
 
     def chat(messages):
         try:

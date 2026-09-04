@@ -50,6 +50,20 @@ class TestExtractClaims:
         result = extract_claims_with_citations(md)
         assert result == [("世界模型很重要", "paper:1")]
 
+    def test_image_embed_line_ignored(self):
+        md = (
+            "![Publication years of the selected representative papers.](publication_timeline)\n\n"
+            "These models support planning [paper:1]."
+        )
+        result = extract_claims_with_citations(md)
+        assert result == [("These models support planning", "paper:1")]
+
+    def test_embed_caption_not_extracted_as_citation(self):
+        md = "Timeline follows.\n![Figure 1. Overview.](hero_banner)\nAnd a claim [paper:2]."
+        result = extract_claims_with_citations(md)
+        assert ("Timeline follows", "Figure 1. Overview.") not in result
+        assert result == [("And a claim", "paper:2")]
+
 
 # ── Stage 3: no evidence → unsupported ─────────────────────────────
 

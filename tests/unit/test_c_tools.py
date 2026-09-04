@@ -646,6 +646,45 @@ def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
         assert "Its method can be summarized as" not in body  # template summary replaced
 
 
+def test_llm_aliases_map_back_and_leaked_ids_are_dropped():
+    section = {
+        "section_title": "Theme",
+        "section_goal": "compare the assigned papers",
+        "selected_papers": [
+            {
+                "paper_id": "p_alpha",
+                "title": "Alpha",
+                "problem": "planning",
+                "method": "latent dynamics",
+                "contribution": "policy learning",
+                "limitations": "short horizon",
+                "evidence_snippets": ["alpha evidence sentence"],
+            },
+            {
+                "paper_id": "p_beta",
+                "title": "Beta",
+                "problem": "control",
+                "method": "world model rollout",
+                "contribution": "benchmark",
+                "limitations": "narrow domain",
+                "evidence_snippets": ["beta evidence sentence"],
+            },
+        ],
+    }
+    reply = "\n".join(
+        [
+            "[SUMMARY] Alpha studies planning from learned dynamics [P1].",
+            "[COMPARISON] Beta differs in dynamics and role [P2]. A bare leak paper:10. 1016/j. fake must vanish.",
+            "[LIMITATION] Unknown tags are dropped [P9]. The evidence does not establish scale [P2].",
+        ]
+    )
+    paragraphs = write_survey._llm_section_paragraphs(section, lambda messages, **kwargs: reply, zh=False)
+
+    assert "[p_alpha]" in paragraphs["summary"] and "P1" not in paragraphs["summary"]
+    assert "[p_beta]" in paragraphs["comparison"] and "1016" not in paragraphs["comparison"]
+    assert "P9" not in paragraphs["limitation"] and "[p_beta]" in paragraphs["limitation"]
+
+
 def test_llm_exception_falls_back_to_template_and_still_writes(tmp_path, monkeypatch):
     monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
     monkeypatch.delenv("GENERATE_KEY", raising=False)

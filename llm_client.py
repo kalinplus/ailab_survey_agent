@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import time
 from typing import Any
 
@@ -18,13 +19,24 @@ class LLMClientError(RuntimeError):
 class InternS2Client:
     """OpenAI-compatible client for Intern-S2-Preview style chat APIs."""
 
-    def __init__(self, config: AppConfig) -> None:
+    def __init__(
+        self,
+        config: AppConfig,
+        *,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        model_name: str | None = None,
+        min_interval: float = 2.1,
+    ) -> None:
         self.config = config
+        self.api_key = api_key if api_key else config.intern_api_key
+        self.base_url = (base_url or config.intern_api_base_url).rstrip("/")
+        self.model_name = model_name or config.intern_model_name
         self._last_call: float = 0.0
-        self._min_interval: float = 2.1  # Intern-S2 rate limit: 1 req per 2s
+        self._min_interval: float = min_interval
 
     def is_configured(self) -> bool:
-        return bool(self.config.intern_api_key)
+        return bool(self.api_key)
 
     def chat(
         self,
@@ -39,21 +51,22 @@ class InternS2Client:
             raise LLMClientError("INTERN_API_KEY is empty; cannot call Intern-S2-Preview.")
 
         payload: dict[str, Any] = {
-            "model": self.config.intern_model_name,
+            "model": self.model_name,
             "messages": messages,
             "temperature": temperature,
-            "thinking_mode": thinking_mode,
         }
+        if thinking_mode:
+            payload["thinking_mode"] = thinking_mode
         if response_format:
             payload["response_format"] = response_format
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
 
         headers = {
-            "Authorization": f"Bearer {self.config.intern_api_key}",
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
-        url = f"{self.config.intern_api_base_url}/chat/completions"
+        url = f"{self.base_url}/chat/completions"
 
         last_error: Exception | None = None
         for _ in range(self.config.max_llm_retries + 1):
@@ -95,6 +108,26 @@ class InternS2Client:
             if extracted is not None:
                 return extracted
             raise LLMClientError(f"Model did not return valid JSON: {content[:500]}") from exc
+
+
+def heavy_llm_client(config: AppConfig) -> InternS2Client:
+    """Client for the hard generative stages (survey writer, repair agent).
+
+    HEAVY_LLM_BASE_URL / HEAVY_LLM_API_KEY / HEAVY_LLM_MODEL point at a stronger
+    OpenAI-compatible endpoint (e.g. GLM); when unset, the Intern-S2-Preview
+    config is used unchanged. Simple judging tasks keep using InternS2Client(cfg).
+    """
+    base_url = (os.getenv("HEAVY_LLM_BASE_URL") or "").strip()
+    api_key = (os.getenv("HEAVY_LLM_API_KEY") or "").strip()
+    if not (base_url and api_key):
+        return InternS2Client(config)
+    return InternS2Client(
+        config,
+        api_key=api_key,
+        base_url=base_url,
+        model_name=(os.getenv("HEAVY_LLM_MODEL") or "").strip() or None,
+        min_interval=float(os.getenv("HEAVY_LLM_MIN_INTERVAL") or 2.1),
+    )
 
 
 def _extract_json_object(content: str) -> dict[str, Any] | None:

@@ -16,10 +16,16 @@ from tools.models.bundle import ClaimMap, ClaimEntry
 def extract_claims_with_citations(md: str):
     """Split markdown into sentences; keep those containing a [citation].
 
+    Image embeds (`![caption](artifact_id)`) are dropped line-wise first: the
+    square brackets inside `![...]` would otherwise be extracted as a citation
+    whose id is the caption text (S0: claims citing "Publication years of ...").
     Returns list of (claim_text_without_brackets, first_citation_id).
     """
+    prose = "\n".join(
+        line for line in md.splitlines() if not line.lstrip().startswith("![")
+    )
     out = []
-    for sentence in re.split(r"(?<=[.。])\s+", md):
+    for sentence in re.split(r"(?<=[.。])\s+", prose):
         cites = re.findall(r"\[([^\]]+)\]", sentence)
         if cites:
             text = re.sub(r"\[[^\]]+\]", "", sentence).strip().rstrip(".。").strip()
