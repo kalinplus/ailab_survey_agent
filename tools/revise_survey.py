@@ -221,10 +221,13 @@ def _revise_unsupported_claims(
 
 def _replace_references(markdown: str, card_by_id: dict[str, dict[str, Any]]) -> str:
     body = re.split(r"\n## References\b", markdown, maxsplit=1)[0].rstrip()
-    used = sorted(_extract_citations(body))
+    # List only papers that resolve to a verified card: a bracket artifact in the
+    # body (an unclosed '[' reads as one huge multi-paragraph "citation id") would
+    # otherwise be printed twice here, duplicating whole sections after ## References.
+    used = [paper_id for paper_id in sorted(_extract_citations(body)) if paper_id in card_by_id]
     refs = ["", "## References", ""]
     for paper_id in used:
-        card = card_by_id.get(paper_id, {})
+        card = card_by_id[paper_id]
         title = card.get("title") or paper_id
         year = card.get("year") or "n.d."
         refs.append(f"- {paper_id}: {title} ({year}).")

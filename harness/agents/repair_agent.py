@@ -304,6 +304,33 @@ def decide_batches(
 # ---------------------------------------------------------------------------
 
 
+def _headings(md: str) -> list[str]:
+    return re.findall(r"(?m)^## .+$", md)
+
+
+def _references_tail(md: str) -> str:
+    """Everything from the first ## References heading on: repair must not touch it."""
+    match = re.search(r"(?m)^## References\b", md)
+    return md[match.start():] if match else ""
+
+
+def _invariant_violation(before: str, after: str, allowed_ids: set[str]) -> str:
+    """Structural post-condition for one repair action; '' means the edit is legal.
+
+    A repair pass may never change the set of '## ' section headings, never
+    write content after '## References', and never introduce a citation id
+    outside the whitelist (it may only shrink the set of offending ids).
+    """
+    if _headings(before) != _headings(after):
+        return "section heading set changed"
+    if _references_tail(before) != _references_tail(after):
+        return "content after ## References changed"
+    injected = _extract_citations(after) - _extract_citations(before) - allowed_ids
+    if injected:
+        return f"introduced non-whitelisted citation ids: {sorted(injected)[:3]}"
+    return ""
+
+
 class _SciverseBudget:
     def __init__(self, client, limit: int):
         self.client = client
@@ -354,9 +381,17 @@ def execute_decisions(
             action = item.get("action")
             if action is None:  # unresolved during decision phase
                 continue
+            before = md
             outcome, md = _execute_one(
                 action, item.get("params", {}), item["record"], md, evidence_store,
                 evidence_by_paper, allowed_ids, nli, sciverse_budget)
+            violation = _invariant_violation(before, md, allowed_ids)
+            if violation:
+                # fail per action, not per run: revert only this mutation
+                target = (item["record"].get("citation_id")
+                          or item["record"].get("claim_id") or item["record"].get("ref"))
+                logger.warning(f"[repair] reverted {action} on {target}: {violation}")
+                outcome, md = "invalid_action", before
             item["outcome"] = outcome
             if on_event:
                 on_event({"agent": "repair", "event": "action", "failure_type": group,

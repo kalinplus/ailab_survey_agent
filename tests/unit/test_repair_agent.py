@@ -7,6 +7,7 @@ budget breakers, repair_log. Fakes mirror the real contracts.
 """
 
 import json
+import re
 
 import pytest
 
@@ -388,3 +389,80 @@ def _claim_map_with(claim_map):
     by_paper = {"p_good": _evidence_store()["evidence"]}
     claim_map["_evidence_by_paper"] = by_paper
     return claim_map
+
+
+# --- S0 regression: repair must not duplicate sections / write after References ---
+#
+# The S0 run grew survey_revised.md by 4606 chars and gained two duplicate
+# "## Agent Planning..." sections after ## References. The writer had emitted an
+# UNCLOSED '[' , so _extract_citations read a whole multi-paragraph blob (with a
+# '## ' heading inside) as ONE citation id; repair could not match it (the
+# sentence splitter breaks inside the id at every '. ') and left it in the body,
+# and the reference rebuild printed that "id" twice as "- id: id (n.d.).".
+
+
+def _sectioned_md():
+    return (
+        "## Agent Planning and Control in Learned Worlds\n\n"
+        "Agents plan with learned world models [p_good].\n\n"
+        "A Survey of Large Language Models takes Language is essentially complex. "
+        "as its target; which yields plans. [paper:10. The evidence in Cosmos stops at "
+        "Detailed limitations require deeper paper parsing or manual review.\n\n"
+        "Generative Game World Simulation hands the open question to Agent Planning "
+        "and Control in Learned Worlds.\n\n"
+        "## Conclusion\n\n"
+        "Repair must not duplicate this section. 1007/s11704-026-60308-3]\n\n"
+        "## References\n\n"
+        "- p_good: World Model Reinforcement Learning Survey (2024).\n"
+    )
+
+
+def _section_claim_map():
+    return {"entries": [
+        {"claim_text": "Agents plan with learned world models", "cited_paper_id": "p_good",
+         "status": "unsupported", "confidence": 0.2, "evidence_ids": ["p_good_ev1"]},
+    ]}
+
+
+def test_repair_never_changes_headings_or_content_after_references(tmp_path):
+    md = _sectioned_md()
+    claim_map = _claim_map_with(_section_claim_map())
+    blob = group_failures(md, claim_map, _ready_set(), [], set())["A"][0]["citation_id"]
+    assert "## Conclusion" in blob          # the artifact swallows a section heading
+
+    def plan(call_idx, messages):
+        content = messages[-1]["content"]
+        if "Failure type A" in content:      # exactly the S0 round-6 garbage decision
+            return [{"id": blob, "action": "delete_claim",
+                     "params": {"reason": "not a real citation"}, "reason": "r"}]
+        if "Failure type B" in content:      # rewrite that injects a whole section
+            return [{"id": "claim_0", "action": "rewrite_claim",
+                     "params": {"new_text": "Agents plan with learned world models.\n"
+                                            "## Conclusion\n\nDuplicated body paragraph."},
+                     "reason": "garbage"}]
+        return []
+
+    result = _run(tmp_path, ScriptedLLM(plan), ScriptedNLI(script={"learned world models": "supported"}),
+                  survey_md=md, claim_map=claim_map)
+    log = {(e["failure_type"], e["id"]): e for e in result["repair_log"]}
+    assert log[("A", blob)]["outcome"] == "invalid_action"       # blob is not a sentence
+    assert log[("B", "claim_0")]["outcome"] == "invalid_action"  # section injection reverted
+    # invariants: heading set unchanged, nothing after ## References touched, no copy of the blob
+    assert re.findall(r"(?m)^## .+$", result["revised_md"]) == re.findall(r"(?m)^## .+$", md)
+    assert result["revised_md"][result["revised_md"].index("## References"):] == \
+        md[md.index("## References"):]
+    assert result["revised_md"].count("## Conclusion") == 1
+    assert result["revised_md"].count(blob) == 1
+    assert result["revised_md"].count("[paper:10.") == 1
+
+
+def test_replace_references_silences_unverified_bracket_artifacts(tmp_path):
+    import tools.revise_survey as revise
+
+    cards = {"p_good": {"title": "World Model Reinforcement Learning Survey", "year": 2024}}
+    revised = revise._replace_references(_sectioned_md(), cards)
+    assert revised.count("## Conclusion") == 1            # no section duplicated into the list
+    tail = revised[revised.index("## References"):]
+    assert re.findall(r"(?m)^## .+$", tail) == ["## References"]
+    assert "paper:10. The evidence in Cosmos" not in tail  # artifact id never echoed
+    assert "- p_good: World Model Reinforcement Learning Survey (2024)." in tail
