@@ -5,20 +5,40 @@
 
 ## Current
 
-### S0 交付件重跑与四层复测（S1+S2 已合并，待真跑）
+### S0 收尾：四层 A/B 已出，下一轮迭代待定方向
 
-- 任务目标：S1/S2 合并后用交付级配置重跑一次生成侧（full，开 `EVISURVEY_WRITER_LLM=1` + 广度旋钮），使四层评测对象是自洽工件，与 2026-09-02 基线（L3 1.667）出 A/B。
-- 建议配置：`EVISURVEY_MAX_QUERIES_PER_ASPECT=4 EVISURVEY_META_PAGE_SIZE=50 EVISURVEY_MAX_CORPUS=60 EVISURVEY_ASPECT_MIN_PAPERS=2 EVISURVEY_WRITER_LLM=1 EVISURVEY_REAL_NLI=1 --use-mineru`（真跑前先小步冒烟确认旋钮组合不炸）
-- 验收条件：
-  - 新 run 的 `output/survey.md` 与评测 evidence store 同 id 空间，`id_space_mismatch=false`
-  - 语料 ≥30 / 5 类目 / gold recall ≥0.10 / coverage 维持 1.0
-  - L0 max sim<0.8、零引用正文节=0、L1.5 support rate≥0.5、L1 precision≥0.8
-  - L3 总分较基线回升且三维 rationale 不再指向引用塌缩/复述
-  - 重跑后的 showcase 产物（HTML/PDF）仍通过 readiness gates
+- 任务目标：S0 五轮真跑完成，尝试 5 首次 goal gate passed（0 unsupported / 0 invalid / coverage 1.137），四层评测已出（`output/survey_eval_report.md`，2026-09-04）。两个小修复（`e007ac7`：句尾引用归位 + 白名单最新优先）已提交**未重跑验证**。
+- 验收条件回顾（对照 2026-09-02 基线）：
+  - 同 id 空间（已达成）：citation depth 0.0→0.145、utilization 0.0→0.145（真实值非告警）
+  - L1.5 support rate 0.297→0.571、整体 unsupported 0.125→0.014（已达成）
+  - L0 max sim<0.8（未达成：0.961，OC×FD 两节近重复 + Abstract×Intro 0.898）
+  - L3 回升（未达成：仍 1.667，维度从 1/3/1 变 1/1/3，rationale 指向无关引用/样板重复/元话语残留）
+  - freshness（回退：白名单旧文优先所致，已修未验证）
+  - showcase readiness gates 复跑（未做）
 
 ## Next
 
-（无排队任务）
+### 下一轮迭代 bucket（按评测证据排序，待用户挑）
+
+- **冗余**：OC×FD 0.961——`_evidence_bits` 同源导致两节内容几乎相同，需要差异化数据源或合并为一节；Abstract×Intro 0.898。
+- **评测器格式耦合**：L1 cited=2 / L0 正文节零引用是 GLM 句尾挂引用所致（已修 `e007ac7`），但评测器的 cited-sentence 判定也应对 citation-only fragment 做归一化，否则永远低估。
+- **claim_map 提取薄**：30 引用只提出 2-8 条参与验证——generation 侧 verify 覆盖薄，靠评测 L1.5 兜底；考虑把 claim mapper 的引用提取升级为多引用/跨行鲁棒。
+- **gold 对齐回退**：system-in-gold 0.583→0.118，60 篇广度语料 vs gold 338 篇重合度低——P2/P3 的 EN 主题 aspects 与 gold 综述参考表错位，需要相关性引导的检索或 gold-free 的覆盖度量。
+- **L3 元话语残留**：judge 仍点名 meta-commentary——repair agent 改写句可能引入新的元话语，禁词表可加入 repair 输出侧。
+- **MinerU 图表链路**（用户指示暂缓）：`/agent/parse/url` 秒回 200 零轮询 → parsed=0。
+- **P2 taxonomy 随机性**：4 轮 run 类目数 26/4/~2/4 波动大，考虑温度/种子固定或模板化。
+
+## Log
+
+### 2026-09-04（晚：尝试 5 首次 gate passed，四层 A/B 出炉）
+
+- 尝试 4 被 kill（repair round 5 中途）；死前已证明 round-0 初稿规模保住（19.6K chars/36 引用/invalid=1）。
+- 尝试 5（+`REQUEST_TIMEOUT_SECONDS=300`，60s 默认对 GLM 思考太紧是 sec_04/05 超时兜底的根因）：**goal gate 首次 passed**——unsupported 0 / invalid 0 / coverage 1.137；正文 4 节全带引用；21 引用 / 8 唯一 id（基线 84/3）；repair agent 末轮 claim_map success。决定性变量：repair agent(GLM) + SUMMARY 近引用 prompt + 别名方案。
+- 四层 A/B（vs 09-02 基线）：整体 unsupported 0.125→**0.014**；L1.5 support 0.297→**0.571**；citation depth/utilization 0→**0.145**（id 同空间）；L1 recall/precision 1.0（但样本仅 2 句，失真）；冗余 max 0.952→0.961（回退）；freshness 回退（oldest-first，已修）；gold recall 0.033→0.018（回退）；L3 1.667→1.667（维度 1/3/1→1/1/3）。
+- 新修复 `e007ac7`（未重跑验证）：GLM 句尾挂引用被句子切分变成 citation-only fragment（L1 cited=2 与 L0 正文零引用的评测假象来源）→ 归位到句内；prelock 白名单改最新优先。
+- 评测脚本调用方式（本轮工件配对）：`--survey output/survey.md --evidence-store cache/evidence_store.json --papers cache/paper_cards.json --taxonomy cache/taxonomy.json --figure-bank cache/figure_bank.json --table-bank cache/table_bank.json`。
+
+### 2026-09-04（下午：S0 真跑 4 轮迭代——LLM 写作 × NLI × 修复回路的三重冲突诊断与修复）
 
 ## Log
 
