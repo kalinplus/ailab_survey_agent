@@ -2451,8 +2451,19 @@ def _contains_banned_phrase(text: str) -> bool:
 def _shorten(text: Any, limit: int) -> str:
     value = " ".join(str(text or "").split())
     if len(value) <= limit:
-        return value
-    return value[: limit - 1].rstrip() + "..."
+        return _drop_unbalanced(value)
+    return _drop_unbalanced(value[: limit - 1].rstrip() + "...")
+
+
+def _drop_unbalanced(value: str) -> str:
+    """Truncation can cut a citation bracket in half ('...as [paper:10. 485');
+    the orphan '[' then makes downstream extractors swallow whole paragraphs as
+    one citation id (S0 round-2: a 1535-char block became one reference entry,
+    printed twice by _replace_references)."""
+    cut = value.rfind("[")
+    if cut != -1 and "]" not in value[cut:]:
+        return value[:cut].rstrip()
+    return value
 
 
 def _escape_pipe(text: Any) -> str:
