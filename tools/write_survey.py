@@ -151,6 +151,7 @@ def run(request_path: str) -> dict[str, Any]:
     timeline = _build_timeline(task_id, categories, cards)
     artifacts, image_notes = _build_generated_artifacts(cfg, task_id, timeline, categories, cards, evidence_by_paper)
     survey = _render_survey(topic, language, section_plan, artifacts, cards, evidence_by_paper, llm_chat=_writer_llm_chat(cfg))
+    survey = _lint_citation_brackets(survey)
 
     survey_path = _resolve(root, outputs.get("survey_markdown_path", "output/survey.md"))
     timeline_path = _resolve(root, outputs.get("timeline_path", "cache/timeline.json"))
@@ -2463,6 +2464,33 @@ def _shorten(text: Any, limit: int) -> str:
     if len(value) <= limit:
         return _drop_unbalanced(value)
     return _drop_unbalanced(value[: limit - 1].rstrip() + "...")
+
+
+def _lint_citation_brackets(md: str) -> str:
+    """Final structural lint before the survey is written.
+
+    Internal LLM/template paths have repeatedly leaked half-formed citation
+    brackets (S0 rounds 2-3: an orphan '[' made extractors swallow paragraphs
+    into one citation id, and space-broken ids split across bracket groups).
+    Enforce the document invariant here, at the write boundary, so no single
+    path's leak can reach verify/repair: unbalanced '[' truncates to its start,
+    and a bracket group containing whitespace/newlines is never a valid paper
+    id, so its content is dropped. Image embeds (![...](...)) are line-initial
+    and balanced; untouched.
+    """
+    out_lines = []
+    for line in md.splitlines():
+        if line.lstrip().startswith("!["):
+            out_lines.append(line)
+            continue
+        while line.count("[") > line.count("]"):
+            cut = line.rfind("[")
+            line = line[:cut].rstrip()
+        # Drop whitespace-bearing id-shaped bracket groups (cannot be valid
+        # paper ids); legit multi-word links like [some text](url) are kept.
+        line = re.sub(r"\[(?:paper:[^\]]*|P\d[^\]]*)\s[^\]]*\]", "", line)
+        out_lines.append(line)
+    return "\n".join(out_lines) + "\n"
 
 
 def _drop_unbalanced(value: str) -> str:

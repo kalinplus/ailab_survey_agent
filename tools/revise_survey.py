@@ -88,7 +88,7 @@ def _run_repair_agent(cfg, root: Path, task_id: str, inputs: dict, markdown: str
                                     {"evidence": []})
     try:
         result = run_repair(
-            task_id=task_id, round_no=_next_repair_round(root),
+            task_id=task_id, round_no=_next_repair_round(root, task_id),
             survey_md=markdown, claim_map=claim_map, evidence_store=evidence_store,
             ready_set=ready_set, figure_items=figure_items,
             allowed_artifacts=allowed_artifacts,
@@ -104,7 +104,8 @@ def _run_repair_agent(cfg, root: Path, task_id: str, inputs: dict, markdown: str
         write_json(evidence_path, result["evidence_store"])
     repair_log_path = root / "output" / "repair_log.json"
     existing = read_json(repair_log_path) if repair_log_path.exists() else []
-    write_json(repair_log_path, existing + result["repair_log"])
+    stamped = [dict(entry, task_id=task_id) for entry in result["repair_log"]]
+    write_json(repair_log_path, existing + stamped)
     # NOTE: no square brackets anywhere in these lines — the verifier's citation
     # extractor treats [x] as a reference id, so bracketed notes would pollute
     # the next verify round with phantom claims
@@ -113,13 +114,21 @@ def _run_repair_agent(cfg, root: Path, task_id: str, inputs: dict, markdown: str
     return result["revised_md"], notes, result["metrics"]
 
 
-def _next_repair_round(root: Path) -> int:
-    """Outer Goal-Gate round number = how many repairs already happened."""
+def _next_repair_round(root: Path, task_id: str) -> int:
+    """Outer Goal-Gate round number = repairs already done FOR THIS TASK.
+
+    The log accumulates across runs by design (audit trail); without the
+    task filter a fresh run continues an old run's numbering (S0 round-3
+    started at round 7) and stale entries leak into forensics."""
     repair_log_path = root / "output" / "repair_log.json"
     if not repair_log_path.exists():
         return 1
     entries = read_json(repair_log_path)
-    return max((int(e.get("round", 0)) for e in entries if isinstance(e, dict)), default=0) + 1
+    rounds = [
+        int(e.get("round", 0)) for e in entries
+        if isinstance(e, dict) and e.get("task_id", task_id) == task_id
+    ]
+    return max(rounds, default=0) + 1
 
 
 def _make_llm_json_chat(cfg):
