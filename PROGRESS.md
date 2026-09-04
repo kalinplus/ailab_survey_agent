@@ -5,32 +5,29 @@
 
 ## Current
 
-### S0 收尾：四层 A/B 已出，下一轮迭代待定方向
+### S0 第二轮真跑（T1+T2+T3 已合并）
 
-- 任务目标：S0 五轮真跑完成，尝试 5 首次 goal gate passed（0 unsupported / 0 invalid / coverage 1.137），四层评测已出（`output/survey_eval_report.md`，2026-09-04）。两个小修复（`e007ac7`：句尾引用归位 + 白名单最新优先）已提交**未重跑验证**。
-- 验收条件回顾（对照 2026-09-02 基线）：
-  - 同 id 空间（已达成）：citation depth 0.0→0.145、utilization 0.0→0.145（真实值非告警）
-  - L1.5 support rate 0.297→0.571、整体 unsupported 0.125→0.014（已达成）
-  - L0 max sim<0.8（未达成：0.961，OC×FD 两节近重复 + Abstract×Intro 0.898）
-  - L3 回升（未达成：仍 1.667，维度从 1/3/1 变 1/1/3，rationale 指向无关引用/样板重复/元话语残留）
-  - freshness（回退：白名单旧文优先所致，已修未验证）
-  - showcase readiness gates 复跑（未做）
+- 任务目标：三路合并后交付级重跑，用 T2 新指标出四层 A/B（vs 尝试 5）。
+- 配置：`REQUEST_TIMEOUT_SECONDS=300 TOOL_TIMEOUT_SECONDS=3600` + 广度旋钮（4/50/60/2）+ `EVISURVEY_WRITER_LLM=1 EVISURVEY_REPAIR_AGENT=1 EVISURVEY_NLI_DEVICE=cpu EVISURVEY_REAL_NLI=1` + en + `--max-papers 60 --max-core-papers 15`
+- 验收条件：
+  - in-gold ≥0.3 / seed-bib 指标显著非零且方向可解释
+  - L1 cited 句 ≥15（归一化生效）
+  - L0 max sim<0.8（T3 目标；Abstract×Intro 短框架段可能仍 >0.9，如实记录）
+  - gate 保持 passed、正文节全带引用
 
 ## Next
 
-### T3 写作变化性（worktree 进行中）
-
-- 任务目标：正文 moves 菜单驱动（按主张组织）、引用风格混合、OC/FD 数据源分离、Abstract/Intro 差异化。spec：`specs/T3-写作变化性.md`
-- 验收条件：unit 五条全过；真跑 L0 max sim<0.8
-
-### S0 第二轮真跑（依赖 T3 合并）
-
-- 配置：GLM（HEAVY_LLM_*）+ repair agent + `REQUEST_TIMEOUT_SECONDS=300` + 广度旋钮 + en；评测用 T2 新指标（`--seed-bibs --canonical`）出 A/B
-- 验收条件：in-gold ≥0.3 / seed-bib 指标方向可解释 / L1 cited 句 ≥15 / L0 max sim<0.8 / gate passed 保持
+（无排队任务）
 
 ## Log
 
-### 2026-09-04（晚二：T1+T2 三路并行中的两路合并）
+### 2026-09-04（晚三：T3 合并，三路并行全闭环）
+
+- T3 合并（`6a8bbd8`，378 unit passed）：固定三段骨架 → moves 菜单（按主张分组/让论文互相对话/缺口收尾）；author-prominent + information-prominent 引用风格混用（滞留 tag 归位正则泛化 `_STRANDED_TAGS_RE`）；删 `_evidence_bits`，OC/FD 从 `_limitation_pool` 对半切（构造性不相交）；跨节句子台账 `_fresh_text`（任何句全文只出现一次）；Abstract/Intro 分离（锚点引用 + taxonomy roadmap）。离线真实数据冒烟：全文跨节零重复句、OC×FD 掉出相似度 top8。
+- 已知边界：Abstract×Intro 这类短框架段 bge 天然 ~0.92，L0<0.8 真跑才见分晓；写作 LLM 调用 +4 次/篇（abstract/intro/OC/FD）。
+- 三路并行零冲突收尾（T1 触达 phases/prelock、T2 触达 evaluate/eval-script、T3 触达 write_survey，文件集严格不相交）。
+
+### 2026-09-04（晚二：T1+T2 合并）
 
 - T2 合并（`179f5eb`）：评测器 `_sentence_units` 归一化 citation-only fragment（修 L1 cited=2 / L0 假性零引用）；gold-free 主指标上线（seed-bib recall / canonical hit@N / 语料多样性），gold 降级次要诊断；`cache/seed_survey_bibs.json`（7 综述→23 并集）与生成脚本入库。真实 12 篇语料冒烟：seed-bib 0.261 / in-seed-bib 0.5 / canonical 命中 0.5——方向合理。
 - T1 合并（`a85bf26`）：P2 种子综述参考文献 → `source=bib` expansion（staples world_models/dreamerv3/muzero 在列）；P3 landmark 查询族（无年份窗）+ 标题规范化模糊去重；白名单 recency×influence 混合（`log1p(citation_count+survey_ref_count)`，平手 influence 破平，全零退化为纯 recency）。偏差合理：贯通 `PaperCard.citation_count/survey_ref_count`（否则 blend 在生产退化为纯 recency，boundary 扩展有据）。
@@ -44,10 +41,6 @@
 - 四层 A/B（vs 09-02 基线）：整体 unsupported 0.125→**0.014**；L1.5 support 0.297→**0.571**；citation depth/utilization 0→**0.145**（id 同空间）；L1 recall/precision 1.0（但样本仅 2 句，失真）；冗余 max 0.952→0.961（回退）；freshness 回退（oldest-first，已修）；gold recall 0.033→0.018（回退）；L3 1.667→1.667（维度 1/3/1→1/1/3）。
 - 新修复 `e007ac7`（未重跑验证）：GLM 句尾挂引用被句子切分变成 citation-only fragment（L1 cited=2 与 L0 正文零引用的评测假象来源）→ 归位到句内；prelock 白名单改最新优先。
 - 评测脚本调用方式（本轮工件配对）：`--survey output/survey.md --evidence-store cache/evidence_store.json --papers cache/paper_cards.json --taxonomy cache/taxonomy.json --figure-bank cache/figure_bank.json --table-bank cache/table_bank.json`。
-
-### 2026-09-04（下午：S0 真跑 4 轮迭代——LLM 写作 × NLI × 修复回路的三重冲突诊断与修复）
-
-## Log
 
 ### 2026-09-04（下午：S0 真跑 4 轮迭代——LLM 写作 × NLI × 修复回路的三重冲突诊断与修复）
 
