@@ -1619,6 +1619,16 @@ def _map_alias_citations(text: str, alias_of: dict[str, str]) -> str:
             break
         text = pulled
     text = re.sub(r"\[(P\d+)\]", _replace, text)
+    # GLM recalls real DOIs from pretraining and space-breaks them
+    # ("[paper:10. 48550/arxiv. 2312. 12491]") even though prompts only carry
+    # aliases. The id is otherwise correct: compact it back so the whitelist
+    # filter can rescue the citation instead of dropping the sentence
+    # (S0 round-4: deleting these took the whole survey's citations with it).
+    text = re.sub(
+        r"\[(paper:[^\]]+)\]",
+        lambda m: "[" + re.sub(r"\s+", "", m.group(1)) + "]",
+        text,
+    )
     return text
 
 
