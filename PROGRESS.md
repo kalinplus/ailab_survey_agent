@@ -18,22 +18,24 @@
 
 ## Next
 
-### T1 搜索引导与白名单选择（worktree 并行中）
+### T3 写作变化性（worktree 进行中）
 
-- 任务目标：种子综述 bib 驱动 expansion + landmark 查询族 + 标题模糊去重 + 白名单 recency×influence 混合。spec：`specs/T1-搜索引导与白名单选择.md`
-- 验收条件：unit（fake API）四条全过；真跑（S0 下轮）in-gold ≥0.3、staples 命中非空
+- 任务目标：正文 moves 菜单驱动（按主张组织）、引用风格混合、OC/FD 数据源分离、Abstract/Intro 差异化。spec：`specs/T3-写作变化性.md`
+- 验收条件：unit 五条全过；真跑 L0 max sim<0.8
 
-### T2 评测度量 gold-free 改造（worktree 并行中）
+### S0 第二轮真跑（依赖 T3 合并）
 
-- 任务目标：seed-bib recall / canonical hit@N / 多样性指标替换 gold 主位 + 评测器 citation-only 归一化。spec：`specs/T2-评测度量goldfree改造.md`；canonical 清单已备 `cache/canonical_papers.json`（20 篇）
-- 验收条件：unit 四条全过；回放尝试 5 工件 L1 cited 句 ≥15
-
-### T3 写作变化性（worktree 并行中）
-
-- 任务目标：正文 moves 菜单驱动（按主张组织）、引用风格混合、OC/FD 数据源分离、Abstract/Intro 差异化。spec：`specs/T3-写作变化性.md`（吸收学术写作研究：Waterloo/Monash/Purdue OWL、Mensch & Kording 2017）
-- 验收条件：unit 五条全过（跨节句唯一、OC∩FD 证据集为空、两种引用形态绑定、Abstract 带引用）；真跑 L0 max sim<0.8
+- 配置：GLM（HEAVY_LLM_*）+ repair agent + `REQUEST_TIMEOUT_SECONDS=300` + 广度旋钮 + en；评测用 T2 新指标（`--seed-bibs --canonical`）出 A/B
+- 验收条件：in-gold ≥0.3 / seed-bib 指标方向可解释 / L1 cited 句 ≥15 / L0 max sim<0.8 / gate passed 保持
 
 ## Log
+
+### 2026-09-04（晚二：T1+T2 三路并行中的两路合并）
+
+- T2 合并（`179f5eb`）：评测器 `_sentence_units` 归一化 citation-only fragment（修 L1 cited=2 / L0 假性零引用）；gold-free 主指标上线（seed-bib recall / canonical hit@N / 语料多样性），gold 降级次要诊断；`cache/seed_survey_bibs.json`（7 综述→23 并集）与生成脚本入库。真实 12 篇语料冒烟：seed-bib 0.261 / in-seed-bib 0.5 / canonical 命中 0.5——方向合理。
+- T1 合并（`a85bf26`）：P2 种子综述参考文献 → `source=bib` expansion（staples world_models/dreamerv3/muzero 在列）；P3 landmark 查询族（无年份窗）+ 标题规范化模糊去重；白名单 recency×influence 混合（`log1p(citation_count+survey_ref_count)`，平手 influence 破平，全零退化为纯 recency）。偏差合理：贯通 `PaperCard.citation_count/survey_ref_count`（否则 blend 在生产退化为纯 recency，boundary 扩展有据）。
+- 修了一个 `98ec405` 遗留的隐性测试破坏（`47874f2`）：repair-agent 测试 stub 的 SimpleNamespace 缺 `intern_api_base_url`——单跑必挂、全量被顺序掩盖，两 agent 独立发现。教训：改构造函数签名后要单跑受影响测试文件。
+- 合并后主工作区 `pytest tests/unit/` 374 passed。T3 进行中。
 
 ### 2026-09-04（晚：尝试 5 首次 gate passed，四层 A/B 出炉）
 
