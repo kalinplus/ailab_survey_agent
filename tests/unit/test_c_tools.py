@@ -681,7 +681,18 @@ def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
     whitelists = _section_whitelists(cache)
     assert all(len(ids) >= 3 for ids in whitelists.values())
 
-    replies = []
+    # Task-marked replies first: FakeLLMClient returns the first response whose
+    # tag occurs in the prompt, and the tail-section prompts quote paper titles
+    # that also appear in the section prompts.
+    replies = [
+        (
+            "draft the abstract",
+            "This survey covers two themes over six citation-ready studies [P1] [P2]. Its claims are bound to verified evidence snippets.",
+        ),
+        ("draft the introduction", "Game intelligence needs models that learn how worlds evolve rather than hand-written rules."),
+        ("draft the open challenges", "Reported evidence stops at short horizons and narrow evaluation [P1]."),
+        ("draft the future directions", "Follow-up work should extend the reported method to held-out environments [P1]."),
+    ]
     for title, allowed in whitelists.items():
         ids = sorted(allowed)
         replies.append(
@@ -692,6 +703,7 @@ def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
                         f"[SUMMARY] {ids[0]} studies the section goal [{ids[0]}].",
                         f"This sentence leaks the harness chain, CitationReadySet and invents [{ids[-1]}] plus [offtopic].",
                         f"[COMPARISON] {ids[0]} differs from {ids[1]} in method and role [{ids[0]}] [{ids[1]}].",
+                        f"{title} is the landmark work here, and its evidence shows measured rollout behaviour [{ids[0]}].",
                         f"[LIMITATION] The reported evidence does not establish long-horizon robustness [{ids[2]}].",
                     ]
                 ),
@@ -704,7 +716,7 @@ def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
     result = write_survey.run(str(request_path))
 
     assert result["status"] == "success"
-    assert fake.calls == len(whitelists), "each themed section must be drafted by the LLM"
+    assert fake.calls >= len(whitelists), "each themed section must be drafted by the LLM"
     survey = (output / "survey.md").read_text(encoding="utf-8")
     assert "harness chain" not in survey
     assert "[offtopic]" not in survey
@@ -714,6 +726,11 @@ def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
         assert citations <= allowed, f"{title}: citations outside the section whitelist"
         assert "differs from" in body  # LLM comparison paragraph landed
         assert "Its method can be summarized as" not in body  # template summary replaced
+        assert f"{title} is the landmark work here" in body  # author-prominent style
+        ids = sorted(allowed)
+        assert f"[{ids[0]}] [{ids[1]}]" in body  # information-prominent cluster
+    abstract = _section_body(survey, "Abstract")
+    assert _citations(abstract), "LLM abstract must carry a citation"
 
 
 def test_llm_aliases_map_back_and_leaked_ids_are_dropped():
@@ -748,11 +765,135 @@ def test_llm_aliases_map_back_and_leaked_ids_are_dropped():
             "[LIMITATION] Unknown tags are dropped [P9]. The evidence does not establish scale [P2].",
         ]
     )
-    paragraphs = write_survey._llm_section_paragraphs(section, lambda messages, **kwargs: reply, zh=False)
+    paragraphs = write_survey._llm_section_body(section, lambda messages, **kwargs: reply, zh=False, seen=set())
+    text = " ".join(paragraphs)
 
-    assert "[p_alpha]" in paragraphs["summary"] and "P1" not in paragraphs["summary"]
-    assert "[p_beta]" in paragraphs["comparison"] and "1016" not in paragraphs["comparison"]
-    assert "P9" not in paragraphs["limitation"] and "[p_beta]" in paragraphs["limitation"]
+    assert "[p_alpha]" in text and "P1" not in text
+    assert "[p_beta]" in text and "1016" not in text
+    assert "P9" not in text and "[p_beta]" in text
+
+
+def test_both_citation_styles_bind_to_the_whitelist():
+    """Author-prominent and clustered tags both survive alias mapping and filtering."""
+    section = {
+        "section_title": "Theme",
+        "section_goal": "compare the assigned papers",
+        "selected_papers": [
+            {
+                "paper_id": "p_alpha",
+                "title": "Alpha",
+                "problem": "planning",
+                "method": "latent dynamics",
+                "contribution": "policy learning",
+                "limitations": "short horizon",
+                "evidence_snippets": ["alpha evidence sentence"],
+            },
+            {
+                "paper_id": "p_beta",
+                "title": "Beta",
+                "problem": "control",
+                "method": "world model rollout",
+                "contribution": "benchmark",
+                "limitations": "narrow domain",
+                "evidence_snippets": ["beta evidence sentence"],
+            },
+        ],
+    }
+    reply = "\n\n".join(
+        [
+            "Alpha studies planning from learned dynamics [P1].",
+            "Simulation scales to larger worlds. [P2]",
+            "Later work agrees on the mechanism [P1] [P2].",
+        ]
+    )
+    paragraphs = write_survey._llm_section_body(section, lambda messages, **kwargs: reply, zh=False, seen=set())
+    text = " ".join(paragraphs)
+
+    # author-prominent: title in subject position, tag kept
+    assert "Alpha studies planning from learned dynamics [p_alpha]." in text
+    # stranded tag pulled back inside its sentence (no citation-only fragment)
+    assert "Simulation scales to larger worlds [p_beta]." in text
+    assert "larger worlds. [p_beta]" not in text
+    # information-prominent cluster binds both ids
+    assert "the mechanism [p_alpha] [p_beta]." in text
+    for paragraph in paragraphs:
+        assert _citations(paragraph) <= {"p_alpha", "p_beta"}
+
+
+def test_stranded_legacy_id_tag_is_pulled_inside_the_sentence():
+    assert write_survey._map_alias_citations("The gains hold at scale. [paper:x].", {}) == "The gains hold at scale [paper:x]."
+    assert write_survey._map_alias_citations("Both hold. [P1] [P2].", {"P1": "p_a", "P2": "p_b"}) == "Both hold [p_a] [p_b]."
+
+
+def _prose_sentences(text: str) -> list[str]:
+    prose = "\n".join(line for line in text.splitlines() if not line.strip().startswith("!["))
+    return [sentence.strip() for sentence in write_survey._split_sentences(prose) if sentence.strip()]
+
+
+def _citing_sentences(text: str) -> set[str]:
+    return {sentence for sentence in _prose_sentences(text) if _citations(sentence)}
+
+
+def test_no_sentence_repeats_across_body_sections_and_oc_fd_are_disjoint(tmp_path, monkeypatch):
+    monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
+    monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
+    monkeypatch.delenv("GENERATE_KEY", raising=False)
+    cache, output = _scaled_inputs(tmp_path, papers_per_category=3)
+    request_path = _survey_request(tmp_path, cache, output, "en")
+
+    result = write_survey.run(str(request_path))
+
+    assert result["status"] == "success"
+    survey = (output / "survey.md").read_text(encoding="utf-8")
+    plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))
+    body_titles = [section["section_title"] for section in plan["sections"]]
+    assert len(body_titles) >= 3
+
+    owner: dict[str, str] = {}
+    for title in body_titles:
+        for sentence in _prose_sentences(_section_body(survey, title)):
+            key = write_survey._norm_sentence(sentence)
+            assert key not in owner, f"sentence rendered in {owner[key]!r} and {title!r}: {sentence!r}"
+            owner[key] = title
+
+    # OC and FD must not draw on the same evidence bit (S0: 0.961 similarity)
+    entries = write_survey._section_paper_entries(plan["sections"])
+    open_bits, direction_bits = write_survey._split_limitation_pool(write_survey._limitation_pool(entries))
+    assert open_bits and direction_bits
+    open_texts = {write_survey._norm_sentence(bit["text"]) for bit in open_bits}
+    direction_texts = {write_survey._norm_sentence(bit["text"]) for bit in direction_bits}
+    assert open_texts.isdisjoint(direction_texts)
+    assert {bit["paper_id"] for bit in open_bits}.isdisjoint({bit["paper_id"] for bit in direction_bits})
+    open_body = _section_body(survey, "Open Challenges")
+    direction_body = _section_body(survey, "Future Directions")
+    assert _citing_sentences(open_body) and _citing_sentences(direction_body)
+    assert not _citing_sentences(open_body) & _citing_sentences(direction_body)
+
+
+def test_abstract_and_intro_are_differentiated(tmp_path, monkeypatch):
+    monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
+    monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
+    monkeypatch.delenv("GENERATE_KEY", raising=False)
+    cache, output = _scaled_inputs(tmp_path, papers_per_category=3)
+    request_path = _survey_request(tmp_path, cache, output, "en")
+
+    result = write_survey.run(str(request_path))
+
+    assert result["status"] == "success"
+    survey = (output / "survey.md").read_text(encoding="utf-8")
+    allowed = set(json.loads((cache / "citation_ready_set.json").read_text(encoding="utf-8"))["allowed_paper_ids"])
+    plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))["sections"]
+
+    abstract = _section_body(survey, "Abstract")
+    intro = _section_body(survey, "Introduction")
+    assert _citations(abstract), "abstract carries at least one whitelisted citation"
+    assert _citations(abstract) <= allowed
+    for section in plan:
+        assert section["section_title"] in intro, f"intro does not preview {section['section_title']!r}"
+    abstract_keys = {write_survey._norm_sentence(s) for s in _prose_sentences(abstract)}
+    intro_keys = {write_survey._norm_sentence(s) for s in _prose_sentences(intro)}
+    assert abstract_keys and intro_keys and not abstract_keys & intro_keys
+    assert _citations(intro) <= allowed
 
 
 def test_llm_exception_falls_back_to_template_and_still_writes(tmp_path, monkeypatch):
