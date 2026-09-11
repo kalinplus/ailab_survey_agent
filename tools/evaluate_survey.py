@@ -22,48 +22,18 @@ import statistics
 from datetime import datetime
 from pathlib import Path
 
+from tools.verify.text_units import (
+    CITATION as _CITATION,
+    SENT_SPLIT as _SENT_SPLIT,
+    body_text as _body_text,
+    evidence_units as _evidence_units,
+    is_citation as _is_citation,
+    sentence_units as _sentence_units,
+)
+
 logger = logging.getLogger(__name__)
 
-_SENT_SPLIT = re.compile(r"(?<=[.。])\s+")
-_CITATION = re.compile(r"\[([^\]]+)\]")
-_STRUCTURAL = ("#", "|", "!", ">")
 _FIGURE_EMBED = re.compile(r"!\[[^\]]*\]\([^)]*\)")
-
-
-def _body_text(md: str) -> str:
-    """Drop headings / tables / images / quotes so only prose is measured."""
-    lines = [ln for ln in md.splitlines() if not ln.lstrip().startswith(_STRUCTURAL)]
-    return "\n".join(lines)
-
-
-def _sentences(md: str) -> list[str]:
-    return [s.strip() for s in _SENT_SPLIT.split(_body_text(md)) if s.strip()]
-
-
-def _is_citation(cited_id: str, known_ids: set[str] | None) -> bool:
-    """Bracket content counts as a citation only if it is a paper id
-    ('paper:...' convention) or resolvable in the evidence store — figure/
-    table references like '[Future Matrix]' are not citations."""
-    return cited_id.startswith("paper:") or (known_ids is not None and cited_id in known_ids)
-
-
-def _sentence_units(md: str, known_ids: set[str] | None = None) -> list[tuple[str, list[str]]]:
-    """(claim_text, citation_ids) per logical sentence.
-
-    Models drop the tag after the closing period ('...scale. [paper:x].'), which
-    sentence splitting turns into a citation-only fragment; that fragment is
-    merged back into the preceding sentence so its citations bind to the claim
-    they annotate instead of being dropped (and the preceding sentence miscounted
-    as uncited)."""
-    units: list[list] = []
-    for sentence in _sentences(md):
-        cites = [c for c in _CITATION.findall(sentence) if _is_citation(c, known_ids)]
-        text = _CITATION.sub("", sentence).strip().rstrip(".。").strip()
-        if not text and cites and units and units[-1][0]:
-            units[-1][1].extend(cites)
-        elif text:
-            units.append([text, cites])
-    return [(text, cites) for text, cites in units]
 
 
 def _iter_sentence_claims(md: str, known_ids: set[str] | None = None):
@@ -81,22 +51,6 @@ def extract_claim_pairs(md: str, known_ids: set[str] | None = None) -> list[tupl
 
 _LABEL_RANK = {"entailment": 2, "neutral": 1, "contradiction": 0}
 _LABEL_STATUS = {"entailment": "supported", "neutral": "weak", "contradiction": "unsupported"}
-_SENT_BOUNDARY = re.compile(r"(?<=[.!?。])\s+")
-_MIN_UNIT_CHARS = 20
-
-
-def _evidence_units(texts: list[str]) -> list[str]:
-    """Sentence windows: cross-encoder NLI fails on long-passage premises
-    (a verbatim quote inside a 1700-char abstract scores neutral), so each
-    multi-sentence evidence text is split into sentence-level units."""
-    units: list[str] = []
-    for t in texts:
-        parts = [p.strip() for p in _SENT_BOUNDARY.split(t)]
-        if len(parts) == 1:
-            units.append(t.strip())
-            continue
-        units.extend(p for p in parts if len(p) >= _MIN_UNIT_CHARS)
-    return units or [t.strip() for t in texts]
 
 
 def _best_judgment(nli, claim: str, evidences: list):
@@ -177,8 +131,9 @@ def ab_comparison(report_rows: list[dict]) -> list[dict]:
     """Convert repair A/B report rows into a recall-equivalent comparison table.
 
     Caveat (documented in the report): these per-config numbers come from the
-    repair joint's claim_map, whose claim granularity is first-citation-per-
-    sentence — coarser than citation_quality's pair level.
+    repair joint's claim_map, which since wave 1B is also pair-level (one entry
+    per claim x citation) — same granularity as citation_quality, but built
+    from the generation-side evidence store rather than the evaluator's own.
     """
     out = []
     for row in report_rows:
@@ -1098,7 +1053,7 @@ def render_md(report: dict) -> str:
         lines += [
             "",
             "Recall-equivalent = (total − unsupported − weak) / total from the repair A/B "
-            "claim_map (first-citation-per-sentence granularity, coarser than Layer 1 pairs). "
+            "claim_map (pair-level: one entry per claim × citation, same granularity as Layer 1). "
             "Retention story: delete-only repair reaches validity 1.0 by shrinking claims "
             "(61→20); action repair keeps claims (50) at the same validity.",
             "",

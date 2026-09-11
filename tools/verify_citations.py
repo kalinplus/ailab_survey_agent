@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 from pathlib import Path
 
 from config import load_config
@@ -14,6 +15,7 @@ from harness.logger import setup_logging
 from tools.models.artifacts import CitationIndex, EvidenceStore, Figure, FigureBank, ParsedPapers, TableBank
 from tools.nlp.nli_verifier import FakeNLIModel, NLIVerifier
 from tools.verify import claim_mapper, structural
+from tools.verify.text_units import sentence_units
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +74,14 @@ def run(request_path: str) -> dict:
         if os.getenv("EVISURVEY_CLAIM_LLM_FALLBACK", "false").lower() in {"1", "true", "yes"}
         else None
     )
+    # T5: the writer's structured claim source is the truth; missing file means
+    # a template/freeform run falls back to reverse-parsing via the shared kernel.
+    structured_claims_path = cfg.root_dir / "cache" / "structured_claims.json"
+    structured_claims = None
+    if structured_claims_path.exists():
+        saved_claims = read_json(structured_claims_path)
+        if saved_claims.get("task_id") == task_id:
+            structured_claims = saved_claims.get("claims") or None
     claim_map = claim_mapper.run(
         task_id,
         survey_md,
@@ -79,13 +89,27 @@ def run(request_path: str) -> dict:
         ParsedPapers(task_id=task_id, papers=[]),
         nli_model,
         llm_fallback,
+        structured_claims=structured_claims,
     )
 
     write_json(resolve(outputs["citation_result_path"]), citation_result.model_dump())
     write_json(resolve(outputs["claim_map_path"]), claim_map.model_dump())
 
+    source_violations = sum(bool(e.source_role_violation) for e in claim_map.entries)
+    quote_like = sum(bool(e.quote_diagnostic.get("quote_like")) for e in claim_map.entries)
+    plan_path = cfg.root_dir / "cache" / "section_claim_plan.json"
+    empty_sections = 0
+    if plan_path.exists():
+        plan = read_json(plan_path)
+        if plan.get("task_id") == task_id:
+            for section in plan.get("sections", []):
+                title = re.escape(str(section.get("section_title", "")))
+                match = re.search(r"(?ms)^## " + title + r"\s*\n(.*?)(?=^## |\Z)", survey_md)
+                units = sentence_units(match.group(1), set(ready_set.get("allowed_paper_ids", []))) if match else []
+                if not any(cites for _, cites in units):
+                    empty_sections += 1
     unsupported = sum(1 for e in claim_map.entries if e.status == "unsupported")
-    status = "success" if (citation_result.invalid_citations == 0 and unsupported == 0) else "partial_success"
+    status = "success" if (citation_result.invalid_citations == 0 and unsupported == 0 and not empty_sections and bool(claim_map.entries)) else "partial_success"
     logger.info("[verify] claim_map: %s entries, %s unsupported -> status=%s", len(claim_map.entries), unsupported, status)
 
     metrics = {
@@ -97,6 +121,10 @@ def run(request_path: str) -> dict:
         "supported_claims": sum(1 for e in claim_map.entries if e.status == "supported"),
         "weak_claims": sum(1 for e in claim_map.entries if e.status == "weak"),
         "unsupported_claims": unsupported,
+        "source_role_violations": source_violations,
+        "quote_like_claims": quote_like,
+        "empty_evidence_sections": empty_sections,
+        "no_verifiable_claims": int(not claim_map.entries),
     }
     return {
         "status": status,
@@ -109,10 +137,21 @@ def run(request_path: str) -> dict:
     }
 
 
+_NLI_MODEL = None
+
+
 def _nli_model():
-    if os.getenv("EVISURVEY_REAL_NLI", "false").lower() in {"1", "true", "yes"}:
-        return NLIVerifier()
-    return FakeNLIModel(mapping=_demo_entailment_keywords())
+    # One model per process: constructing NLIVerifier() per verify/repair round
+    # reloads the CrossEncoder each time and the copies accumulate — two full
+    # E2E runs were jetsam-killed at the post-repair verify boundary on a 16GB
+    # machine before this cache existed.
+    global _NLI_MODEL
+    if _NLI_MODEL is None:
+        if os.getenv("EVISURVEY_REAL_NLI", "false").lower() in {"1", "true", "yes"}:
+            _NLI_MODEL = NLIVerifier()
+        else:
+            _NLI_MODEL = FakeNLIModel(mapping=_demo_entailment_keywords())
+    return _NLI_MODEL
 
 
 def _final_or_requested_json(root: Path, name: str, requested_path: Path) -> dict:

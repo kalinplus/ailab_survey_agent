@@ -638,19 +638,26 @@ def _render_submission_html(topic: str, submission_md: str, root: Path, html_pat
     h2 {{ margin-top: 2.4rem; padding-bottom: 0.35rem; border-bottom: 1px solid #b9c2c9; color: #17324d; }}
     h3 {{ color: #17324d; }}
     p {{ line-height: 1.85; text-align: justify; }}
-    .paper-figure, .paper-table {{ margin: 2rem 0; break-inside: avoid; }}
+    .paper-figure {{ margin: 2rem 0; break-inside: avoid; }}
+    .paper-table {{ margin: 2rem 0; }}
     .figure-title {{ font-weight: 700; margin-bottom: 0.5rem; color: #17324d; }}
     figcaption {{ margin-top: 0.55rem; font-size: 0.92rem; line-height: 1.55; color: #4b5563; }}
     img {{ max-width: 100%; height: auto; border: 1px solid #cbd5df; }}
     table {{ width: 100%; border-collapse: collapse; font-size: 0.9rem; }}
     thead th {{ background: #e8eef3; color: #17324d; }}
-    th, td {{ border: 1px solid #cbd5df; padding: 0.55rem 0.65rem; vertical-align: top; }}
+    th, td {{ border: 1px solid #cbd5df; padding: 0.55rem 0.65rem; vertical-align: top; overflow-wrap: break-word; }}
+    tr {{ break-inside: avoid; }}
     .references p {{ text-indent: -2em; padding-left: 2em; text-align: left; }}
     @page {{ size: A4; margin: 22mm 20mm; }}
     @media print {{
       body {{ background: #fff; }}
       .paper {{ box-shadow: none; margin: 0; padding: 0; max-width: none; }}
-      .paper-figure, .paper-table, table, img {{ break-inside: avoid; }}
+      .paper-figure, img {{ break-inside: avoid; }}
+      /* Long matrix tables may exceed one page: let them flow so WeasyPrint
+         repeats thead on each page, instead of a failed whole-table avoid
+         that produced mid-row cuts and large whitespace (wave6 p-08). */
+      table {{ break-inside: auto; }}
+      tr {{ break-inside: avoid; }}
       a {{ color: #111; text-decoration: none; }}
     }}
   </style>

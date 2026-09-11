@@ -49,7 +49,7 @@ def run(request_path: str) -> dict[str, Any]:
         if result is not None:
             revised, notes, metrics = result
             revised = _replace_references(revised, card_by_id)
-            revised = _append_revision_notes(revised, notes)
+            revised = _append_revision_notes(revised, notes, survey_path.parent)
             return _write_revised(root, task_id, request_path, outputs, revised, metrics,
                                   "Survey repaired by failure-typed actions.")
 
@@ -57,7 +57,7 @@ def run(request_path: str) -> dict[str, Any]:
     revised = _remove_invalid_entries(markdown, citation_result, allowed_ids, allowed_artifacts, notes)
     revised = _revise_unsupported_claims(revised, claim_map, allowed_ids, notes)
     revised = _replace_references(revised, card_by_id)
-    revised = _append_revision_notes(revised, notes)
+    revised = _append_revision_notes(revised, notes, survey_path.parent)
     return _write_revised(root, task_id, request_path, outputs, revised,
                           {"revision_notes": len(notes),
                            "remaining_citations": len(_extract_citations(revised)),
@@ -102,6 +102,20 @@ def _run_repair_agent(cfg, root: Path, task_id: str, inputs: dict, markdown: str
 
     if result["evidence_store"] != evidence_store:
         write_json(evidence_path, result["evidence_store"])
+    structured_path = root / "cache" / "structured_claims.json"
+    if structured_path.exists():
+        structured = read_json(structured_path)
+        if structured.get("task_id") == task_id:
+            from tools.verify.text_units import normalize_text
+            for action in result["repair_log"]:
+                if not action.get("rewritten_text"):
+                    continue
+                for claim in structured.get("claims", []):
+                    if (normalize_text(claim.get("text", "")) == normalize_text(action["claim_text"])
+                            and action.get("cited_paper_id") in claim.get("cites", [])):
+                        claim["text"] = action["rewritten_text"]
+                        claim["scope"] = action.get("rewritten_scope") or claim.get("scope", "")
+            write_json(structured_path, structured)
     repair_log_path = root / "output" / "repair_log.json"
     existing = read_json(repair_log_path) if repair_log_path.exists() else []
     stamped = [dict(entry, task_id=task_id) for entry in result["repair_log"]]
@@ -138,9 +152,9 @@ def _make_llm_json_chat(cfg):
 
     def chat(messages):
         try:
-            return client.json_chat(messages, temperature=0.1, max_tokens=6000)
+            return client.json_chat(messages, temperature=0.1, max_tokens=8000)
         except Exception:
-            content = client.chat(messages, temperature=0.1, max_tokens=6000)
+            content = client.chat(messages, temperature=0.1, max_tokens=8000)
             extracted = _extract_json_object(content)
             if extracted is None:
                 raise ValueError("model reply contained no JSON object")
@@ -243,13 +257,29 @@ def _replace_references(markdown: str, card_by_id: dict[str, dict[str, Any]]) ->
     return body + "\n" + "\n".join(refs).rstrip() + "\n"
 
 
-def _append_revision_notes(markdown: str, notes: list[str]) -> str:
+def _append_revision_notes(markdown: str, notes: list[str], notes_dir=None) -> str:
+    """Wave 5 (2a): repair notes never enter the delivered markdown. The
+    internal draft and the public render must tell the same story — the L3
+    judge and the doc-level read both consume survey.md. Notes go to
+    revision_notes.md next to the survey instead; the markdown is returned
+    unchanged."""
     if not notes:
         notes = ["No illegal citations or artifacts were found; references were normalized to actually cited allowed papers."]
-    lines = [markdown.rstrip(), "", "## Revision Notes", ""]
+    lines = ["# Revision Notes", ""]
     for note in notes:
-        lines.append(f"- {note}")
-    return "\n".join(lines).rstrip() + "\n"
+        # Exception text interpolated into reasons can carry brackets ("[Errno 8]
+        # nodename...") — the verifier's citation extractor reads any bracket as
+        # a reference id, so a bracketed note becomes phantom invalid citations
+        # (batch-4: 32 unresolved repair notes -> 32 bogus invalid citations).
+        safe = str(note).replace("[", "(").replace("]", ")")
+        lines.append(f"- {safe}")
+    out_dir = Path(notes_dir) if notes_dir else Path("output")
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "revision_notes.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    except OSError as exc:
+        logger.warning(f"[revise] revision notes write failed: {exc}")
+    return markdown
 
 
 def _remove_sentence_containing(markdown: str, claim_text: str, cited_id: str) -> str:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import json
 import logging
 import os
 import re
@@ -20,6 +21,8 @@ from config import load_config
 from harness.agents.relevance import EmbeddingScorer
 from harness.json_io import read_json, write_json
 from harness.logger import now_iso
+from tools.verify.text_units import sentence_units, normalize_text
+from tools.verify.source_contract import SCOPE_ROLES, valid_support, quote_diagnostic, role_violation
 
 logger = logging.getLogger(__name__)
 
@@ -44,22 +47,9 @@ BANNED_META_PHRASES = [
     "harness chain",
     "降调写法",
     "topic relevance",
+    "rule-based taxonomy fallback",
+    "merged from a seed survey",
 ]
-
-# T3 writing variation: body paragraphs come from a moves menu (group claims ->
-# let the papers talk -> close on the gap) instead of a fixed
-# [SUMMARY]/[COMPARISON]/[LIMITATION] skeleton, which is what made every section
-# read alike (eval S0: section-pair similarity up to 0.885).
-_MOVES_EN = (
-    "Group the papers by the claim they support, not one paper after another: state the claim, then cite every paper that backs it with their tags together at the end of the sentence.",
-    "Let the papers talk to each other: where they agree, cluster their tags at the end of the sentence; for the landmark or contested work, put its title in subject position and cite it right there.",
-    "Close the paragraph on what the reported evidence does not settle, so the next paragraph has something to pick up.",
-)
-_MOVES_ZH = (
-    "按主张而非逐篇组织：先陈述一个主张，再把支持它的多篇论文的 tag 聚簇放在句末。",
-    "让论文互相对话：一致之处在句尾聚簇挂引；地标或存在争议的工作，把其标题放到主语位置并就近挂引。",
-    "段落收在已报告证据尚未确立的位置，给下一段留出承接点。",
-)
 
 # A bare paper id in prose (the S0 failure mode: space-broken DOIs the model
 # paraphrased out of the prompt) can never be legitimate survey text. Sentence
@@ -72,6 +62,16 @@ _LEAKED_ID_FRAGMENT_RE = re.compile(r"^\s*\d{2,}\s*[/.]")
 # ("...scale. [P2]." / "...scale. [paper:x]."); see _map_alias_citations.
 _STRANDED_TAGS_RE = re.compile(r"([.。!?！？])\s*((?:\[(?:P\d+|paper:[^\]]+)\]\s*)+\.?)")
 
+# T5 structured claims: the LLM body path plans claims as data
+# ({"text", "cite", "scope"}) before any prose exists. Scope drives the
+# deterministic paragraph order and travels with the persisted claim.
+_CLAIM_SCOPES = ("contribution", "method", "comparison", "limitation", "background")
+_CLAIM_BRACKETS_RE = re.compile(r"\[([^\[\]]*)\]")
+
+# Evidence tiers describe source availability; claim roles constrain scope.
+_FULLTEXT_SOURCE_TYPES = {"paragraph", "agentic_chunk", "content_chunk"}
+_TIER_LABELS = {"fulltext_ok": "full", "abstract_only": "abstract-only"}
+
 # Artifact embed positions, keyed to paragraph slots. With the moves menu the
 # paragraph count is model-chosen, so indices clamp to the last paragraph.
 _PLACEMENT_INDEX = {
@@ -83,6 +83,27 @@ _PLACEMENT_INDEX = {
 _SENTENCE_RE = re.compile(r"(?<=[.!?。！？])\s+")
 # \s+ not \s*: a zero-width split shreds DOIs ("10." | "48550/...") so every
 # citation in an LLM sentence got fragmented and dropped by the guards.
+
+# T12 intro dedup: an intro sentence whose word bag overlaps a body-section
+# sentence with Jaccard >= 0.6 (casefolded, stopwords out) restates the body
+# and is dropped once the body has rendered. Section-title words are removed
+# from both bags first — the roadmap is supposed to name sections, so title
+# overlap is not a penalty.
+_INTRO_DEDUP_THRESHOLD = 0.6
+_INTRO_MIN_SENTENCES = 3
+_INTRO_TOKEN_RE = re.compile(r"[a-z0-9]+|[\u4e00-\u9fff]")
+_INTRO_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "been", "both", "by", "can",
+    "each", "for", "from", "how", "in", "into", "is", "it", "its", "may",
+    "no", "not", "of", "on", "or", "over", "own", "such", "than", "that",
+    "the", "their", "then", "these", "this", "those", "through", "to",
+    "via", "was", "were", "what", "when", "where", "whether", "which",
+    "while", "who", "with", "using", "based",
+    # zh function characters (CJK tokens are single characters)
+    "的", "了", "在", "是", "和", "与", "或", "及", "对", "从", "被", "把",
+    "为", "也", "都", "就", "而", "等", "中", "有", "不", "这", "那", "并",
+    "其", "以", "于", "由", "可", "能", "会", "该",
+}
 
 POSITIVE_KEYWORDS = [
     "game",
@@ -150,15 +171,27 @@ def run(request_path: str) -> dict[str, Any]:
     cards = _score_cards_for_topic(cards, evidence_by_paper, categories, topic)
 
     section_plan = _build_section_claim_plan(task_id, categories, cards, evidence_by_paper)
-    timeline = _build_timeline(task_id, categories, cards)
-    artifacts, image_notes = _build_generated_artifacts(cfg, task_id, timeline, categories, cards, evidence_by_paper)
-    survey = _render_survey(topic, language, section_plan, artifacts, cards, evidence_by_paper, llm_chat=_writer_llm_chat(cfg))
+    safe_cards = [{**card, **_selected_paper_entry(card, evidence_by_paper)} for card in cards]
+    timeline = _build_timeline(task_id, categories, safe_cards)
+    artifacts, image_notes = _build_generated_artifacts(cfg, task_id, timeline, categories, safe_cards, evidence_by_paper)
+    structured_claims: list[dict[str, Any]] = []
+    survey = _render_survey(
+        topic,
+        language,
+        section_plan,
+        artifacts,
+        cards,
+        evidence_by_paper,
+        llm_chat=_writer_llm_chat(cfg),
+        structured_out=structured_claims,
+    )
     survey = _lint_citation_brackets(survey)
 
     survey_path = _resolve(root, outputs.get("survey_markdown_path", "output/survey.md"))
     timeline_path = _resolve(root, outputs.get("timeline_path", "cache/timeline.json"))
     artifact_bank_path = _resolve(root, outputs.get("generated_artifact_bank_path", "cache/generated_artifact_bank.json"))
     claim_plan_path = root / "cache" / "section_claim_plan.json"
+    structured_claims_path = root / "cache" / "structured_claims.json"
     preflight_path = root / "output" / "c_preflight_report.json"
     audit_path = root / "output" / "artifact_audit_report.json"
     visual_path = root / "output" / "visual_decision_report.json"
@@ -168,8 +201,15 @@ def run(request_path: str) -> dict[str, Any]:
     write_json(timeline_path, timeline)
     write_json(artifact_bank_path, {"task_id": task_id, "artifacts": artifacts})
     write_json(claim_plan_path, {"task_id": task_id, "sections": section_plan})
+    # T5: the structured claim source is the truth the downstream claim map is
+    # built from; reverse-parsing the markdown (T4 kernel) is only the fallback.
+    write_json(structured_claims_path, {"task_id": task_id, "claims": structured_claims})
 
     preflight = _preflight(task_id, survey, allowed_ids, artifacts, cards)
+    empty_sections = sum(not any(p.get("sources") for p in section.get("selected_papers", [])) for section in section_plan)
+    preflight["empty_evidence_sections"] = empty_sections
+    preflight["no_verifiable_claims"] = not bool(structured_claims)
+    preflight["pass"] = preflight["pass"] and not empty_sections and bool(structured_claims)
     audit = _artifact_audit(task_id, root, artifacts, allowed_ids)
     visual = _visual_decisions(task_id, timeline, artifacts, image_notes)
     write_json(preflight_path, preflight)
@@ -182,6 +222,7 @@ def run(request_path: str) -> dict[str, Any]:
         _rel(root, timeline_path),
         _rel(root, artifact_bank_path),
         _rel(root, claim_plan_path),
+        _rel(root, structured_claims_path),
         _rel(root, preflight_path),
         _rel(root, audit_path),
         _rel(root, visual_path),
@@ -196,6 +237,8 @@ def run(request_path: str) -> dict[str, Any]:
             "allowed_papers": len(allowed_ids),
             "used_papers": len(_extract_citations(survey) & allowed_ids),
             "sections": len(section_plan),
+            "structured_claims": len(structured_claims),
+            "empty_evidence_sections": empty_sections,
             "generated_artifacts": len(artifacts),
         },
         "Grounded survey and C-generated artifacts written.",
@@ -365,6 +408,12 @@ def _build_section_claim_plan(
                 ],
             }
         )
+    for section in sections:
+        section["section_goal"] = _safe_section_goal(section)
+        section["claims"] = [dict(claim=source["claim_text"], source_role=source["source_role"],
+                                  supporting_papers=[source["paper_id"]],
+                                  supporting_evidence=source["evidence_ids"], risk_level="pending_verification")
+                             for paper in section["selected_papers"] for source in paper.get("sources", [])]
     return sections
 
 
@@ -479,25 +528,30 @@ def _pick_section_cards(
 
 def _selected_paper_entry(card: dict[str, Any], evidence_by_paper: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     score = float(card.get("topic_relevance_score", 0.0))
-    snippets = []
+    # ONLY claims listed in an evidence row's supports_claims may feed the
+    # writer: the claim mapper re-checks that correspondence verbatim at final
+    # verify (invalid_source_binding otherwise). A card claim that failed P5.2's
+    # NLI gate must not sneak back in through a side door (wave8 ③a retraction —
+    # it produced 9 unsupported claims and a coverage_fail in the first run).
+    sources = []
     for item in evidence_by_paper.get(card.get("paper_id"), []):
-        text = _shorten(item.get("text"), 240)
-        if text:
-            snippets.append(text)
-        if len(snippets) >= SECTION_EVIDENCE_SNIPPETS:
-            break
-    return {
-        "paper_id": card.get("paper_id"),
-        "title": card.get("title", ""),
-        "year": card.get("year"),
-        "problem": _field_or_claim(card, "problem", "key_results"),
-        "method": _field_or_claim(card, "method", "method"),
-        "contribution": _field_or_claim(card, "contribution", "key_results"),
-        "limitations": _field_or_claim(card, "limitations", "limitations"),
-        "evidence_snippets": snippets,
-        "topic_relevance_score": round(score, 3),
-        "selection_reason": _selection_reason(card),
+        for claim in item.get("supports_claims", []):
+            if valid_support(claim, item):
+                sources.append({**claim, "evidence_id": item["evidence_id"],
+                                "source_type": item.get("source_type", ""),
+                                "source_doc_id": item.get("source_doc_id", ""),
+                                "source_title": item.get("source_title", ""),
+                                "source_chunk_id": item.get("source_chunk_id", "")})
+    entry = {
+        "paper_id": card.get("paper_id"), "title": card.get("title", ""),
+        "year": card.get("year"), "sources": sources,
+        "problem": "", "method": "", "contribution": "", "limitations": "",
+        "evidence_snippets": [source["claim_text"] for source in sources],
+        "topic_relevance_score": round(score, 3), "selection_reason": _selection_reason(card),
     }
+    for field, scope in (("method", "method"), ("contribution", "contribution"), ("limitations", "limitation")):
+        entry[field] = next((x["claim_text"] for x in sources if x["source_role"] in SCOPE_ROLES[scope]), "")
+    return entry
 
 
 def _artifact_slots_for_section(index: int, title: str) -> list[dict[str, str]]:
@@ -599,11 +653,17 @@ def _fresh_text(text: str, seen: set[str], keep_duplicate: bool = True) -> str:
 
 
 def _llm_or_template(label: str, llm_chat: Callable | None, draft: Callable[[], str], template: Callable[[], str]) -> str:
-    """One LLM boundary: a section-level failure degrades to its template text."""
+    """One LLM boundary: a section-level failure degrades to its template text.
+
+    Drafts pass through heading-strip + partial-sentence trim: a model heading
+    would duplicate the rendered one, and a token-limit cutoff would leak a
+    mid-word stub into the survey.
+    """
     if llm_chat is None:
         return template()
     try:
-        return draft() or template()
+        draft_text = _trim_partial_sentence(_strip_model_headings(draft()))
+        return draft_text or template()
     except Exception as exc:  # LLM boundary: designed per-section degradation
         logger.warning(f"[writer] {label} LLM unusable -> template fallback: {exc}")
         return template()
@@ -617,8 +677,10 @@ def _render_survey(
     cards: list[dict[str, Any]],
     evidence_by_paper: dict[str, list[dict[str, Any]]],
     llm_chat: Callable | None = None,
+    structured_out: list[dict[str, Any]] | None = None,
 ) -> str:
     zh = language == "zh"
+    structured_out = structured_out if structured_out is not None else []
     ranked = _rank_cards(cards, evidence_by_paper)
     allowed = {str(card["paper_id"]) for card in cards}
     # Cross-section sentence ledger: no sentence may render in two sections.
@@ -628,12 +690,15 @@ def _render_survey(
         title,
         "",
         "## Abstract" if not zh else "## 摘要",
-        _abstract_text(topic, sections, ranked, evidence_by_paper, zh, llm_chat=llm_chat, allowed=allowed, seen=seen),
+        _abstract_text(topic, sections, ranked, evidence_by_paper, zh, llm_chat=llm_chat, allowed=allowed, seen=seen, claims_out=structured_out),
         "",
         "## Introduction" if not zh else "## 引言",
         _introduction_text(topic, sections, zh, llm_chat=llm_chat, allowed=allowed, seen=seen),
         "",
     ]
+    # The intro paragraph slot: the T12 dedupe rewrites it in place once the
+    # body sentences exist (the intro renders first, so the guard is deferred).
+    intro_index = len(lines) - 2
     if not zh:
         lines.extend(
             [
@@ -648,20 +713,45 @@ def _render_survey(
             ]
         )
 
+    tiers = _paper_evidence_tiers(evidence_by_paper)
+    body_start = len(lines)
     for index, section in enumerate(sections):
         following = sections[index + 1] if index + 1 < len(sections) else None
         lines.extend([f"## {section['section_title']}", ""])
-        lines.extend(_build_section_text(section, zh, next_section=following, llm_chat=llm_chat, seen=seen))
+        lines.extend(
+            _build_section_text(
+                section,
+                zh,
+                next_section=following,
+                llm_chat=llm_chat,
+                seen=seen,
+                claims_out=structured_out,
+                tiers=tiers,
+            )
+        )
+    # T12: the intro renders before the body, so its paraphrase guard can only
+    # run now that the body sentences exist. Template runs (llm_chat is None)
+    # never enter it — their output stays byte-identical.
+    if llm_chat is not None:
+        lines[intro_index] = _dedupe_intro_against_body(
+            lines[intro_index], _body_prose_sentences(lines[body_start:]), sections
+        )
 
     entries = _section_paper_entries(sections)
-    challenge_bits, direction_bits = _split_limitation_pool(_limitation_pool(entries))
+    challenge_bits, direction_bits = _split_limitation_pool(_limitation_pool(entries, seen=seen))
     challenge_entries = _bits_entries(challenge_bits, entries)
     direction_entries = _bits_entries(direction_bits, entries)
-    # Source separation: the conclusion cites papers the abstract does not, so
-    # the two short sections cannot collapse into the same summary.
-    spent_ids = {card["paper_id"] for card in _abstract_anchors(ranked)} | {bit["paper_id"] for bit in direction_bits}
-    closing = _field_bits([card for card in ranked if card.get("paper_id") not in spent_ids], "contribution", "method", 2)
-    closing = closing or _field_bits(ranked, "contribution", "method", 2)
+    body_units = sentence_units("\n".join(lines[body_start:]), allowed)
+    closing = []
+    for text, cites in body_units:
+        if not cites or len(closing) >= 3:
+            continue
+        planned = next((row for row in structured_out if normalize_text(row["text"]) == normalize_text(text)), None)
+        bindings = planned.get("source_bindings", []) if planned else [source for entry in entries
+                   for source in entry.get("sources", []) if normalize_text(source["claim_text"]) == normalize_text(text)]
+        if (bindings and all(b["source_role"] in SCOPE_ROLES["comparison"] for b in bindings)
+                and not quote_diagnostic(text, [b["source_quote"] for b in bindings])["quote_like"]):
+            closing.append({"paper_id": cites[0], "cites": cites, "text": text})
     lines.extend(
         [
             "## Open Challenges" if not zh else "## 开放挑战",
@@ -669,7 +759,7 @@ def _render_survey(
             _llm_or_template(
                 "open challenges",
                 llm_chat,
-                lambda: _llm_open_challenges(challenge_entries, llm_chat, zh, allowed, seen),
+                lambda: _llm_open_challenges(challenge_entries, llm_chat, zh, allowed, seen, structured_out),
                 lambda: _open_challenges_text(challenge_bits, zh, seen),
             ),
             "",
@@ -682,7 +772,7 @@ def _render_survey(
             _llm_or_template(
                 "future directions",
                 llm_chat,
-                lambda: _llm_future_directions(direction_entries, llm_chat, zh, allowed, seen),
+                lambda: _llm_future_directions(direction_entries, llm_chat, zh, allowed, seen, structured_out),
                 lambda: _future_directions_text(direction_bits, entries, zh, seen),
             ),
             "",
@@ -708,7 +798,29 @@ def _render_survey(
         if card:
             year = card.get("year") or "n.d."
             lines.append(f"- {paper_id}: {card.get('title', paper_id)} ({year}).")
-    return "\n".join(lines).strip() + "\n"
+    unique_lines = []
+    embedded = set()
+    for line in lines:
+        match = re.fullmatch(r"!\[[^\]]*\]\(([^)]+)\)", line)
+        if match:
+            if match.group(1) in embedded:
+                continue
+            embedded.add(match.group(1))
+        unique_lines.append(line)
+    final = "\n".join(unique_lines).strip() + "\n"
+    present = {(normalize_text(text), tuple(cites)) for text, cites in sentence_units(final, allowed) if cites}
+    structured_out[:] = [row for row in structured_out if (normalize_text(row["text"]), tuple(row["cites"])) in present]
+    recorded = {(normalize_text(row["text"]), tuple(row["cites"])) for row in structured_out}
+    for text, cites in sentence_units(final, allowed):
+        if not cites or (normalize_text(text), tuple(cites)) in recorded:
+            continue
+        bindings = [source for entry in entries for source in entry.get("sources", [])
+                    if source["paper_id"] in cites and normalize_text(source["claim_text"]) == normalize_text(text)]
+        scope = next((scope for scope, roles in SCOPE_ROLES.items()
+                      if bindings and all(b["source_role"] in roles for b in bindings)), "")
+        structured_out.append({"text": text, "cites": cites, "scope": scope,
+                               "source_bindings": bindings})
+    return final
 
 
 def _abstract_anchors(ranked: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -729,35 +841,30 @@ def _template_abstract(
     Kept separate from the introduction (motivation + roadmap): the intro owns
     the section titles, so the abstract names only its end points — sharing the
     title list is what made the old pair the second-most-similar one. The anchor
-    sentences quote evidence rather than card labels, which also keeps them away
-    from the conclusion's contribution sentences.
+    sentence names representative works by title only (evidence snippets are no
+    longer spliced here), which also keeps it away from the conclusion's
+    contribution sentences.
     """
     themes = [str(section.get("section_title", "")).strip() for section in sections if section.get("section_title")]
     scope = _scope_span(themes, zh)
     sentences = []
     if zh:
-        sentences.append(f"本综述覆盖 {len(sections)} 个主题、{len(ranked)} 篇可引用研究，{scope}。")
-        sentences.append("每条主张都绑定到该论文的证据片段，图表也由同一批论文卡生成。")
+        sentences.append(f"本综述覆盖 {len(sections)} 个主题、{len(ranked)} 篇入选研究，{scope}。")
+        sentences.append("综述区分已报告的发现与开放问题，参考文献列出正文实际引用的研究。")
     else:
-        sentences.append(f"This survey covers {len(sections)} themes over {len(ranked)} citation-ready studies, {scope}.")
-        sentences.append("Every claim carries the tag of the paper whose evidence supports it.")
-    for card in _abstract_anchors(ranked):
-        paper_id = card["paper_id"]
-        snippets = [
-            str(item.get("text", "")).strip()
-            for item in evidence_by_paper.get(paper_id, [])
-            if str(item.get("text", "")).strip()
-        ]
-        # The evidence snippet is inserted after a colon, near verbatim: an
-        # added reporting verb would collide with the snippet's own ("X reports
-        # that ... reports ...").
-        summary = _clean_clause(_shorten(snippets[0] if snippets else card.get("method") or card.get("contribution"), 150)) or (
-            "citable method evidence" if not zh else "可引用的方法证据"
-        )
-        if zh:
-            sentences.append(f"{card.get('title') or paper_id}：{summary} [{paper_id}]。")
+        sentences.append(f"This survey covers {len(sections)} research {'theme' if len(sections) == 1 else 'themes'} and {len(ranked)} selected {'paper' if len(ranked) == 1 else 'papers'}, {scope}.")
+        sentences.append("The review separates reported findings from open questions and lists the papers cited in its discussion.")
+    # Anchor sentences name representative works by title only: splicing
+    # truncated evidence snippets after the title was the unreadable abstract
+    # the manual review flagged ("Tree-based plannin [paper:...]").")
+    anchors = _abstract_anchors(ranked)
+    if anchors:
+        names = [str(card.get("title") or card["paper_id"]) for card in anchors]
+        if len(names) == 1:
+            listing = names[0]
         else:
-            sentences.append(f"{card.get('title') or paper_id}: {summary} [{paper_id}].")
+            listing = (", ".join(names[:-1])) + (", and " + names[-1])
+        sentences.append(("代表性工作包括 " if zh else "Representative work includes ") + listing + ("。" if zh else "."))
     return _fresh_text(" ".join(sentences), seen)
 
 
@@ -781,63 +888,13 @@ def _llm_abstract(
     zh: bool,
     allowed: set[str],
     seen: set[str],
+    claims_out=None,
 ) -> str:
     """LLM abstract over the top-ranked papers; raises when the reply is unusable."""
-    alias_of: dict[str, str] = {}
-    paper_lines = []
-    for index, card in enumerate(ranked[:4], start=1):
-        paper_id = str(card.get("paper_id") or "")
-        if not paper_id:
-            continue
-        alias = f"P{index}"
-        alias_of[alias] = paper_id
-        snippets = [
-            str(item.get("text", "")).strip()
-            for item in evidence_by_paper.get(paper_id, [])
-            if str(item.get("text", "")).strip()
-        ]
-        paper_lines.append(
-            " | ".join(
-                [
-                    alias,
-                    str(card.get("title", "")),
-                    str(card.get("method", "")),
-                    str(card.get("contribution", "")),
-                    " ".join(snippets[:1]),
-                ]
-            )
-        )
-    tag_list = " ".join(f"[{alias}]" for alias in alias_of)
-    user = "\n".join(
-        [
-            "Task: draft the abstract.",
-            "Survey topic: " + str(topic or ""),
-            "Section titles: " + "; ".join(str(section.get("section_title", "")) for section in sections),
-            "Papers (tag | title | method | contribution | evidence):",
-            *paper_lines,
-            "Write in Chinese (简体)." if zh else "Write in English.",
-            "Write ONE paragraph of 3-5 sentences: what this survey covers, and how its claims are grounded in evidence.",
-            f"Cite 2-3 of these papers by clustering their tags at the end of a sentence: {tag_list}",
-            "Restate only the facts in the paper list above: no invented numbers, years, benchmarks, or paper names.",
-            "Refer to papers by their titles in prose, and never copy an internal paper id, DOI, or URL into the text.",
-        ]
-    )
-    reply = llm_chat(
-        [
-            {"role": "system", "content": "You draft the abstract of an evidence-grounded academic survey."},
-            {"role": "user", "content": user},
-        ],
-        temperature=0.3,
-        max_tokens=1200,
-    )
-    if not isinstance(reply, str) or not reply.strip():
-        raise ValueError(f"empty LLM reply: {str(reply)[:120]}")
-    body = _map_alias_citations(reply.strip(), alias_of)
-    body = _sanitize_llm_paragraph(re.sub(r"^(?:#+\s*)?(?:Abstract|摘要)[:.]?\s*", "", body, flags=re.IGNORECASE), allowed)
-    body = _fresh_text(body, seen, keep_duplicate=False)
-    if len(_split_sentences(body)) < 2 or not _extract_citations(body):
-        raise ValueError("abstract reply has no citation-bearing sentence")
-    return body
+    section = {"section_title": "Abstract", "section_goal": f"Summarize reported findings for {topic}",
+               "selected_papers": [_selected_paper_entry(c, evidence_by_paper) for c in ranked[:4]]}
+    return " ".join(_llm_structured_section_body(section, llm_chat, zh, seen, claims_out,
+                                               _paper_evidence_tiers(evidence_by_paper)))
 
 
 def _abstract_text(
@@ -849,13 +906,14 @@ def _abstract_text(
     llm_chat: Callable | None = None,
     allowed: set[str] | None = None,
     seen: set[str] | None = None,
+    claims_out=None,
 ) -> str:
     seen = seen if seen is not None else set()
     allowed = allowed or {str(card["paper_id"]) for card in ranked if card.get("paper_id")}
     return _llm_or_template(
         "abstract",
         llm_chat,
-        lambda: _llm_abstract(topic, sections, ranked, evidence_by_paper, llm_chat, zh, allowed, seen),
+        lambda: _llm_abstract(topic, sections, ranked, evidence_by_paper, llm_chat, zh, allowed, seen, claims_out),
         lambda: _template_abstract(topic, sections, ranked, evidence_by_paper, zh, seen),
     )
 
@@ -888,7 +946,7 @@ def _roadmap_text(sections: list[dict[str, Any]], zh: bool, seen: set[str]) -> s
         title = str(section.get("section_title", "")).strip()
         if not title:
             continue
-        goal = _clean_clause(section.get("section_goal")) or ("the evidence for this theme" if not zh else "该主题下的证据")
+        goal = _clean_clause(_safe_section_goal(section)) or ("the evidence for this theme" if not zh else "该主题下的证据")
         sentences.append(frames[index % len(frames)].format(title=title, goal=goal if zh else _lower_first(goal)))
     return _fresh_text(" ".join(sentences), seen)
 
@@ -937,15 +995,23 @@ def _llm_motivation(
     allowed: set[str],
     seen: set[str],
 ) -> str:
-    """LLM motivation: 2-3 uncited sentences; the roadmap is added separately."""
+    """LLM motivation: 2-3 uncited sentences; the roadmap is added separately.
+
+    T12 responsibility boundary: the introduction owns the research question,
+    the background motivation, and a one-sentence-per-section map (appended
+    deterministically). Expanding a section's specific methods, datasets, or
+    metrics is the body sections' job, not the intro's.
+    """
     user = "\n".join(
         [
             "Task: draft the introduction.",
             "Survey topic: " + str(topic or ""),
             "Themes: " + "; ".join(str(section.get("section_title", "")) for section in sections),
             "Write in Chinese (简体)." if zh else "Write in English.",
-            "Write 2-3 sentences of motivation only: why the field needs this survey now.",
-            "Do not cite any paper, do not preview the sections (a roadmap is added separately), and do not invent numbers, years, benchmarks, or paper names.",
+            "The introduction owns exactly three things: the research question, the background motivation, and a one-sentence-per-section roadmap. The roadmap is appended separately, so do not write it yourself.",
+            "Write 2-3 sentences covering the research question and the motivation only: the question this survey answers, and why the field needs it answered now.",
+            "Stay inside that responsibility: never expand any section's specific methods, datasets, or metrics — the body sections own that detail.",
+            "Do not cite any paper, do not preview the sections, and do not invent numbers, years, benchmarks, or paper names.",
         ]
     )
     reply = llm_chat(
@@ -954,7 +1020,7 @@ def _llm_motivation(
             {"role": "user", "content": user},
         ],
         temperature=0.4,
-        max_tokens=800,
+        max_tokens=1600,
     )
     if not isinstance(reply, str) or not reply.strip():
         raise ValueError(f"empty LLM reply: {str(reply)[:120]}")
@@ -965,19 +1031,82 @@ def _llm_motivation(
     return body
 
 
-_LIMITATION_MARKERS = (
-    "limitation",
-    "however",
-    "remain",
-    "difficult",
-    "challenge",
-    "error",
-    "risk",
-    "fail",
-    "lack",
-    "cannot",
-    "require",
-)
+def _intro_word_bag(text: str, exclude: set[str] | None = None) -> set[str]:
+    """Casefolded bag of words for the intro/body Jaccard guard.
+
+    Latin/digit runs shorter than 2 characters are noise; CJK text has no word
+    boundaries without a segmenter, so each Han character is one token (minus
+    function-character stopwords). Dependency-free on purpose — the guard must
+    not pull in embeddings or a tokenizer.
+    """
+    exclude = exclude if exclude is not None else set()
+    bag: set[str] = set()
+    for token in _INTRO_TOKEN_RE.findall(text.casefold()):
+        if token in exclude or token in _INTRO_STOPWORDS:
+            continue
+        if len(token) == 1 and not ("\u4e00" <= token <= "\u9fff"):
+            continue
+        bag.add(token)
+    return bag
+
+
+def _jaccard(a: set[str], b: set[str]) -> float:
+    union = a | b
+    return len(a & b) / len(union) if union else 0.0
+
+
+def _body_prose_sentences(body_lines: list[str]) -> list[str]:
+    """Prose sentences of the rendered body sections (image embeds excluded)."""
+    sentences: list[str] = []
+    for line in body_lines:
+        if not line.strip() or line.lstrip().startswith("!["):
+            continue
+        sentences.extend(_split_sentences(line))
+    return sentences
+
+
+def _dedupe_intro_against_body(
+    intro: str,
+    body_sentences: list[str],
+    sections: list[dict[str, Any]],
+) -> str:
+    """T12 write-side guard: drop intro sentences that restate body content.
+
+    `_fresh_text` only blocks exact repeats, so an intro sentence that
+    paraphrases a body sentence with different wording survived it (eval
+    redundancy 0.917 for Introduction x a body section). Every intro sentence
+    is compared with every body sentence by bag-of-words Jaccard (casefolded,
+    stopwords out); >= _INTRO_DEDUP_THRESHOLD counts as a body restatement
+    and the sentence goes. Section-title words are removed from both bags
+    first — roadmap sentences are supposed to name sections, so title overlap
+    is not a penalty. A cut that would leave fewer than
+    _INTRO_MIN_SENTENCES sentences is rolled back whole (anti-hollowing, the
+    same spirit as the coverage gate).
+    """
+    title_words = _intro_word_bag(" ".join(str(section.get("section_title", "")) for section in sections))
+    body_bags = [bag for bag in (_intro_word_bag(sentence, title_words) for sentence in body_sentences) if bag]
+    if not body_bags:
+        return intro
+    kept_paragraphs: list[list[str]] = []
+    kept_count = 0
+    dropped = 0
+    for paragraph in intro.split("\n\n"):
+        kept_sentences: list[str] = []
+        for sentence in _split_sentences(paragraph):
+            bag = _intro_word_bag(sentence, title_words)
+            if bag and any(_jaccard(bag, other) >= _INTRO_DEDUP_THRESHOLD for other in body_bags):
+                dropped += 1
+                continue
+            kept_sentences.append(sentence.strip())
+        if kept_sentences:
+            kept_paragraphs.append(kept_sentences)
+            kept_count += len(kept_sentences)
+    if dropped and kept_count < _INTRO_MIN_SENTENCES:
+        logger.warning(f"[writer] intro dedupe would leave {kept_count} sentences; keeping original intro")
+        return intro
+    if dropped:
+        logger.info(f"[writer] intro dedupe dropped {dropped} body-restating sentence(s)")
+    return "\n\n".join(" ".join(sentences) for sentences in kept_paragraphs) if dropped else intro
 
 
 def _section_paper_entries(sections: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -999,35 +1128,30 @@ def _section_paper_entries(sections: list[dict[str, Any]]) -> list[dict[str, Any
     return entries
 
 
-def _limitation_pool(entries: list[dict[str, Any]], limit: int = 8) -> list[dict[str, str]]:
-    """One boundary-flavoured bit per paper, best first, deduped by text.
+def _limitation_pool(entries: list[dict[str, Any]], limit: int = 8, seen: set[str] | None = None) -> list[dict[str, str]]:
+    """One explicitly attributed limitation per paper, deduplicated by text.
 
-    Boundary-flavoured evidence wins over the card limitation field, which wins
-    over any other evidence snippet; generic limitation strings shared by
-    several cards collapse to a single bit.
+    A limitation already rendered in the body (prefix match against the
+    cross-section ledger, citation suffix excluded) does not consume a slot:
+    the wave7 template path wasted Open Challenges' only bit on a sentence the
+    dedupe gate then dropped.
     """
-    pool: list[dict[str, str]] = []
-    used_texts: set[str] = set()
+    ledger = seen if seen is not None else set()
+    pool = []
+    used = set()
     for entry in entries:
-        paper_id = entry.get("paper_id")
-        if not paper_id:
-            continue
-        snippets = [str(snippet).strip() for snippet in entry.get("evidence_snippets", []) if str(snippet).strip()]
-        marked = [s for s in snippets if any(marker in s.casefold() for marker in _LIMITATION_MARKERS)]
-        candidates = [_shorten(snippet, 200) for snippet in marked]
-        candidates.append(_shorten(entry.get("limitations"), 200))
-        candidates.extend(_shorten(snippet, 200) for snippet in snippets)
-        text = next((candidate for candidate in candidates if candidate), "")
-        if not text:
-            continue
-        key = _norm_sentence(text)
-        if key in used_texts:
-            continue
-        used_texts.add(key)
-        pool.append({"paper_id": str(paper_id), "title": _shorten(entry.get("title") or paper_id, 90), "text": text})
-        if len(pool) >= limit:
+        for source in entry.get("sources", []):
+            text = source["claim_text"]
+            bit_key = _norm_sentence(text).rstrip(" .;")
+            rendered = bool(bit_key) and any(key.startswith(bit_key) for key in ledger)
+            if (source["source_role"] != "own_limitation" or normalize_text(text) in used
+                    or rendered
+                    or quote_diagnostic(text, [source["source_quote"]])["quote_like"]):
+                continue
+            used.add(normalize_text(text))
+            pool.append({"paper_id": entry["paper_id"], "title": entry["title"], "text": text})
             break
-    return pool
+    return pool[:limit]
 
 
 def _split_limitation_pool(pool: list[dict[str, str]]) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
@@ -1058,7 +1182,10 @@ def _field_bits(ranked: list[dict[str, Any]], field: str, fallback: str, limit: 
         paper_id = card.get("paper_id")
         if not paper_id:
             continue
-        text = _shorten(card.get(field), 200) or _shorten(card.get(fallback), 200)
+        scope = "limitation" if field == "limitations" else "contribution"
+        text = next((source["claim_text"] for source in card.get("sources", [])
+                     if source["source_role"] in SCOPE_ROLES[scope]
+                     and not quote_diagnostic(source["claim_text"], [source["source_quote"]])["quote_like"]), "")
         if not text:
             continue
         bits.append({"paper_id": paper_id, "title": _shorten(card.get("title") or paper_id, 90), "text": text})
@@ -1076,104 +1203,19 @@ def _open_challenges_text(bits: list[dict[str, str]], zh: bool, seen: set[str]) 
             else "所选论文的证据尚不足以支撑更强的开放挑战结论。",
             seen,
         )
-    if zh:
-        parts = "；".join(f"{bit['title']}：{bit['text']} [{bit['paper_id']}]" for bit in bits)
-        text = f"综合正文各节，已记录的证据边界集中在少数几处：{parts}。它们仍是开放问题，而非已确立的结论。"
-    else:
-        parts = "; ".join(f"{bit['title']}: {bit['text']} [{bit['paper_id']}]" for bit in bits)
-        text = f"Read across the body sections, the recorded boundaries cluster into a few open problems: {parts}. Each remains open rather than settled."
-    return _fresh_text(text, seen)
+    text = _fresh_text(" ".join(f"{bit['text'].rstrip('.。')} [{bit['paper_id']}]" + ("。" if zh else ".")
+                                for bit in bits[:3]), seen, keep_duplicate=False)
+    return text or ("上述局限限定了结论的适用范围；现有证据不足以进一步概括共同挑战。" if zh else
+                    "The limitations discussed above bound the findings; the recorded evidence does not justify a stronger shared challenge.")
 
 
-def _future_directions_text(
-    bits: list[dict[str, str]],
-    entries: list[dict[str, Any]],
-    zh: bool,
-    seen: set[str],
-) -> str:
-    """Per-direction next steps: a limitation bit plus the same paper's contribution."""
+def _future_directions_text(bits, entries, zh, seen):
     if not bits:
-        return _fresh_text(
-            "Future directions follow from the limitation fields captured for the selected papers."
-            if not zh
-            else "未来方向取决于所选论文已记录的局限。",
-            seen,
-        )
-    by_id = {str(entry.get("paper_id")): entry for entry in entries}
-    parts = []
-    for bit in bits:
-        contribution = _clean_clause(_shorten(by_id.get(bit["paper_id"], {}).get("contribution"), 120)) or (
-            "its reported contribution" if not zh else "其已报告的贡献"
-        )
-        if zh:
-            parts.append(f"对 {bit['title']} 而言，后续工作应在保持「{contribution}」的同时，越过已报告的边界（{bit['text']}）[{bit['paper_id']}]。")
-        else:
-            parts.append(
-                f"For {bit['title']}, follow-up work should keep {_lower_first(contribution)} while removing the reported boundary ({_lower_first(bit['text'])}) [{bit['paper_id']}]."
-            )
-    lead = (
-        "These boundaries translate into one concrete step per direction."
-        if not zh
-        else "由此可以得到逐方向的可操作建议。"
-    )
-    return _fresh_text(lead + " " + " ".join(parts), seen)
-
-
-_OC_TASK = "Task: draft the open challenges."
-_FD_TASK = "Task: draft the future directions."
-
-
-def _tail_llm_reply(
-    entries: list[dict[str, Any]],
-    fields: list[str],
-    task_line: str,
-    instructions: list[str],
-    llm_chat: Callable,
-    zh: bool,
-) -> str:
-    """Shared prompt shape for the two tail sections: alias-tagged paper entries."""
-    if not entries:
-        raise ValueError("no paper entries to draft from")
-    alias_of: dict[str, str] = {}
-    paper_lines = []
-    for index, entry in enumerate(entries, start=1):
-        paper_id = str(entry.get("paper_id") or "")
-        if not paper_id:
-            continue
-        alias = f"P{index}"
-        alias_of[alias] = paper_id
-        values = []
-        for field in fields:
-            value = entry.get(field, "")
-            values.append(" ".join(str(part) for part in value) if isinstance(value, list) else str(value))
-        paper_lines.append(" | ".join([alias] + values))
-    tag_list = " ".join(f"[{alias}]" for alias in alias_of)
-    user = "\n".join(
-        [
-            task_line,
-            "Papers (tag | " + " | ".join(fields) + "):",
-            *paper_lines,
-            "Write in Chinese (简体)." if zh else "Write in English.",
-            *instructions,
-            "Restate only the facts in the paper list above: no invented numbers, years, benchmarks, or paper names.",
-            "Refer to papers by their titles in prose, and never copy an internal paper id, DOI, or URL into the text.",
-            f"Cite only with these bracketed tags: {tag_list}",
-        ]
-    )
-    reply = llm_chat(
-        [
-            {
-                "role": "system",
-                "content": "You draft a closing section of an evidence-grounded academic survey. Citations must use the supplied bracketed paper tags and nothing else.",
-            },
-            {"role": "user", "content": user},
-        ],
-        temperature=0.3,
-        max_tokens=1200,
-    )
-    if not isinstance(reply, str) or not reply.strip():
-        raise ValueError(f"empty LLM reply: {str(reply)[:120]}")
-    return reply
+        return "尚无充分的已归属局限可支撑具体研究建议。" if zh else "The recorded limitations do not yet justify specific research proposals."
+    premises = _open_challenges_text(bits[:2], zh, seen)
+    proposal = ("本综述建议优先检验上述边界；该建议尚待验证。" if zh else
+                "This review proposes testing these boundaries in follow-up evaluation; the proposal remains untested.")
+    return premises + " " + proposal
 
 
 def _llm_open_challenges(
@@ -1182,96 +1224,30 @@ def _llm_open_challenges(
     zh: bool,
     allowed: set[str],
     seen: set[str],
+    claims_out=None,
 ) -> str:
     """Cross-section open problems; input entries are disjoint from the FD ones."""
-    reply = _tail_llm_reply(
-        entries,
-        ["title", "limitations", "evidence_snippets"],
-        _OC_TASK,
-        [
-            "Write 2-3 sentences that synthesize open problems ACROSS the sections these papers come from: state where the reported evidence stops, and what therefore stays unsettled.",
-            "Do not summarize one paper after another; make each sentence draw on more than one paper where the evidence allows.",
-            "End every factual sentence with the tags of the papers it draws on.",
-        ],
-        llm_chat,
-        zh,
-    )
-    return _tail_text(reply, entries, allowed, seen, "open-challenges")
+    section = {"section_title": "Open Challenges", "section_goal": "Summarize only explicit own limitations, at most 3 sentences",
+               "selected_papers": [{**e, "sources": [s for s in e.get("sources", []) if s["source_role"] == "own_limitation"]} for e in entries]}
+    paragraphs = _llm_structured_section_body(section, llm_chat, zh, seen, claims_out)
+    return " ".join(_split_sentences(" ".join(paragraphs))[:3])
 
 
-def _llm_future_directions(
-    entries: list[dict[str, Any]],
-    llm_chat: Callable,
-    zh: bool,
-    allowed: set[str],
-    seen: set[str],
-) -> str:
-    """Actionable per-direction steps; input entries are disjoint from the OC ones."""
-    reply = _tail_llm_reply(
-        entries,
-        ["title", "limitations", "contribution", "evidence_snippets"],
-        _FD_TASK,
-        [
-            "Write one actionable suggestion per direction (2-4 sentences): a concrete next step that starts from a stated limitation and builds on the reported contribution.",
-            "Phrase each suggestion as an instruction to follow-up work, not as a restatement of the limitation.",
-            "End every factual sentence with the tag of the paper it draws on.",
-        ],
-        llm_chat,
-        zh,
-    )
-    return _tail_text(reply, entries, allowed, seen, "future-directions")
-
-
-def _tail_text(reply: str, entries: list[dict[str, Any]], allowed: set[str], seen: set[str], label: str) -> str:
-    """Alias-map, whitelist-filter and dedupe a tail-section draft."""
-    alias_of = {f"P{index}": str(entry.get("paper_id")) for index, entry in enumerate(entries, start=1) if entry.get("paper_id")}
-    body = _sanitize_llm_paragraph(_map_alias_citations(reply.strip(), alias_of), allowed)
-    body = _fresh_text(body, seen, keep_duplicate=False)
-    if not _split_sentences(body) or not _extract_citations(body):
-        raise ValueError(f"{label} reply has no citation-bearing sentence")
-    return body
+def _llm_future_directions(entries, llm_chat, zh, allowed, seen, claims_out=None):
+    # Suggestions are the review author's, separated from observed premises.
+    premises = _llm_open_challenges(entries, llm_chat, zh, allowed, seen, claims_out)
+    proposal = ("本综述建议优先检验上述边界；这是待验证的研究建议。" if zh else
+                "As a proposal of this review, follow-up evaluation should test these stated boundaries; this is not an established result.")
+    return premises + " " + proposal
 
 
 def _conclusion_text(bits: list[dict[str, str]], zh: bool, seen: set[str]) -> str:
-    lead = (
-        "The field is moving from agents that merely act in hand-built games toward systems that learn, generate, and evaluate interactive worlds."
-        if not zh
-        else "整体来看，所选工作把游戏智能从手工环境中的行为学习，推向能够学习、生成并评测交互世界的系统。"
-    )
     if not bits:
-        return _fresh_text(lead, seen)
-    if zh:
-        body = "；".join(f"{bit['title']}：{bit['text']} [{bit['paper_id']}]" for bit in bits)
-        return _fresh_text(f"{lead} 其中，{body}。", seen)
-    body = " ".join(f"{bit['title']}: {bit['text']} [{bit['paper_id']}]." for bit in bits)
-    return _fresh_text(f"{lead} {body}", seen)
-
-
-_SUMMARY_FRAMES_EN = (
-    "{title} addresses {problem}. Its method can be summarized as {method}, and its contribution is {contribution} [{pid}].",
-    "{title} takes {problem} as its target; the reported method is {method}, which yields {contribution} [{pid}].",
-    "{title} starts from {problem} and builds on {method}, contributing {contribution} [{pid}].",
-    "On {problem}, {title} contributes {contribution} through {method} [{pid}].",
-)
-_SUMMARY_FRAMES_ZH = (
-    "{title} 处理的问题可概括为 {problem}；其方法侧重 {method}，主要贡献是 {contribution} [{pid}]。",
-    "{title} 以 {problem} 为目标，报告的方法是 {method}，由此得到 {contribution} [{pid}]。",
-    "围绕 {problem}，{title} 通过 {method} 实现 {contribution} [{pid}]。",
-    "{title} 从 {problem} 出发，方法上依赖 {method}，贡献落在 {contribution} [{pid}]。",
-)
-
-_LIMIT_FRAMES_EN = (
-    "{title} is limited by {limitation} [{pid}].",
-    "{title} leaves {limitation} unresolved [{pid}].",
-    "The evidence in {title} stops at {limitation} [{pid}].",
-    "The reported results of {title} are bounded by {limitation} [{pid}].",
-)
-_LIMIT_FRAMES_ZH = (
-    "{title} 的边界是 {limitation} [{pid}]。",
-    "{title} 尚未解决 {limitation} [{pid}]。",
-    "{title} 的证据停在 {limitation} [{pid}]。",
-    "{title} 的已报告结果受限于 {limitation} [{pid}]。",
-)
+        return "现有安全归属的证据不足以形成跨研究结论。" if zh else "Safely attributed findings are insufficient for a cross-study conclusion."
+    lead = "综合上述研究，以下发现构成本综述的结论依据。" if zh else "The synthesis rests on the following reported findings."
+    findings = " ".join(f"{bit['text'].rstrip('.。')} " + " ".join(f"[{pid}]" for pid in bit.get("cites", [bit["paper_id"]])) + ("。" if zh else ".") for bit in bits[:3])
+    end = "这些发现的适用范围仍分别受各自研究设置约束。" if zh else "Their scopes remain tied to the respective study settings; they do not by themselves establish a shared performance ranking."
+    return lead + " " + findings + " " + end
 
 
 def _build_section_text(
@@ -1280,15 +1256,18 @@ def _build_section_text(
     next_section: dict[str, Any] | None = None,
     llm_chat: Callable | None = None,
     seen: set[str] | None = None,
+    claims_out: list[dict[str, Any]] | None = None,
+    tiers: dict[str, str] | None = None,
 ) -> list[str]:
     """One body section: framing sentence, moves-menu paragraphs, bridge sentence.
 
     The paragraph shape is model-chosen (moves menu) or the deterministic
     template fallback; artifact embeds are interleaved by paragraph slot, so
-    neither path can strand a planned figure or table.
+    neither path can strand a planned figure or table. Both paths require
+    source-bound, role-labelled propositions.
     """
     title = str(section.get("section_title", "This section"))
-    goal = str(section.get("section_goal", ""))
+    goal = _safe_section_goal(section)
     papers = section.get("selected_papers", [])
     section_match = re.search(r"(\d+)$", str(section.get("section_id", "")))
     section_index = int(section_match.group(1)) if section_match else 0
@@ -1298,7 +1277,7 @@ def _build_section_text(
     llm_paragraphs: list[str] = []
     if llm_chat is not None:
         try:
-            llm_paragraphs = _llm_section_body(section, llm_chat, zh, seen)
+            llm_paragraphs = _llm_section_body(section, llm_chat, zh, seen, claims_out=claims_out, tiers=tiers)
         except Exception as exc:  # LLM boundary: designed per-section degradation
             logger.warning(
                 f"[writer] section {section.get('section_id')} LLM unusable -> template fallback: {exc}"
@@ -1308,11 +1287,18 @@ def _build_section_text(
         paragraphs = llm_paragraphs
     else:
         paragraphs = [
-            _template_summary(papers, zh, section_index, seen),
-            _template_comparison(papers, zh, title, seen),
-            _template_limitations(papers, zh, section_index, seen),
+            paragraph
+            for paragraph in (
+                _template_summary(papers, zh, section_index, seen),
+                _template_comparison(papers, zh, title, seen),
+                _template_limitations(papers, zh, section_index, seen),
+            )
+            if paragraph  # e.g. no real limitation evidence -> no filler paragraph
         ]
 
+    if not paragraphs:
+        paragraphs = ["No safely attributed claims are available for this section." if not zh
+                      else "本节尚无可安全归属到来源的论断。"]
     # Framing sentence: no citation, so it cannot create an unsupported one.
     if zh:
         framing = f"{title} 这一部分关注的问题是：{_clean_clause(goal) or '如何把该主题下论文的方法、证据与局限组织成可比较的综述段落'}。"
@@ -1329,46 +1315,28 @@ def _pid_ok(pid: Any) -> bool:
     return isinstance(pid, str) and bool(pid) and not any(ch.isspace() for ch in pid)
 
 
-def _template_summary(papers: list[dict[str, Any]], zh: bool, section_index: int, seen: set[str]) -> str:
-    """Claim-per-paper paragraph; the reporting frame rotates by section index."""
-    frames = _SUMMARY_FRAMES_ZH if zh else _SUMMARY_FRAMES_EN
+def _template_claims(papers, scopes, seen, zh):
     sentences = []
-    for offset, paper in enumerate(papers[:SECTION_PAPERS]):
-        pid = paper.get("paper_id")
-        if not _pid_ok(pid):
-            # A pid that is not a single-line DOI form has been corrupted
-            # upstream (S0 round-3: a pid spliced with rendered sections);
-            # formatting it would put multi-paragraph text inside [ ].
-            logger.warning(f"[writer] skip summary sentence for malformed paper_id: {str(pid)[:80]!r}")
-            continue
-        values = {
-            "title": paper.get("title") or pid,
-            "problem": paper.get("problem") or ("a core modeling problem" if not zh else "该主题下的核心建模问题"),
-            "method": paper.get("method") or ("the method described by the paper card" if not zh else "论文中可确认的方法线索"),
-            "contribution": paper.get("contribution") or ("citation-ready evidence for this theme" if not zh else "为该方向提供可引用证据"),
-            "pid": pid,
-        }
-        sentences.append(frames[(section_index - 1 + offset) % len(frames)].format(**values))
-    return _fresh_text(" ".join(sentences), seen)
+    used = set()
+    for paper in papers[:SECTION_PAPERS]:
+        for source in paper.get("sources", []):
+            text = source["claim_text"].strip().rstrip(".。")
+            if (source["source_role"] not in set().union(*(SCOPE_ROLES[scope] for scope in scopes))
+                    or quote_diagnostic(text, [source["source_quote"]])["quote_like"]
+                    or normalize_text(text) in used):
+                continue
+            used.add(normalize_text(text))
+            sentences.append(f"{text} [{paper['paper_id']}]" + ("。" if zh else "."))
+            break
+    return _fresh_text(" ".join(sentences), seen, keep_duplicate=False) if sentences else ""
 
 
-def _template_limitations(papers: list[dict[str, Any]], zh: bool, section_index: int, seen: set[str]) -> str:
-    """Boundary paragraph; the reporting frame rotates by section index."""
-    frames = _LIMIT_FRAMES_ZH if zh else _LIMIT_FRAMES_EN
-    sentences = []
-    for offset, paper in enumerate(papers[:4]):
-        pid = paper.get("paper_id")
-        if not _pid_ok(pid):
-            logger.warning(f"[writer] skip limitation sentence for malformed paper_id: {str(pid)[:80]!r}")
-            continue
-        sentences.append(
-            frames[(section_index - 1 + offset) % len(frames)].format(
-                title=paper.get("title") or pid,
-                limitation=paper.get("limitations") or ("the available evidence boundary" if not zh else "公开证据不足以支持更强结论"),
-                pid=pid,
-            )
-        )
-    return _fresh_text(" ".join(sentences), seen)
+def _template_summary(papers, zh, section_index, seen):
+    return _template_claims(papers, ["contribution", "background"], seen, zh)
+
+
+def _template_limitations(papers, zh, section_index, seen):
+    return _template_claims(papers, ["limitation"], seen, zh)
 
 
 def _section_lines(paragraphs: list[str], slots: list[dict[str, Any]]) -> list[str]:
@@ -1386,8 +1354,7 @@ def _section_lines(paragraphs: list[str], slots: list[dict[str, Any]]) -> list[s
             position = _PLACEMENT_INDEX.get(str(slot.get("placement", "")))
             if position is None:
                 continue
-            if position == -1:
-                position = last
+            position = last if position == -1 else min(position, last)
             if position != index:
                 continue
             lines.extend([f"![{slot.get('caption', slot['artifact_id'])}]({slot['artifact_id']})", ""])
@@ -1402,7 +1369,7 @@ def _section_bridge(title: str, next_section: dict[str, Any] | None, zh: bool, s
     """
     next_title = str((next_section or {}).get("section_title", "")).strip()
     if next_title:
-        next_goal = _clean_clause((next_section or {}).get("section_goal")) or (
+        next_goal = _clean_clause(_safe_section_goal(next_section or {})) or (
             "how those capabilities are evaluated" if not zh else "这些能力如何被评测"
         )
         if zh:
@@ -1413,141 +1380,394 @@ def _section_bridge(title: str, next_section: dict[str, Any] | None, zh: bool, s
     return _fresh_text(f"{title} closes the body; the remaining sections fold this evidence into open challenges and future directions.", seen)
 
 
-def _template_comparison(papers: list[dict[str, Any]], zh: bool, section_title: str = "", seen: set[str] | None = None) -> str:
-    """Comparison paragraph built from the section's own card fields.
+def _template_comparison(papers, zh, section_title="", seen=None):
+    return _template_claims(papers, ["method"], seen if seen is not None else set(), zh)
 
-    The closing sentence names the section and its end-point papers: a shared
-    rotating closer was one of the exact repeats the eval flagged across
-    sections, and a content-derived one cannot repeat.
+
+def _paper_evidence_tiers(evidence_by_paper: dict[str, list[dict[str, Any]]]) -> dict[str, str]:
+    """paper_id -> "fulltext_ok" | "abstract_only" by the paper's evidence mix.
+
+    fulltext_ok requires a full-text fragment (paragraph / agentic_chunk) that
+    actually binds one of the paper's claims (non-empty supports_claims — the
+    possible_claims ↔ supports_claims correspondence): a paper whose only
+    paragraph matched none of its claims must not waive method/comparison/
+    limitation claims. Abstract/caption rows only — no evidence rows at all,
+    or a paper absent from the map — tier abstract_only, the conservative side.
     """
-    seen = seen if seen is not None else set()
-    compared = [paper for paper in papers[:3] if paper.get("paper_id")]
-    if not compared:
-        return _fresh_text(
-            "No citation-ready paper could be assigned to this section, so it stays a placeholder rather than an unsourced claim."
-            if not zh
-            else "本节没有可指派的论文证据，因此保留为占位说明，不给出无来源结论。",
-            seen,
+    tiers: dict[str, str] = {}
+    for paper_id, items in evidence_by_paper.items():
+        bound_fulltext = any(
+            str(item.get("source_type") or "") in _FULLTEXT_SOURCE_TYPES
+            and any(valid_support(row, item) for row in item.get("supports_claims", []))
+            for item in items
         )
-    section_label = section_title or "this section"
-    first = compared[0].get("title") or compared[0].get("paper_id")
-    last = compared[-1].get("title") or compared[-1].get("paper_id")
-    if zh:
-        parts = [
-            f"{paper.get('title') or paper.get('paper_id')} 以 {_shorten(paper.get('method'), 120) or '其报告的方法'} 为核心，"
-            f"贡献落在 {_shorten(paper.get('contribution'), 120) or '其报告的结果'} [{paper.get('paper_id')}]"
-            for paper in compared
-        ]
-        head = "横向比较，" if len(compared) > 1 else "本节覆盖的工作中，"
-        closer = (
-            f"在「{section_label}」一节，分野位于 {first} 与 {last} 之间，而不是发表渠道或年份。"
-            if len(compared) > 1
-            else f"「{section_label}」一节只覆盖一项工作，对比落在其方法内部。"
-        )
-        return _fresh_text(head + "；".join(parts) + "。" + closer, seen)
-    if len(compared) == 1:
-        paper = compared[0]
-        return _fresh_text(
-            f"{paper.get('title') or paper.get('paper_id')} is the only citation-ready work assigned here: "
-            f"its method is {_shorten(paper.get('method'), 120) or 'the reported method'} and its contribution is "
-            f"{_shorten(paper.get('contribution'), 120) or 'the reported result'} [{paper.get('paper_id')}].",
-            seen,
-        )
-    parts = [
-        f"{paper.get('title') or paper.get('paper_id')} centers on {_shorten(paper.get('method'), 120) or 'the reported method'} "
-        f"and contributes {_shorten(paper.get('contribution'), 120) or 'the reported result'} [{paper.get('paper_id')}]"
-        for paper in compared
-    ]
-    closer = f"Inside {section_label}, the split runs between {first} and {last}, not between venues or years."
-    return _fresh_text("Compared side by side, " + "; ".join(parts) + ". " + closer, seen)
+        tiers[paper_id] = "fulltext_ok" if bound_fulltext else "abstract_only"
+    return tiers
 
 
-def _llm_section_body(section: dict[str, Any], llm_chat: Callable, zh: bool, seen: set[str]) -> list[str]:
-    """Draft the section body from the moves menu; raise when the reply is unusable.
+def _source_aliases(section):
+    sources = {}
+    for index, paper in enumerate(section.get("selected_papers", [])[:SECTION_PAPERS], 1):
+        for number, source in enumerate(paper.get("sources", []), 1):
+            if source.get("paper_id") == paper.get("paper_id"):
+                sources[f"P{index}S{number}"] = source
+    return sources
 
-    Anti-hallucination guard: the prompt carries only this section's card fields
-    plus evidence snippets, identified by short [Pn] aliases — real ids never
-    reach the model, so it cannot mangle them into bare, space-broken DOIs.
-    Returned [Pn] tags map back to real ids; any sentence citing an unknown
-    tag, an id outside the section whitelist, a bare leaked id, or a sentence
-    another section already used is dropped. Paragraphs are untagged: the moves
-    menu replaced the fixed [SUMMARY]/[COMPARISON]/[LIMITATION] protocol.
+
+def _safe_section_goal(section):
+    goal = str(section.get("section_goal", ""))
+    if _contains_banned_phrase(goal):
+        return "the reported evidence for " + str(section.get("section_title", "this theme"))
+    return goal
+
+
+def _section_alias_context(section, tiers=None):
+    alias_of = {f"P{i}": str(p["paper_id"]) for i, p in
+                enumerate(section.get("selected_papers", [])[:SECTION_PAPERS], 1) if p.get("paper_id")}
+    lines = []
+    for alias, pid in alias_of.items():
+        paper = next(p for p in section["selected_papers"] if p.get("paper_id") == pid)
+        label = alias if tiers is None else f"{alias}({_TIER_LABELS[tiers.get(pid, 'abstract_only')]})"
+        lines.append(f"{label} | {paper.get('title', '')} (metadata, not a claim)")
+    for alias, source in _source_aliases(section).items():
+        lines.append(f"{alias} | role={source['source_role']} | source_type={source['source_type']} | "
+                     f"claim={source['claim_text']} | source_quote={source['source_quote']}")
+    return alias_of, set(alias_of.values()), lines
+
+
+def _llm_section_body(
+    section: dict[str, Any],
+    llm_chat: Callable,
+    zh: bool,
+    seen: set[str],
+    claims_out: list[dict[str, Any]] | None = None,
+    tiers: dict[str, str] | None = None,
+) -> list[str]:
+    """One validated JSON path; failures reach the source-safe template."""
+    return _llm_structured_section_body(section, llm_chat, zh, seen, claims_out, tiers)
+
+
+def _llm_structured_section_body(
+    section: dict[str, Any],
+    llm_chat: Callable,
+    zh: bool,
+    seen: set[str],
+    claims_out: list[dict[str, Any]] | None,
+    tiers: dict[str, str] | None = None,
+) -> list[str]:
+    """Draft the section body as a structured claim list; raise ValueError
+    when the reply is unusable so the caller uses source-safe templates.
+
+    The model returns [{"text", "cite", "scope"}, ...] with alias tags only.
+    Validation checks source aliases, claim-level roles and single-sentence
+    round-trip through the shared claim kernel;
+    paragraphs are assembled by scope, and each rendered claim unit is
+    collected into claims_out as the structured source of truth for the
+    downstream claim map.
     """
-    papers = section.get("selected_papers", [])[:SECTION_PAPERS]
-    allowed = {str(paper.get("paper_id")) for paper in papers if paper.get("paper_id")}
-    alias_of: dict[str, str] = {}
-    paper_lines = []
-    for index, paper in enumerate(papers, start=1):
-        paper_id = str(paper.get("paper_id"))
-        if not paper.get("paper_id"):
-            continue
-        alias = f"P{index}"
-        alias_of[alias] = paper_id
-        paper_lines.append(
-            " | ".join(
-                [
-                    alias,
-                    str(paper.get("title", "")),
-                    str(paper.get("problem", "")),
-                    str(paper.get("method", "")),
-                    str(paper.get("contribution", "")),
-                    str(paper.get("limitations", "")),
-                    " ".join(str(s) for s in paper.get("evidence_snippets", [])),
-                ]
-            )
-        )
+    alias_of, allowed, paper_lines = _section_alias_context(section, tiers)
+    if not alias_of:
+        raise ValueError("section has no citable papers")
     tag_list = " ".join(f"[{alias}]" for alias in alias_of)
-    moves = _MOVES_ZH if zh else _MOVES_EN
+    # Tiers describe availability; claim attribution, not tier, controls scope.
+    tier_rules = [
+        "Source role and the selected assertion control scope, not page availability. An abstract can support an explicitly stated method; never extrapolate implementation detail.",
+        # Explicit mapping: the wave8 run's dominant fallback was
+        # source_role_out_of_scope — the model picking scopes its cited
+        # sources cannot legally support. State the contract, don't loosen it.
+        "Scope-role contract: \"method\" admits own_method/own_setup; \"contribution\" admits own_contribution/own_result; "
+        "\"comparison\" admits own_method/own_setup/own_contribution/own_result; \"limitation\" admits only own_limitation; "
+        "\"background\" admits only background/related_work. Choose the scope your cited sources can legally support.",
+    ]
     user = "\n".join(
         [
             "Section title: " + str(section.get("section_title", "")),
-            "Section goal: " + str(section.get("section_goal", "")),
-            "Papers (tag | title | problem | method | contribution | limitation | evidence):",
+            "Section goal: " + _safe_section_goal(section),
+            "Paper metadata followed by source assertions (source alias | role | type | claim | source_quote):",
             *paper_lines,
+            *tier_rules,
             "Write in Chinese (简体)." if zh else "Write in English.",
-            "Write 3 short paragraphs of survey prose. No headings, no bullet points, no labels at the start of a line.",
-            "Apply these writing moves, one per paragraph:",
-            *(f"{number}. {move}" for number, move in enumerate(moves, start=1)),
-            "Mix two citation styles: author-prominent for the landmark or contested work (its title as the sentence subject, its tag right after it) and information-prominent for established results (several tags clustered at the end of one sentence).",
-            "Every factual sentence must reuse the evidence text above almost verbatim and carry the tag of the paper it comes from; rhetorical and transitional sentences carry no tag.",
+            "Plan the section body as an ordered list of claims; paragraphs are assembled from the claim scopes.",
+            'Reply with ONLY a JSON array (no prose around it, no code fence) where each element is {"text": <one sentence>, "cite": [<tags>], "sources": [<source aliases>], "scope": <scope>}.',
+            f'"scope" is one of: {", ".join(_CLAIM_SCOPES)}. Order the claims: {" then ".join(_CLAIM_SCOPES)}.',
+            '"text" is one complete survey sentence with no headings, bullets or labels; a bracketed tag inside text is allowed only in the author-prominent style (a landmark work\'s tag right after its title).',
+            '"cite" lists every tag the sentence draws on; omit uncited transitions from the JSON.',
+            "Paraphrase the supplied claim, preserving technical terms, attribution, negation and scope; do not copy source sentences.",
+            'Every claim MUST have citations and "sources": ["P1S1", ...], at least one source from EACH cited paper.',
+            "A source role constrains the claim scope; background/related_work can only support background, never own methods/results.",
+            "Never infer absence of limitations from missing data. Do not cite metadata, evidence tiers, or this survey workflow.",
             "Restate only the facts in the paper list above: no invented numbers, years, benchmarks, or paper names.",
-            "Refer to papers by their titles in prose, and cite them only with the bracketed tags — never copy any internal paper id, DOI, or URL into the text.",
-            "Vary reporting verbs and sentence openings; never start two neighbouring sentences with the same words.",
+            "Refer to papers by their titles in prose, and never copy an internal paper id, DOI, or URL into the text.",
+            "Write 2-6 claims, or fewer if the sources do not justify more. No uncited claims.",
             f"Cite only with these bracketed tags: {tag_list}",
         ]
     )
+    # Generous budget: reasoning models spend completion tokens on hidden
+    # thinking before the visible JSON, so the array needs headroom.
     messages = [
         {
             "role": "system",
             "content": (
-                "You draft body paragraphs for an evidence-grounded academic survey. "
-                "Citations must use the supplied bracketed paper tags and nothing else."
+                "You plan body paragraphs of an evidence-grounded academic survey as structured claims. "
+                "Reply with a JSON array only; citations must use the supplied bracketed paper tags and nothing else."
             ),
         },
         {"role": "user", "content": user},
     ]
-    # Generous budget: reasoning models spend completion tokens on hidden
-    # thinking before the visible content, so 3 short paragraphs need headroom.
-    reply = llm_chat(messages, temperature=0.3, max_tokens=6000)
+    source_aliases = _source_aliases(section)
+    reply = llm_chat(messages, temperature=0.3, max_tokens=8000)
     if not isinstance(reply, str) or not reply.strip():
         raise ValueError(f"empty LLM reply: {str(reply)[:120]}")
-    paragraphs = []
-    for raw in _parse_move_paragraphs(reply):
-        body = _map_alias_citations(raw, alias_of)
-        body = _sanitize_llm_paragraph(body, allowed)
-        body = _fresh_text(body, seen, keep_duplicate=False)
-        if body.strip():
-            paragraphs.append(body.strip())
-    if len(paragraphs) == 1:
-        # A model that ignores the paragraph breaks still produced usable prose:
-        # split it at the sentence midpoint rather than discarding the section.
-        sentences = _split_sentences(paragraphs[0])
-        if len(sentences) >= 2:
-            middle = max(1, len(sentences) // 2)
-            paragraphs = [" ".join(sentences[:middle]), " ".join(sentences[middle:])]
-    if len(paragraphs) < 2:
-        raise ValueError(f"LLM reply has {len(paragraphs)} usable paragraphs")
+    try:
+        units = _validated_claim_units(_parse_structured_claims(reply), alias_of, allowed, zh, tiers,
+                                       source_aliases)
+    except _ClaimValidationError as exc:
+        # Persist every total-validation failure, alias or not: the wave8 run
+        # showed the dominant rejection moving past aliases to role-scope, and
+        # a blind spot there would repeat the wave7 undiagnosable fallbacks.
+        _persist_writer_rejects(section, reply, exc.rejects, attempt=1)
+        if not exc.alias_related:
+            raise
+        # One targeted retry: the alias contract is mechanical, so the exact
+        # tag list plus the rejection reasons usually fix it in one round.
+        retry_note = (
+            "Your reply was rejected: " + "; ".join(exc.rejects[:4])
+            + '. In the JSON arrays, "cite" and "sources" must contain the bare tags WITHOUT brackets or quotes. '
+            + f'"cite" may only use: {", ".join(alias_of)}. '
+            + f'"sources" may only use: {", ".join(source_aliases) if source_aliases else "(none)"}. '
+            + "Reply again with the corrected JSON array only."
+        )
+        try:
+            retry = llm_chat(messages + [{"role": "user", "content": retry_note}], temperature=0.3, max_tokens=8000)
+        except Exception:
+            raise exc from None
+        if not isinstance(retry, str) or not retry.strip():
+            raise
+        try:
+            units = _validated_claim_units(_parse_structured_claims(retry), alias_of, allowed, zh, tiers,
+                                           source_aliases)
+        except _ClaimValidationError as exc2:
+            _persist_writer_rejects(section, retry, exc2.rejects, attempt=2)
+            raise
+        logger.info("[writer] alias-format retry recovered %d claim unit(s)", len(units))
+    paragraphs, kept = _assemble_claim_paragraphs(units, allowed, seen)
+    if not paragraphs:
+        raise ValueError("no source-bound claim survived")
+    if claims_out is not None:
+        section_info = {
+            "section_id": str(section.get("section_id", "")),
+            "section_title": str(section.get("section_title", "")),
+        }
+        for row in kept:
+            claims_out.append({**section_info, **row})
     return paragraphs
+
+
+def _parse_structured_claims(reply: str) -> list[Any]:
+    """Extract the JSON claim array; tolerant of wrapper prose or code fences."""
+    text = reply.strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z]*\s*|\s*```$", "", text).strip()
+    start, end = text.find("["), text.rfind("]")
+    if start == -1 or end <= start:
+        raise ValueError("reply contains no JSON array")
+    data = json.loads(text[start : end + 1])
+    if not isinstance(data, list) or not data:
+        raise ValueError("structured reply is not a non-empty JSON array")
+    return data
+
+
+class _ClaimValidationError(ValueError):
+    """Total claim-validation failure carrying the per-claim rejection reasons."""
+
+    def __init__(self, message: str, rejects: list[str], alias_related: bool):
+        super().__init__(message)
+        self.rejects = rejects
+        self.alias_related = alias_related
+
+
+# Raw LLM replies behind total alias rejections, appended as JSONL. The wave7
+# run left no trace of the exact tag format the model emitted, which made the
+# 6/6 template fallbacks impossible to attribute. Tests monkeypatch this path.
+_WRITER_REJECTS_PATH = Path("output") / "writer_llm_rejects.jsonl"
+
+
+def _persist_writer_rejects(section, reply: str, rejects: list[str], attempt: int) -> None:
+    """Diagnostics only — a failed write must not break the writing path."""
+    record = {
+        "ts": now_iso(),
+        "section_id": str(section.get("section_id", "")),
+        "section_title": str(section.get("section_title", "")),
+        "attempt": attempt,
+        "rejects": rejects[:12],
+        "reply": str(reply)[:6000],
+    }
+    try:
+        _WRITER_REJECTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with _WRITER_REJECTS_PATH.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except OSError as exc:
+        logger.warning("[writer] could not persist LLM reject diagnostics: %s", exc)
+
+
+def _alias_lookup(tag: str, keys) -> str | None:
+    """Canonical alias key for an LLM-emitted tag.
+
+    The prompt presents tags bracketed ("Cite only with these bracketed tags:
+    [P1] ...") while validation wants the bare key, so tolerate one bracket
+    layer and case drift ([p1s2] -> P1S2). Returns None when nothing matches,
+    keeping the rejection reason truthful to what the model emitted.
+    """
+    cand = tag.strip()
+    if cand.startswith("[") and cand.endswith("]"):
+        cand = cand[1:-1].strip()
+    if cand in keys:
+        return cand
+    if cand.upper() in keys:
+        return cand.upper()
+    return None
+
+
+def _validated_claim_units(
+    raw_claims: list[Any],
+    alias_of: dict[str, str],
+    allowed: set[str],
+    zh: bool,
+    tiers: dict[str, str] | None = None,
+    sources: dict[str, dict] | None = None,
+) -> list[dict[str, Any]]:
+    """Enforce same-paper source aliases, claim-level roles and one sentence.
+
+    Lexical diagnostics are advisory; every rendered rewrite still needs NLI.
+    """
+    units: list[dict[str, Any]] = []
+    rejects: list[str] = []
+    for raw in raw_claims[:6]:
+        if not isinstance(raw, dict):
+            continue
+        text = raw.get("text")
+        scope = raw.get("scope")
+        cites = [(_alias_lookup(c, alias_of) or c) if isinstance(c, str) else c
+                 for c in raw.get("cite", [])]
+
+        def _reject(reason: str) -> None:
+            # Distinguish WHY a section fell back to template: silent drops
+            # made three wave6 body sections undiagnosable.
+            rejects.append(f"{reason} ({str(text)[:50]!r})")
+
+        if not isinstance(text, str) or not text.strip():
+            continue
+        if "\n" in text or re.match(r"^\s*(?:#+|[-*]\s|\*\*(?:Abstract|Introduction|Future Directions|Open Challenges|Conclusion)\*\*)", text, re.I):
+            _reject("structural_text")
+            continue
+        if scope not in _CLAIM_SCOPES or not isinstance(cites, list):
+            _reject(f"scope={scope!r}")
+            continue
+        embedded = [(_alias_lookup(t, alias_of) or t) for t in _CLAIM_BRACKETS_RE.findall(text)]
+        if any(tag not in alias_of for tag in embedded):
+            _reject("unknown_embedded_alias")
+            continue
+        if any(not isinstance(alias, str) or alias not in alias_of for alias in cites):
+            _reject("unknown_cite_alias")
+            continue
+        bound: list[str] = []
+        for alias in embedded + [alias for alias in cites if isinstance(alias, str)]:
+            paper_id = alias_of[alias]
+            if paper_id not in bound:
+                bound.append(paper_id)
+        source_names = raw.get("sources", [])
+        if not bound or not isinstance(source_names, list) or not source_names or not sources:
+            _reject("no_bound_paper_or_sources")
+            continue
+        source_names = [(_alias_lookup(n, sources) or n) if isinstance(n, str) else n
+                        for n in source_names]
+        if any(not isinstance(name, str) or name not in sources for name in source_names):
+            _reject("unknown_source_alias")
+            continue
+        bindings = [sources[name] for name in source_names]
+        if {b["paper_id"] for b in bindings} != set(bound):
+            _reject("sources_do_not_cover_cited_papers")
+            continue
+        if any(b.get("source_role") not in SCOPE_ROLES[scope]
+               or role_violation(b.get("source_role"), b.get("source_quote", "")) for b in bindings):
+            _reject("source_role_out_of_scope")
+            continue
+        if _contains_banned_phrase(text) or re.search(r"\b(?:evidence (?:tier|available)|abstract.only|full.text material)\b", text, re.I):
+            _reject("banned_phrase_or_leaked_tier")
+            continue
+        body = _CLAIM_BRACKETS_RE.sub(
+            lambda m: f"[{_alias_lookup(m.group(1), alias_of) or m.group(1)}]", text).strip()
+        body = body.rstrip(" .,;、;。．")
+        trailing = [paper_id for paper_id in bound if f"[{paper_id}]" not in body]
+        sentence = body
+        if trailing:
+            sentence += " " + " ".join(f"[{paper_id}]" for paper_id in trailing)
+        sentence += "。" if zh else "."
+        parsed = sentence_units(sentence, allowed)
+        if len(parsed) != 1 or not parsed[0][0]:
+            _reject("not_single_sentence")
+            continue
+        units.append({"scope": scope, "sentence": sentence, "text": parsed[0][0], "cites": parsed[0][1],
+                      "source_bindings": bindings,
+                      "quote_diagnostic": quote_diagnostic(parsed[0][0], [b["source_quote"] for b in bindings])})
+    if rejects:
+        logger.warning("[writer] claim validation rejected %d raw claim(s): %s",
+                       len(rejects), " | ".join(rejects[:6]))
+    if not any(unit["cites"] for unit in units):
+        alias_related = any(r.startswith(("unknown_cite_alias", "unknown_embedded_alias", "unknown_source_alias"))
+                            for r in rejects)
+        raise _ClaimValidationError(
+            "no claim survived alias/scope validation (rejections: "
+            + ("; ".join(rejects[:6]) if rejects else "none parsed") + ")",
+            rejects, alias_related)
+    return units
+
+
+def _assemble_claim_paragraphs(
+    units: list[dict[str, Any]],
+    allowed: set[str],
+    seen: set[str],
+) -> tuple[list[str], list[dict[str, Any]]]:
+    """Scope-grouped paragraphs plus the claim units that actually rendered.
+
+    Every sentence still passes the freeform write-side defenses (whitelist
+    filter, leak guards, cross-section dedupe); a claim dropped there is
+    dropped from the structured source too, so the persisted truth always
+    matches the rendered markdown.
+    """
+    groups: list[list[tuple[str, dict[str, Any] | None]]] = []
+    for scope in _CLAIM_SCOPES:
+        rows: list[tuple[str, dict[str, Any] | None]] = []
+        for unit in (item for item in units if item["scope"] == scope):
+            body = _sanitize_llm_paragraph(unit["sentence"], allowed)
+            body = _fresh_text(body, seen, keep_duplicate=False)
+            if not body:
+                continue
+            parsed = sentence_units(body, allowed)
+            if len(parsed) != 1:
+                continue
+            text, cites = parsed[0]
+            rows.append((body, {**{k: v for k, v in unit.items() if k != "sentence"}, "text": text, "cites": cites} if cites else None))
+        if rows:
+            groups.append(rows)
+    if len(groups) == 1 and len(groups[0]) >= 2:
+        # One scope group still yields a section: split at the claim midpoint
+        # rather than discarding the reply (same policy as the freeform path).
+        middle = max(1, len(groups[0]) // 2)
+        rows = groups[0]
+        groups = [rows[:middle], rows[middle:]]
+    paragraphs = [" ".join(sentence for sentence, _ in rows) for rows in groups]
+    kept = [
+        {"paragraph": index, **claim}
+        for index, rows in enumerate(groups)
+        for _, claim in rows
+        if claim
+    ]
+    return paragraphs, kept
+
+
+def _llm_section_body_freeform(section, llm_chat, zh, seen):
+    return _llm_structured_section_body(section, llm_chat, zh, seen, None)
 
 
 # Paragraph-boundary markers a model may emit instead of plain blank lines: a
@@ -1626,6 +1846,7 @@ def _map_alias_citations(text: str, alias_of: dict[str, str]) -> str:
     # aliases. The id is otherwise correct: compact it back so the whitelist
     # filter can rescue the citation instead of dropping the sentence
     # (S0 round-4: deleting these took the whole survey's citations with it).
+    text = _trim_partial_sentence(_strip_model_headings(text))
     text = re.sub(
         r"\[(paper:[^\]]+)\]",
         lambda m: "[" + re.sub(r"\s+", "", m.group(1)) + "]",
@@ -1640,6 +1861,7 @@ def _sanitize_llm_paragraph(text: str, allowed: set[str]) -> str:
     # both the leak guards and the whitelist check (every LLM path funnels
     # through here; the tail sections do not alias-map, so this is the one
     # point that sees all of them).
+    text = _trim_partial_sentence(_strip_model_headings(text))
     text = re.sub(
         r"\[(paper:[^\]]+)\]",
         lambda m: "[" + re.sub(r"\s+", "", m.group(1)) + "]",
@@ -1674,7 +1896,7 @@ def _build_timeline(task_id: str, categories: list[dict[str, Any]], cards: list[
                 "category_id": card.get("category_id") or "uncategorized",
                 "category_name": category.get("category_name") or card.get("category") or "Uncategorized",
                 "paper_ids": [card["paper_id"]],
-                "summary": _shorten(card.get("contribution") or card.get("method") or card.get("title", ""), 180),
+                "summary": _shorten(card.get("contribution") or card.get("method") or card.get("title", ""), 260),
             }
         )
     return {"task_id": task_id, "events": events}
@@ -1971,13 +2193,26 @@ def _draw_timeline_png(path: Path, cards: list[dict[str, Any]]) -> None:
     plt.close(fig)
 
 
+def _taxonomy_counts(categories: list[dict[str, Any]], cards: list[dict[str, Any]]) -> dict[str, int]:
+    """Count cards per taxonomy category via the categories' own paper_ids.
+
+    Card.category_id is never populated under the claim contract; reading the
+    assignment at its source fixed the single-bar "Uncategorized" figure.
+    """
+    name_of: dict[str, str] = {}
+    for cat in categories:
+        for pid in cat.get("paper_ids") or []:
+            name_of[pid] = cat.get("category_name") or cat.get("name") or "Uncategorized"
+    counts: dict[str, int] = defaultdict(int)
+    for card in cards:
+        counts[name_of.get(card.get("paper_id"), card.get("category") or "Uncategorized")] += 1
+    return dict(counts)
+
+
 def _draw_taxonomy_png(path: Path, categories: list[dict[str, Any]], cards: list[dict[str, Any]]) -> None:
     import matplotlib.pyplot as plt
 
-    counts: dict[str, int] = defaultdict(int)
-    category_names = {cat.get("category_id"): cat.get("category_name") or cat.get("name") or "Uncategorized" for cat in categories}
-    for card in cards:
-        counts[category_names.get(card.get("category_id"), card.get("category") or "Uncategorized")] += 1
+    counts = _taxonomy_counts(categories, cards)
     labels = list(counts.keys())
     values = [counts[label] for label in labels]
     fig, ax = plt.subplots(figsize=(11, 5.8), dpi=150)
@@ -2022,15 +2257,17 @@ def _draw_method_comparison_png(path: Path, cards: list[dict[str, Any]]) -> None
 
 
 def _final_table_specs(cards: list[dict[str, Any]], categories: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    name_of = {pid: (cat.get("category_name") or cat.get("name") or "")
+               for cat in categories for pid in (cat.get("paper_ids") or [])}
     systems_headers = ["Paper", "Year", "Category", "Method", "Contribution", "Limitation"]
     systems_rows = [
         [
             card.get("title", ""),
             str(card.get("year", "")),
-            card.get("category", ""),
-            _shorten(card.get("method", ""), 96),
-            _shorten(card.get("contribution", ""), 96),
-            _shorten(card.get("limitations", ""), 96),
+            name_of.get(card.get("paper_id"), card.get("category", "")),
+            _shorten(card.get("method", ""), 260),
+            _shorten(card.get("contribution", ""), 260),
+            _shorten(card.get("limitations", ""), 260),
         ]
         for card in cards[:12]
     ]
@@ -2121,8 +2358,8 @@ def _plan_image_prompt(
             {
                 "paper_id": card.get("paper_id"),
                 "title": card.get("title"),
-                "method": _shorten(card.get("method", ""), 140),
-                "contribution": _shorten(card.get("contribution", ""), 140),
+                "method": _shorten(card.get("method", ""), 200),
+                "contribution": _shorten(card.get("contribution", ""), 200),
                 "evidence_count": len(evidence_by_paper.get(card.get("paper_id"), [])),
             }
             for card in cards[:8]
@@ -2334,17 +2571,7 @@ def _categories(taxonomy_raw: Any, cards: list[dict[str, Any]]) -> list[dict[str
 
 
 def _claim_from_card(card: dict[str, Any]) -> str:
-    title = card.get("title") or card.get("paper_id")
-    method = _shorten(card.get("method", ""), 140)
-    contribution = _shorten(card.get("contribution", ""), 180)
-    problem = _shorten(card.get("problem", ""), 120)
-    if contribution and method:
-        return f"{title} addresses {problem or 'this research problem'} with {method}, and reports {contribution}"
-    if contribution:
-        return f"{title} contributes {contribution}"
-    if method:
-        return f"{title} uses {method} for {problem or 'the target task'}"
-    return f"{title} is part of the citation-ready evidence base for this topic"
+    return next((source["claim_text"] for source in card.get("sources", [])), "")
 
 
 def _score_cards_for_topic(
@@ -2392,17 +2619,9 @@ def _keyword_match_score(text: Any, keywords: list[str]) -> float:
 
 
 def _field_or_claim(card: dict[str, Any], field: str, claim_bucket: str) -> str:
-    value = str(card.get(field) or "").strip()
-    if value:
-        return _shorten(value, 220)
-    possible = card.get("possible_claims") or {}
-    bucket = possible.get(claim_bucket) or possible.get(claim_bucket.replace("_", " ")) or []
-    if isinstance(bucket, list) and bucket:
-        first = bucket[0]
-        if isinstance(first, dict):
-            return _shorten(first.get("text", ""), 220)
-        return _shorten(getattr(first, "text", ""), 220)
-    return ""
+    scope = {"method": "method", "limitations": "limitation"}.get(field, "contribution")
+    return next((s["claim_text"] for s in card.get("sources", [])
+                 if s.get("source_role") in SCOPE_ROLES[scope]), "")
 
 
 def _selection_reason(card: dict[str, Any]) -> str:
@@ -2477,8 +2696,15 @@ def _split_sentences(text: str) -> list[str]:
 
 
 def _clean_clause(text: str) -> str:
-    """Drop trailing punctuation so a template sentence keeps a single full stop."""
-    return str(text or "").strip().rstrip(".,;、;。． ")
+    """Drop trailing punctuation and a leading "Focuses on ..." so a template
+    sentence keeps a single full stop and never reads "focuses on Focuses on"."""
+    value = re.sub(
+        r"^(?:focuses on|focus on|focused on|聚焦于|聚焦|关注)\s*",
+        "",
+        str(text or "").strip(),
+        flags=re.IGNORECASE,
+    )
+    return value.strip().rstrip(".,;、;。． ")
 
 
 def _contains_banned_phrase(text: str) -> bool:
@@ -2490,7 +2716,56 @@ def _shorten(text: Any, limit: int) -> str:
     value = " ".join(str(text or "").split())
     if len(value) <= limit:
         return _drop_unbalanced(value)
-    return _drop_unbalanced(value[: limit - 1].rstrip() + "...")
+    cut = value[: limit - 3]
+    # Cut on a word boundary when one exists: a mid-word stub ("high qua...")
+    # reads as corruption in the rendered survey. CJK text has no spaces, so
+    # it falls back to the plain character cut.
+    if " " in cut:
+        cut = cut[: cut.rfind(" ")].rstrip()
+    return _drop_unbalanced(cut + "...")
+
+
+_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.。!?！？])\s+")
+
+
+def _first_sentence(text: Any) -> str:
+    """First complete sentence of a card/evidence field.
+
+    Template summary frames quote at most this: splicing a 200-character
+    mid-abstract run-on into "X starts from ..." was the unreadable fallback
+    prose flagged in manual review.
+    """
+    value = " ".join(str(text or "").split())
+    if not value:
+        return ""
+    return _SENTENCE_SPLIT_RE.split(value, maxsplit=1)[0].strip()
+
+
+_HEADING_LINE_RE = re.compile(r"^\s*#{1,6}\s+")
+
+
+def _strip_model_headings(text: str) -> str:
+    """The model sometimes prefixes its own markdown heading; the renderer
+    already writes the real section heading, so a model heading duplicates it."""
+    lines = [ln for ln in str(text or "").splitlines() if not _HEADING_LINE_RE.match(ln)]
+    return "\n".join(lines).strip()
+
+
+def _trim_partial_sentence(text: str) -> str:
+    """Drop a trailing fragment that lacks terminal punctuation.
+
+    A reply cut off by a token limit ends mid-sentence ("... toward real");
+    keeping only complete sentences turns it into a clean paragraph (or an
+    empty one, which falls through to the template).
+    """
+    value = str(text or "").strip()
+    if not value:
+        return value
+    ends = [m for m in re.finditer(r"[.。!?！？](?:\s|$)", value + " ")]
+    if not ends:
+        return ""
+    cut = value[: ends[-1].start() + 1].strip()
+    return cut or value
 
 
 def _lint_citation_brackets(md: str) -> str:
