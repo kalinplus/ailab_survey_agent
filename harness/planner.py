@@ -91,6 +91,13 @@ class Planner:
             and bool(self.config.sciverse_api_token)
             and os.getenv("EVISURVEY_STRATEGY_AGENT", "1").lower() not in {"0", "false", "no"}
         )
+        # Native Chat Completions tool calling for the strategy joint; default
+        # off — JSON typed-action mode stays the delivered behavior until the
+        # native wire passes a real-run A/B.
+        use_native_agent_tools = (
+            use_strategy_agent
+            and os.getenv("EVISURVEY_AGENT_TOOLS", "0").lower() not in {"0", "false", "no"}
+        )
         strategy = build_search_strategy(
             task_id=task_id,
             topic=topic,
@@ -105,6 +112,7 @@ class Planner:
             cluster_count=self.config.strategy_cluster_count,
             memory_context=memory_context,
             llm_json_chat=self._strategy_json_chat if mode == "full" and self.llm_client.is_configured() else None,
+            llm_tool_chat=self._strategy_tool_chat if use_native_agent_tools else None,
             use_strategy_agent=use_strategy_agent,
         )
         agent_lessons = (strategy.get("strategy_agent") or {}).get("lessons", [])
@@ -362,6 +370,11 @@ class Planner:
         except Exception:
             content = self.llm_client.chat(messages, temperature=0.1, max_tokens=4000)
             return self._extract_json_object(content)
+
+    def _strategy_tool_chat(self, messages, tools):
+        # Native tool-calling wire for the strategy joint (EVISURVEY_AGENT_TOOLS=1);
+        # endpoint support verified live by scripts/probe_tool_calling.py.
+        return self.llm_client.tool_chat(messages, tools=tools, temperature=0.1, max_tokens=4000)
 
     def _extract_json_object(self, content: str) -> dict[str, Any]:
         try:

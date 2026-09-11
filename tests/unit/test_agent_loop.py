@@ -93,7 +93,7 @@ def test_parse_fail_gets_one_repair_retry_then_succeeds():
     assert loop.llm_calls == 2
     # repair instruction was appended before the retry
     retry_call = llm.messages_seen[1]
-    assert any("not a usable action JSON" in m["content"] for m in retry_call if m["role"] == "user")
+    assert any("not a usable action" in m["content"] for m in retry_call if m["role"] == "user")
 
 
 def test_parse_fail_twice_bubbles():
@@ -217,3 +217,131 @@ def test_trajectory_writer_appends_jsonl(tmp_path):
     lines = (tmp_path / "logs" / "traj" / "a.jsonl").read_text().strip().splitlines()
     assert len(lines) == 2
     assert json.loads(lines[0])["action"] == "probe_query"
+
+
+# --- native tool-calling mode -------------------------------------------------
+
+
+class ScriptedToolLLM:
+    """Callable standing in for InternS2Client.tool_chat; pops scripted
+    assistant messages of the shape {"tool_calls": [...], "content": ...}."""
+
+    def __init__(self, replies):
+        self.replies = list(replies)
+        self.messages_seen = []
+
+    def __call__(self, messages, tools):
+        self.messages_seen.append([dict(m) for m in messages])
+        self.tools_seen = tools
+        reply = self.replies.pop(0)
+        if isinstance(reply, Exception):
+            raise reply
+        return reply
+
+
+def _tool_call(name, args=None, call_id="call_1"):
+    return {"id": call_id, "type": "function",
+            "function": {"name": name, "arguments": json.dumps(args or {})}}
+
+
+SCHEMAS = {
+    "probe_query": {"description": "probe a query",
+                    "parameters": {"type": "object",
+                                   "properties": {"query": {"type": "string"}},
+                                   "required": ["query"]}},
+    "accept": {"description": "finish", "parameters": {"type": "object", "properties": {}}},
+}
+
+
+def _native_loop(tools, replies, **config_kwargs):
+    config = AgentConfig(name="test_agent", system_prompt="sys", tools=tools,
+                         tool_schemas=SCHEMAS, **config_kwargs)
+    llm = ScriptedToolLLM(replies)
+    return BoundedAgentLoop(config, llm_json_chat=lambda m: (_ for _ in ()).throw(
+        AssertionError("json_chat must not be called in native mode")), llm_tool_chat=llm), llm
+
+
+def test_native_dispatch_and_tool_role_observation():
+    seen = {}
+
+    def probe(decision):
+        seen["decision"] = decision
+        return {"n_hits": 3}
+
+    def accept(decision):
+        raise LoopFinished({"ok": True})
+
+    loop, llm = _native_loop(
+        {"probe_query": probe, "accept": accept},
+        [{"tool_calls": [_tool_call("probe_query", {"query": "world models"})]},
+         {"tool_calls": [_tool_call("accept", call_id="call_2")]}])
+    result = loop.run("task text")
+    assert result.status == "finished"
+    assert result.payload == {"ok": True}
+    assert seen["decision"]["query"] == "world models"
+    assert seen["decision"]["action"] == "probe_query"
+    # observation went back as a role=tool message, after the echoed assistant tool call
+    second_call = llm.messages_seen[1]
+    assert second_call[-2]["role"] == "assistant"
+    assert second_call[-2]["tool_calls"][0]["id"] == "call_1"
+    tool_msg = second_call[-1]
+    assert tool_msg["role"] == "tool"
+    assert tool_msg["tool_call_id"] == "call_1"
+    assert "n_hits" in tool_msg["content"]
+    # the schema list handed to the provider matches the registry
+    assert {t["function"]["name"] for t in llm.tools_seen} == {"probe_query", "accept"}
+
+
+def test_native_unknown_action_still_gated_by_registry():
+    loop, llm = _native_loop(
+        {"accept": lambda d: (_ for _ in ()).throw(LoopFinished({"ok": 1}))},
+        [{"tool_calls": [_tool_call("probe_query", {"query": "x"})]},
+         {"tool_calls": [_tool_call("accept", call_id="call_2")]}])
+    result = loop.run("task")
+    assert result.status == "finished"
+    obs = llm.messages_seen[1][-1]["content"]
+    assert "unknown action" in obs
+
+
+def test_native_no_tool_call_gets_one_repair_retry():
+    loop, llm = _native_loop(
+        {"accept": lambda d: (_ for _ in ()).throw(LoopFinished({}))},
+        [{"content": "I would rather answer in prose."},
+         {"tool_calls": [_tool_call("accept")]}])
+    result = loop.run("task")
+    assert result.status == "finished"
+    # the repair nudge arrived as a user message before the second call
+    assert any("did not call a tool" in m["content"]
+               for m in llm.messages_seen[1] if m["role"] == "user")
+
+
+def test_native_bad_arguments_json_is_parse_failure():
+    llm_replies = [
+        {"tool_calls": [{"id": "c", "type": "function",
+                         "function": {"name": "accept", "arguments": "{not json"}}]},
+        {"tool_calls": [_tool_call("accept", call_id="c2")]},
+    ]
+    loop, llm = _native_loop({"accept": lambda d: (_ for _ in ()).throw(LoopFinished({"ok": 1}))},
+                             llm_replies)
+    assert loop.run("task").status == "finished"
+
+
+def test_native_budget_llm_calls_counts_repair_retry():
+    loop, _llm = _native_loop(
+        {"accept": lambda d: (_ for _ in ()).throw(LoopFinished({}))},
+        [{"content": "no tool"}], max_llm_calls=1)
+    with pytest.raises(LoopParseError):
+        loop.run("task")
+
+
+def test_native_trajectory_records_action_and_args(tmp_path):
+    from harness.agents.loop import trajectory_writer
+
+    records = []
+    loop, _llm = _native_loop(
+        {"accept": lambda d: (_ for _ in ()).throw(LoopFinished({"done": 1}))},
+        [{"tool_calls": [_tool_call("accept")]}],
+        on_action=records.append)
+    loop.run("task")
+    assert records[0]["action"] == "accept"
+    assert records[0]["args"] == {}

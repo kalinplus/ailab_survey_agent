@@ -118,6 +118,123 @@ Reply with exactly ONE JSON object choosing one action:
 You have very few turns and you share the strategy joint's SciVerse budget: stop
 exploring as soon as you hold enough titles/keywords and report."""
 
+# Native tool-calling mode (EVISURVEY_AGENT_TOOLS=1): schemas mirror the action
+# docs above; the chassis still gates execution against the registry, so the
+# schema constrains the model while the toolbox stays the permission boundary.
+_NATIVE_TOOLS_ADDENDUM = """
+
+[tool protocol] The actions above are exposed as native tool calls. Ignore the
+"reply with exactly ONE JSON object" wording: call exactly one tool per turn
+with the documented arguments; the observation (with the report card under
+[framework state]) returns as the tool result."""
+
+_MAIN_TOOL_SCHEMAS = {
+    "probe_query": {
+        "description": (
+            "Test a query without touching the strategy; returns n_hits, sample "
+            "titles, year span. Does NOT consume a round. filters='none' bypasses "
+            "the year filter (many zero-result aspects are killed by it)."),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string"},
+                "filters": {"type": "string", "enum": ["none", "default"]},
+                "page_size": {"type": "integer", "minimum": 1, "maximum": 8},
+            },
+            "required": ["query"],
+        },
+    },
+    "discover_by_description": {
+        "description": (
+            "Semantic search by natural-language description of the sub-field; "
+            "tolerates missing jargon, returns real titles and field keywords to "
+            "mine into concrete queries. Does NOT consume a round."),
+        "parameters": {
+            "type": "object",
+            "properties": {"text": {"type": "string"}},
+            "required": ["text"],
+        },
+    },
+    "delegate_search": {
+        "description": (
+            "Hand ONE deep-exploration goal to a bounded search subagent (max 2 "
+            "per run, does NOT consume a round). It runs its own SciVerse "
+            "searches and returns only a compact summary; its calls share your budget."),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "goal": {"type": "string"},
+                "queries": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["goal"],
+        },
+    },
+    "commit_edits": {
+        "description": (
+            "Apply edits, then a full re-sample and a new report card follow. "
+            "CONSUMES ONE ROUND. Ops: rewrite{aspect_id,name?,description?,keywords?}, "
+            "merge{aspect_ids,name,description,keywords?}, add{name,description,keywords}, "
+            "delete{aspect_id}."),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "edits": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "op": {"type": "string"},
+                            "aspect_id": {"type": "string"},
+                            "aspect_ids": {"type": "array", "items": {"type": "string"}},
+                            "name": {"type": "string"},
+                            "description": {"type": "string"},
+                            "keywords": {"type": "array", "items": {"type": "string"}},
+                        },
+                        "required": ["op"],
+                    },
+                },
+            },
+            "required": ["edits"],
+        },
+    },
+    "accept": {
+        "description": "Finish. Only passes when EVERY aspect has n_unique >= 3.",
+        "parameters": {"type": "object", "properties": {}},
+    },
+}
+
+_SUB_TOOL_SCHEMAS = {
+    "search_papers": {
+        "description": "Meta-search by keyword, no year filter; returns title/year/keywords per hit.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string"},
+                "page_size": {"type": "integer", "minimum": 1, "maximum": 8},
+            },
+            "required": ["query"],
+        },
+    },
+    "discover": {
+        "description": "Semantic search by plain-language description of the sub-field.",
+        "parameters": {
+            "type": "object",
+            "properties": {"text": {"type": "string"}},
+            "required": ["text"],
+        },
+    },
+    "report_findings": {
+        "description": (
+            "Report your findings and finish. The papers and keywords you actually "
+            "retrieved are attached automatically; notes is one short line."),
+        "parameters": {
+            "type": "object",
+            "properties": {"notes": {"type": "string"}},
+            "required": ["notes"],
+        },
+    },
+}
+
 
 def _sampling_filters(end_year: int) -> list[dict]:
     # Mirrors P3's _year_filters(2018, end) so the card measures what P3 would see.
@@ -512,6 +629,7 @@ def run_strategy_agent(
     max_core_papers: int,
     end_year: int,
     llm_json_chat: Callable[[list[dict[str, str]]], dict],
+    llm_tool_chat: Callable[[list[dict[str, Any]], list[dict[str, Any]]], dict[str, Any]] | None = None,
     sciverse: Any | None = None,
     sciverse_api_key: str = "",
     sciverse_api_base_url: str = "https://api.sciverse.space",
@@ -534,7 +652,8 @@ def run_strategy_agent(
     log = trajectory_writer(trajectory_dir / f"{task_id}_strategy.jsonl")
     log({"agent": "strategy", "event": "start", "topic": topic, "task_id": task_id,
          "max_rounds": max_rounds, "max_llm_calls": max_llm_calls,
-         "max_sciverse_calls": max_sciverse_calls})
+         "max_sciverse_calls": max_sciverse_calls,
+         "wire": "native_tools" if llm_tool_chat else "json_actions"})
 
     # t0: probe + deterministic clustering (zero LLM)
     probe_papers = _probe(budget, topic, probe_limit)
@@ -744,10 +863,11 @@ def run_strategy_agent(
                       "with one short notes line.")
         sub_config = AgentConfig(
             name="strategy_subagent",
-            system_prompt=SUBAGENT_SYSTEM,
+            system_prompt=SUBAGENT_SYSTEM + (_NATIVE_TOOLS_ADDENDUM if llm_tool_chat else ""),
             tools={"search_papers": sub_search_papers,
                    "discover": sub_discover,
                    "report_findings": sub_report_findings},
+            tool_schemas=_SUB_TOOL_SCHEMAS if llm_tool_chat else None,
             max_turns=SUBAGENT_MAX_TURNS,
             max_llm_calls=SUBAGENT_MAX_LLM_CALLS,
             max_wallclock=SUBAGENT_MAX_WALLCLOCK,
@@ -755,7 +875,7 @@ def run_strategy_agent(
             on_finish=lambda summary: log(
                 {"agent": "strategy_subagent", "event": "loop_finish", **summary}),
         )
-        sub_loop = BoundedAgentLoop(sub_config, llm_json_chat)
+        sub_loop = BoundedAgentLoop(sub_config, llm_json_chat, llm_tool_chat)
         try:
             result = sub_loop.run(sub_task)
         except Exception as exc:  # delegation boundary: a broken subagent must not abort the main loop
@@ -782,12 +902,13 @@ def run_strategy_agent(
 
     config = AgentConfig(
         name="strategy",
-        system_prompt=STRATEGY_SYSTEM,
+        system_prompt=STRATEGY_SYSTEM + (_NATIVE_TOOLS_ADDENDUM if llm_tool_chat else ""),
         tools={"probe_query": probe_query,
                "discover_by_description": discover_by_description,
                "delegate_search": delegate_search,
                "commit_edits": commit_edits,
                "accept": accept},
+        tool_schemas=_MAIN_TOOL_SCHEMAS if llm_tool_chat else None,
         max_turns=2 * max_llm_calls,
         max_llm_calls=max_llm_calls - 1,  # naming already spent one
         max_wallclock=max(1.0, max_wallclock - (time.monotonic() - started)),
@@ -798,7 +919,7 @@ def run_strategy_agent(
     task = (f"Survey topic: {topic}\n"
             "Improve the search aspects until every report-card row has n_unique >= 3 "
             "(or the sub-area is proven absent and deleted), then accept.")
-    loop = BoundedAgentLoop(config, llm_json_chat)
+    loop = BoundedAgentLoop(config, llm_json_chat, llm_tool_chat)
     loop_llm_calls = 0
     try:
         result = loop.run(task)

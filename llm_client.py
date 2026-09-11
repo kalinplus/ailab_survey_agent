@@ -58,6 +58,8 @@ class InternS2Client:
         response_format: dict[str, str] | None = None,
         max_tokens: int | None = None,
         thinking_mode: bool = False,
+        tools: list[dict[str, Any]] | None = None,
+        tool_choice: str | dict[str, Any] = "auto",
     ) -> str:
         if not self.is_configured():
             raise LLMClientError("INTERN_API_KEY is empty; cannot call Intern-S2-Preview.")
@@ -81,6 +83,9 @@ class InternS2Client:
                 payload["thinking"] = {"type": "enabled", "effort": self.thinking_effort}
         if response_format:
             payload["response_format"] = response_format
+        if tools:
+            payload["tools"] = tools
+            payload["tool_choice"] = tool_choice
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
 
@@ -90,12 +95,14 @@ class InternS2Client:
         }
         url = f"{self.base_url}/chat/completions"
 
-        content = self._post_chat(url, headers, payload)
+        message = self._post_chat(url, headers, payload)
+        content = message.get("content")
         if _is_empty_reply(content):
             self._note_empty_reply()
             # Retry once after a fresh interval; the rate limiter inside
             # _post_chat enforces the min_interval gap between the two calls.
-            content = self._post_chat(url, headers, payload)
+            message = self._post_chat(url, headers, payload)
+            content = message.get("content")
             if _is_empty_reply(content):
                 self._note_empty_reply()
                 raise LLMClientError(
@@ -104,11 +111,48 @@ class InternS2Client:
                 )
         return content
 
-    def _post_chat(self, url: str, headers: dict[str, str], payload: dict[str, Any]) -> Any:
+    def tool_chat(
+        self,
+        messages: list[dict[str, Any]],
+        *,
+        tools: list[dict[str, Any]],
+        tool_choice: str | dict[str, Any] = "auto",
+        temperature: float = 0.1,
+        max_tokens: int | None = None,
+    ) -> dict[str, Any]:
+        """Native tool-calling turn: returns the full assistant message.
+
+        Unlike chat(), empty content is NOT an error here — a tool-calling
+        turn legitimately carries its payload in ``tool_calls`` with null
+        content (verified live on Intern-S2-Preview and DeepSeek by
+        scripts/probe_tool_calling.py: structured tool_calls, valid args,
+        role=tool round trip).
+        """
+        if not self.is_configured():
+            raise LLMClientError("INTERN_API_KEY is empty; cannot call Intern-S2-Preview.")
+        payload: dict[str, Any] = {
+            "model": self.model_name,
+            "messages": messages,
+            "temperature": temperature,
+            "tools": tools,
+            "tool_choice": tool_choice,
+        }
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        return self._post_chat(f"{self.base_url}/chat/completions", headers, payload)
+
+    def _post_chat(self, url: str, headers: dict[str, str], payload: dict[str, Any]) -> dict[str, Any]:
         """One logical chat request; retries transport-level errors only.
 
-        Empty-reply discipline lives in chat(), so an empty content returned
-        here is a caller-visible outcome, not a transport failure.
+        Returns the full assistant message dict (content / tool_calls /
+        reasoning_content), not just the content string — tool-calling turns
+        carry their payload outside content. Empty-reply discipline lives in
+        chat(), so an empty content returned here is a caller-visible outcome,
+        not a transport failure.
         """
         last_error: Exception | None = None
         for _ in range(self.config.max_llm_retries + 1):
@@ -122,7 +166,7 @@ class InternS2Client:
                     response = client.post(url, headers=headers, json=payload)
                     response.raise_for_status()
                     data = response.json()
-                    return data["choices"][0]["message"]["content"]
+                    return data["choices"][0]["message"]
             except (httpx.HTTPError, KeyError, IndexError, json.JSONDecodeError) as exc:
                 last_error = exc
 

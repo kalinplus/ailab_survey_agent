@@ -51,6 +51,7 @@ def build_search_strategy(
     cluster_count: int = 4,
     memory_context: str = "",
     llm_json_chat: Callable[[list[dict[str, str]]], dict[str, Any]] | None = None,
+    llm_tool_chat: Callable[[list[dict[str, Any]], list[dict[str, Any]]], dict[str, Any]] | None = None,
     use_strategy_agent: bool = False,
 ) -> dict[str, Any]:
     # Joint 1 (docs/RealAgent/关节1-策略Agent-方案与测试.md): open-book decomposition
@@ -62,7 +63,8 @@ def build_search_strategy(
             return run_strategy_agent(
                 task_id=task_id, topic=topic, max_papers=max_papers,
                 max_core_papers=max_core_papers, end_year=end_year,
-                llm_json_chat=llm_json_chat, sciverse_api_key=sciverse_api_key,
+                llm_json_chat=llm_json_chat, llm_tool_chat=llm_tool_chat,
+                sciverse_api_key=sciverse_api_key,
                 sciverse_api_base_url=sciverse_api_base_url,
                 memory_context=memory_context, probe_limit=probe_limit,
                 cluster_count=cluster_count,
