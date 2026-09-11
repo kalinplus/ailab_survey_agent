@@ -54,27 +54,39 @@ def run(request_path: str) -> dict:
     mineru = MinerUClient(use_mock=request.pipeline_config.use_mock_mineru_if_failed)
     cleaner = DataCleaner()
 
+    # Generation tasks (topic decomposition, survey analysis, card extraction)
+    # use the heavy model (DeepSeek Flash, thinking disabled) when configured —
+    # the Intern core reasons by default and burns the whole completion budget
+    # before the JSON appears (verified: 16.9k chars of "Thinking Process:" with
+    # max_tokens=4096, or an instant empty array). Intern stays the fallback so
+    # an Intern-only key still runs the full chain.
+    from llm_client import heavy_llm_client
+    heavy = heavy_llm_client(cfg)
+    generation_llm = heavy if heavy.is_configured() else llm
+    logger.info(f"[worker] generation model={generation_llm.model_name} (fallback core: {llm.model_name})")
+
     # Phase 1-6 (Phase 4 RAG removed — superseded by agentic-search; see docs/模块B-架构设计.md)
     logger.info(f"[worker] start task_id={request.task_id} topic={request.topic!r} "
                 f"use_mineru={request.pipeline_config.use_mineru} seed={len(seed_papers)} surveys={len(surveys)}")
 
-    demand = phase1_decompose.run(request, strategy, seed_papers, llm)
+    demand = phase1_decompose.run(request, strategy, seed_papers, generation_llm)
     logger.info(f"[worker] P1 done: {len(demand.aspects)} aspects, "
                 f"{len(demand.structure_errors)} structure_errors, {len(demand.coverage_warnings)} coverage_warnings")
 
     survey_struct = phase2_survey_analyzer.run(
         request.task_id, request.topic, strategy.sub_domains,
-        demand.aspects, surveys, llm, mineru, cleaner, sciverse)
+        demand.aspects, surveys, generation_llm, mineru, cleaner, sciverse)
     logger.info(f"[worker] P2 done: {len(survey_struct.refined_taxonomy)} taxonomy cats, "
                 f"{len(survey_struct.expansion_candidates)} expansion_candidates")
 
     retrieved, parsed = phase3_paper_retriever.run(
         request.task_id, demand.aspects, survey_struct.expansion_candidates,
-        sciverse, mineru, cleaner, seed_papers, request.pipeline_config, llm)
+        sciverse, mineru, cleaner, seed_papers, request.pipeline_config, llm,
+        topic=request.topic)
     logger.info(f"[worker] P3 done: {len(retrieved.papers)} retrieved, {len(parsed.papers)} parsed")
 
     cards = phase5_cards.run(
-        request.task_id, parsed, retrieved, llm,
+        request.task_id, parsed, retrieved, generation_llm,
         demand.aspects, request.pipeline_config.aspect_match_threshold)
     _deep = sum(1 for c in cards.paper_cards if c.card_type == "deep")
     logger.info(f"[worker] P5.1 cards: {len(cards.paper_cards)} (deep={_deep}, shallow={len(cards.paper_cards) - _deep})")

@@ -103,12 +103,39 @@ class SciVerseClient:
     def agentic_search(self, query, top_k=10, filters=None):
         return self._post("/agentic-search", {"query": query, "top_k": top_k, "filters": filters or {}})
 
-    def get_content(self, doc_id, offset=0, limit=10):
-        return self._get("/content", {"doc_id": doc_id, "offset": offset, "limit": limit})
+    def get_content(self, doc_id, offset=None, limit=None):
+        # Live contract (2026-09-09): offset/limit are sent only when provided —
+        # without them one call returns the whole text with more=False; the
+        # default limit of 700 chars applies only when offset is passed.
+        params = {"doc_id": doc_id}
+        if offset is not None:
+            params["offset"] = offset
+        if limit is not None:
+            params["limit"] = limit
+        return self._get("/content", params)
+
+    def read_full_text(self, doc_id, max_pages=8):
+        """Whole-paper text via /content: first call without offset returns the
+        full document; keep following more/next_offset only when the service
+        paginates, bounded by max_pages."""
+        parts = []
+        offset = None
+        for _ in range(max_pages):
+            data = self.get_content(doc_id, offset=offset)
+            text = data.get("text") or ""
+            if text:
+                parts.append(text)
+            if not data.get("more") or data.get("next_offset") is None:
+                break
+            offset = data["next_offset"]
+        return "".join(parts)
 
     def get_resource(self, file_name):
         return self._request("GET", "/resource", params={"file_name": file_name}, timeout=120).content
 
-    def meta_paper_relations(self, paper_id, relation="REFERENCES", page=1):
+    def meta_paper_relations(self, unique_id, relation="REFERENCES", page=1, page_size=200):
+        # Live contract (2026-09-09): POST with unique_id (paper:<doi> — the
+        # same shape as our paper_id), NOT paper_id; GET returns 405.
         return self._post("/meta-paper-relations",
-                          {"paper_id": paper_id, "relation": relation, "page": page})
+                          {"unique_id": unique_id, "relation": relation,
+                           "page": page, "page_size": page_size})

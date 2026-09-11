@@ -14,7 +14,12 @@ def run(task_id, topic, artifacts_paths, retrieved, parsed, paper_cards, evidenc
     card_rate = (len(paper_cards.paper_cards) / paper_count) if paper_count else 0.0
     ev_rate = (sum(len(c.evidence_ids) for c in paper_cards.paper_cards) / max(core_count, 1))
     covered = sorted({a["aspect_id"] for c in paper_cards.paper_cards for a in c.matched_aspects})
-    per_aspect = {}  # filled by caller if needed
+    # Aspect skeleton: a taxonomy category holding fewer papers than the floor
+    # means the survey's skeleton is thin there — surface it instead of letting
+    # a 60-paper corpus average hide a 1-paper section.
+    aspect_floor = 2
+    per_aspect = {c.category_name: c.paper_count for c in taxonomy.categories}
+    degraded_aspects = [name for name, count in per_aspect.items() if count < aspect_floor]
 
     if paper_count >= quality_requirements.min_total_papers and core_count >= quality_requirements.min_core_papers:
         status = "success" if not warnings else "partial_success"
@@ -26,6 +31,8 @@ def run(task_id, topic, artifacts_paths, retrieved, parsed, paper_cards, evidenc
                 f"figures={len(figure_bank.figures)} citations={len(citation_index.citations)}")
     if status == "failed":
         logger.error(f"[P6] bundle FAILED (paper_count={paper_count})")
+    if degraded_aspects:
+        logger.warning(f"[P6] degraded aspect skeleton (papers < {aspect_floor}): {degraded_aspects}")
 
     return KnowledgeBundle(
         task_id=task_id, topic=topic, status=status, artifacts=artifacts_paths,
@@ -39,13 +46,14 @@ def run(task_id, topic, artifacts_paths, retrieved, parsed, paper_cards, evidenc
             "taxonomy_category_count": len(taxonomy.categories),
             "citation_count": len(citation_index.citations),
         },
-        coverage_report={"covered_aspects": covered, "undercovered_aspects": [], "papers_per_aspect": per_aspect},
+        coverage_report={"covered_aspects": covered, "undercovered_aspects": degraded_aspects, "papers_per_aspect": per_aspect},
         quality_report={
             "search_success": paper_count > 0,
             "parse_success_rate": round(parse_rate, 3),
             "paper_card_success_rate": round(card_rate, 3),
             "evidence_coverage_rate": round(ev_rate, 3),
             "has_multimodal_evidence": len(figure_bank.figures) > 0,
+            "degraded_aspects": degraded_aspects,
             "warnings": warnings,
         },
     )
