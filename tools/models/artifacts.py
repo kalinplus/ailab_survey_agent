@@ -4,6 +4,14 @@ from pydantic import BaseModel
 class RetrievedPaper(BaseModel):
     paper_id: str
     title: str
+    # SciVerse opaque document id — the /content key. Persisted at retrieval so
+    # evidence grounding can fetch the paper's OWN fulltext (unique_id alone
+    # cannot: doc_id is an internal hash, not derivable from the DOI).
+    doc_id: str = ""
+    # OpenAlex-shaped structured topic labels (primary_topic.domain/field) —
+    # the wave-5 topic gate judges relevance by them, not by title wording
+    topic_domain: str = ""
+    topic_field: str = ""
     authors: list[str] = []
     year: int | None = None
     venue: str | None = None
@@ -23,9 +31,12 @@ class RetrievedPapers(BaseModel):
 
 
 class Paragraph(BaseModel):
-    page: int
+    # page=None means "no page information" (markdown-only parse channel);
+    # index is a per-paper globally unique block number, never per-section.
+    page: int | None
     index: int
     text: str
+    role: str = ""  # e.g. "reference" for bibliography-section blocks
 
 
 class ParsedPaper(BaseModel):
@@ -48,11 +59,14 @@ class Claim(BaseModel):
     text: str
     dimension: str
     evidence_ids: list[str] = []
+    source_role: str = "unknown"
+    source_quote: str = ""
 
 
 class PaperCard(BaseModel):
     paper_id: str
     title: str
+    doc_id: str = ""  # provenance chain from RetrievedPaper (/content key)
     authors: list[str] = []
     year: int | None = None
     venue: str | None = None
@@ -62,6 +76,8 @@ class PaperCard(BaseModel):
     category_id: str | None = None
     category: str = ""
     card_type: str = "deep"
+    extraction_status: str = "legacy_unverified"
+    source_blocks: list[dict] = []
     problem: str = ""
     method: str = ""
     contribution: str = ""
@@ -82,10 +98,15 @@ class Evidence(BaseModel):
     evidence_id: str
     paper_id: str
     source_type: str = "paragraph"
-    source_page: int = 0
+    source_page: int | None = 0  # None = unknown (markdown-only source)
     source_paragraph_index: int = 0
     text: str
     supports_claims: list[dict] = []
+    # Provenance of externally fetched chunks (agentic-search / repair backfill).
+    # A chunk may carry paper_id=X only when these fields verify it belongs to X.
+    source_doc_id: str = ""
+    source_title: str = ""
+    source_chunk_id: str = ""
 
 
 class EvidenceStore(BaseModel):

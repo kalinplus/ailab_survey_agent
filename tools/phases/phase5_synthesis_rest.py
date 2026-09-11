@@ -1,13 +1,22 @@
 import logging
+import re
+
 from tools.models.artifacts import Figure, FigureBank, Table, TableBank, Category, Taxonomy, CitationIndex
 from tools.models.common import figure_id, table_id, category_id
 
 logger = logging.getLogger(__name__)
 
+# Category-name tokens that match nothing distinctive; before wave7 the
+# matcher counted them, piling 48/67 cards into the first category and
+# leaving every card field the writer consumed empty ("Uncategorized 13").
+_TAXONOMY_STOPWORDS = {"and", "or", "for", "of", "the", "a", "an", "in", "on",
+                       "with", "to", "via"}
+
 
 def build_figure_bank(task_id, parsed_papers):
     figs = [Figure(figure_id=figure_id(p.paper_id, f["num"]), paper_id=p.paper_id,
-                   caption=f.get("caption", ""), page=f.get("page", 0))
+                   caption=f.get("caption", ""), page=f.get("page", 0),
+                   image_path=f.get("img_path"))
             for p in parsed_papers.papers for f in p.figures]
     return FigureBank(task_id=task_id, figures=figs)
 
@@ -27,21 +36,30 @@ def build_taxonomy(task_id, topic, refined_taxonomy, paper_cards, llm):
             name_to_id[c["name"]] = category_id(len(name_to_id) + 1)
         cats.append(Category(category_id=name_to_id[c["name"]], category_name=c["name"],
                             description=c.get("description", "")))
-    # assign each card to best-matching category by keyword overlap
+    # assign each card to the best-matching category by meaningful-token
+    # coverage of its title AND claim texts (the legacy method/contribution
+    # fields are empty under the wave6 claim contract)
     for card in paper_cards.paper_cards:
-        best = None
-        best_score = -1
-        text = f"{card.title} {card.method}".lower()
+        claim_text = " ".join(cl.text for bucket in card.possible_claims.values() for cl in bucket)
+        text_tokens = set(re.findall(r"[a-z0-9]+", f"{card.title} {claim_text}".lower()))
+        best, best_score = None, 0.0
         for c in refined_taxonomy:
-            score = sum(1 for kw in c["name"].lower().split() if kw in text)
-            if score > best_score:
-                best_score = score
-                best = c["name"]
+            tokens = [t for t in re.findall(r"[a-z0-9]+", c["name"].lower())
+                      if t not in _TAXONOMY_STOPWORDS]
+            if not tokens:
+                continue
+            hits = sum(1 for t in tokens if t in text_tokens)
+            score = hits / len(tokens)
+            if hits and score > best_score:
+                best_score, best = score, c["name"]
         if best:
             for cat in cats:
                 if cat.category_name == best:
                     cat.paper_ids.append(card.paper_id)
                     break
+        else:
+            logger.warning("[P5.3] taxonomy: no category matched %s (%s)",
+                           card.paper_id, card.title[:60])
     for cat in cats:
         cat.paper_count = len(cat.paper_ids)
     return Taxonomy(task_id=task_id, topic=topic, taxonomy_version="v1",

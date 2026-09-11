@@ -42,8 +42,37 @@ class NLIVerifier:
         from sentence_transformers import CrossEncoder  # lazy import
         self.model = CrossEncoder(model_name, device=device or _default_device())
 
+    def _predict(self, pairs):
+        """Chunked scoring + MPS cache release: content fulltext turned
+        best_match inputs into thousands of windows, and tens of thousands of
+        small forward passes grow the PyTorch MPS allocator's cached blocks
+        until the 20 GiB unified-memory cap OOMs (live 2026-09-10, twice).
+        Chunks bound the per-forward size; empty_cache bounds accumulation."""
+        if not pairs:
+            return []
+        chunk = int(os.getenv("EVISURVEY_NLI_BATCH", "32") or 32)
+        if chunk <= 0:
+            chunk = 32
+        if len(pairs) <= chunk:
+            out = self.model.predict(pairs)
+        else:
+            out = []
+            for i in range(0, len(pairs), chunk):
+                out.extend(self.model.predict(pairs[i:i + chunk]))
+        self._release_mps_cache()
+        return out
+
+    @staticmethod
+    def _release_mps_cache():
+        try:
+            import torch
+            if torch.backends.mps.is_available():
+                torch.mps.empty_cache()
+        except Exception:
+            pass
+
     def judge(self, premise: str, hypothesis: str) -> NLIResult:
-        scores = self.model.predict([(premise, hypothesis)])[0]  # [contra, entail, neutral]
+        scores = self._predict([(premise, hypothesis)])[0]  # [contra, entail, neutral]
         c, e, n = float(scores[0]), float(scores[1]), float(scores[2])
         label = LABELS[int(max(range(3), key=lambda i: scores[i]))]
         return NLIResult(label, *_support(label, c, e, n))
@@ -51,9 +80,13 @@ class NLIVerifier:
     def best_match(self, claim: str, evidences: list[str]) -> NLIResult:
         if not evidences:
             return NLIResult("neutral", "indirect", 0.0)
-        pairs = [(f"There is a paper. Content: '{ev}'", f"The paper supports: '{claim}'")
-                 for ev in evidences]
-        scores = self.model.predict(pairs)
+        # Raw (evidence, claim) pairs — same convention as judge() and the
+        # evaluator's L1. The old template wrapper ("There is a paper. Content:
+        # '{ev}' / The paper supports: '{claim}'") broke the real cross-encoder
+        # on verbatim-quote claims: live wave-4, 15/28 pairs flipped when the
+        # wrapper was removed (scripts/diagnose_verifier_divergence.py).
+        pairs = [(ev, claim) for ev in evidences]
+        scores = self._predict(pairs)
         best_i = int(max(range(len(evidences)), key=lambda i: scores[i][1]))
         c, e, n = (float(x) for x in scores[best_i])
         label = LABELS[int(max(range(3), key=lambda i: scores[best_i][i]))]

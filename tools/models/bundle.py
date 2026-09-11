@@ -34,6 +34,11 @@ class ClaimEntry(BaseModel):
     status: str
     evidence_ids: list[str] = []
     confidence: float = 0.0
+    nli_status: str = "unsupported"
+    source_role_violation: str = ""
+    source_bindings: list[dict] = []
+    scope: str = ""
+    quote_diagnostic: dict = {}
 
 
 class ClaimMap(BaseModel):
