@@ -1,0 +1,122 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "events": [
+    {
+      "year": 2016,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1038/nature16961"
+      ],
+      "summary": "Without lookahead search, the neural networks play Go at the level of state-of-the-art Monte Carlo tree search programs simulating thousands of random self-play games."
+    },
+    {
+      "year": 2017,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.1712.01815"
+      ],
+      "summary": "Training ran 700,000 steps with mini-batches of 4,096 from random initialization, using 5,000 first-generation TPUs for self-play and 64 second-generation TPUs for training."
+    },
+    {
+      "year": 2019,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1038/s41586-019-1724-z"
+      ],
+      "summary": "AlphaStar achieved Grandmaster level for all three StarCraft races and ranked above 99.8% of officially ranked human players."
+    },
+    {
+      "year": 2020,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1038/s41586-020-03051-4"
+      ],
+      "summary": "On Go, chess and shogi, MuZero matched AlphaZero's superhuman performance without any knowledge of the game rules."
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2301.04104"
+      ],
+      "summary": "Mastering Diverse Domains through World Models"
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2305.16291"
+      ],
+      "summary": "Voyager can use its learned skill library in a new Minecraft world to solve novel tasks from scratch, while other techniques struggle to generalize."
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2308.03688"
+      ],
+      "summary": "Poor long-term reasoning, decision-making, and instruction following are the main obstacles for developing usable LLM agents."
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2309.09777"
+      ],
+      "summary": "DriveDreamer is instantiated on the nuScenes benchmark and verified to enable precise, controllable video generation capturing real-world traffic structural constraints."
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2310.05036"
+      ],
+      "summary": "ChatGPT playing good achieved 22.2% win rate against evil rule-based bots, while a good-role bot achieved 38.2% in the same setting."
+    },
+    {
+      "year": 2024,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1007/s11704-024-40231-1"
+      ],
+      "summary": "A Survey on Large Language Model based Autonomous Agents"
+    },
+    {
+      "year": 2024,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.3390/info15030135"
+      ],
+      "summary": "The survey reviews FER methods from the pro-deep learning era using handcrafted features like SVM and HOG through to the deep learning era."
+    },
+    {
+      "year": 2024,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "summary": "At 11B parameters, Genie can be considered a foundation world model."
+    },
+    {
+      "year": 2024,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2408.14837"
+      ],
+      "summary": "GameNGen is the first game engine powered entirely by a neural model, enabling real-time interaction with complex environments over long trajectories at high quality."
+    }
+  ]
+}

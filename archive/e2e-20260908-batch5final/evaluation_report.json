@@ -1,0 +1,72 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "coverage_score": 0.835,
+  "citation_validity_score": 0.984,
+  "evidence_grounding_score": 0.2,
+  "visualization_score": 1.0,
+  "structure_score": 1.0,
+  "overall_score": 0.755,
+  "details": {
+    "coverage": {
+      "cited_papers": [
+        "23, 40, 41",
+        "paper:10.1007/s11280-024-01291-2",
+        "paper:10.1038/nature14236",
+        "paper:10.1038/s41586-020-03051-4",
+        "paper:10.1109/tkde.2024.3361474",
+        "paper:10.1145/3626235",
+        "paper:10.1145/3639372",
+        "paper:10.1162/tacl_a_00704",
+        "paper:10.48550/arxiv.2305.16291",
+        "paper:10.48550/arxiv.2310.05036",
+        "paper:10.48550/arxiv.2312.10997",
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2408.14837",
+        "paper:10.48550/arxiv.2501.03575",
+        "paper:10.5281/zenodo.10630803",
+        "paper:10.71943/bayer.figshare.29827805.v1"
+      ],
+      "taxonomy_categories": 4,
+      "covered_category_ids": [
+        "cat_001",
+        "cat_002",
+        "cat_003"
+      ],
+      "category_coverage": 0.75,
+      "citation_diversity": 1.0,
+      "section_citation_coverage": 0.8
+    },
+    "citation": {
+      "total_citations": 64,
+      "valid_citations": 63,
+      "invalid_citations": 1
+    },
+    "evidence_grounding": {
+      "supported_claims": 0,
+      "weak_claims": 4,
+      "unsupported_claims": 6,
+      "total_claims": 10
+    },
+    "visualization": {
+      "artifact_count": 8,
+      "artifact_types": [
+        "comparison_chart",
+        "comparison_table",
+        "evaluation_matrix",
+        "future_matrix",
+        "taxonomy_graph",
+        "timeline",
+        "visual_overview"
+      ]
+    },
+    "p0_quality": {
+      "topic_relevance_score": 0.41,
+      "section_depth_score": 0.895,
+      "section_citation_coverage": 0.8,
+      "citation_diversity_score": 1.0,
+      "artifact_integration_score": 1.0,
+      "survey_char_count": 25764,
+      "unique_cited_papers": 16
+    }
+  }
+}

@@ -1,4 +1,293 @@
 {
   "task_id": "task_world_models_for_games_a_survey_001",
-  "tables": []
+  "tables": [
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl1",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 1: Description of selected prompts",
+      "page": 5
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl2",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 2: Results of LLMs playing role of ASSASSIN, EVIL, against baseline playing GOOD team",
+      "page": 8
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl3",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 3: Results of LLMs playing role of SERVANT, GOOD, against baseline playing EVIL team",
+      "page": 8
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl4",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 6: System Prompt for Introduction (Rules in Table 1) Table 7: System Prompt for Identity (Roles in Table 1)",
+      "page": 13
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl5",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "",
+      "page": 13
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl6",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 8: System Prompt for Identity Reveal (Merlin and Evil Players)",
+      "page": 14
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl7",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 12: Action Prompt for Assassination (Request in Table 1)",
+      "page": 16
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl8",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 15: Parse Prompt for Team Selection (Parse in Table 1)",
+      "page": 18
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl9",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 16: Parse Prompt for Voting(Parse in Table 1)",
+      "page": 18
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl10",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 17: Parse Prompt for Quest (Parse in Table 1)",
+      "page": 18
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl11",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 18: Parse Prompt for Assassination (Parse in Table 1)",
+      "page": 19
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl12",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 21: Get Believed Sides (Parse Results)",
+      "page": 21
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl13",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 25: Example #1 of Discussion",
+      "page": 24
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl14",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 26: Example #2 of Discussion",
+      "page": 25
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl15",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 27: Example #3 of Discussion",
+      "page": 26
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2310.05036_tbl16",
+      "paper_id": "paper:10.48550/arxiv.2310.05036",
+      "caption": "Table 28: Example #1 of Voting",
+      "page": 27
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl1",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table 1: Game environments explored in GTBENCH.",
+      "page": 4
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl2",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table 2: Code-pretraining benefits strategic reasoning. Gray rows are code-pretrained LLMs.",
+      "page": 7
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl3",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table 3: The NRA of LLM agents w/ CoT reasoning. Cyan cells mean CoT results in better performance. Magenta cells mean CoT results in worse performance.",
+      "page": 7
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl4",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table 4: The average NRA of LLM-driven agents when Breakthrough is included and excluded.",
+      "page": 8
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl5",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table 5: Quantitative results of error patterns.",
+      "page": 8
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl6",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table 6: The Elo rating results of LLM-vs.-LLM experiments.",
+      "page": 8
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl7",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table A7: Sanity check. The completion rates of LLM agents over all the games.",
+      "page": 23
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl8",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table A8: The affect of various temperatures for generation sampling.",
+      "page": 24
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl9",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table A9: Different Chain-of-Thought strategies.",
+      "page": 25
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl10",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table A10: Fail cases in different Chain-of-Thought prompts.",
+      "page": 25
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl11",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Table A11: We conclude 5 common error patterns in GTBENCH, including misinterpretation, factual error, math calculation, and over-confidence. For each demonstration, the explanation explains why LLM generation is incorrect.",
+      "page": 26
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl12",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Figure A8: The user interface of GTBENCH leaderboard.",
+      "page": 28
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.12348_tbl13",
+      "paper_id": "paper:10.48550/arxiv.2402.12348",
+      "caption": "Figure A9: The user interface of GTBENCH leaderboard when various LLMs/agents and opponents are selected.",
+      "page": 29
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl1",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 1. Performance of LLMs in battles against the bot.",
+      "page": 4
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl2",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 2. Confusion matrices for type advantage prediction. Table 2 shows the three confusion matrices of LLMs, where their performance is highly related to their win rates in Table 1. LLaMA-2 and GPT-3.5 suffer from severe hallucination problems, while GPT-4 achieves the best performance with an accuracy of 84.0%, we still observe it frequently making ineffective actions, which is because in a single battle, LLMs need to compare the types of all the opponent’s Pokemon with types of all their Pok´ emon, as well as types´ of moves.",
+      "page": 4
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl3",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 3. Performance of ICRL in battles against the bot.",
+      "page": 5
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl4",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 4. Performance of KAG in battles against the bot.",
+      "page": 6
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl5",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 5. Performance of prompting approaches in battles against the bot.",
+      "page": 6
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl6",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 6. Statistic analysis of panic switching",
+      "page": 7
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl7",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 7. Performance of POKE´ LLMON against human players.",
+      "page": 7
+    },
+    {
+      "table_id": "paper:10.48550/arxiv.2402.01118_tbl8",
+      "paper_id": "paper:10.48550/arxiv.2402.01118",
+      "caption": "Table 8. Battle performance impacted by the attrition strategy",
+      "page": 8
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl1",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Fig. 3    Examples of different IE tasks",
+      "page": 4
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl2",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 1    Comparison  of  LLMs  for  named  entity  recognition  (identification  &  typing)  with  the  Micro-F1  metric  (%).    indicates  that  the  model  is discriminative. We demonstrate some universal and discriminative models for comparison. IE techniques include Cross-Domain Learning (CDL), Zero-Shot Prompting (ZS Pr), In-Context Learning (ICL), Supervised Fine-Tuning (SFT), Data Augmentation (DA). Uni. denotes whether the model is universal. Onto. 5 denotes the OntoNotes 5.0. Details of datasets and backbones are presented in Section 8. The settings for all subsequent tables are consistent with this format",
+      "page": 5
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl3",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 2    Comparison of LLMs for relation extraction with the “relation strict” [4] Micro-F1 metric (%).   indicates that the model is discriminative",
+      "page": 5
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl4",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 3    Comparison of LLMs for relation classification with the Micro-F1 metric (%)",
+      "page": 6
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl5",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 4    Comparison  of Micro-F1  Values  for  Event  Extraction  on  ACE05.  Evaluation  tasks  include:  Trigger  Identification  (Trg-I),  Trigger  Classification (Trg-C), Argument Identification (Arg-I), and Argument Classification (Arg-C).   indicates that the model is discriminative",
+      "page": 6
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl6",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 5    The statistics of research in specific domain",
+      "page": 11
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl7",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 6    A summary of some representative IE datasets",
+      "page": 12
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl8",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 7    Statistics of common datasets for information extraction.   denotes the dataset is multimodal. # refers to the number of categories or sentences. The data in the table is partially referenced from InstructUIE [192]",
+      "page": 12
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl9",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "",
+      "page": 13
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl10",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "Table 8    The common backbones for generative information extraction. We mark the commonly used base and large versions for better reference",
+      "page": 13
+    },
+    {
+      "table_id": "paper:10.1007/s11704-024-40555-y_tbl11",
+      "paper_id": "paper:10.1007/s11704-024-40555-y",
+      "caption": "",
+      "page": 14
+    }
+  ]
 }

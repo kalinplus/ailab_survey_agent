@@ -1,0 +1,77 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "events": [
+    {
+      "year": 2017,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.1712.01815"
+      ],
+      "summary": "Mastering Chess and Shogi by Self-Play with a General Reinforcement Learning Algorithm"
+    },
+    {
+      "year": 2019,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1038/s41586-019-1724-z"
+      ],
+      "summary": "Grandmaster level in StarCraft II using multi-agent reinforcement learning"
+    },
+    {
+      "year": 2020,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.1038/s41586-020-03051-4"
+      ],
+      "summary": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model"
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2301.04104"
+      ],
+      "summary": "Mastering Diverse Domains through World Models"
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2308.03688"
+      ],
+      "summary": "AgentBench: Evaluating LLMs as Agents"
+    },
+    {
+      "year": 2023,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2310.05036"
+      ],
+      "summary": "AVALONBENCH: Evaluating LLMs Playing the Game of Avalon"
+    },
+    {
+      "year": 2024,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "summary": "Genie: Generative Interactive Environments"
+    },
+    {
+      "year": 2024,
+      "category_id": "uncategorized",
+      "category_name": "Uncategorized",
+      "paper_ids": [
+        "paper:10.48550/arxiv.2408.14837"
+      ],
+      "summary": "DIFFUSION MODELS ARE REAL-TIME GAME ENGINES"
+    }
+  ]
+}

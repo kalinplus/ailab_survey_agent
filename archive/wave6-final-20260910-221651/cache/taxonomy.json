@@ -1,0 +1,144 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "topic": "World Models for Games: A Survey",
+  "taxonomy_version": "v1",
+  "refine_history": [
+    "prelimiminary",
+    "refined",
+    "final"
+  ],
+  "categories": [
+    {
+      "category_id": "cat_001",
+      "category_name": "Procedural Generation and Scripting",
+      "description": "Methods for procedurally generating game worlds and scripting dynamic events, including rule-based, grammar-based, and search-based approaches.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2206.06994",
+        "paper:10.48550/arxiv.2310.05036",
+        "paper:10.1109/tg.2022.3216582",
+        "paper:10.1016/j.entcom.2022.100491",
+        "paper:10.48550/arxiv.2506.17201",
+        "paper:10.48550/arxiv.2507.18899",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.48550/arxiv.2309.15789",
+        "paper:10.48550/arxiv.1912.01588",
+        "paper:10.1038/s42256-020-0208-z",
+        "paper:10.1109/cig.2019.8848053",
+        "paper:10.1109/tg.2018.2846639",
+        "paper:10.48550/arxiv.2005.00687",
+        "paper:10.1145/3502431",
+        "paper:10.5281/zenodo.1207631",
+        "paper:10.48550/arxiv.2206.08853",
+        "paper:10.1038/s41586-020-03051-4",
+        "paper:10.48550/arxiv.1712.01815",
+        "paper:10.1109/cvpr52733.2024.02058",
+        "paper:10.1109/cog60054.2024.10645619",
+        "paper:10.1109/cvpr52729.2023.01215",
+        "paper:10.1145/3664647.3681129",
+        "paper:10.1109/metroxraine66377.2025.11340090",
+        "paper:10.1111/cgf.14989",
+        "paper:10.6025/jmpt/2024/15/4/131-137",
+        "paper:10.1109/cpee59623.2023.10285307",
+        "paper:10.3934/jdg.2024010",
+        "paper:10.1109/cost57098.2022.00046",
+        "paper:10.1007/978-3-031-16719-5",
+        "paper:10.1109/cog52621.2021.9619053",
+        "paper:10.1109/3dv66043.2025.00119",
+        "paper:10.1007/s00521-020-05383-8",
+        "paper:10.5281/zenodo.13903427",
+        "paper:10.1609/aiide.v16i1.7416",
+        "paper:10.1038/nature16961",
+        "paper:10.48550/arxiv.2403.15698",
+        "paper:10.1145/3402942.3409599",
+        "paper:10.17605/osf.io/jud6q",
+        "paper:10.1109/tg.2019.2931044",
+        "paper:10.1371/journal.pone.0332379.t003",
+        "paper:10.1109/infoteh60418.2024.10495969",
+        "paper:10.1142/s0218213019300011",
+        "paper:10.1145/3582437.3587188",
+        "paper:10.1111/cgf.12276",
+        "paper:10.48448/p8x8-vd53",
+        "paper:10.1109/mcg.2024.3439736",
+        "paper:10.1109/mcg.2023.3243276",
+        "paper:10.48550/arxiv.2308.03688"
+      ],
+      "stage_order": 0,
+      "paper_count": 48,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_002",
+      "category_name": "Latent Representations and World Models",
+      "description": "Learning compact latent representations of game states and dynamics for prediction, planning, and control in world models, including internal representation and general world model definitions.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2301.04104",
+        "paper:10.48550/arxiv.2408.14837",
+        "paper:10.48550/arxiv.2511.23429",
+        "paper:10.48550/arxiv.2501.11260",
+        "paper:10.48550/arxiv.2508.01922",
+        "paper:10.3390/info15030135",
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.1145/3771095",
+        "paper:10.1109/tiv.2024.3398357",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.1109/icra48891.2023.10161243",
+        "paper:10.1109/tip.2020.2995264",
+        "paper:10.48550/arxiv.2305.16291"
+      ],
+      "stage_order": 0,
+      "paper_count": 13,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_003",
+      "category_name": "Generative Simulation and Interactive Control",
+      "description": "Generative approaches for simulating futures and enabling interactive control, including video generation, diffusion-based control, and action-conditioned generation.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.1007/s42154-024-00289-w",
+        "paper:10.48550/arxiv.2402.15391"
+      ],
+      "stage_order": 0,
+      "paper_count": 3,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_004",
+      "category_name": "Multi-Agent and Mean-Field Simulation",
+      "description": "Scalable simulation and planning techniques for large populations of agents using mean-field approximations and related multi-agent methods.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.1038/s41586-019-1724-z"
+      ],
+      "stage_order": 0,
+      "paper_count": 1,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_005",
+      "category_name": "Benchmarks and Evaluation",
+      "description": "Datasets, benchmarks, and evaluation frameworks for assessing world models, simulators, and agents across diverse games and tasks, including simulator quality and benchmark dimensions.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2305.18486"
+      ],
+      "stage_order": 0,
+      "paper_count": 2,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_006",
+      "category_name": "Game-Oriented and Cross-Domain Applications",
+      "description": "Applications of world models to specific game genres and cross-domain extensions such as autonomous driving, robotics, and social simulacra.",
+      "related_aspects": [],
+      "paper_ids": [],
+      "stage_order": 0,
+      "paper_count": 0,
+      "adjustment_note": ""
+    }
+  ]
+}

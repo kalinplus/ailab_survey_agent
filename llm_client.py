@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import time
 from typing import Any
@@ -10,6 +11,8 @@ from typing import Any
 import httpx
 
 from config import AppConfig
+
+logger = logging.getLogger(__name__)
 
 
 class LLMClientError(RuntimeError):
@@ -28,6 +31,7 @@ class InternS2Client:
         model_name: str | None = None,
         min_interval: float = 2.1,
         thinking_effort: str | None = None,
+        request_timeout: float | None = None,
     ) -> None:
         self.config = config
         self.api_key = api_key if api_key else config.intern_api_key
@@ -36,6 +40,12 @@ class InternS2Client:
         self.thinking_effort = thinking_effort
         self._last_call: float = 0.0
         self._min_interval: float = min_interval
+        # Output discipline: empty/whitespace replies observed so far; callers
+        # can read this into their metrics.
+        self.empty_reply_count = 0
+        self.request_timeout: float = (
+            request_timeout if request_timeout is not None else config.request_timeout_seconds
+        )
 
     def is_configured(self) -> bool:
         return bool(self.api_key)
@@ -62,7 +72,13 @@ class InternS2Client:
         if self.thinking_effort:
             # GLM-style reasoning endpoints: cap hidden thinking so the budget
             # survives to visible content (empty replies when reasoning eats it).
-            payload["thinking"] = {"type": "enabled", "effort": self.thinking_effort}
+            # "disabled" turns thinking off entirely (DeepSeek-style reasoning
+            # models burn the whole completion budget on reasoning_content
+            # otherwise — grounded survey prose does not need it).
+            if self.thinking_effort == "disabled":
+                payload["thinking"] = {"type": "disabled"}
+            else:
+                payload["thinking"] = {"type": "enabled", "effort": self.thinking_effort}
         if response_format:
             payload["response_format"] = response_format
         if max_tokens is not None:
@@ -74,6 +90,26 @@ class InternS2Client:
         }
         url = f"{self.base_url}/chat/completions"
 
+        content = self._post_chat(url, headers, payload)
+        if _is_empty_reply(content):
+            self._note_empty_reply()
+            # Retry once after a fresh interval; the rate limiter inside
+            # _post_chat enforces the min_interval gap between the two calls.
+            content = self._post_chat(url, headers, payload)
+            if _is_empty_reply(content):
+                self._note_empty_reply()
+                raise LLMClientError(
+                    "empty reply after retry "
+                    f"(model={self.model_name}, n_th={self.empty_reply_count})"
+                )
+        return content
+
+    def _post_chat(self, url: str, headers: dict[str, str], payload: dict[str, Any]) -> Any:
+        """One logical chat request; retries transport-level errors only.
+
+        Empty-reply discipline lives in chat(), so an empty content returned
+        here is a caller-visible outcome, not a transport failure.
+        """
         last_error: Exception | None = None
         for _ in range(self.config.max_llm_retries + 1):
             # Rate limiting: Intern-S2 allows 1 request per 2s
@@ -81,7 +117,7 @@ class InternS2Client:
             if elapsed < self._min_interval:
                 time.sleep(self._min_interval - elapsed)
             try:
-                with httpx.Client(timeout=self.config.request_timeout_seconds) as client:
+                with httpx.Client(timeout=self.request_timeout) as client:
                     self._last_call = time.monotonic()
                     response = client.post(url, headers=headers, json=payload)
                     response.raise_for_status()
@@ -91,6 +127,12 @@ class InternS2Client:
                 last_error = exc
 
         raise LLMClientError(f"Intern-S2-Preview call failed: {last_error}") from last_error
+
+    def _note_empty_reply(self) -> None:
+        self.empty_reply_count += 1
+        logger.warning(
+            "[llm] empty reply (model=%s, n_th=%d)", self.model_name, self.empty_reply_count
+        )
 
     def json_chat(
         self,
@@ -122,11 +164,15 @@ def heavy_llm_client(config: AppConfig) -> InternS2Client:
     HEAVY_LLM_BASE_URL / HEAVY_LLM_API_KEY / HEAVY_LLM_MODEL point at a stronger
     OpenAI-compatible endpoint (e.g. GLM); when unset, the Intern-S2-Preview
     config is used unchanged. Simple judging tasks keep using InternS2Client(cfg).
+    Heavy calls get their own timeout budget: HEAVY_LLM_TIMEOUT_SECONDS
+    (default 300) replaces the shared REQUEST_TIMEOUT_SECONDS so a long
+    generation is not cut at the short default nor allowed to hang for hours.
     """
+    heavy_timeout = float(os.getenv("HEAVY_LLM_TIMEOUT_SECONDS") or 300)
     base_url = (os.getenv("HEAVY_LLM_BASE_URL") or "").strip()
     api_key = (os.getenv("HEAVY_LLM_API_KEY") or "").strip()
     if not (base_url and api_key):
-        return InternS2Client(config)
+        return InternS2Client(config, request_timeout=heavy_timeout)
     return InternS2Client(
         config,
         api_key=api_key,
@@ -134,7 +180,14 @@ def heavy_llm_client(config: AppConfig) -> InternS2Client:
         model_name=(os.getenv("HEAVY_LLM_MODEL") or "").strip() or None,
         min_interval=float(os.getenv("HEAVY_LLM_MIN_INTERVAL") or 2.1),
         thinking_effort=(os.getenv("HEAVY_LLM_THINKING_EFFORT") or "").strip() or None,
+        request_timeout=heavy_timeout,
     )
+
+
+def _is_empty_reply(content: Any) -> bool:
+    # Reasoning-heavy endpoints can return null or whitespace-only content when
+    # hidden thinking eats the whole token budget; both count as empty.
+    return not (isinstance(content, str) and content.strip())
 
 
 def _extract_json_object(content: str) -> dict[str, Any] | None:

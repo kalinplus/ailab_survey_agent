@@ -1,0 +1,72 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "coverage_score": 0.835,
+  "citation_validity_score": 0.985,
+  "evidence_grounding_score": 0.279,
+  "visualization_score": 1.0,
+  "structure_score": 1.0,
+  "overall_score": 0.775,
+  "details": {
+    "coverage": {
+      "cited_papers": [
+        "23, 40, 41",
+        "paper:10.1007/s11280-024-01291-2",
+        "paper:10.1007/s11704-024-40555-y",
+        "paper:10.1109/tg.2024.3461510",
+        "paper:10.1109/tkde.2024.3361474",
+        "paper:10.1145/3626235",
+        "paper:10.1145/3639372",
+        "paper:10.1145/3698590",
+        "paper:10.1145/3746449",
+        "paper:10.1162/tacl_a_00704",
+        "paper:10.48550/arxiv.2305.14992",
+        "paper:10.48550/arxiv.2308.03688",
+        "paper:10.48550/arxiv.2308.10792",
+        "paper:10.48550/arxiv.2312.10997",
+        "paper:10.48550/arxiv.2402.02716",
+        "paper:10.48550/arxiv.2501.03575"
+      ],
+      "taxonomy_categories": 4,
+      "covered_category_ids": [
+        "cat_001",
+        "cat_002",
+        "cat_004"
+      ],
+      "category_coverage": 0.75,
+      "citation_diversity": 1.0,
+      "section_citation_coverage": 0.8
+    },
+    "citation": {
+      "total_citations": 65,
+      "valid_citations": 64,
+      "invalid_citations": 1
+    },
+    "evidence_grounding": {
+      "supported_claims": 6,
+      "weak_claims": 12,
+      "unsupported_claims": 25,
+      "total_claims": 43
+    },
+    "visualization": {
+      "artifact_count": 8,
+      "artifact_types": [
+        "comparison_chart",
+        "comparison_table",
+        "evaluation_matrix",
+        "future_matrix",
+        "taxonomy_graph",
+        "timeline",
+        "visual_overview"
+      ]
+    },
+    "p0_quality": {
+      "topic_relevance_score": 0.354,
+      "section_depth_score": 0.895,
+      "section_citation_coverage": 0.8,
+      "citation_diversity_score": 1.0,
+      "artifact_integration_score": 0.75,
+      "survey_char_count": 28895,
+      "unique_cited_papers": 16
+    }
+  }
+}

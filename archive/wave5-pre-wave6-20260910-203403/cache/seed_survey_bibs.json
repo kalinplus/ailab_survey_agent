@@ -1,0 +1,269 @@
+{
+  "source": "/Users/kalin/github/AILabMacroHard/.claude/worktrees/agent-a87b5ca1eacf7dc46/cache/surveys.json",
+  "generated_by": "scripts/build_seed_survey_bibs.py",
+  "n_surveys": 7,
+  "n_survey_refs": 30,
+  "n_title_resolved": 13,
+  "entries": [
+    {
+      "id": "agentbench_2023",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "A Survey on Evaluation of LLM-based Agents"
+      ]
+    },
+    {
+      "id": "alphago_2016",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "Reinforcement Learning in Strategy-Based and Atari Games: A Review of Google DeepMind's Innovations"
+      ]
+    },
+    {
+      "id": "alphastar_2019",
+      "title": "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning",
+      "year": 2019,
+      "venue": "Nature",
+      "resolved_from": "final_paper_cards.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "Reinforcement Learning in Strategy-Based and Atari Games: A Review of Google DeepMind's Innovations"
+      ]
+    },
+    {
+      "id": "alphazero_2017",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "Reinforcement Learning in Strategy-Based and Atari Games: A Review of Google DeepMind's Innovations"
+      ]
+    },
+    {
+      "id": "avalonbench_2023",
+      "title": "AvalonBench: Evaluating LLMs Playing the Game of Avalon",
+      "year": 2023,
+      "venue": "arXiv (Cornell University)",
+      "resolved_from": "retrieved_papers.json",
+      "survey_ref_count": 2,
+      "surveys": [
+        "A Survey on Large Language Model-Based Game Agents",
+        "A Survey on Evaluation of LLM-based Agents"
+      ]
+    },
+    {
+      "id": "cradle_2024",
+      "title": "Cradle-to-cradle business model tool: Innovating circular business models for startups",
+      "year": 2024,
+      "venue": "Journal of Cleaner Production",
+      "resolved_from": "retrieved_papers.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "A Survey on Large Language Model-Based Game Agents"
+      ]
+    },
+    {
+      "id": "dqn_2015",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "Reinforcement Learning in Strategy-Based and Atari Games: A Review of Google DeepMind's Innovations"
+      ]
+    },
+    {
+      "id": "dreamerv3_2023",
+      "title": "DreamerV3: Mastering Diverse Domains through World Models",
+      "year": 2023,
+      "venue": "arXiv",
+      "resolved_from": "final_paper_cards.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "Understanding World or Predicting Future? A Comprehensive Survey of World Models"
+      ]
+    },
+    {
+      "id": "gamefactory_2025",
+      "title": "GameFactory: Creating New Games with Generative Interactive Videos",
+      "year": 2025,
+      "venue": "arXiv.org",
+      "resolved_from": "retrieved_papers.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "A Survey of Interactive Generative Video"
+      ]
+    },
+    {
+      "id": "gamenegen_2024",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 2,
+      "surveys": [
+        "Is Sora a World Simulator? A Comprehensive Survey on General World Models and Beyond",
+        "A Survey of Interactive Generative Video"
+      ]
+    },
+    {
+      "id": "genie2_2024",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "Simulating the Visual World with Artificial Intelligence: A Roadmap"
+      ]
+    },
+    {
+      "id": "genie3_2025",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "Simulating the Visual World with Artificial Intelligence: A Roadmap"
+      ]
+    },
+    {
+      "id": "genie_2024",
+      "title": "Genie: Generative Interactive Environments",
+      "year": 2024,
+      "venue": "arXiv",
+      "resolved_from": "final_paper_cards.json",
+      "survey_ref_count": 3,
+      "surveys": [
+        "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
+        "Is Sora a World Simulator? A Comprehensive Survey on General World Models and Beyond",
+        "A Survey of Interactive Generative Video"
+      ]
+    },
+    {
+      "id": "gtbench_2024",
+      "title": "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "year": 2024,
+      "venue": "arXiv.org",
+      "resolved_from": "retrieved_papers.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "A Survey on Evaluation of LLM-based Agents"
+      ]
+    },
+    {
+      "id": "hunyuan_gamecraft_2025",
+      "title": "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "year": 2025,
+      "venue": "arXiv.org",
+      "resolved_from": "retrieved_papers.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "Simulating the Visual World with Artificial Intelligence: A Roadmap"
+      ]
+    },
+    {
+      "id": "matrix_game_2024",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "Simulating the Visual World with Artificial Intelligence: A Roadmap"
+      ]
+    },
+    {
+      "id": "minedojo_2022",
+      "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
+      "year": 2022,
+      "venue": "NeurIPS",
+      "resolved_from": "final_paper_cards.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "A Survey on Large Language Model-Based Game Agents"
+      ]
+    },
+    {
+      "id": "muzero_2020",
+      "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
+      "year": 2020,
+      "venue": "Nature",
+      "resolved_from": "final_paper_cards.json",
+      "survey_ref_count": 2,
+      "surveys": [
+        "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
+        "Reinforcement Learning in Strategy-Based and Atari Games: A Review of Google DeepMind's Innovations"
+      ]
+    },
+    {
+      "id": "oasis_2024",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 2,
+      "surveys": [
+        "Simulating the Visual World with Artificial Intelligence: A Roadmap",
+        "A Survey of Interactive Generative Video"
+      ]
+    },
+    {
+      "id": "pokellmon_2024",
+      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+      "year": 2024,
+      "venue": "arXiv.org",
+      "resolved_from": "retrieved_papers.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "A Survey on Large Language Model-Based Game Agents"
+      ]
+    },
+    {
+      "id": "sora_2024",
+      "title": "Open-Sora: Democratizing Efficient Video Production for All",
+      "year": 2024,
+      "venue": "arXiv.org",
+      "resolved_from": "retrieved_papers.json",
+      "survey_ref_count": 2,
+      "surveys": [
+        "Understanding World or Predicting Future? A Comprehensive Survey of World Models",
+        "Is Sora a World Simulator? A Comprehensive Survey on General World Models and Beyond"
+      ]
+    },
+    {
+      "id": "voyager_2023",
+      "title": null,
+      "year": null,
+      "venue": null,
+      "resolved_from": null,
+      "survey_ref_count": 1,
+      "surveys": [
+        "A Survey on Large Language Model-Based Game Agents"
+      ]
+    },
+    {
+      "id": "world_models_2018",
+      "title": "World Models",
+      "year": 2018,
+      "venue": "NeurIPS",
+      "resolved_from": "final_paper_cards.json",
+      "survey_ref_count": 1,
+      "surveys": [
+        "Understanding World or Predicting Future? A Comprehensive Survey of World Models"
+      ]
+    }
+  ]
+}

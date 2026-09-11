@@ -1,0 +1,988 @@
+{
+  "task_id": "survey_eval",
+  "citation_quality": {
+    "n_sentences": 58,
+    "n_cited_sentences": 21,
+    "n_pairs": 21,
+    "supported_pairs": 21,
+    "weak_pairs": 0,
+    "unsupported_pairs": 0,
+    "citation_recall": 1.0,
+    "citation_precision": 1.0,
+    "citation_coverage": 0.362,
+    "pairs": [
+      {
+        "claim_text": "ChatGPT playing good achieved 22.2% win rate against evil rule-based bots, while a good-role bot achieved 38.2% in the same setting",
+        "cited_paper_id": "paper:10.48550/arxiv.2310.05036",
+        "status": "supported",
+        "confidence": 0.561
+      },
+      {
+        "claim_text": "GameNGen is the first game engine powered entirely by a neural model, enabling real-time interaction with complex environments over long trajectories at high quality",
+        "cited_paper_id": "paper:10.48550/arxiv.2408.14837",
+        "status": "supported",
+        "confidence": 0.545
+      },
+      {
+        "claim_text": "These deep neural networks are trained by combining supervised learning from human expert games with reinforcement learning from self-play",
+        "cited_paper_id": "paper:10.1038/nature16961",
+        "status": "supported",
+        "confidence": 0.539
+      },
+      {
+        "claim_text": "AVALONBENCH is a game environment for evaluating multi-agent LLM agents, including rule-based baseline opponents and ReAct-style LLM agents with role-specific prompts",
+        "cited_paper_id": "paper:10.48550/arxiv.2310.05036",
+        "status": "supported",
+        "confidence": 0.558
+      },
+      {
+        "claim_text": "GameNGen is trained in two phases: an RL-agent learns to play and sessions are recorded, then a diffusion model generates the next frame conditioned on past frames and actions",
+        "cited_paper_id": "paper:10.48550/arxiv.2408.14837",
+        "status": "supported",
+        "confidence": 0.545
+      },
+      {
+        "claim_text": "On Go, chess and shogi, MuZero matched AlphaZero's superhuman performance without any knowledge of the game rules",
+        "cited_paper_id": "paper:10.1038/s41586-020-03051-4",
+        "status": "supported",
+        "confidence": 0.574
+      },
+      {
+        "claim_text": "MuZero's learned model iteratively predicts the reward, action-selection policy, and value function, the quantities most directly relevant to planning",
+        "cited_paper_id": "paper:10.1038/s41586-020-03051-4",
+        "status": "supported",
+        "confidence": 0.575
+      },
+      {
+        "claim_text": "At 11B parameters, Genie can be considered a foundation world model",
+        "cited_paper_id": "paper:10.48550/arxiv.2402.15391",
+        "status": "supported",
+        "confidence": 0.6
+      },
+      {
+        "claim_text": "AlphaStar achieved Grandmaster level for all three StarCraft races and ranked above 99.8% of officially ranked human players",
+        "cited_paper_id": "paper:10.1038/s41586-019-1724-z",
+        "status": "supported",
+        "confidence": 0.573
+      },
+      {
+        "claim_text": "Their method is a multi-agent reinforcement learning algorithm using human and agent game data within a diverse league of adapting strategies",
+        "cited_paper_id": "paper:10.1038/s41586-019-1724-z",
+        "status": "supported",
+        "confidence": 0.545
+      },
+      {
+        "claim_text": "Poor long-term reasoning, decision-making, and instruction following are the main obstacles for developing usable LLM agents",
+        "cited_paper_id": "paper:10.48550/arxiv.2308.03688",
+        "status": "supported",
+        "confidence": 0.548
+      },
+      {
+        "claim_text": "AgentBench is a multi-dimensional benchmark with 8 distinct environments to assess LLM-as-Agent reasoning and decision-making abilities",
+        "cited_paper_id": "paper:10.48550/arxiv.2308.03688",
+        "status": "supported",
+        "confidence": 0.552
+      },
+      {
+        "claim_text": "The survey reviews FER methods from the pro-deep learning era using handcrafted features like SVM and HOG through to the deep learning era",
+        "cited_paper_id": "paper:10.3390/info15030135",
+        "status": "supported",
+        "confidence": 0.517
+      },
+      {
+        "claim_text": "DriveDreamer is instantiated on the nuScenes benchmark and verified to enable precise, controllable video generation capturing real-world traffic structural constraints",
+        "cited_paper_id": "paper:10.48550/arxiv.2309.09777",
+        "status": "supported",
+        "confidence": 0.543
+      },
+      {
+        "claim_text": "DriveDreamer employs a two-stage training pipeline: first learning structured traffic constraints, then anticipating future states",
+        "cited_paper_id": "paper:10.48550/arxiv.2309.09777",
+        "status": "supported",
+        "confidence": 0.554
+      },
+      {
+        "claim_text": "Voyager is the first LLM-powered embodied lifelong learning agent in Minecraft that continuously explores, acquires diverse skills, and makes novel discoveries without human intervention",
+        "cited_paper_id": "paper:10.48550/arxiv.2305.16291",
+        "status": "supported",
+        "confidence": 0.549
+      },
+      {
+        "claim_text": "Voyager has three key components: an automatic curriculum maximizing exploration, an ever-growing skill library of executable code, and an iterative prompting mechanism using environment feedback, execution errors, and self-verification",
+        "cited_paper_id": "paper:10.48550/arxiv.2305.16291",
+        "status": "supported",
+        "confidence": 0.549
+      },
+      {
+        "claim_text": "Training ran 700,000 steps with mini-batches of 4,096 from random initialization, using 5,000 first-generation TPUs for self-play and 64 second-generation TPUs for training",
+        "cited_paper_id": "paper:10.48550/arxiv.1712.01815",
+        "status": "supported",
+        "confidence": 0.552
+      },
+      {
+        "claim_text": "ChatGPT playing good achieved 22.2% win rate against evil rule-based bots, while a good-role bot achieved 38.2% in the same setting",
+        "cited_paper_id": "paper:10.48550/arxiv.2310.05036",
+        "status": "supported",
+        "confidence": 0.561
+      },
+      {
+        "claim_text": "GameNGen is the first game engine powered entirely by a neural model, enabling real-time interaction with complex environments over long trajectories at high quality",
+        "cited_paper_id": "paper:10.48550/arxiv.2408.14837",
+        "status": "supported",
+        "confidence": 0.545
+      },
+      {
+        "claim_text": "These deep neural networks are trained by combining supervised learning from human expert games with reinforcement learning from self-play",
+        "cited_paper_id": "paper:10.1038/nature16961",
+        "status": "supported",
+        "confidence": 0.539
+      }
+    ],
+    "nli_model": "cross-encoder/nli-deberta-v3-base@cpu"
+  },
+  "deterministic_profile": {
+    "current_year": 2026,
+    "freshness": {
+      "recent_floor": 2025,
+      "n_cited_ids": 11,
+      "years_unresolved": [],
+      "citation_year_median": 2023.0,
+      "corpus_year_median": 2023.0,
+      "year_offset": 0.0,
+      "citation_recent_share": 0.0,
+      "corpus_recent_share": 0.179
+    },
+    "structure": {
+      "n_sections": 11,
+      "length_cv": 0.477,
+      "n_citations": 21,
+      "mean_citations_per_section": 1.909,
+      "zero_citation_sections": [
+        "Abstract",
+        "Introduction",
+        "Open Challenges",
+        "Future Directions"
+      ],
+      "figure_refs_in_body": 8,
+      "table_refs_in_body": 0,
+      "figure_bank_size": 86,
+      "table_bank_size": 45,
+      "figure_usage": 0.093,
+      "table_usage": 0.0,
+      "sections": [
+        {
+          "section": "Abstract",
+          "prose_chars": 460,
+          "n_sentences": 3,
+          "n_citations": 0,
+          "citations_per_1000_chars": 0.0
+        },
+        {
+          "section": "Introduction",
+          "prose_chars": 994,
+          "n_sentences": 5,
+          "n_citations": 0,
+          "citations_per_1000_chars": 0.0
+        },
+        {
+          "section": "Procedural Generation and Scripting",
+          "prose_chars": 1458,
+          "n_sentences": 7,
+          "n_citations": 5,
+          "citations_per_1000_chars": 3.429
+        },
+        {
+          "section": "Latent Representations and World Models",
+          "prose_chars": 884,
+          "n_sentences": 4,
+          "n_citations": 2,
+          "citations_per_1000_chars": 2.262
+        },
+        {
+          "section": "Generative Simulation and Interactive Control",
+          "prose_chars": 936,
+          "n_sentences": 5,
+          "n_citations": 3,
+          "citations_per_1000_chars": 3.205
+        },
+        {
+          "section": "Multi-Agent and Mean-Field Simulation",
+          "prose_chars": 818,
+          "n_sentences": 4,
+          "n_citations": 2,
+          "citations_per_1000_chars": 2.445
+        },
+        {
+          "section": "Benchmarks and Evaluation",
+          "prose_chars": 1019,
+          "n_sentences": 5,
+          "n_citations": 3,
+          "citations_per_1000_chars": 2.944
+        },
+        {
+          "section": "Game-Oriented and Cross-Domain Applications",
+          "prose_chars": 1047,
+          "n_sentences": 5,
+          "n_citations": 3,
+          "citations_per_1000_chars": 2.865
+        },
+        {
+          "section": "Open Challenges",
+          "prose_chars": 207,
+          "n_sentences": 2,
+          "n_citations": 0,
+          "citations_per_1000_chars": 0.0
+        },
+        {
+          "section": "Future Directions",
+          "prose_chars": 203,
+          "n_sentences": 2,
+          "n_citations": 0,
+          "citations_per_1000_chars": 0.0
+        },
+        {
+          "section": "Conclusion",
+          "prose_chars": 716,
+          "n_sentences": 5,
+          "n_citations": 3,
+          "citations_per_1000_chars": 4.19
+        }
+      ]
+    },
+    "redundancy": {
+      "mode": "embedding",
+      "n_section_pairs": 55,
+      "mean_similarity": 0.742,
+      "max_similarity": 0.891,
+      "top_pairs": [
+        {
+          "a": "Procedural Generation and Scripting",
+          "b": "Conclusion",
+          "similarity": 0.891
+        },
+        {
+          "a": "Abstract",
+          "b": "Introduction",
+          "similarity": 0.884
+        },
+        {
+          "a": "Abstract",
+          "b": "Procedural Generation and Scripting",
+          "similarity": 0.866
+        }
+      ]
+    }
+  },
+  "corpus_coverage": {
+    "cov_threshold": 0.5,
+    "n_categories": 6,
+    "n_covered": 6,
+    "category_coverage_rate": 1.0,
+    "weighted_citation_depth": 0.164,
+    "mean_citation_depth": 0.291,
+    "corpus_utilization": 0.164,
+    "n_cited_ids": 11,
+    "n_cited_ids_in_corpus": 11,
+    "id_space_mismatch": false,
+    "missed_categories": [],
+    "categories": [
+      {
+        "category_id": "cat_001",
+        "category_name": "Procedural Generation and Scripting",
+        "n_papers": 48,
+        "best_similarity": 0.826,
+        "best_section": "Procedural Generation and Scripting",
+        "covered": true,
+        "citation_depth": 0.104
+      },
+      {
+        "category_id": "cat_002",
+        "category_name": "Latent Representations and World Models",
+        "n_papers": 13,
+        "best_similarity": 0.933,
+        "best_section": "Latent Representations and World Models",
+        "covered": true,
+        "citation_depth": 0.308
+      },
+      {
+        "category_id": "cat_003",
+        "category_name": "Generative Simulation and Interactive Control",
+        "n_papers": 3,
+        "best_similarity": 0.871,
+        "best_section": "Generative Simulation and Interactive Control",
+        "covered": true,
+        "citation_depth": 0.333
+      },
+      {
+        "category_id": "cat_004",
+        "category_name": "Multi-Agent and Mean-Field Simulation",
+        "n_papers": 1,
+        "best_similarity": 0.883,
+        "best_section": "Multi-Agent and Mean-Field Simulation",
+        "covered": true,
+        "citation_depth": 1.0
+      },
+      {
+        "category_id": "cat_005",
+        "category_name": "Benchmarks and Evaluation",
+        "n_papers": 2,
+        "best_similarity": 0.813,
+        "best_section": "Benchmarks and Evaluation",
+        "covered": true,
+        "citation_depth": 0.0
+      },
+      {
+        "category_id": "cat_006",
+        "category_name": "Game-Oriented and Cross-Domain Applications",
+        "n_papers": 0,
+        "best_similarity": 0.839,
+        "best_section": "Game-Oriented and Cross-Domain Applications",
+        "covered": true,
+        "citation_depth": 0.0
+      }
+    ]
+  },
+  "seed_bib_coverage": {
+    "n_surveys": 7,
+    "n_seed_bibs": 23,
+    "n_corpus_papers": 67,
+    "n_matched_entries": 8,
+    "n_matched_papers": 8,
+    "seed_bib_recall": 0.348,
+    "in_seed_bib_rate": 0.119,
+    "matched": [
+      "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning",
+      "AvalonBench: Evaluating LLMs Playing the Game of Avalon",
+      "GameFactory: Creating New Games with Generative Interactive Videos",
+      "Genie: Generative Interactive Environments",
+      "GTBench: Uncovering the Strategic Reasoning Limitations of LLMs via Game-Theoretic Evaluations",
+      "Hunyuan-GameCraft: High-dynamic Interactive Game Video Generation with Hybrid History Condition",
+      "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
+      "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models"
+    ],
+    "missed": [
+      "agentbench_2023",
+      "alphago_2016",
+      "alphazero_2017",
+      "Cradle-to-cradle business model tool: Innovating circular business models for startups",
+      "dqn_2015",
+      "DreamerV3: Mastering Diverse Domains through World Models",
+      "gamenegen_2024",
+      "genie2_2024",
+      "genie3_2025",
+      "matrix_game_2024",
+      "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
+      "oasis_2024",
+      "Open-Sora: Democratizing Efficient Video Production for All",
+      "voyager_2023",
+      "World Models"
+    ]
+  },
+  "canonical_hits": {
+    "n_canonical": 20,
+    "n_corpus_papers": 67,
+    "n_hits": 6,
+    "hit_rate": 0.3,
+    "k": 10,
+    "hits_at_k": 2,
+    "hit_at_k_rate": 0.2,
+    "matched": [
+      "MuZero",
+      "AlphaStar",
+      "DreamerV3",
+      "Genie: Generative interactive environments",
+      "GameNGen",
+      "GameFactory: Creating new games with generative interactive videos"
+    ],
+    "missing": [
+      "World Models",
+      "PlaNet",
+      "Dreamer",
+      "MBPO",
+      "NGU",
+      "DreamerV2",
+      "Agent57: Outperforming the Atari Human Benchmark",
+      "Minedojo: Building open-ended embodied agents with internet-scale knowledge",
+      "Video PreTraining (VPT): Learning to Act by Watching Unlabeled Online Videos",
+      "Generative agents: Interactive simulacra of human behavior",
+      "Gaia-1: A generative world model for autonomous driving",
+      "UniSim",
+      "Diamond: Diffusion for world modeling: Visual details matter in Atari",
+      "Cosmos world foundation model platform for physical ai"
+    ]
+  },
+  "corpus_diversity": {
+    "n_aspects": 6,
+    "n_papers": 67,
+    "n_unassigned_papers": 0,
+    "years": [
+      2014,
+      2016,
+      2017,
+      2018,
+      2018,
+      2019,
+      2019,
+      2019,
+      2019,
+      2020,
+      2020,
+      2020,
+      2020,
+      2020,
+      2020,
+      2020,
+      2020,
+      2021,
+      2022,
+      2022,
+      2022,
+      2022,
+      2022,
+      2022,
+      2022,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2023,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2024,
+      2025,
+      2025,
+      2025,
+      2025,
+      2025,
+      2025,
+      2025,
+      2025,
+      2025,
+      2025,
+      2025,
+      2026
+    ],
+    "year_spread": 12,
+    "year_median": 2023.0,
+    "n_venues": 36,
+    "venues": [
+      "2019 IEEE Conference on Games (CoG)",
+      "2021 IEEE Conference on Games (CoG)",
+      "2022 International Conference on Culture-Oriented Science and Technology (CoST)",
+      "2023 24th International Conference on Computational Problems of Electrical Engineering (CPEE)",
+      "2024 23rd International Symposium INFOTEH-JAHORINA (INFOTEH)",
+      "2024 IEEE Conference on Games (CoG)",
+      "ACM Multimedia",
+      "ACM Transactions on Graphics",
+      "ACM Transactions on Internet Technology",
+      "arXiv (Cornell University)",
+      "arXiv.org",
+      "Automotive Innovation",
+      "Computer Graphics Forum",
+      "Computer Vision and Pattern Recognition",
+      "Entertainment Computing",
+      "Figshare",
+      "Frontiers of Computer Science",
+      "IEEE Computer Graphics and Applications",
+      "IEEE Transactions on Games",
+      "IEEE Transactions on Image Processing",
+      "IEEE Transactions on Intelligent Vehicles",
+      "Information",
+      "International Conference on 3D Vision",
+      "International Conference on Foundations of Digital Games",
+      "International Journal on Artificial Intelligence Tools",
+      "Journal of Dynamics & Games, 2025, Vol 12, Issue 1, p1",
+      "Journal of Multimedia Processing and Technologies",
+      "Nature",
+      "Nature Machine Intelligence",
+      "Neural Computing and Applications",
+      "Open MIND",
+      "OSF Preprints (OSF Preprints)",
+      "Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment",
+      "Socio-Environmental Systems Modeling",
+      "Synthesis lectures on games and computational intelligence",
+      "Underline Science Inc."
+    ],
+    "citation_percentiles": {
+      "p25": 9.5,
+      "p50": 52.0,
+      "p75": 176.0
+    },
+    "aspects": [
+      {
+        "aspect_id": "cat_001",
+        "aspect_name": "Procedural Generation and Scripting",
+        "n_papers": 48,
+        "years": [
+          2014,
+          2016,
+          2017,
+          2018,
+          2018,
+          2019,
+          2019,
+          2019,
+          2020,
+          2020,
+          2020,
+          2020,
+          2020,
+          2020,
+          2020,
+          2021,
+          2022,
+          2022,
+          2022,
+          2022,
+          2022,
+          2022,
+          2022,
+          2023,
+          2023,
+          2023,
+          2023,
+          2023,
+          2023,
+          2023,
+          2023,
+          2024,
+          2024,
+          2024,
+          2024,
+          2024,
+          2024,
+          2024,
+          2024,
+          2024,
+          2024,
+          2024,
+          2025,
+          2025,
+          2025,
+          2025,
+          2025,
+          2025
+        ],
+        "year_spread": 11,
+        "year_median": 2023.0,
+        "n_venues": 30,
+        "venues": [
+          "2019 IEEE Conference on Games (CoG)",
+          "2021 IEEE Conference on Games (CoG)",
+          "2022 International Conference on Culture-Oriented Science and Technology (CoST)",
+          "2023 24th International Conference on Computational Problems of Electrical Engineering (CPEE)",
+          "2024 23rd International Symposium INFOTEH-JAHORINA (INFOTEH)",
+          "2024 IEEE Conference on Games (CoG)",
+          "ACM Multimedia",
+          "ACM Transactions on Graphics",
+          "arXiv (Cornell University)",
+          "arXiv.org",
+          "Computer Graphics Forum",
+          "Computer Vision and Pattern Recognition",
+          "Entertainment Computing",
+          "Figshare",
+          "Frontiers of Computer Science",
+          "IEEE Computer Graphics and Applications",
+          "IEEE Transactions on Games",
+          "International Conference on 3D Vision",
+          "International Conference on Foundations of Digital Games",
+          "International Journal on Artificial Intelligence Tools",
+          "Journal of Dynamics & Games, 2025, Vol 12, Issue 1, p1",
+          "Journal of Multimedia Processing and Technologies",
+          "Nature",
+          "Nature Machine Intelligence",
+          "Neural Computing and Applications",
+          "OSF Preprints (OSF Preprints)",
+          "Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment",
+          "Socio-Environmental Systems Modeling",
+          "Synthesis lectures on games and computational intelligence",
+          "Underline Science Inc."
+        ],
+        "citation_percentiles": {
+          "p25": 7.5,
+          "p50": 33.5,
+          "p75": 161.5
+        }
+      },
+      {
+        "aspect_id": "cat_002",
+        "aspect_name": "Latent Representations and World Models",
+        "n_papers": 13,
+        "years": [
+          2020,
+          2023,
+          2023,
+          2023,
+          2023,
+          2024,
+          2024,
+          2024,
+          2024,
+          2025,
+          2025,
+          2025,
+          2026
+        ],
+        "year_spread": 6,
+        "year_median": 2024.0,
+        "n_venues": 7,
+        "venues": [
+          "ACM Transactions on Internet Technology",
+          "arXiv (Cornell University)",
+          "arXiv.org",
+          "IEEE Transactions on Image Processing",
+          "IEEE Transactions on Intelligent Vehicles",
+          "Information",
+          "Open MIND"
+        ],
+        "citation_percentiles": {
+          "p25": 8.0,
+          "p50": 62.0,
+          "p75": 166.0
+        }
+      },
+      {
+        "aspect_id": "cat_003",
+        "aspect_name": "Generative Simulation and Interactive Control",
+        "n_papers": 3,
+        "years": [
+          2024,
+          2025,
+          2025
+        ],
+        "year_spread": 1,
+        "year_median": 2025.0,
+        "n_venues": 3,
+        "venues": [
+          "arXiv (Cornell University)",
+          "arXiv.org",
+          "Automotive Innovation"
+        ],
+        "citation_percentiles": {
+          "p25": 29.5,
+          "p50": 30.0,
+          "p75": 120.0
+        }
+      },
+      {
+        "aspect_id": "cat_004",
+        "aspect_name": "Multi-Agent and Mean-Field Simulation",
+        "n_papers": 1,
+        "years": [
+          2019
+        ],
+        "year_spread": 0,
+        "year_median": 2019.0,
+        "n_venues": 1,
+        "venues": [
+          "Nature"
+        ],
+        "citation_percentiles": {
+          "p25": 4276.0,
+          "p50": 4276.0,
+          "p75": 4276.0
+        }
+      },
+      {
+        "aspect_id": "cat_005",
+        "aspect_name": "Benchmarks and Evaluation",
+        "n_papers": 2,
+        "years": [
+          2023,
+          2024
+        ],
+        "year_spread": 1,
+        "year_median": 2023.5,
+        "n_venues": 2,
+        "venues": [
+          "arXiv (Cornell University)",
+          "arXiv.org"
+        ],
+        "citation_percentiles": {
+          "p25": 99.75,
+          "p50": 125.5,
+          "p75": 151.25
+        }
+      },
+      {
+        "aspect_id": "cat_006",
+        "aspect_name": "Game-Oriented and Cross-Domain Applications",
+        "n_papers": 0,
+        "years": [],
+        "year_spread": null,
+        "year_median": null,
+        "n_venues": 0,
+        "venues": [],
+        "citation_percentiles": null
+      }
+    ]
+  },
+  "reference_coverage": {
+    "gold_source_title": "Understanding World or Predicting Future? A Comprehensive Review of World Models",
+    "n_gold_refs": 338,
+    "n_system_titles": 67,
+    "exact_matches": 8,
+    "substring_matches": 1,
+    "fuzzy_matches": 0,
+    "reference_recall": 0.027,
+    "missed_count": 329,
+    "matched_titles": [
+      "Diffusion models are real-time game engines",
+      "Drivedreamer: Towards real-world-driven world models for autonomous driving",
+      "Gamefactory: Creating new games with generative interactive videos",
+      "Genie: Generative interactive environments",
+      "Mastering the game of go with deep neural networks and tree search",
+      "Procthor: Large-scale embodied ai using procedural generation",
+      "Trafficbots: Towards world models for autonomous driving simulation and motion prediction",
+      "World models for autonomous driving: An initial survey",
+      "Xiaofeng Wang, Zheng Zhu, Guan Huang, Xinze Chen, Jiagang Zhu, and Jiwen Lu. Drivedreamer: Towards real-world-driven world models for autonomous driving, 2023"
+    ],
+    "system_in_gold_rate": 0.119,
+    "fuzzy": true
+  },
+  "uncited_claims": {
+    "max_claims": 60,
+    "n_uncited_total": 26,
+    "n_evaluated": 26,
+    "n_searched": 26,
+    "n_cache_hits": 0,
+    "n_truncated": 0,
+    "supported": 9,
+    "weak": 16,
+    "unsupported": 1,
+    "uncited_support_rate": 0.346,
+    "claims": [
+      {
+        "claim_text": "This survey covers 6 research themes and 13 selected papers, spanning Procedural Generation and Scripting to Game-Oriented and Cross-Domain Applications",
+        "status": "weak",
+        "confidence": 0.699,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "The review separates reported findings from open questions and lists the papers cited in its discussion",
+        "status": "supported",
+        "confidence": 0.602,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Representative work includes Grandmaster level in StarCraft II using multi-agent reinforcement learning, Mastering Diverse Domains through World Models, and DIFFUSION MODELS ARE REAL-TIME GAME ENGINES",
+        "status": "weak",
+        "confidence": 0.361,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "What does it mean for an artificial agent to learn and use an internal model of a game world, and how can such models be built, evaluated, and exploited across the many roles games demand of them? As games become both a dominant testbed for learning-based control and a practical target for automated design, the field has accumulated a fragmented mix of procedural generators, latent dynamics models, learned simulators, and multi-agent approximations whose relationships and trade-offs remain unclear",
+        "status": "weak",
+        "confidence": 0.353,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "This survey answers that question by organizing the area around its core themes and clarifying what is genuinely shared across them",
+        "status": "weak",
+        "confidence": 0.764,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "The survey first presents a graphical overview to orient readers before the technical taxonomy",
+        "status": "weak",
+        "confidence": 0.542,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Figure 1 shows the relationship among world models, game environments, agents, and evaluation",
+        "status": "weak",
+        "confidence": 0.346,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Figure 2 then reframes the same topic as an interaction loop: an agent observes, a world model predicts, the environment responds, and evaluation closes the cycle",
+        "status": "weak",
+        "confidence": 0.312,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Procedural Generation and Scripting focuses on Methods for procedurally generating game worlds and scripting dynamic events, including rule-based, grammar-based, and search-based approaches",
+        "status": "supported",
+        "confidence": 0.044,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Procedural Generation and Scripting hands the open question to Latent Representations and World Models, which asks about learning compact latent representations of game states and dynamics for prediction, planning, and control in world models, including internal representation and general world model definitions",
+        "status": "weak",
+        "confidence": 0.283,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Latent Representations and World Models focuses on Learning compact latent representations of game states and dynamics for prediction, planning, and control in world models, including internal representation and general world model definitions",
+        "status": "weak",
+        "confidence": 0.638,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Latent Representations and World Models hands the open question to Generative Simulation and Interactive Control, which asks about generative approaches for simulating futures and enabling interactive control, including video generation, diffusion-based control, and action-conditioned generation",
+        "status": "weak",
+        "confidence": 0.908,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Generative Simulation and Interactive Control focuses on Generative approaches for simulating futures and enabling interactive control, including video generation, diffusion-based control, and action-conditioned generation",
+        "status": "supported",
+        "confidence": 0.301,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Generative Simulation and Interactive Control hands the open question to Multi-Agent and Mean-Field Simulation, which asks about scalable simulation and planning techniques for large populations of agents using mean-field approximations and related multi-agent methods",
+        "status": "weak",
+        "confidence": 0.824,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Multi-Agent and Mean-Field Simulation focuses on Scalable simulation and planning techniques for large populations of agents using mean-field approximations and related multi-agent methods",
+        "status": "supported",
+        "confidence": 0.137,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Multi-Agent and Mean-Field Simulation hands the open question to Benchmarks and Evaluation, which asks about datasets, benchmarks, and evaluation frameworks for assessing world models, simulators, and agents across diverse games and tasks, including simulator quality and benchmark dimensions",
+        "status": "weak",
+        "confidence": 0.975,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Benchmarks and Evaluation focuses on Datasets, benchmarks, and evaluation frameworks for assessing world models, simulators, and agents across diverse games and tasks, including simulator quality and benchmark dimensions",
+        "status": "supported",
+        "confidence": 0.206,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Benchmarks and Evaluation hands the open question to Game-Oriented and Cross-Domain Applications, which asks about applications of world models to specific game genres and cross-domain extensions such as autonomous driving, robotics, and social simulacra",
+        "status": "supported",
+        "confidence": 0.068,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Game-Oriented and Cross-Domain Applications focuses on Applications of world models to specific game genres and cross-domain extensions such as autonomous driving, robotics, and social simulacra",
+        "status": "supported",
+        "confidence": 0.508,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Game-Oriented and Cross-Domain Applications closes the body; the remaining sections fold this evidence into open challenges and future directions",
+        "status": "unsupported",
+        "confidence": 0.2,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "The captured evidence does not yet support sharper open-challenge statements",
+        "status": "supported",
+        "confidence": 0.472,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Table 2 organizes the main evaluation protocols used across game intelligence, learned simulators, and interactive world models",
+        "status": "weak",
+        "confidence": 0.313,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "The recorded limitations do not yet justify specific research proposals",
+        "status": "weak",
+        "confidence": 0.475,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Table 3 summarizes these future directions, and Figure 5 contrasts method families by their contribution and limitation profiles",
+        "status": "weak",
+        "confidence": 0.129,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "The synthesis rests on the following reported findings",
+        "status": "weak",
+        "confidence": 1.0,
+        "from_cache": false,
+        "n_hits": 3
+      },
+      {
+        "claim_text": "Their scopes remain tied to the respective study settings; they do not by themselves establish a shared performance ranking",
+        "status": "supported",
+        "confidence": 0.539,
+        "from_cache": false,
+        "n_hits": 3
+      }
+    ]
+  },
+  "overall_unsupported_rate": 0.021,
+  "academic_value": {
+    "n_calls": 3,
+    "dimensions": {
+      "informational_value": {
+        "score": 3,
+        "rationale": "The survey outlines core themes and cites representative papers but exhibits uneven content depth, includes irrelevant references (e.g., facial expression recognition), and admits insufficient evidence for critical synthesis in challenges and future directions."
+      },
+      "scholarly_communication_value": {
+        "score": 3,
+        "rationale": "The survey features a clear thematic structure and logical flow but exhibits gaps in academic expression due to repetitive content, placeholder image markers, and weak synthesis in the conclusion."
+      },
+      "research_guidance_value": {
+        "score": 3,
+        "rationale": "The survey includes critical remarks on limitations and trade-offs but explicitly admits in its Open Challenges and Future Directions sections that it lacks sharper statements or specific actionable proposals for new researchers."
+      }
+    },
+    "overall": 3.0
+  },
+  "meta": {
+    "generated_at": "2026-09-10T14:50:20+00:00",
+    "survey": "/Users/kalin/github/AILabMacroHard/archive/wave6-final-20260910-221651/output/survey.md",
+    "nli_model": "cross-encoder/nli-deberta-v3-base@cpu",
+    "judge_model": "intern-s2-preview",
+    "layers": "L0 deterministic / L1 citation quality / L1.5 uncited claims / L2' corpus coverage + gold-free reference quality (seed-bib recall, canonical hit@N, corpus diversity) / L3 academic value",
+    "note": "Layer 1 is pair-level (every citation per sentence); evaluator shares the NLIVerifier infrastructure with the generation-side claim mapper but runs independently on the final artifact. Gold reference recall is a secondary diagnostic only: one gold survey's reference list is not ground truth and its size caps recall for a breadth-first corpus."
+  }
+}

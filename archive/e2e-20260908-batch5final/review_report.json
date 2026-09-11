@@ -1,0 +1,228 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "stage": "after_b_verification_before_final_render",
+  "hard_gate_pass": false,
+  "hard_gates": {
+    "citation_validity": {
+      "score": 0.984,
+      "threshold": 0.95,
+      "pass": true,
+      "blocking": true,
+      "reason": "CitationResult validity score."
+    },
+    "evidence_grounding": {
+      "score": 0.2,
+      "threshold": 0.8,
+      "pass": false,
+      "blocking": true,
+      "reason": "{'supported_claims': 0, 'weak_claims': 4, 'unsupported_claims': 6, 'total_claims': 10}"
+    },
+    "figure_table_legality": {
+      "score": 0.984,
+      "threshold": 1.0,
+      "pass": false,
+      "blocking": true,
+      "reason": "Structural verifier has no invalid figure/artifact refs."
+    },
+    "generated_artifact_provenance": {
+      "score": 1.0,
+      "threshold": 1.0,
+      "pass": true,
+      "blocking": true,
+      "reason": "GeneratedArtifactBank audit."
+    },
+    "reference_integrity": {
+      "score": 1.0,
+      "threshold": 1.0,
+      "pass": true,
+      "blocking": true,
+      "reason": "References contain only actually cited allowed papers."
+    },
+    "topic_relevance": {
+      "score": 0.41,
+      "threshold": 0.7,
+      "pass": false,
+      "blocking": false,
+      "reason": "Average topic relevance of cited selected papers. Diagnostic only; upstream retrieval quality must not block P1 public delivery."
+    },
+    "section_depth": {
+      "score": 0.895,
+      "threshold": 0.65,
+      "pass": true,
+      "blocking": false,
+      "reason": "Per-section paragraphs, length, and citation count. Diagnostic only because revised drafts may collapse headings while public rendering remains valid."
+    },
+    "citation_diversity": {
+      "score": 1.0,
+      "threshold": 0.6,
+      "pass": true,
+      "blocking": false,
+      "reason": "Unique cited papers over min(allowed papers, 10). Diagnostic only."
+    },
+    "artifact_integration": {
+      "score": 1.0,
+      "threshold": 0.65,
+      "pass": true,
+      "blocking": false,
+      "reason": "Placed artifact refs over usable generated artifacts. Diagnostic only."
+    },
+    "public_readiness": {
+      "score": 1.0,
+      "threshold": 1.0,
+      "pass": true,
+      "reason": "Public Markdown/HTML/PDF contain no internal IDs or harness process terms.",
+      "checks": {
+        "public_files_exist": true,
+        "no_internal_terms": true,
+        "references_public": true,
+        "markdown_artifacts_inlined": true,
+        "image_paths_exist": true,
+        "pdfs_not_tiny": true,
+        "final_report_is_public_view": true
+      }
+    },
+    "submission_readiness": {
+      "score": 0.0,
+      "threshold": 1.0,
+      "pass": false,
+      "reason": "Final public package satisfies presentation submission checks.",
+      "checks": {
+        "all_references_topic_relevant": true,
+        "relevant_reference_count": true,
+        "section_count": true,
+        "section_citation_coverage": false,
+        "public_image_count": true,
+        "figure_table_count": true,
+        "every_figure_has_title_caption_alt": true,
+        "every_table_has_title_caption_headers": true,
+        "every_artifact_is_referenced_in_text": true,
+        "language_is_english": true,
+        "no_internal_terms": true,
+        "real_pdf_ok": true,
+        "html_table_headers": true
+      }
+    }
+  },
+  "soft_review": {
+    "logical_coherence": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "logical_coherence is good under the rule-based G-Eval-style rubric."
+    },
+    "terminology_precision": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "terminology_precision is good under the rule-based G-Eval-style rubric."
+    },
+    "argument_depth": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "argument_depth is good under the rule-based G-Eval-style rubric."
+    },
+    "novelty_synthesis": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "novelty_synthesis is good under the rule-based G-Eval-style rubric."
+    },
+    "writing_clarity": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "writing_clarity is good under the rule-based G-Eval-style rubric."
+    },
+    "structure_quality": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "structure_quality is good under the rule-based G-Eval-style rubric."
+    },
+    "visual_design": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "visual_design is good under the rule-based G-Eval-style rubric."
+    },
+    "reader_value": {
+      "raw_score": 5,
+      "score": 1.0,
+      "comment": "reader_value is good under the rule-based G-Eval-style rubric."
+    }
+  },
+  "soft_overall_score": 1.0,
+  "final_decision": "public_but_not_submission_ready",
+  "revision_suggestions": [
+    {
+      "priority": "high",
+      "target": "evidence_grounding",
+      "suggestion": "Address the failed hard gate before final publication."
+    },
+    {
+      "priority": "high",
+      "target": "figure_table_legality",
+      "suggestion": "Address the failed hard gate before final publication."
+    },
+    {
+      "priority": "low",
+      "target": "topic_relevance",
+      "suggestion": "Improve this non-blocking quality diagnostic in the next iteration."
+    },
+    {
+      "priority": "high",
+      "target": "submission_readiness",
+      "suggestion": "Address the failed hard gate before final publication."
+    }
+  ],
+  "public_readiness": {
+    "pass": true,
+    "score": 1.0,
+    "checks": {
+      "public_files_exist": true,
+      "no_internal_terms": true,
+      "references_public": true,
+      "markdown_artifacts_inlined": true,
+      "image_paths_exist": true,
+      "pdfs_not_tiny": true,
+      "final_report_is_public_view": true
+    },
+    "forbidden_hits": [],
+    "markdown_artifact_id_leaks": [],
+    "public_outputs": {
+      "survey_public_md": "output/survey_public.md",
+      "survey_html": "output/survey.html",
+      "final_report_html": "output/final_report.html",
+      "survey_pdf": "output/survey.pdf",
+      "final_report_pdf": "output/final_report.pdf"
+    }
+  },
+  "submission_readiness": {
+    "pass": false,
+    "score": 0.0,
+    "checks": {
+      "all_references_topic_relevant": true,
+      "relevant_reference_count": true,
+      "section_count": true,
+      "section_citation_coverage": false,
+      "public_image_count": true,
+      "figure_table_count": true,
+      "every_figure_has_title_caption_alt": true,
+      "every_table_has_title_caption_headers": true,
+      "every_artifact_is_referenced_in_text": true,
+      "language_is_english": true,
+      "no_internal_terms": true,
+      "real_pdf_ok": true,
+      "html_table_headers": true
+    },
+    "metrics": {
+      "relevant_reference_count": 16,
+      "section_count": 10,
+      "section_citation_coverage": 0.7,
+      "public_image_count": 5,
+      "figure_table_count": 8,
+      "real_pdf_ok": true
+    },
+    "public_outputs": {
+      "survey_submission_md": "output/survey_submission.md",
+      "survey_html": "output/survey.html",
+      "final_report_html": "output/final_report.html",
+      "survey_pdf": "output/survey.pdf",
+      "final_report_pdf": "output/final_report.pdf"
+    }
+  }
+}

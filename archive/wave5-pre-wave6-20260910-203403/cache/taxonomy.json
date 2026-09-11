@@ -1,0 +1,123 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "topic": "World Models for Games: A Survey",
+  "taxonomy_version": "v1",
+  "refine_history": [
+    "prelimiminary",
+    "refined",
+    "final"
+  ],
+  "categories": [
+    {
+      "category_id": "cat_001",
+      "category_name": "Procedural Content Generation Mechanisms",
+      "description": "Rule-based taxonomy fallback for Procedural Content Generation Mechanisms.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2407.17572",
+        "paper:10.1109/mcg.2024.3447775",
+        "paper:10.1145/3512290.3528701",
+        "paper:10.48550/arxiv.2309.15789",
+        "paper:10.1038/s42256-020-0208-z",
+        "paper:10.1109/cig.2019.8848053",
+        "paper:10.1109/tg.2018.2846639",
+        "paper:10.1109/tciaig.2011.2148116",
+        "paper:10.1145/2000919.2000922",
+        "paper:10.48550/arxiv.2206.08853",
+        "paper:10.5281/zenodo.1207631",
+        "paper:10.1109/cog60054.2024.10645619",
+        "paper:10.4114/intartif.vol24iss68pp33-36",
+        "paper:10.1007/978-3-031-23161-2_300944",
+        "paper:10.5753/sbgames.2025.10297",
+        "paper:10.5281/zenodo.11903525",
+        "paper:10.1109/iconscept61884.2024.10627796",
+        "paper:10.1111/cgf.14989",
+        "paper:10.1109/tg.2023.3270422",
+        "paper:10.1007/978-3-031-16719-5",
+        "paper:10.1109/cost57098.2022.00046",
+        "paper:10.1109/cog52621.2021.9619053",
+        "paper:10.1007/s00521-020-05383-8",
+        "paper:10.1109/cvpr52733.2024.02058",
+        "paper:10.1609/aiide.v16i1.7416",
+        "paper:10.1609/aiide.v12i2.12898",
+        "paper:10.48550/arxiv.2403.15698",
+        "paper:10.1145/3293882.3330566",
+        "paper:10.1109/cvpr52729.2023.01215",
+        "paper:10.48550/arxiv.2206.06994",
+        "paper:10.1142/s0218213019300011",
+        "paper:10.1109/t-affc.2011.6",
+        "paper:10.17605/osf.io/jud6q",
+        "paper:10.1109/tg.2019.2931044",
+        "paper:10.1016/j.asoc.2019.105909",
+        "paper:10.1145/3582437.3587188",
+        "paper:10.1111/jcal.12280",
+        "paper:10.1609/aiide.v14i1.13012",
+        "paper:10.1007/978-3-642-12239-2_15",
+        "paper:10.48550/arxiv.2308.03688"
+      ],
+      "stage_order": 0,
+      "paper_count": 40,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_002",
+      "category_name": "Standardized Game World Benchmarks",
+      "description": "Rule-based taxonomy fallback for Standardized Game World Benchmarks.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2408.14837",
+        "paper:10.48550/arxiv.2501.08325",
+        "paper:10.48550/arxiv.2310.05036",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2511.23429",
+        "paper:10.48550/arxiv.2301.04104",
+        "paper:10.1038/nature16961",
+        "paper:10.3934/jdg.2024010",
+        "paper:10.1371/journal.pone.0332379.t003",
+        "paper:10.48550/arxiv.2405.09711",
+        "paper:10.1109/cvpr52733.2024.02159",
+        "paper:10.1109/tip.2020.2995264"
+      ],
+      "stage_order": 0,
+      "paper_count": 12,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_003",
+      "category_name": "Latent Dynamics and Simulation Models",
+      "description": "Rule-based taxonomy fallback for Latent Dynamics and Simulation Models.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.1038/s41586-020-03051-4",
+        "paper:10.1007/978-3-319-42716-4",
+        "paper:10.48550/arxiv.2501.16411",
+        "paper:10.48550/arxiv.1712.01815",
+        "paper:10.48550/arxiv.2402.01118",
+        "paper:10.1145/3771095",
+        "paper:10.1109/cvpr52733.2024.02060",
+        "paper:10.1109/cvpr52733.2024.02090",
+        "paper:10.1109/tpami.2024.3507000",
+        "paper:10.48550/arxiv.2404.18824",
+        "paper:10.18653/v1/2024.findings-naacl.149",
+        "paper:10.1038/s41586-019-1724-z",
+        "paper:10.48550/arxiv.2305.16291"
+      ],
+      "stage_order": 0,
+      "paper_count": 13,
+      "adjustment_note": ""
+    },
+    {
+      "category_id": "cat_004",
+      "category_name": "Interactive Controllable Generation Frameworks",
+      "description": "Rule-based taxonomy fallback for Interactive Controllable Generation Frameworks.",
+      "related_aspects": [],
+      "paper_ids": [
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2506.17201"
+      ],
+      "stage_order": 0,
+      "paper_count": 2,
+      "adjustment_note": ""
+    }
+  ]
+}

@@ -1,0 +1,2567 @@
+[
+  {
+    "round": 1,
+    "failure_type": "A",
+    "id": "1",
+    "action": "remap_citation",
+    "reason": "Sentence concerns 'Reasoning with Language Model is Planning with World Model' and CoT-enhanced LLM reasoning; candidate paper title exactly matches the claim.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 1,
+    "failure_type": "A",
+    "id": "11",
+    "action": "backfill_evidence",
+    "reason": "No candidates provided and no whitelisted paper clearly matches the vague, truncated claim; semantic search can supply grounding evidence instead of deleting.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 2,
+    "failure_type": "A",
+    "id": "1",
+    "action": "remap_citation",
+    "reason": "Claim concerns LLM reasoning and CoT prompting, which matches the candidate paper 'Reasoning with Language Model is Planning with World Model'.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "A",
+    "id": "1",
+    "action": "remap_citation",
+    "reason": "Cited paper 10.1145/3746449 is not whitelisted; the sentence discusses LLM reasoning, which directly matches the candidate 'Reasoning with Language Model is Planning with World Model'.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_0",
+    "action": "swap_evidence",
+    "reason": "Chunk contains the exact 'Two main difficulties are identified' sentence from the cited paper, directly grounding the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "swap_evidence",
+    "reason": "Chunk contains the verbatim 'learn tabula rasa in isolated environments' sentence, exactly matching the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_5",
+    "action": "rewrite_claim",
+    "reason": "Bare 'unresolved' fragment replaced with a complete assertion the cited paper's evidence (task-specific optimization, limited annotated data) directly supports.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_6",
+    "action": "remap_citation",
+    "reason": "Sentence concerns autonomous driving world models (GAIA-1 context); cited 2305.14992 is an LLM chain-of-thought paper that cannot support it, while 2309.09777's evidence covers world models for autonomous driving.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": "rewrite_claim",
+    "reason": "Meaningless 'unresolved' fragment replaced with a weaker assertion matching the cited paper's evidence on LLM reasoning limitations.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_9",
+    "action": "remap_citation",
+    "reason": "Cited DOI resolves to the LLM-agents survey; the crypto-mining mean field game abstract quoted in the claim lives under paper:10.1287/mnsc.2023.4798, whose title clearly matches the sentence.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": "backfill_evidence",
+    "reason": "Cited DOI is actually the Mean Field Games paper and no GameFactory candidate id appears in the previews; semantic backfill can fetch real grounding chunks without inventing an id.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_12",
+    "action": "rewrite_claim",
+    "reason": "Cited MineDojo chunks only support the open-ended embodied simulation suite side, not the competitive game-theoretic evaluations half; weaken to what the evidence supports.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": "remap_citation",
+    "reason": "Cited arXiv DOI is an LLM-agent paper; the hypergraph latent-space paper (Turnbull, Lunagomez, Nemeth, Airoldi, JASA) is paper:10.1080/01621459.2023.2270750, whose chunks on relational/higher-order data match the sentence.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_14",
+    "action": "delete_claim",
+    "reason": "",
+    "outcome": "deleted",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_15",
+    "action": "backfill_evidence",
+    "reason": "Cited paper (world-models survey) contains evidence chunks about LLMs/GPT-4 and reasoning; semantic search can ground the CoT/reasoning assertion, and the stray title fragment is not itself the failure.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "B",
+    "id": "claim_17",
+    "action": "swap_evidence",
+    "reason": "Chunk 252 contains the exact 'two main difficulties' phrasing matching the claim, directly supporting it.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "D",
+    "id": "claim_1",
+    "action": "rewrite_claim",
+    "reason": "Claim is truncated and asserts achievement too strongly; evidence supports that action-controlled generation is pursued via collecting the GF-Minecraft dataset.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "D",
+    "id": "claim_3",
+    "action": "rewrite_claim",
+    "reason": "Evidence attributes the surge in attention to MLLM and video-generation advances and frames world models as predictive frameworks; the claim's 'due to their capacity for' assertion was stronger than the cited survey supports.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "D",
+    "id": "claim_4",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports that world models predict future states from observations and actions and are increasingly studied for modeling driving environments; the claim's stronger assertion that this 'empowers autonomous vehicles' via risk evaluation is not directly grounded.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 3,
+    "failure_type": "D",
+    "id": "claim_11",
+    "action": "rewrite_claim",
+    "reason": "The first half is directly supported by the cited paper's abstract, but the appended clause about LLM strategic/logical reasoning in real-world applications is unsupported by the provided evidence, so it is removed to match what the evidence shows.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "A",
+    "id": "1",
+    "action": "remap_citation",
+    "reason": "Candidate 'Reasoning with Language Model is Planning with World Model' clearly matches the sentence's topic (LLM reasoning enhanced by CoT prompting) and is the source of the quoted passage.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_0",
+    "action": "swap_evidence",
+    "reason": "Abstract chunk verbatim states the two identified difficulties, directly grounding the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "swap_evidence",
+    "reason": "Intro chunk contains the exact tabula-rasa statement, directly grounding the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_3",
+    "action": "backfill_evidence",
+    "reason": "Claim text is a fragment ('unresolved'); semantic search can fetch the chunk discussing the unresolved aspect.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "backfill_evidence",
+    "reason": "Claim concerns GAIA-1 but cited paper (2305.14992) previews only cover CoT/LLM reasoning; no remap candidates listed, so fetch grounding chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_6",
+    "action": "backfill_evidence",
+    "reason": "Claim text is a fragment ('unresolved') and preview chunks do not ground it; retrieve proper grounding via semantic search.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_7",
+    "action": "remap_citation",
+    "reason": "Claim title and abstract exactly match 'A Mean Field Games Model for Cryptocurrency Mining' evidence chunks seen under paper:10.1287/mnsc.2023.4798; current citation points to an LLM-agents survey.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": "backfill_evidence",
+    "reason": "Cited paper is actually the Mean Field Games paper and no id for the GameFactory paper is available; semantic search can fetch grounding chunks for the claim instead of guessing an id.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_9",
+    "action": "swap_evidence",
+    "reason": "This chunk explicitly describes the open-sourced MineDojo simulation suite for generally capable embodied agents, directly grounding the 'open-ended embodied simulation suite' side of the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": "backfill_evidence",
+    "reason": "Cited paper's chunks are about LLM-based agents, not hypergraph latent space modeling, and no candidate id for the hypergraph paper is listed; backfill retrieval is safer than inventing an id.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_11",
+    "action": "backfill_evidence",
+    "reason": "Previewed chunks cover world models broadly (JEPA, Sora) and do not support the CoT reasoning assertion; backfill will fetch chunks that actually ground the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": "swap_evidence",
+    "reason": "Abstract chunk verbatim states the two main difficulties cited; attaching it directly grounds the claim from the already-cited paper.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 4,
+    "failure_type": "D",
+    "id": "claim_1",
+    "action": "rewrite_claim",
+    "reason": "Claim is truncated ('action-controlled v'); rewritten as a complete, weaker sentence directly supported by the cited GameFactory evidence describing dataset collection for action-controlled video generation.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_0",
+    "action": "rewrite_claim",
+    "reason": "Claim was a truncated title/abstract fragment ending mid-word; rewritten as a complete assertion directly supported by the cited paper's abstract chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_1",
+    "action": "rewrite_claim",
+    "reason": "Claim was a title/author fragment with no assertion; rewritten using the paper's own supported first-of-its-kind statement.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_3",
+    "action": "remap_citation",
+    "reason": "Sentence quotes the PCGRL abstract ('train level-designing agents'), which clearly matches the AIIDE PCGRL paper, not the cited Springer PCG survey.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "delete_claim",
+    "reason": "",
+    "outcome": "deleted",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_5",
+    "action": "rewrite_claim",
+    "reason": "Original meta-assertion about 'evidence boundary' is unsupported; rewritten to the concrete, evidence-backed statement from the cited survey's chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_6",
+    "action": "rewrite_claim",
+    "reason": "Correctly cited paper with supporting chunks (abstract/intro on RL agents constructing levels); replace the garbled meta-text with an assertion the evidence supports.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": "remap_citation",
+    "reason": "Claim is about 'Large Language Model Routing with Benchmark Datasets'; that exact title and the quoted abstract sentence appear in arxiv.2309.15789's chunks, while the cited 2305.18486 explicitly excludes LLMs from its benchmark.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_9",
+    "action": "backfill_evidence",
+    "reason": "Claim concerns an image segmentation survey but is cited to the LLM Routing paper, and no candidate paper with a matching title is available; semantic search can fetch grounding chunks for the segmentation assertion instead of deleting.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": "rewrite_claim",
+    "reason": "The cited paper's chunks directly discuss ChatGPT's versatility and its evaluation; soften the garbled 'unresolved boundary' claim to what the evidence chunks support.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_11",
+    "action": "rewrite_claim",
+    "reason": "Citation is correct (chunks contain the paper's title and abstract); replace the meta-text with the abstract-supported assertion.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_12",
+    "action": "rewrite_claim",
+    "reason": "Meta-claim about results being 'bounded' is unsupported; evidence chunks instead support a definitional statement about image segmentation.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": "remap_citation",
+    "reason": "Cited paper is an LLM-agent survey, unrelated to the sentence; the cradle-to-cradle circular business model paper title clearly matches the sentence.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_15",
+    "action": "rewrite_claim",
+    "reason": "Boundary meta-claim unsupported; evidence chunks directly support this characterization of autonomous agents.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_16",
+    "action": "rewrite_claim",
+    "reason": "Meta-claim unsupported; cited paper's evidence chunks support the statement about circular-born startups and sustainability.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_17",
+    "action": "rewrite_claim",
+    "reason": "Limitation meta-claim unsupported; evidence chunks describe the framework, its action-controlled dataset, and scene-generalizable approach.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_18",
+    "action": "remap_citation",
+    "reason": "Claim quotes the Procgen Benchmark abstract; cited paper 2402.12348 (LLM strategic reasoning) has no matching evidence, while 1912.01588's title exactly matches the sentence and its chunks contain the quoted text.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_19",
+    "action": "remap_citation",
+    "reason": "Claim is about ProcTHOR and massive-dataset-driven advances in vision/NLP; cited 1912.01588 (Procgen) evidence doesn't support it, while 2206.06994 (ProcTHOR) contains the matching chunk on large expressive models trained on massive datasets.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_20",
+    "action": "rewrite_claim",
+    "reason": "'Bounded by the available evidence boundary' is a non-substantive unsupported assertion; the evidence directly supports describing the paper's focus on LLM strategic reasoning.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_21",
+    "action": "rewrite_claim",
+    "reason": "Generic 'limited by evidence boundary' filler is unsupported; the evidence directly supports the Procgen description and its generalization emphasis.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_22",
+    "action": "rewrite_claim",
+    "reason": "'Leaves the evidence boundary unresolved' is an unsupported placeholder assertion; the evidence supports a factual statement about embodied AI's driving fields.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_23",
+    "action": "backfill_evidence",
+    "reason": "Claim quotes the Infinigen abstract but the cited Parti paper's chunks only cover text-to-image models; semantic search can fetch proper grounding chunks",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_24",
+    "action": "remap_citation",
+    "reason": "Sentence is about the Open Graph Benchmark paper, whose title exactly matches arxiv.2005.00687 (currently miscited to a procedural-generation CVPR paper)",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_25",
+    "action": "rewrite_claim",
+    "reason": "Meta 'evidence boundary' phrasing is unsupported; weakened assertion matches evidence chunks describing text-to-image generation goals",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_26",
+    "action": "rewrite_claim",
+    "reason": "Unsupported boundary filler replaced with assertion grounded in cited chunks defining procedural generation and citing Infinigen",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_27",
+    "action": "rewrite_claim",
+    "reason": "Boundary filler replaced with assertion directly supported by the OGB abstract and conclusion chunks",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_28",
+    "action": "rewrite_claim",
+    "reason": "Claim text is a garbled paste of the PCGRL paper title/headers, not an assertion; rewritten to a statement the cited survey's evidence chunks directly support.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_29",
+    "action": "backfill_evidence",
+    "reason": "The evidence preview for the cited ASFAULT paper is misindexed (it shows PCGRL text); semantic search should fetch the correct grounding chunks for the ASFAULT assertion in this paper.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_30",
+    "action": "rewrite_claim",
+    "reason": "Original claim is a garbled fragment from an unrelated ChatGPT-benchmark paper; no remap candidates, so rewritten to content supported by the cited paper's evidence chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_31",
+    "action": "rewrite_claim",
+    "reason": "Claim is a truncated fragment ('W while removing the reported boundary'); rewritten to an assertion supported by the cited paper's title and abstract chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_32",
+    "action": "swap_evidence",
+    "reason": "This chunk contains the exact sentence about dividing the image into meaningful segments, directly grounding the claim in the cited paper.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "B",
+    "id": "claim_33",
+    "action": "rewrite_claim",
+    "reason": "Failure type B: cited paper contains a directly matching statement in evidence chunk agentic_96_p11_19727, so weaken the claim to exactly what that chunk asserts.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "E",
+    "id": "dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg",
+    "action": "delete_line",
+    "reason": "",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "D",
+    "id": "claim_2",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "D",
+    "id": "claim_7",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "D",
+    "id": "claim_14",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 5,
+    "failure_type": "D",
+    "id": "claim_34",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_0",
+    "action": "rewrite_claim",
+    "reason": "Evidence chunks support describing PCGRL as casting level generation as RL, but not the vague unresolved-boundary assertion.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "rewrite_claim",
+    "reason": "Previewed chunks support LLM progress (e.g., ChatGPT) and under-explored benchmark evaluation, but not the specific open-source-LLM-growth claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "rewrite_claim",
+    "reason": "Cited paper is an LLM autonomous-agents survey, unrelated to cradle-to-cradle startups; rewrite asserts only what its evidence chunks directly support.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_6",
+    "action": "remap_citation",
+    "reason": "Sentence title 'Leveraging Procedural Generation to Benchmark Reinforcement Learning' clearly matches arXiv 1912.01588, whose chunks contain the Procgen text; cited 2402.12348 is an unrelated LLM-reasoning paper.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_7",
+    "action": "rewrite_claim",
+    "reason": "Cited paper is Procgen, not ProcTHOR, and no ProcTHOR candidate id is listed; rewrite asserts only what the available Procgen evidence supports.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": "rewrite_claim",
+    "reason": "Evidence describes Procgen's 16 environments for generalization/sample-efficiency evaluation; the 'limited by evidence boundary' assertion is unsupported.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_9",
+    "action": "rewrite_claim",
+    "reason": "Cited paper 2206.10789 covers text-to-image models (DALL-E 2, Imagen), not Infinigen; no candidate paper matches the Infinigen title, so rewrite to what the evidence supports.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": "rewrite_claim",
+    "reason": "Cited CVPR paper is SimpleProc on procedural data; no candidate paper matches the Open Graph Benchmark title, so rewrite to the supported procedural-data statement.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_11",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports the general text-to-image goal but never attributes it to the Parti paper, so weaken to the supported general assertion.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_12",
+    "action": "rewrite_claim",
+    "reason": "Evidence states the procedural generation paradigm and cites Infinigen as an instance, but does not ground the attribution to the Infinigen paper itself.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": "swap_evidence",
+    "reason": "This chunk matches the claim nearly verbatim (OGB = diverse, challenging, realistic datasets enabling scalable, robust, reproducible graph ML).",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_14",
+    "action": "rewrite_claim",
+    "reason": "Claim text is a bibliographic fragment (PCGRL title/authors), not an assertable sentence; rewritten to a PCG statement directly supported by the cited survey's chunks.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_15",
+    "action": "backfill_evidence",
+    "reason": "Claim describes ASFAULT, but the cited paper is PCGRL and no remap candidates were provided; backfill semantic search to fetch correct grounding chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "B",
+    "id": "claim_16",
+    "action": "rewrite_claim",
+    "reason": "Claim text was truncated with '...)' ; the cited paper's evidence contains this complete sentence, so restore it verbatim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "D",
+    "id": "claim_1",
+    "action": "rewrite_claim",
+    "reason": "Softens the 'stops at the evidence boundary' assertion to the weaker, evidence-supported statement that reported results are limited to the simulated road-generation setting.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "D",
+    "id": "claim_3",
+    "action": "backfill_evidence",
+    "reason": "Preview chunks describe LLM routing, not image segmentation, so no swap candidate fits and no remap candidates were listed; semantic backfill can fetch grounding chunks for the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "D",
+    "id": "claim_5",
+    "action": "backfill_evidence",
+    "reason": "Preview chunks about circular startups cannot support the GameFactory generative-video claim; no swap candidate fits and no remap candidates were listed, so fetch fresh grounding chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 6,
+    "failure_type": "D",
+    "id": "claim_17",
+    "action": "rewrite_claim",
+    "reason": "Downgrades the unsupported 'pivotal role in implementing high-level circularity to fight resource depletion' to the evidence-backed 'important role in the shift toward sustainability' and completes the truncated boundary clause.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_0",
+    "action": "swap_evidence",
+    "reason": "This chunk defines prediction capability exactly as claimed (capacity to reason about future evolution of dynamic scenes, fundamental to safe/efficient/proactive driving).",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_1",
+    "action": "backfill_evidence",
+    "reason": "Claim spans two grounded parts (intro motivation re GPT-4/Sora/AGI and code-repository summary); no single preview chunk covers both, so semantic search should fetch grounding chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "swap_evidence",
+    "reason": "This chunk directly grounds the chain-of-thought/intermediate-step reasoning capability the claim attributes to the paper; the framing itself is the paper's title.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "rewrite_claim",
+    "reason": "",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_5",
+    "action": null,
+    "reason": "model did not answer this failure",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_6",
+    "action": "rewrite_claim",
+    "reason": "Evidence (chunk 343) supports only CoT intermediate-step generation; the world-model-simulation framing and stepwise-consequence-planning claims overreach, so weaken to the supported core.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_7",
+    "action": "rewrite_claim",
+    "reason": "",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": null,
+    "reason": "model did not answer this failure",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": null,
+    "reason": "model did not answer this failure",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": null,
+    "reason": "model did not answer this failure",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_15",
+    "action": "backfill_evidence",
+    "reason": "Preview chunks support MARL and resource-allocation prediction; public goods/hypergraph grounding should exist elsewhere in this paper, so fetch it via semantic search.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_16",
+    "action": "backfill_evidence",
+    "reason": "The LLM-as-world-model for model-based planning is this paper's core contribution but is absent from preview chunks; semantic search should ground it.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_18",
+    "action": "rewrite_claim",
+    "reason": "Evidence only supports that tree search outperforms reactive planning; coupling an implicit world model with tree search conflates two distinct approaches, so weaken to what the evidence states.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_19",
+    "action": "backfill_evidence",
+    "reason": "Preview chunks cover multi-agent systems/MARL but not the hypergraph group representation; grounding chunks for the hypergraph formulation should exist in the paper, so fetch via semantic search.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_21",
+    "action": "swap_evidence",
+    "reason": "This chunk explicitly states GameFactory is a framework for action-controlled and scene-generalizable game video generation, directly supporting the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_22",
+    "action": "backfill_evidence",
+    "reason": "Claim mirrors MineDojo's abstract (open-ended agents with internet-scale knowledge plus open-sourcing suite/models); backfill will retrieve the grounding chunks the paper clearly contains.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_23",
+    "action": "backfill_evidence",
+    "reason": "GTBench's game-theoretic evaluation of LLM strategic reasoning is stated in the paper's abstract; backfill will fetch that contribution chunk instead of the generic intro chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_25",
+    "action": "backfill_evidence",
+    "reason": "MineDojo's abstract proposes open-ended embodied agents with internet-scale knowledge to fix tabula-rasa learning; backfill will retrieve the exact grounding for this causal framing.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_28",
+    "action": "remap_citation",
+    "reason": "Claim is about GTBench but cites GameFactory (2501.08325); 2402.12348 is the GTBench paper already cited for claim_23, matching the sentence subject.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_29",
+    "action": "swap_evidence",
+    "reason": "Chunk agentic_240 verbatim supports the tabula-rasa limitation in specialist domains like Atari and Go, directly grounding the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_30",
+    "action": "backfill_evidence",
+    "reason": "Cited paper's intro centers on strategic reasoning of LLMs in game settings; semantic search should surface chunks about game-theoretic limitation findings absent from the preview.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_31",
+    "action": "backfill_evidence",
+    "reason": "Cited paper is AgentBench itself; its abstract/intro should contain chunks grounding the claim about quantitatively evaluating LLMs as agents, which the truncated preview chunks don't show.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_33",
+    "action": "backfill_evidence",
+    "reason": "Preview chunks cover general trajectory prediction only; the cited 'Driving Into the Future' paper's abstract should ground the world-model forecasting and planning contribution.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_34",
+    "action": "backfill_evidence",
+    "reason": "AgentBench's benchmark-design sections should contain chunks establishing the quantitative interactive-environment protocol; preview shows only generic intro text.",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_37",
+    "action": "rewrite_claim",
+    "reason": "The single cited AgentBench paper can only ground the AgentBench portion; the claims about the survey and driving pipelines' evaluation settings cannot be supported by this citation.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_38",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports isolation and divergence from human learning, not 'real-world conditions', so weaken the assertion to match",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_39",
+    "action": "backfill_evidence",
+    "reason": "Previewed AgentBench intro chunks are truncated and none fully cover the evaluation-gap statement; semantic search should fetch grounding chunks from the same paper",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "B",
+    "id": "claim_40",
+    "action": "backfill_evidence",
+    "reason": "Decomposition and human-anticipation parts are supported; the world-model gap framing needs grounding chunks fetched from the cited paper",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "E",
+    "id": "dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg",
+    "action": "delete_line",
+    "reason": "Last resort: unrecoverable figure reference with empty candidate list",
+    "outcome": "deleted",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "E",
+    "id": "dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg",
+    "action": "delete_line",
+    "reason": "Last resort: unrecoverable figure reference with empty candidate list",
+    "outcome": "deleted",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_3",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports prediction being fundamental to safe, efficient driving and decision-making, but the 'supplies the conceptual core' assertion for game content is unsupported; hedge to a suggestion.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_9",
+    "action": "rewrite_claim",
+    "reason": "First half matches evidence nearly verbatim, but 'a principal limitation' and the definitive 'which bounds' overreach; soften 'principal' to 'noted' and 'bounds' to 'suggests limits'.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_11",
+    "action": "rewrite_claim",
+    "reason": "Evidence confirms prediction serves safe/efficient/proactive driving, but 'must be adapted' is a categorical conclusion the survey does not assert; weaken to a suggestion.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_14",
+    "action": "keep",
+    "reason": "Claim mirrors the evidence almost verbatim ('incorporating advanced planning algorithms, e.g., tree search, is advantageous over reactive planning for web agents'); assertion strength is appropriate as-is.",
+    "outcome": "kept",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_24",
+    "action": "rewrite_claim",
+    "reason": "Evidence states the dataset was collected to achieve action-controlled generation, not that it grounds scene-generalizable generation (achieved via open-domain generative priors); weaken the dataset's asserted role.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_26",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_27",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_32",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_35",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 7,
+    "failure_type": "D",
+    "id": "claim_36",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_0",
+    "action": "swap_evidence",
+    "reason": "Preview chunk on Prediction Capability almost verbatim supports the claim (capacity to reason about future evolution of dynamic driving scenes, fundamental to safe/efficient/proactive behavior); re-point citation to it.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_1",
+    "action": "rewrite_claim",
+    "reason": "Drops the code-repository clause not covered by the strongest chunk; remaining assertion is directly supported by the survey's abstract chunk on GPT-4/Sora/AGI and comprehensive review.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "swap_evidence",
+    "reason": "Chunk directly evidences the claim's distinctive assertion: LLMs' strong reasoning capabilities via chain-of-thought prompting with intermediate steps; the planning-as-world-model framing is the paper's own title.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "rewrite_claim",
+    "reason": "First half is directly supported by the cited driving-survey chunk; the procedural-content-generation transposition (rolling out world models of levels/storylines) is the author's extrapolation the paper cannot ground, so it is removed.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_5",
+    "action": "rewrite_claim",
+    "reason": "The claimed mapping of methodological families to MLLMs vs. Sora and the game-taxonomy analogy are not stated in the paper; the two-purposes framing is verbatim supported by its foundational-definition chunk.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_6",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports the CoT prompting description and the world-model framing, but not that CoT rollouts are world-model simulations 'directly reusable' for storylines; weaken to a supportable assertion.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_7",
+    "action": "rewrite_claim",
+    "reason": "Cited driving survey supports only the prediction-scoping half; the comparison to the comprehensive survey is not grounded by this paper, so keep only the supported part and leave the taxonomy suggestion in the authorial voice.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": "remap_citation",
+    "reason": "The sentence explicitly names 'Reasoning with Language Model is Planning with World Model', which is exactly the title of paper:10.48550/arxiv.2305.14992; the cited driving survey cannot support the RAP attribution.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": "swap_evidence",
+    "reason": "This chunk directly states the survey closes by outlining key challenges and future research directions, grounding the closing claim without needing a rewrite.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": "swap_evidence",
+    "reason": "This chunk ties modeling of multi-agent economic interactions to the importance of predicting collective behavior, directly grounding both parts of the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_15",
+    "action": "rewrite_claim",
+    "reason": "Preview evidence supports the MARL framing and the resource-allocation prediction motivation, but not the public goods games/hypergraph specificity, so weaken to what the chunks state.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_16",
+    "action": "backfill_evidence",
+    "reason": "Claim mirrors the paper's own title/abstract (LLM as world model of the internet for model-based planning); semantic search should retrieve the grounding world-model chunk.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_18",
+    "action": "rewrite_claim",
+    "reason": "Tree search outperforming reactive planning is directly supported by the evidence; drop the unsupported implicit-world-model coupling.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_21",
+    "action": "swap_evidence",
+    "reason": "This chunk contains the near-verbatim sentence 'framework for action-controlled and scene-generalizable game video generation', directly grounding the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_22",
+    "action": "swap_evidence",
+    "reason": "This chunk verbatim states MineDojo open-sources its simulation suite, knowledge bases, algorithm implementation, and pretrained models toward generally capable embodied agents.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_23",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_28",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_29",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_30",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_33",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_34",
+    "action": "backfill_evidence",
+    "reason": "AgentBench abstract states it evaluates LLMs as agents on challenging tasks in interactive environments; semantic search should retrieve that grounding chunk from the cited paper.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_38",
+    "action": "backfill_evidence",
+    "reason": "The claim paraphrases the survey's framing of prior work training agents with limited knowledge in isolated environments vs real-world conditions; backfill will fetch the abstract passage supporting it.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_39",
+    "action": "backfill_evidence",
+    "reason": "AgentBench's abstract explicitly notes LLMs' agent potential is acknowledged while quantitative evaluation in interactive environments is missing; backfill should retrieve this.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "B",
+    "id": "claim_40",
+    "action": "rewrite_claim",
+    "reason": "Previewed chunks support the four-step decomposition and the human prediction-to-anticipation contrast, but not the world-model assertion, so the claim is weakened to what the evidence grounds.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_3",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports prediction's role in driving safety/efficiency/decision-making, but 'paramount' and 'supplies the conceptual core' for game content generation overstate; weakened to a suggested analogy",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_9",
+    "action": "rewrite_claim",
+    "reason": "Struggle with multi-step reasoning/planning despite CoT is directly supported, but 'a principal limitation' and the hard 'bounds' on generation go beyond the evidence; hedged",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_11",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports prediction serving safe/efficient/proactive driving decision-making, but 'confined' and 'must be adapted' are too categorical; softened to 'centered' and 'suggesting'",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_14",
+    "action": "keep",
+    "reason": "Claim mirrors the paper's own statement ('Recent work has shown that incorporating advanced planning algorithms, e.g., tree search, is advantageous over reactive planning for web agents'), so the assertion is appropriately calibrated",
+    "outcome": "kept",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_19",
+    "action": "rewrite_claim",
+    "reason": "Preview evidence grounds multi-agent interactions and LLM-empowered modeling of collective behavior, but does not establish the categorical 'spans disciplines' scope; weakened and anchored to the resource-allocation context",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_24",
+    "action": "rewrite_claim",
+    "reason": "Evidence ties the dataset to action control; scene-generalizable generation is a framework-level property driven by pre-trained video diffusion priors, so the attribution to the dataset is weakened.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_25",
+    "action": "keep",
+    "reason": "Claim closely mirrors the paper's stated motivation (agents typically learning tabula rasa in isolated environments) and contribution (open-ended embodied agents with internet-scale knowledge); assertion is acceptable as-is.",
+    "outcome": "kept",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_26",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports strategic reasoning in game-theoretic settings; the added 'logical reasoning' attribution overstates GTBench's focus.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_27",
+    "action": "rewrite_claim",
+    "reason": "MineDojo is a simulation suite for developing agents, not a generation framework, so 'complementary layers of interactive generation' overstates; framing softened to 'complementary purposes'.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_31",
+    "action": "rewrite_claim",
+    "reason": "Drops the subjective 'landmark' label and the 'urgent' intensifier while retaining the core assertion the evidence supports.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_32",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports that agent development is a long-standing objective in academia/industry, but not that the survey 'consolidates' the field; softened to 'reviews' and aligned wording with evidence.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_35",
+    "action": "rewrite_claim",
+    "reason": "Evidence directly supports only the definition itself; removed the unsupported assertion that the survey grounds evaluation in this definition.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_36",
+    "action": "rewrite_claim",
+    "reason": "Dropped the unsupported 'On the simulation side' framing; the four-step division and trajectory prediction's pivotal role match the evidence nearly verbatim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 8,
+    "failure_type": "D",
+    "id": "claim_37",
+    "action": "rewrite_claim",
+    "reason": "A comparison 'showing' divergent settings is too strong for the cited intro-level evidence; weakened 'shows divergent' to 'suggests differing' while preserving the enumeration.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "A",
+    "id": "1, 26, 32",
+    "action": "remap_citation",
+    "reason": "EvalCrafter benchmarks large video generation models, matching the claim about evolution of generative video modeling.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "A",
+    "id": "4; 37; 7; 12",
+    "action": "remap_citation",
+    "reason": "GTBench paper directly matches the sentence about LLM strategic reasoning limitations via game-theoretic evaluation.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "A",
+    "id": "cs.CV",
+    "action": "remap_citation",
+    "reason": "The citation was an arXiv category string; the claim about massive datasets and high-capacity models driving advancements comes from the ProcTHOR paper itself.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_1",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports RL training of level-building agents, but the 'level design framed as a game' framing is not in the previewed chunks; weaken the claim to what the chunks state.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "swap_evidence",
+    "reason": "Chunk 96_p0_616 verbatim states that search-based, solver-based, rule-based and grammar-based PCG methods have been applied to various content types; attach that chunk.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_3",
+    "action": "rewrite_claim",
+    "reason": "Previewed chunks support RL for level generation with agents trained to construct levels; drop the unsupported 'level design itself as the game being played' framing.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "remap_citation",
+    "reason": "The sentence is about the PCGRL paper's own claim; its title matches the sentence and it contains 'to the best of our knowledge, this is the first time reinforcement learning is brought to bear on this problem'.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_5",
+    "action": "rewrite_claim",
+    "reason": "The speculative 'shift toward learning agents' framing is unsupported; replace with the concrete content-type coverage stated in the cited chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_6",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_7",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_12",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": null,
+    "reason": "no usable action list after retry: model reply contained no JSON object",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_14",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports the video-benchmark side (temporal coherence, visual quality, growing benchmarks); rewrite aligns wording with grounded terms and softens the ungrounded 'depart from its lane' specificity",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_15",
+    "action": "rewrite_claim",
+    "reason": "Drop unsupported 'replace costly or hazardous real-world measurement' and 'world model' framing; keep the contrast that the cited benchmark evidence can carry",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_16",
+    "action": "backfill_evidence",
+    "reason": "Previewed chunks only cover virtual-road tools and virtual replication of testing; the expense/danger/fatalities motivation is plausibly stated elsewhere in this self-driving testing survey, so fetch grounding chunks",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_17",
+    "action": "swap_evidence",
+    "reason": "This chunk directly grounds rapid field progress plus the growing number of open-/closed-source models and benchmarks, supporting the evaluation-bottleneck assertion",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_18",
+    "action": "backfill_evidence",
+    "reason": "Previewed chunks appear mismatched (WANDERLAND text under the ProcTHOR id); only the CV/NLP comparison is covered, so re-run semantic search to fetch ProcTHOR platform-grounding chunks",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_19",
+    "action": "swap_evidence",
+    "reason": "Abstract chunk directly supports both the motivation (generative videos revolutionizing game development) and the framework description.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_21",
+    "action": "swap_evidence",
+    "reason": "Chunk explicitly states GF-Minecraft was collected first to achieve action-controlled video generation.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_22",
+    "action": "backfill_evidence",
+    "reason": "Preview chunks are from an unrelated paper (WANDERLAND) and do not ground the ProcTHOR/GameFactory comparison; semantic search should fetch proper grounding chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_23",
+    "action": "rewrite_claim",
+    "reason": "Evidence only supports the module-specific characterization; the mean-field/population-level reuse assertion is unsupported and removed.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_24",
+    "action": "rewrite_claim",
+    "reason": "Grounded in the GF-Minecraft chunk; drops the unsupported 'anchored to that collection' claim, which conflicts with the paper's scene-generalizable action control via open-domain generative priors.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_25",
+    "action": "backfill_evidence",
+    "reason": "Claim splices two supported passages (agentic_18 and agentic_19); no single preview chunk covers it, so fetch grounding chunks for the full claim",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_26",
+    "action": "backfill_evidence",
+    "reason": "GTBench-specific statement about game-theoretic evaluation is absent from the generic intro chunks shown; the cited paper likely contains it deeper",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_29",
+    "action": "swap_evidence",
+    "reason": "Chunk 144 states the PCGML training-on-existing-content method almost verbatim",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_30",
+    "action": "rewrite_claim",
+    "reason": "Drop the PCGML contrast, which the cited GTBench paper cannot support; keep only the GTBench half",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_31",
+    "action": "backfill_evidence",
+    "reason": "Claim about GTBench's necessity of game-theoretic assessment is not in the generic preview chunks; search the cited paper for grounding",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_32",
+    "action": "swap_evidence",
+    "reason": "Introduction chunk states verbatim that in PCGML a machine learning model trains on an existing corpus of game content, directly grounding the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_34",
+    "action": "rewrite_claim",
+    "reason": "Drops the unsupported evaluative phrase 'a vital component of software testing'; the remaining assertion matches the paper's stated contribution to mobile app testing via LLM-based test script generation and migration.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_35",
+    "action": "rewrite_claim",
+    "reason": "The cited paper only characterizes Infinigen as procedural and focused on high-fidelity realism; the 'entirely procedural, every asset from scratch via randomized mathematical rules' phrasing overstates the available evidence.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_36",
+    "action": "swap_evidence",
+    "reason": "Section 2.3 states verbatim that procedural data offers the advantage of generating infinite variation through a compact set of rules.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_37",
+    "action": "swap_evidence",
+    "reason": "Chunk near-verbatim states the investigation explores the capabilities of LLMs, represented by ChatGPT, in test script generation and migration, contributing to mobile app testing.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_38",
+    "action": "rewrite_claim",
+    "reason": "Evidence only states traditional rule-based methods demand extensive manual modeling and that Infinigen is a recent procedural method; the strong assertion that Infinigen 'replaces' manual modeling with 'fully automated' synthesis is not fully supported, so weaken the claim to match the cited chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "B",
+    "id": "claim_39",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports the labor demands of traditional rule-based pipelines, but not the stronger assertion that this 'remains the key limitation' motivating fully procedural world generation; soften to what the cited chunks can ground.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "E",
+    "id": "dt=2026-06-04/ht=19/1a86671922bc18617446eee16cd42d7fe62242511dd73ccc8efb5f1c4aa0e838.jpg",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_0",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_8",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_9",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_11",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_20",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_27",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_28",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 9,
+    "failure_type": "D",
+    "id": "claim_33",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "A",
+    "id": "23, 40, 41",
+    "action": "remap_citation",
+    "reason": "Sentence asserts LLM success across NLP tasks; the Explainability for LLMs survey covers LLM capabilities broadly, best matching candidate in whitelist.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_1",
+    "action": "swap_evidence",
+    "reason": "Evidence chunk 60 contains the claim text verbatim (GPT-4, Sora, world models and AGI), so attaching it directly grounds the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "swap_evidence",
+    "reason": "Chunk 91 explicitly states LLMs face hallucinations, outdated information, and non-transparent, untraceable reasoning, and that RAG has emerged as a promising solution.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "swap_evidence",
+    "reason": "Chunk 49 directly states the need for an advanced method of creating 3D assets led to focusing on generative AI, matching the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_5",
+    "action": "swap_evidence",
+    "reason": "Chunk 61 directly supports summarizing representative papers with code repositories, outlining key challenges, and providing future research directions.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_7",
+    "action": "rewrite_claim",
+    "reason": "The cited diffusion-models survey contains no content on world models, so the contrastive claim cannot be grounded; rewriting keeps only the part the paper's abstract supports.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": "swap_evidence",
+    "reason": "This chunk states verbatim that LLMs face hallucinations, outdated information, and non-transparent, untraceable reasoning processes, fully grounding the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_9",
+    "action": "swap_evidence",
+    "reason": "This chunk explicitly says the survey outlines key challenges and provides insights into potential future research directions, directly matching the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": "swap_evidence",
+    "reason": "This chunk states LLMs showcase strong reasoning capabilities using chain-of-thought, where LLMs are prompted to generate intermediate steps before the final answer, exactly matching the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": "swap_evidence",
+    "reason": "This chunk covers both parts of the claim: LLMs revolutionized NLP and 'this remarkable performance comes with substantial computational costs.'",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_14",
+    "action": "rewrite_claim",
+    "reason": "The paper supports the descriptive CoT capability statement but not the causal framing that CoT is the mechanism behind the reasoning gains; weaken the claim to what the evidence states.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_16",
+    "action": "rewrite_claim",
+    "reason": "Evidence says compression emerged as a key research area to address size/compute challenges; 'methodological response' overstates, so weaken to what the chunk supports.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_17",
+    "action": "rewrite_claim",
+    "reason": "Comparison with the LLM-agent survey is not supported by this paper's chunks; keep only the framing stated in the paper's title.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_18",
+    "action": "rewrite_claim",
+    "reason": "Contrast with Recommendation Systems is unsupported; retain only the supported claim about compression targeting computational cost.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_19",
+    "action": "swap_evidence",
+    "reason": "Claim is a near-verbatim restatement of this chunk ('even such reasoning-oriented models still struggle with problems that require multi-step reasoning and planning').",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_20",
+    "action": "swap_evidence",
+    "reason": "Claim matches this chunk almost word-for-word ('their large size and high computational needs pose challenges for practical use, especially in resource-limited settings').",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_25",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports Cosmos as a digital twin of the physical world, but not the stronger pairing-of-digital-twins / evaluative-reference framing; weaken the assertion to match the chunks",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_26",
+    "action": "backfill_evidence",
+    "reason": "Preview chunks are generic LLM-agent intro text that does not state the interactive-environment, quantitatively-scored protocol; semantic search should fetch grounding chunks for this AgentBench claim",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_29",
+    "action": "rewrite_claim",
+    "reason": "Cited paper contains no knowledge-editing evaluation evidence, so the cross-paper contrast is ungrounded; rewrite to keep only the games-survey assertion its abstract supports",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_33",
+    "action": "rewrite_claim",
+    "reason": "Evidence chunk nearly verbatim supports the success statement; drop the unsupported trailing 'underpins their relevance for constructing visually rich representations' clause",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_34",
+    "action": "swap_evidence",
+    "reason": "This chunk near-verbatim states LLMs show exceptional performance on reference disambiguation and metaphor recognition/generation, directly grounding the claim, unlike the opacity-focused intro chunks currently attached",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_35",
+    "action": "swap_evidence",
+    "reason": "Chunk 127 states verbatim that instruction tuning has become a widely adopted post-training method enabling LLMs and MLLMs to follow instructions and solve broader general tasks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_36",
+    "action": "rewrite_claim",
+    "reason": "SOTA-across-tasks is supported by chunk 235 and image-synthesis success by chunk 234; the unsupported 'algorithmic foundation' framing is weakened to grounded phrasing.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_37",
+    "action": "swap_evidence",
+    "reason": "Chunk 126 directly states SFT performs full-parameter fine-tuning on pre-trained models using task-specific labeled data (input-output pairs).",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_39",
+    "action": "rewrite_claim",
+    "reason": "Chunk 126 supports the close relation to SFT and prompt tuning and the special-form-of-SFT framing; the unsupported meta-claim about how the survey situates it is removed.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_40",
+    "action": "rewrite_claim",
+    "reason": "Chunks 234 and 235 directly support surpassing GANs and SOTA performance; the interpretive 'dominant paradigm shift' claim is dropped.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "B",
+    "id": "claim_41",
+    "action": "backfill_evidence",
+    "reason": "Synthesis claim spans both diffusion-model visual synthesis and LLM/MLLM instruction-following, but the previewed chunks only cover diffusion models. The cited survey has many chunks beyond the preview, so semantic search should fetch grounding for both components rather than weakening or deleting the conclusion.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_0",
+    "action": "rewrite_claim",
+    "reason": "The phrase 'epoch of all-encompassing Artificial Intelligence for General Creativity' overstates the source; evidence supports 'epoch of generative AI' with creativity boundaries being redefined.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_12",
+    "action": "keep",
+    "reason": "Evidence directly supports both assertions: LLMs as powerful NLP tools and significant attention in recommendation; wording matches the source.",
+    "outcome": "kept",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_21",
+    "action": "rewrite_claim",
+    "reason": "Soften 'foundational contribution' and the unverifiable premise details to what the cited text supports: a key advance and a foundation model serving as a digital twin of the physical world.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_22",
+    "action": "rewrite_claim",
+    "reason": "Replace 'urgent need' and 'widely acknowledged' with the evidence-backed motivation of growing interest and demonstrated potential of LLMs as agents.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_23",
+    "action": "rewrite_claim",
+    "reason": "Drop the unverified 'public engagement' portion; retain only the abstract-supported explosive increase in research on LLMs.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_24",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_28",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_31",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_32",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_38",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 10,
+    "failure_type": "D",
+    "id": "claim_42",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "A",
+    "id": "23, 40, 41",
+    "action": "remap_citation",
+    "reason": "The sentence's claim about LLMs' success in NLP matches the whitelisted survey whose title is explicitly referenced in the sentence.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_1",
+    "action": "swap_evidence",
+    "reason": "Preview chunk states the claim nearly verbatim (world models attention due to GPT-4/Sora, pursuit of AGI).",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_2",
+    "action": "swap_evidence",
+    "reason": "Section 2.2 chunk directly states LLM limitations (hallucinations, outdated info, non-transparent reasoning) and RAG as a promising solution.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_4",
+    "action": "rewrite_claim",
+    "reason": "Evidence says a need for 3D asset creation led to focusing on generative AI within one project, not a general recognition across content-creation projects; weaken claim to match the source.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_5",
+    "action": "swap_evidence",
+    "reason": "Chunk explicitly says the survey summarizes representative papers with code repositories, outlines key challenges, and provides future research directions.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_7",
+    "action": "rewrite_claim",
+    "reason": "Cited diffusion survey only supports the diffusion clause; no preview chunk covers world models, and no remap candidates were listed, so drop the unsupported clause.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_8",
+    "action": "swap_evidence",
+    "reason": "Chunk explicitly lists hallucinations, outdated information, and non-transparent, untraceable reasoning of LLMs, directly matching the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_9",
+    "action": "swap_evidence",
+    "reason": "Chunk states the survey outlines key challenges and potential future research directions, exactly what the claim asserts.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_10",
+    "action": "swap_evidence",
+    "reason": "Chunk confirms LLMs showcase strong reasoning capabilities via chain-of-thought with intermediate steps, matching the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_13",
+    "action": "swap_evidence",
+    "reason": "Chunk states LLMs transformed NLP and that remarkable performance comes with substantial computational costs, matching the claim verbatim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_14",
+    "action": "rewrite_claim",
+    "reason": "Claim misattributes CoT as the paper's core mechanism; the paper's thesis is planning with a world model. Weakened rewrite is directly supported by the CoT evidence chunk.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_16",
+    "action": "rewrite_claim",
+    "reason": "Evidence only supports model compression being a key research area addressing these challenges, not that it provides a definitive methodological solution; weakened to match the source.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_17",
+    "action": "rewrite_claim",
+    "reason": "Comparison to the LLM-agent survey is unsupported by the cited paper; kept only the paper's own thesis, which is supported by its title and framing.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_18",
+    "action": "rewrite_claim",
+    "reason": "Nothing about Recommendation Systems or LLM attention in that domain appears in the cited paper; removed the unsupported contrast, keeping the supported core.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_19",
+    "action": "swap_evidence",
+    "reason": "Chunk 252 states almost verbatim that even reasoning-oriented models still struggle with problems requiring multi-step reasoning and planning, so pointing to it grounds the claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_20",
+    "action": "swap_evidence",
+    "reason": "Chunk 66 contains the near-verbatim statement that LLMs' large size and high computational needs pose challenges for practical use, especially in resource-limited settings.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_25",
+    "action": "rewrite_claim",
+    "reason": "Claim asserts an evaluative-reference methodology not shown in evidence; chunk supports only Cosmos serving as a world digital twin, so weaken to match.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_26",
+    "action": "backfill_evidence",
+    "reason": "Claim is core AgentBench content (interactive environments, quantitative scoring) but preview chunks are generic intro text; semantic search should fetch the benchmark grounding chunks.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_29",
+    "action": "rewrite_claim",
+    "reason": "Cited paper supports only the game-survey side; the knowledge-editing comparison is outside its scope, so drop the cross-paper contrast.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_33",
+    "action": "rewrite_claim",
+    "reason": "First clause is near-verbatim in chunk 1; drop the unsupported 'visually rich representations' tail and align with evidenced downstream-applications statement.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_34",
+    "action": "swap_evidence",
+    "reason": "Chunk 2 contains the exact assertion about complex linguistic abilities including reference disambiguation and metaphor recognition/generation; point citation to it.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_35",
+    "action": "swap_evidence",
+    "reason": "Chunk agentic_127 states verbatim that instruction tuning/SFT has become a widely adopted post-training method enabling LLMs and MLLMs to follow instructions and solve broader general tasks; swapping grounds the claim exactly.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_36",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports SOTA across tasks (agentic_235) and promise in image synthesis (agentic_234), but not the stronger 'algorithmic foundation for high-fidelity visual synthesis'; weakened to match the evidence.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_37",
+    "action": "swap_evidence",
+    "reason": "Chunk agentic_126 contains the exact mechanistic statement: SFT performs full-parameter fine-tuning on pre-trained models using task-specific labeled data (input-output pairs).",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_39",
+    "action": "swap_evidence",
+    "reason": "Chunk agentic_126 explicitly states instruction tuning is close to supervised fine-tuning (SFT) and prompt tuning, directly grounding the relationship claim.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "B",
+    "id": "claim_40",
+    "action": "rewrite_claim",
+    "reason": "Evidence (agentic_234) confirms DMs surpassed GAN on image synthesis and subsequent promise across applications, but does not state a 'shift in the dominant paradigm for high-fidelity image generation'; tail replaced with supported content.",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_0",
+    "action": "rewrite_claim",
+    "reason": "The 'epoch of all-encompassing AI for General Creativity' overstates the evidence, which only supports an epoch of GenAI redefining creativity",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_12",
+    "action": "keep",
+    "reason": "Evidence states nearly verbatim that LLMs are emerging as powerful tools in NLP and have garnered significant attention in recommendation; assertion is acceptable as-is",
+    "outcome": "kept",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_21",
+    "action": "rewrite_claim",
+    "reason": "Evidence supports 'key advance' and the digital-twin role of the Cosmos model, but not the specific 'foundational premise' assertion; weaken to match",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_22",
+    "action": "rewrite_claim",
+    "reason": "'Urgent need' and 'widely acknowledged' overstate the evidence, which supports 'growing interest' and 'remarkable potential' as autonomous agents",
+    "outcome": "invalid_action",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_23",
+    "action": "keep",
+    "reason": "Claim mirrors the paper's abstract verbatim ('explosive increase in research' on LLMs and accompanying public engagement); assertion is acceptable as-is",
+    "outcome": "kept",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_24",
+    "action": "rewrite_claim",
+    "reason": "Removes unsupported intensifier 'profound' and softens the 'must capture' framing tail to what the cited abstract supports.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_28",
+    "action": "rewrite_claim",
+    "reason": "Drops the unsupported 'leading protocols' ranking and the 'assesses fidelity' phrasing; evidence only supports Cosmos serving as a digital twin.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_31",
+    "action": "rewrite_claim",
+    "reason": "Softens 'complete evaluation standard' to a design-scope statement and frames the remaining gap as suggestive rather than established.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_32",
+    "action": "rewrite_claim",
+    "reason": "Replaces 'establishes' and 'record-breaking' with 'reports' and 'state-of-the-art', matching the source's actual wording and strength.",
+    "outcome": "repaired",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_38",
+    "action": "keep",
+    "reason": "Assertion is commensurate with evidence: internal mechanisms are described as largely opaque, and this opacity motivates interpretability research.",
+    "outcome": "kept",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_41",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  },
+  {
+    "round": 11,
+    "failure_type": "D",
+    "id": "claim_42",
+    "action": null,
+    "reason": "llm budget exhausted",
+    "outcome": "unresolved",
+    "task_id": "task_world_models_for_games_a_survey_001"
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/kalin/miniconda3/bin/python",
+    "main.py",
+    "--topic",
+    "World Models for Games: A Survey",
+    "--language",
+    "en",
+    "--max-papers",
+    "60",
+    "--max-core-papers",
+    "15",
+    "--mode",
+    "full",
+    "--use-mineru"
+  ],
+  "environment": {
+    "EVISURVEY_WRITER_LLM": "1",
+    "EVISURVEY_REPAIR_AGENT": "1",
+    "EVISURVEY_REAL_NLI": "1",
+    "EVISURVEY_NLI_DEVICE": "cpu",
+    "HF_HUB_OFFLINE": "1",
+    "TOOL_TIMEOUT_SECONDS": "7200",
+    "FINAL_SEED_PAPERS": "0",
+    "DYLD_FALLBACK_LIBRARY_PATH": "/opt/homebrew/lib",
+    "HEAVY_LLM_MODEL": "deepseek-flash",
+    "HEAVY_LLM_THINKING_EFFORT": "disabled"
+  },
+  "git_commit": "4b320ab3f6783a5a47aa2f83a6d2f80fce1367b4",
+  "started_at": "2026-09-10T22:16:51.871060+08:00"
+}

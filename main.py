@@ -32,6 +32,15 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def exit_code_for_status(status: str) -> int:
+    """Map final run status to process exit code.
+
+    quality_failed (Goal Gate failed) must not exit 0 even though the
+    artifacts were rendered; only prepared/completed mean the run met its goal.
+    """
+    return 0 if status in {"prepared", "completed"} else 1
+
+
 def main() -> int:
     args = build_parser().parse_args()
     config = load_config()
@@ -67,7 +76,7 @@ def main() -> int:
     print(f"status: {final_state['status']}")
     print(f"task_id: {final_state['task_id']}")
     print(f"final_state: {config.output_dir / 'final_state.json'}")
-    return 0 if final_state["status"] in {"prepared", "completed"} else 1
+    return exit_code_for_status(final_state["status"])
 
 
 if __name__ == "__main__":

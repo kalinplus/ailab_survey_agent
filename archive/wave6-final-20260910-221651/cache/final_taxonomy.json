@@ -1,0 +1,52 @@
+{
+  "task_id": "task_world_models_and_gamecraft_final_001",
+  "categories": [
+    {
+      "category_id": "cat_world_models",
+      "category_name": "Generative Game World Simulation",
+      "description": "World models that learn compact dynamics for game-like or interactive environments.",
+      "paper_ids": [
+        "world_models_2018",
+        "diffusion_world_models_2024",
+        "gaia1_2023"
+      ]
+    },
+    {
+      "category_id": "cat_planning",
+      "category_name": "Planning and Control with Learned Models",
+      "description": "Agents that use learned dynamics for planning, control, or policy learning.",
+      "paper_ids": [
+        "dreamerv3_2023",
+        "muzero_2020"
+      ]
+    },
+    {
+      "category_id": "cat_neural_engines",
+      "category_name": "Neural Game Engines and Interactive Environments",
+      "description": "Generative systems that synthesize controllable interactive environments.",
+      "paper_ids": [
+        "gamengen_2024",
+        "genie_2024"
+      ]
+    },
+    {
+      "category_id": "cat_game_agents",
+      "category_name": "Game Agents and Multi-Agent Reinforcement Learning",
+      "description": "Large-scale agents trained in complex games and multi-agent settings.",
+      "paper_ids": [
+        "alphastar_2019",
+        "dota2_2019"
+      ]
+    },
+    {
+      "category_id": "cat_simulators",
+      "category_name": "Open-Ended Simulators and Game Intelligence Benchmarks",
+      "description": "Benchmarks and simulators that support open-ended embodied or game intelligence.",
+      "paper_ids": [
+        "generative_agents_2023",
+        "unisim_2024",
+        "minedojo_2022"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "coverage_score": 0.767,
+  "citation_validity_score": 1.0,
+  "evidence_grounding_score": 1.0,
+  "visualization_score": 1.0,
+  "structure_score": 1.0,
+  "overall_score": 0.942,
+  "details": {
+    "coverage": {
+      "cited_papers": [
+        "paper:10.1038/nature16961",
+        "paper:10.1038/s41586-019-1724-z",
+        "paper:10.1038/s41586-020-03051-4",
+        "paper:10.3390/info15030135",
+        "paper:10.48550/arxiv.1712.01815",
+        "paper:10.48550/arxiv.2305.16291",
+        "paper:10.48550/arxiv.2308.03688",
+        "paper:10.48550/arxiv.2309.09777",
+        "paper:10.48550/arxiv.2310.05036",
+        "paper:10.48550/arxiv.2402.15391",
+        "paper:10.48550/arxiv.2408.14837"
+      ],
+      "taxonomy_categories": 6,
+      "covered_category_ids": [
+        "cat_001",
+        "cat_002",
+        "cat_003",
+        "cat_004"
+      ],
+      "category_coverage": 0.667,
+      "citation_diversity": 1.0,
+      "section_citation_coverage": 0.667
+    },
+    "citation": {
+      "total_citations": 29,
+      "valid_citations": 29,
+      "invalid_citations": 0
+    },
+    "evidence_grounding": {
+      "supported_claims": 18,
+      "weak_claims": 0,
+      "unsupported_claims": 0,
+      "total_claims": 18
+    },
+    "visualization": {
+      "artifact_count": 8,
+      "artifact_types": [
+        "comparison_chart",
+        "comparison_table",
+        "evaluation_matrix",
+        "future_matrix",
+        "taxonomy_graph",
+        "timeline",
+        "visual_overview"
+      ]
+    },
+    "p0_quality": {
+      "topic_relevance_score": 0.618,
+      "section_depth_score": 0.95,
+      "section_citation_coverage": 0.667,
+      "citation_diversity_score": 1.0,
+      "artifact_integration_score": 1.0,
+      "survey_char_count": 11035,
+      "unique_cited_papers": 11
+    }
+  }
+}

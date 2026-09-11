@@ -1,0 +1,35 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "topic": "World Models for Games: A Survey",
+  "status": "quality_failed",
+  "goal_gate": {
+    "passed": false,
+    "stop_reason": "repair_budget_exhausted",
+    "unsupported": 20,
+    "invalid_citations": 32,
+    "citation_validity_score": 0.644,
+    "coverage": {
+      "text_retention": 1.207667731629393,
+      "figure_ref_retention": 0.7777777777777778,
+      "min_retention": 0.7,
+      "ok": true
+    }
+  },
+  "final_outputs": {
+    "survey_markdown": "output/survey.md",
+    "html_report": "output/final_report.html",
+    "pdf_report": "output/final_report.pdf",
+    "evaluation_report": "output/evaluation_report.json",
+    "citation_result": "output/citation_result.json",
+    "claim_map": "cache/claim_map.json",
+    "knowledge_bundle": "cache/knowledge_bundle.json",
+    "citation_ready_set": "cache/citation_ready_set.json",
+    "generated_artifact_bank": "cache/generated_artifact_bank.json"
+  },
+  "scores": {
+    "overall_score": 0.684,
+    "citation_validity_score": 0.644,
+    "evidence_grounding_score": 0.257,
+    "visualization_score": 1.0
+  }
+}

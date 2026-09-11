@@ -1,0 +1,346 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "total_citations": 56,
+  "valid_citations": 56,
+  "invalid_citations": 0,
+  "weak_claims": 0,
+  "citation_validity_score": 1.0,
+  "entries": [
+    {
+      "citation_id": "paper:10.48550/arxiv.2501.08325",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1609/aiide.v16i1.7416",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.1912.01588",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s00521-020-05383-8",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1609/aiide.v16i1.7416",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1145/3293882.3330566",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s00521-020-05383-8",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s00521-020-05383-8",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1609/aiide.v16i1.7416",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1145/3293882.3330566",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2305.18486",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2309.15789",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s11042-021-10594-9",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2305.18486",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2309.15789",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2305.18486",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2309.15789",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s11042-021-10594-9",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s11704-024-40231-1",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1016/j.jclepro.2024.142949",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2501.08325",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s11704-024-40231-1",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1016/j.jclepro.2024.142949",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s11704-024-40231-1",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1016/j.jclepro.2024.142949",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2501.08325",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2402.12348",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.1912.01588",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2206.06994",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2402.12348",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.1912.01588",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2402.12348",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.1912.01588",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2206.06994",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2206.10789",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1109/cvpr52729.2023.01215",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2005.00687",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2206.10789",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1109/cvpr52729.2023.01215",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2206.10789",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1109/cvpr52729.2023.01215",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2005.00687",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s00521-020-05383-8",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1609/aiide.v16i1.7416",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1145/3293882.3330566",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.48550/arxiv.2309.15789",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s11042-021-10594-9",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1007/s11704-024-40231-1",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "paper:10.1016/j.jclepro.2024.142949",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "hero_banner",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "concept_overview",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "publication_timeline",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "taxonomy_overview",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "evaluation_protocol_matrix",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "future_directions_matrix",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    },
+    {
+      "citation_id": "method_comparison",
+      "valid": true,
+      "figures_valid": [],
+      "tables_valid": []
+    }
+  ]
+}

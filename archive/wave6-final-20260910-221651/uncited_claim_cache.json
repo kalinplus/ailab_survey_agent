@@ -1,0 +1,132 @@
+{
+  "This survey covers 6 research themes and 13 selected papers, spanning Procedural Generation and Scripting to Game-Oriented and Cross-Domain Applications": {
+    "status": "weak",
+    "confidence": 0.699,
+    "n_hits": 3
+  },
+  "The review separates reported findings from open questions and lists the papers cited in its discussion": {
+    "status": "supported",
+    "confidence": 0.602,
+    "n_hits": 3
+  },
+  "Representative work includes Grandmaster level in StarCraft II using multi-agent reinforcement learning, Mastering Diverse Domains through World Models, and DIFFUSION MODELS ARE REAL-TIME GAME ENGINES": {
+    "status": "weak",
+    "confidence": 0.361,
+    "n_hits": 3
+  },
+  "What does it mean for an artificial agent to learn and use an internal model of a game world, and how can such models be built, evaluated, and exploited across the many roles games demand of them? As games become both a dominant testbed for learning-based control and a practical target for automated design, the field has accumulated a fragmented mix of procedural generators, latent dynamics models, learned simulators, and multi-agent approximations whose relationships and trade-offs remain unclear": {
+    "status": "weak",
+    "confidence": 0.353,
+    "n_hits": 3
+  },
+  "This survey answers that question by organizing the area around its core themes and clarifying what is genuinely shared across them": {
+    "status": "weak",
+    "confidence": 0.764,
+    "n_hits": 3
+  },
+  "The survey first presents a graphical overview to orient readers before the technical taxonomy": {
+    "status": "weak",
+    "confidence": 0.542,
+    "n_hits": 3
+  },
+  "Figure 1 shows the relationship among world models, game environments, agents, and evaluation": {
+    "status": "weak",
+    "confidence": 0.346,
+    "n_hits": 3
+  },
+  "Figure 2 then reframes the same topic as an interaction loop: an agent observes, a world model predicts, the environment responds, and evaluation closes the cycle": {
+    "status": "weak",
+    "confidence": 0.312,
+    "n_hits": 3
+  },
+  "Procedural Generation and Scripting focuses on Methods for procedurally generating game worlds and scripting dynamic events, including rule-based, grammar-based, and search-based approaches": {
+    "status": "supported",
+    "confidence": 0.044,
+    "n_hits": 3
+  },
+  "Procedural Generation and Scripting hands the open question to Latent Representations and World Models, which asks about learning compact latent representations of game states and dynamics for prediction, planning, and control in world models, including internal representation and general world model definitions": {
+    "status": "weak",
+    "confidence": 0.283,
+    "n_hits": 3
+  },
+  "Latent Representations and World Models focuses on Learning compact latent representations of game states and dynamics for prediction, planning, and control in world models, including internal representation and general world model definitions": {
+    "status": "weak",
+    "confidence": 0.638,
+    "n_hits": 3
+  },
+  "Latent Representations and World Models hands the open question to Generative Simulation and Interactive Control, which asks about generative approaches for simulating futures and enabling interactive control, including video generation, diffusion-based control, and action-conditioned generation": {
+    "status": "weak",
+    "confidence": 0.908,
+    "n_hits": 3
+  },
+  "Generative Simulation and Interactive Control focuses on Generative approaches for simulating futures and enabling interactive control, including video generation, diffusion-based control, and action-conditioned generation": {
+    "status": "supported",
+    "confidence": 0.301,
+    "n_hits": 3
+  },
+  "Generative Simulation and Interactive Control hands the open question to Multi-Agent and Mean-Field Simulation, which asks about scalable simulation and planning techniques for large populations of agents using mean-field approximations and related multi-agent methods": {
+    "status": "weak",
+    "confidence": 0.824,
+    "n_hits": 3
+  },
+  "Multi-Agent and Mean-Field Simulation focuses on Scalable simulation and planning techniques for large populations of agents using mean-field approximations and related multi-agent methods": {
+    "status": "supported",
+    "confidence": 0.137,
+    "n_hits": 3
+  },
+  "Multi-Agent and Mean-Field Simulation hands the open question to Benchmarks and Evaluation, which asks about datasets, benchmarks, and evaluation frameworks for assessing world models, simulators, and agents across diverse games and tasks, including simulator quality and benchmark dimensions": {
+    "status": "weak",
+    "confidence": 0.975,
+    "n_hits": 3
+  },
+  "Benchmarks and Evaluation focuses on Datasets, benchmarks, and evaluation frameworks for assessing world models, simulators, and agents across diverse games and tasks, including simulator quality and benchmark dimensions": {
+    "status": "supported",
+    "confidence": 0.206,
+    "n_hits": 3
+  },
+  "Benchmarks and Evaluation hands the open question to Game-Oriented and Cross-Domain Applications, which asks about applications of world models to specific game genres and cross-domain extensions such as autonomous driving, robotics, and social simulacra": {
+    "status": "supported",
+    "confidence": 0.068,
+    "n_hits": 3
+  },
+  "Game-Oriented and Cross-Domain Applications focuses on Applications of world models to specific game genres and cross-domain extensions such as autonomous driving, robotics, and social simulacra": {
+    "status": "supported",
+    "confidence": 0.508,
+    "n_hits": 3
+  },
+  "Game-Oriented and Cross-Domain Applications closes the body; the remaining sections fold this evidence into open challenges and future directions": {
+    "status": "unsupported",
+    "confidence": 0.2,
+    "n_hits": 3
+  },
+  "The captured evidence does not yet support sharper open-challenge statements": {
+    "status": "supported",
+    "confidence": 0.472,
+    "n_hits": 3
+  },
+  "Table 2 organizes the main evaluation protocols used across game intelligence, learned simulators, and interactive world models": {
+    "status": "weak",
+    "confidence": 0.313,
+    "n_hits": 3
+  },
+  "The recorded limitations do not yet justify specific research proposals": {
+    "status": "weak",
+    "confidence": 0.475,
+    "n_hits": 3
+  },
+  "Table 3 summarizes these future directions, and Figure 5 contrasts method families by their contribution and limitation profiles": {
+    "status": "weak",
+    "confidence": 0.129,
+    "n_hits": 3
+  },
+  "The synthesis rests on the following reported findings": {
+    "status": "weak",
+    "confidence": 1.0,
+    "n_hits": 3
+  },
+  "Their scopes remain tied to the respective study settings; they do not by themselves establish a shared performance ranking": {
+    "status": "supported",
+    "confidence": 0.539,
+    "n_hits": 3
+  }
+}

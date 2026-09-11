@@ -1,0 +1,26 @@
+{
+  "source": "hand-curated landmark list for the World Models / GameCraft survey topic",
+  "maintainer": "main session",
+  "papers": [
+    {"title": "World Models", "authors": ["David Ha", "Jürgen Schmidhuber"], "year": 2018},
+    {"title": "Learning latent dynamics for planning from pixels", "alias": "PlaNet", "authors": ["Danijar Hafner"], "year": 2019},
+    {"title": "Dream to Control: Learning Behaviors by Latent Imagination", "alias": "Dreamer", "authors": ["Danijar Hafner"], "year": 2019},
+    {"title": "When to Trust Your Model: Model-Based Policy Optimization", "alias": "MBPO", "authors": ["Michael Janner"], "year": 2019},
+    {"title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model", "alias": "MuZero", "authors": ["Julian Schrittwieser"], "year": 2019},
+    {"title": "Grandmaster-level in StarCraft II using multi-agent reinforcement learning", "alias": "AlphaStar", "authors": ["Oriol Vinyals"], "year": 2019},
+    {"title": "Never Give Up: Learning Directed Exploration Strategies", "alias": "NGU", "authors": ["Charles Badia"], "year": 2020},
+    {"title": "Mastering Atari with Discrete World Models", "alias": "DreamerV2", "authors": ["Danijar Hafner"], "year": 2021},
+    {"title": "Agent57: Outperforming the Atari Human Benchmark", "authors": ["Charles Badia"], "year": 2020},
+    {"title": "Minedojo: Building open-ended embodied agents with internet-scale knowledge", "authors": ["Linxi Fan"], "year": 2022},
+    {"title": "Video PreTraining (VPT): Learning to Act by Watching Unlabeled Online Videos", "authors": ["OpenAI"], "year": 2022},
+    {"title": "Generative agents: Interactive simulacra of human behavior", "authors": ["Joon Sung Park"], "year": 2023},
+    {"title": "Mastering Diverse Domains through World Models", "alias": "DreamerV3", "authors": ["Danijar Hafner"], "year": 2023},
+    {"title": "Gaia-1: A generative world model for autonomous driving", "authors": ["Anthony Hu"], "year": 2023},
+    {"title": "Learning universal predictors", "alias": "UniSim", "authors": ["Sherry Yang"], "year": 2023},
+    {"title": "Genie: Generative interactive environments", "authors": ["Jake Bruce"], "year": 2024},
+    {"title": "Diffusion models are real-time game engines", "alias": "GameNGen", "authors": ["Dani Valevski"], "year": 2024},
+    {"title": "Diamond: Diffusion for world modeling: Visual details matter in Atari", "authors": ["Vincent Micheli"], "year": 2024},
+    {"title": "GameFactory: Creating new games with generative interactive videos", "authors": [], "year": 2025},
+    {"title": "Cosmos world foundation model platform for physical ai", "authors": ["NVIDIA"], "year": 2025}
+  ]
+}

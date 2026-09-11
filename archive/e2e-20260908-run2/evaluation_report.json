@@ -1,0 +1,72 @@
+{
+  "task_id": "task_world_models_for_games_a_survey_001",
+  "coverage_score": 0.867,
+  "citation_validity_score": 1.0,
+  "evidence_grounding_score": 0.042,
+  "visualization_score": 1.0,
+  "structure_score": 1.0,
+  "overall_score": 0.727,
+  "details": {
+    "coverage": {
+      "cited_papers": [
+        "paper:10.1007/s00521-020-05383-8",
+        "paper:10.1007/s11042-021-10594-9",
+        "paper:10.1007/s11704-024-40231-1",
+        "paper:10.1016/j.jclepro.2024.142949",
+        "paper:10.1109/cvpr52729.2023.01215",
+        "paper:10.1145/3293882.3330566",
+        "paper:10.1609/aiide.v16i1.7416",
+        "paper:10.48550/arxiv.1912.01588",
+        "paper:10.48550/arxiv.2005.00687",
+        "paper:10.48550/arxiv.2206.06994",
+        "paper:10.48550/arxiv.2206.10789",
+        "paper:10.48550/arxiv.2305.18486",
+        "paper:10.48550/arxiv.2309.15789",
+        "paper:10.48550/arxiv.2402.12348",
+        "paper:10.48550/arxiv.2501.08325"
+      ],
+      "taxonomy_categories": 5,
+      "covered_category_ids": [
+        "cat_001",
+        "cat_002",
+        "cat_004",
+        "cat_005"
+      ],
+      "category_coverage": 0.8,
+      "citation_diversity": 1.0,
+      "section_citation_coverage": 0.833
+    },
+    "citation": {
+      "total_citations": 56,
+      "valid_citations": 56,
+      "invalid_citations": 0
+    },
+    "evidence_grounding": {
+      "supported_claims": 0,
+      "weak_claims": 1,
+      "unsupported_claims": 11,
+      "total_claims": 12
+    },
+    "visualization": {
+      "artifact_count": 8,
+      "artifact_types": [
+        "comparison_chart",
+        "comparison_table",
+        "evaluation_matrix",
+        "future_matrix",
+        "taxonomy_graph",
+        "timeline",
+        "visual_overview"
+      ]
+    },
+    "p0_quality": {
+      "topic_relevance_score": 0.383,
+      "section_depth_score": 0.912,
+      "section_citation_coverage": 0.833,
+      "citation_diversity_score": 1.0,
+      "artifact_integration_score": 0.875,
+      "survey_char_count": 35913,
+      "unique_cited_papers": 15
+    }
+  }
+}
