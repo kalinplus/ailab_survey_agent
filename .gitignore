@@ -8,7 +8,7 @@ build/
 venv/
 
 # Environment
-# .env
+.env
 .env.local
 
 # IDE
@@ -71,40 +71,9 @@ cache/tool_manifest.json
 requests/*
 !requests/.gitkeep
 
-# Run archives: keep small forensic artifacts, not the big crawled payloads
-archive/**/evidence_store.json
-archive/**/claim_map.json
-archive/**/parsed_papers.json
-archive/**/retrieved_papers.json
-archive/**/paper_cards.json
-archive/**/final_evidence_store.json
-archive/**/eval_evidence_store.json
-archive/**/knowledge_bundle.json
-archive/**/final_knowledge_bundle.json
-archive/**/figure_bank.json
-archive/**/final_figure_bank.json
-archive/**/generated_artifact_bank.json
-archive/**/table_bank.json
-archive/**/final_table_bank.json
-archive/**/citation_index.json
-archive/**/final_citation_index.json
-archive/**/citation_ready_set.json
-archive/**/final_citation_ready_set.json
-archive/**/seed_papers.json
-archive/**/gold_refs.json
-archive/**/p3_stage_trace.json
-archive/**/parse_trace.json
-archive/**/section_claim_plan.json
-archive/**/structured_claims.json
-archive/**/search_strategy.json
-archive/**/agent_context.json
-archive/**/canonical_survival.json
-archive/**/mineru_tasks.json
-archive/**/mineru_assets/
-archive/**/mineru_results/
-archive/**/logs/
-archive/**/requests/
-archive/**/memory/
+# Run archives: local-only forensic snapshots (already-tracked files stay tracked)
+archive/
+
 cache/mineru_assets/
 cache/sciverse_assets/
 cache/mineru_tasks.json
