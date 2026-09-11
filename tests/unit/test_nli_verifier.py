@@ -113,3 +113,24 @@ def test_real_nli_smoke():
     assert result.label in {"entailment", "neutral", "contradiction"}
     assert result.support_type in {"direct", "indirect", "contradictory"}
     assert isinstance(result.confidence, float)
+
+
+def test_real_nli_predict_chunking_matches_single_batch(monkeypatch):
+    """Wave 4 fix: _predict chunks large pair lists (content fulltext pushed
+    best_match into thousands of windows -> single forward OOMs MPS). Chunked
+    output must be identical in shape and selection behavior."""
+    from tools.nlp.nli_verifier import NLIVerifier
+
+    calls = []
+
+    class FakeModel:
+        def predict(self, pairs):
+            calls.append(len(pairs))
+            return [[0.1, float(idx % 3 == 1) * 0.9, 0.05] for idx, _ in enumerate(pairs)]
+
+    monkeypatch.setenv("EVISURVEY_NLI_BATCH", "4")
+    v = NLIVerifier.__new__(NLIVerifier)
+    v.model = FakeModel()
+    res = v.best_match("the claim", [f"evidence {i}" for i in range(10)])
+    assert calls == [4, 4, 2]  # chunked, never one giant batch
+    assert res.label == "entailment"

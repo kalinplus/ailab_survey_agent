@@ -19,6 +19,16 @@ def _citations(markdown: str) -> set[str]:
     return set(re.findall(r"\[([^\]]+)\]", text_only))
 
 
+def _isolated_root(tmp_path, monkeypatch):
+    """Resolve write_survey/revise_survey root-relative cache/output writes
+    inside tmp_path (config.ROOT_DIR + cwd), so unit runs never clobber real
+    run artifacts (same isolation the final-seed test uses)."""
+    import config
+
+    monkeypatch.setattr(config, "ROOT_DIR", tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+
 # --- citation prelock (spec T1 slice 3: recency x influence selection) -------------
 
 
@@ -57,9 +67,26 @@ def test_prelock_keeps_classic_high_influence_paper_when_cap_binds():
     """Spec T1 acceptance 3: canonical staples must not be pushed out of the whitelist
     by a pure newest-first cut (they are the first casualties of that order)."""
     all_ids = ["p_world_models", "p_dreamerv3", "p_fresh_cited", "p_fresh_uncited"]
-    assert _prelock(all_ids, 2)["allowed_paper_ids"] == ["p_dreamerv3", "p_fresh_cited"]
-    assert _prelock(all_ids, 3)["allowed_paper_ids"][:2] == ["p_dreamerv3", "p_fresh_cited"]
+    # With the bib pin (cap binding): the highest survey_ref staple is pinned
+    # first, the blend fills the rest — at cap 2 both staples survive the cut.
+    assert _prelock(all_ids, 2)["allowed_paper_ids"] == ["p_world_models", "p_dreamerv3"]
+    assert _prelock(all_ids, 3)["allowed_paper_ids"] == ["p_world_models", "p_dreamerv3", "p_fresh_cited"]
     assert "p_world_models" in _prelock(all_ids, 3)["allowed_paper_ids"]
+
+
+def test_prelock_items_carry_doc_id():
+    """Wave 3: ready-set items pass the card's doc_id through — it is the
+    /content key the repair backfill grounds own-paper claims by."""
+    cards = _prelock_cards()
+    cards["paper_cards"][0]["doc_id"] = "doc-hash-1"
+    result = build_citation_ready_set(
+        task_id="t", paper_cards=cards,
+        citation_index=_citation_index(["p_world_models"]),
+        evidence_store={"task_id": "t", "evidence": []}, max_core_papers=5)
+    item = next(i for i in result["items"] if i["paper_id"] == "p_world_models")
+    assert item["doc_id"] == "doc-hash-1"
+    assert all(i.get("doc_id", "") == "" for i in result["items"]
+               if i["paper_id"] != "p_world_models")
 
 
 def test_prelock_selection_matches_legacy_set_when_pool_below_cap():
@@ -86,6 +113,30 @@ def test_prelock_degrades_to_recency_without_influence_signals():
         max_core_papers=1,
     )
     assert result["allowed_paper_ids"] == ["p_new"]
+
+
+def _bind_writer_fixture(cards, evidence):
+    """Explicit, invented unit-fixture claims with real fixture block identities.
+
+    Production never upgrades legacy card fields this way; the tests declare
+    their own source roles and assertions instead of relying on that old bug.
+    """
+    for ev in evidence:
+        card = next(c for c in cards if c["paper_id"] == ev["paper_id"])
+        ev["source_type"] = "paragraph"
+        ev["supports_claims"] = []
+        for field, role, dimension in [("method", "own_method", "method"),
+                                       ("contribution", "own_result", "key_results"),
+                                       ("limitations", "own_limitation", "limitations")]:
+            value = card.get(field)
+            if not value:
+                continue
+            text = f"{card['title']} reports {field} findings on {value}"
+            quote = f"We report {field} findings on {value}."
+            ev["text"] += " " + quote
+            ev["supports_claims"].append(dict(paper_id=ev["paper_id"], claim_text=text,
+                dimension=dimension, source_role=role, source_quote=quote,
+                evidence_ids=[ev["evidence_id"]], support_type="direct", confidence=.9))
 
 
 def _minimal_inputs(tmp_path: Path):
@@ -125,6 +176,7 @@ def _minimal_inputs(tmp_path: Path):
             {"evidence_id": "e2", "paper_id": "p2", "text": "interactive simulation supports game environments"},
         ],
     }
+    _bind_writer_fixture(cards["paper_cards"], evidence["evidence"])
     taxonomy = {
         "task_id": "t",
         "categories": [
@@ -156,6 +208,7 @@ def _minimal_inputs(tmp_path: Path):
 
 def test_write_survey_uses_ready_set_and_falls_back_without_generate_key(tmp_path, monkeypatch):
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _minimal_inputs(tmp_path)
     request = {
         "task_id": "t",
@@ -183,7 +236,7 @@ def test_write_survey_uses_ready_set_and_falls_back_without_generate_key(tmp_pat
     assert result["status"] == "success"
     survey = (output / "survey.md").read_text(encoding="utf-8")
     assert _citations(survey) <= {"p1", "p2"}
-    assert len(survey) > 1800
+    assert len(survey) > 1000  # source-constrained output omits legacy filler
     assert "publication_timeline" in survey
     assert "representative_systems" in survey
     bank = json.loads((cache / "generated_artifact_bank.json").read_text(encoding="utf-8"))
@@ -192,12 +245,13 @@ def test_write_survey_uses_ready_set_and_falls_back_without_generate_key(tmp_pat
     assert all("placement_section" in a and "caption" in a and "display_number" in a for a in bank["artifacts"])
     assert all(a.get("alt_text") for a in bank["artifacts"] if a.get("artifact_kind") == "figure")
     assert all(a.get("table_headers") for a in bank["artifacts"] if a.get("artifact_kind") == "table")
-    claim_plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))
+    claim_plan = json.loads((tmp_path / "cache" / "section_claim_plan.json").read_text(encoding="utf-8"))
     assert claim_plan["sections"][0]["selected_papers"]
     assert "topic_relevance_score" in claim_plan["sections"][0]["selected_papers"][0]
 
 
-def test_revise_survey_removes_invalid_refs_and_rebuilds_actual_references(tmp_path):
+def test_revise_survey_removes_invalid_refs_and_rebuilds_actual_references(tmp_path, monkeypatch):
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _minimal_inputs(tmp_path)
     (output / "survey.md").parent.mkdir(parents=True, exist_ok=True)
     (output / "survey.md").write_text(
@@ -229,7 +283,9 @@ def test_revise_survey_removes_invalid_refs_and_rebuilds_actual_references(tmp_p
     assert "![Bad](bad_artifact)" not in revised
     assert "- p1:" in revised
     assert "- p2:" not in revised
-    assert "Revision Notes" in revised
+    # wave 5 (2a): notes live in the sidecar file, never in the delivered md
+    assert "Revision Notes" not in revised
+    assert "Revision Notes" in (output / "revision_notes.md").read_text(encoding="utf-8")
 
 
 def test_render_report_inlines_artifact_and_writes_review_outputs(tmp_path):
@@ -329,8 +385,14 @@ def test_final_seed_papers_are_topic_relevant(tmp_path):
 def test_final_seed_write_and_render_submission_ready(tmp_path, monkeypatch):
     monkeypatch.setenv("FINAL_SEED_PAPERS", "1")
     monkeypatch.delenv("GENERATE_KEY", raising=False)
-    root = Path.cwd()
-    write_final_seed_files(root)
+    # Resolve everything inside tmp_path: tools resolve relative paths against
+    # config.ROOT_DIR, and write_final_seed_files writes both <name>.json and
+    # final_<name>.json — against the real repo that clobbers live cache
+    # artifacts (a full-suite run once destroyed a real run's evidence store).
+    import config
+    monkeypatch.setattr(config, "ROOT_DIR", tmp_path)
+    monkeypatch.chdir(tmp_path)
+    write_final_seed_files(tmp_path)
     request = {
         "task_id": "t_final",
         "topic": "World Models and GameCraft for Interactive Game Intelligence",
@@ -352,7 +414,7 @@ def test_final_seed_write_and_render_submission_ready(tmp_path, monkeypatch):
     request_path = tmp_path / "requests" / "survey_generation_request.json"
     _write_json(request_path, request)
     write_result = write_survey.run(str(request_path))
-    assert write_result["status"] == "success"
+    assert write_result["status"] == "partial_success"  # legacy seed cards have no source-role contract
 
     output = tmp_path / "output"
     cache = tmp_path / "cache"
@@ -391,9 +453,9 @@ def test_final_seed_write_and_render_submission_ready(tmp_path, monkeypatch):
     assert (output / "survey.pdf").read_bytes().startswith(b"%PDF")
     assert (output / "final_report.pdf").read_bytes().startswith(b"%PDF")
     readiness = json.loads((output / "submission_readiness_report.json").read_text(encoding="utf-8"))
-    assert readiness["pass"]
+    assert not readiness["pass"]  # source-poor legacy seed is not submission ready
     review = json.loads((output / "review_report.json").read_text(encoding="utf-8"))
-    assert review["final_decision"] == "submission_ready"
+    assert review["final_decision"] != "submission_ready"
 
 
 def test_plotting_tools_force_agg_backend():
@@ -471,6 +533,7 @@ def _scaled_inputs(tmp_path: Path, papers_per_category: int, native_categories: 
             "limitations": "wireless scheduling limitation",
         }
     )
+    _bind_writer_fixture(cards, evidence)
     for name, data in [
         ("paper_cards", {"task_id": "t", "paper_cards": cards}),
         ("evidence_store", {"task_id": "t", "evidence": evidence}),
@@ -526,6 +589,7 @@ def _section_body(survey: str, title: str) -> str:
 def test_writer_llm_gate_off_keeps_template_output_byte_identical(tmp_path, monkeypatch):
     monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _minimal_inputs(tmp_path)
     request_path = _survey_request(tmp_path, cache, output, "zh")
     default_run = write_survey.run(str(request_path))
@@ -545,13 +609,14 @@ def test_section_selection_is_disjoint_relevance_floored_and_never_empty(tmp_pat
     monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")  # keyword column, no model download
     monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _scaled_inputs(tmp_path, papers_per_category=5)
     request_path = _survey_request(tmp_path, cache, output, "en")
 
     result = write_survey.run(str(request_path))
 
     assert result["status"] == "success"
-    plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))
+    plan = json.loads((tmp_path / "cache" / "section_claim_plan.json").read_text(encoding="utf-8"))
     themed = plan["sections"][: len(_CATEGORY_SPECS)]
     assert len(themed) == len(_CATEGORY_SPECS)
     # no section may lose its body to a greedier one (eval v2 empty-section trap)
@@ -577,13 +642,16 @@ def test_empty_pool_sections_reuse_within_bound_and_keep_their_native_papers(tmp
     monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
     monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _scaled_inputs(tmp_path, papers_per_category=3, native_categories=2)
     request_path = _survey_request(tmp_path, cache, output, "en")
 
     result = write_survey.run(str(request_path))
 
-    assert result["status"] == "success"
-    plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))
+    # Empty taxonomy buckets have no source-bound claims after bounded reuse;
+    # the writer surfaces a partial result instead of filling them from fields.
+    assert result["status"] == "partial_success"
+    plan = json.loads((tmp_path / "cache" / "section_claim_plan.json").read_text(encoding="utf-8"))
     themed = plan["sections"][: len(_CATEGORY_SPECS)]
     assert all(len(section["selected_papers"]) >= 1 for section in themed)
     id_sets = [{paper["paper_id"] for paper in section["selected_papers"]} for section in themed]
@@ -598,6 +666,7 @@ def test_empty_pool_sections_reuse_within_bound_and_keep_their_native_papers(tmp
 def test_template_output_has_no_meta_talk_and_cited_tail_sections(tmp_path, monkeypatch):
     monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _minimal_inputs(tmp_path)
     for language in ["zh", "en"]:
         request_path = _survey_request(tmp_path, cache, output, language)
@@ -612,7 +681,7 @@ def test_template_output_has_no_meta_talk_and_cited_tail_sections(tmp_path, monk
             body = _section_body(survey, title)
             citations = _citations(body)
             assert citations <= {"p1", "p2"}, f"{language}: {title} cites outside the whitelist"
-            assert citations, f"{language}: {title} has no citation"
+            assert body.strip(), f"{language}: {title} must state the evidence gap if all premises were already discussed"
 
 
 def _llm_inputs(tmp_path: Path):
@@ -648,6 +717,7 @@ def _llm_inputs(tmp_path: Path):
                     "text": f"The {name.lower()} experiment {slot} reports measured rollout behaviour.",
                 }
             )
+    _bind_writer_fixture(cards, evidence)
     for name, data in [
         ("paper_cards", {"task_id": "t", "paper_cards": cards}),
         ("evidence_store", {"task_id": "t", "evidence": evidence}),
@@ -676,6 +746,7 @@ def _section_whitelists(cache: Path) -> dict[str, set[str]]:
 def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
     monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _llm_inputs(tmp_path)
     request_path = _survey_request(tmp_path, cache, output, "en")
     whitelists = _section_whitelists(cache)
@@ -684,31 +755,13 @@ def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
     # Task-marked replies first: FakeLLMClient returns the first response whose
     # tag occurs in the prompt, and the tail-section prompts quote paper titles
     # that also appear in the section prompts.
-    replies = [
-        (
-            "draft the abstract",
-            "This survey covers two themes over six citation-ready studies [P1] [P2]. Its claims are bound to verified evidence snippets.",
-        ),
-        ("draft the introduction", "Game intelligence needs models that learn how worlds evolve rather than hand-written rules."),
-        ("draft the open challenges", "Reported evidence stops at short horizons and narrow evaluation [P1]."),
-        ("draft the future directions", "Follow-up work should extend the reported method to held-out environments [P1]."),
-    ]
+    replies = [("draft the introduction", "This review asks how learned worlds can be evaluated.")]
     for title, allowed in whitelists.items():
-        ids = sorted(allowed)
-        replies.append(
-            (
-                title,
-                "\n".join(
-                    [
-                        f"[SUMMARY] {ids[0]} studies the section goal [{ids[0]}].",
-                        f"This sentence leaks the harness chain, CitationReadySet and invents [{ids[-1]}] plus [offtopic].",
-                        f"[COMPARISON] {ids[0]} differs from {ids[1]} in method and role [{ids[0]}] [{ids[1]}].",
-                        f"{title} is the landmark work here, and its evidence shows measured rollout behaviour [{ids[0]}].",
-                        f"[LIMITATION] The reported evidence does not establish long-horizon robustness [{ids[2]}].",
-                    ]
-                ),
-            )
-        )
+        replies.append((title, json.dumps([
+            {"text": f"{title} models use learned predictions", "cite": ["P1"], "sources": ["P1S1"], "scope": "method"},
+            {"text": "This sentence leaks the harness chain", "cite": ["P1"], "sources": ["P1S1"], "scope": "method"},
+            {"text": "A foreign result must be rejected", "cite": ["P9"], "sources": ["P1S1"], "scope": "method"},
+        ])))
     fake = FakeLLMClient(responses=replies)
     monkeypatch.setenv("EVISURVEY_WRITER_LLM", "1")
     monkeypatch.setattr(write_survey, "_writer_llm_chat", lambda cfg: fake.chat)
@@ -724,13 +777,10 @@ def test_llm_sections_stay_inside_their_whitelist(tmp_path, monkeypatch):
         body = _section_body(survey, title)
         citations = _citations(body)
         assert citations <= allowed, f"{title}: citations outside the section whitelist"
-        assert "differs from" in body  # LLM comparison paragraph landed
-        assert "Its method can be summarized as" not in body  # template summary replaced
-        assert f"{title} is the landmark work here" in body  # author-prominent style
-        ids = sorted(allowed)
-        assert f"[{ids[0]}] [{ids[1]}]" in body  # information-prominent cluster
+        assert "models use learned predictions" in body
+        assert "Its method can be summarized as" not in body
     abstract = _section_body(survey, "Abstract")
-    assert _citations(abstract), "LLM abstract must carry a citation"
+    assert _citations(abstract) <= set().union(*whitelists.values())
 
 
 def test_llm_aliases_map_back_and_leaked_ids_are_dropped():
@@ -765,7 +815,7 @@ def test_llm_aliases_map_back_and_leaked_ids_are_dropped():
             "[LIMITATION] Unknown tags are dropped [P9]. The evidence does not establish scale [P2].",
         ]
     )
-    paragraphs = write_survey._llm_section_body(section, lambda messages, **kwargs: reply, zh=False, seen=set())
+    paragraphs = [write_survey._sanitize_llm_paragraph(write_survey._map_alias_citations(part, {"P1": "p_alpha", "P2": "p_beta"}), {"p_alpha", "p_beta"}) for part in write_survey._parse_move_paragraphs(reply)]
     text = " ".join(paragraphs)
 
     assert "[p_alpha]" in text and "P1" not in text
@@ -806,7 +856,7 @@ def test_both_citation_styles_bind_to_the_whitelist():
             "Later work agrees on the mechanism [P1] [P2].",
         ]
     )
-    paragraphs = write_survey._llm_section_body(section, lambda messages, **kwargs: reply, zh=False, seen=set())
+    paragraphs = [write_survey._sanitize_llm_paragraph(write_survey._map_alias_citations(part, {"P1": "p_alpha", "P2": "p_beta"}), {"p_alpha", "p_beta"}) for part in write_survey._parse_move_paragraphs(reply)]
     text = " ".join(paragraphs)
 
     # author-prominent: title in subject position, tag kept
@@ -838,6 +888,7 @@ def test_no_sentence_repeats_across_body_sections_and_oc_fd_are_disjoint(tmp_pat
     monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
     monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _scaled_inputs(tmp_path, papers_per_category=3)
     request_path = _survey_request(tmp_path, cache, output, "en")
 
@@ -845,7 +896,7 @@ def test_no_sentence_repeats_across_body_sections_and_oc_fd_are_disjoint(tmp_pat
 
     assert result["status"] == "success"
     survey = (output / "survey.md").read_text(encoding="utf-8")
-    plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))
+    plan = json.loads((tmp_path / "cache" / "section_claim_plan.json").read_text(encoding="utf-8"))
     body_titles = [section["section_title"] for section in plan["sections"]]
     assert len(body_titles) >= 3
 
@@ -866,7 +917,13 @@ def test_no_sentence_repeats_across_body_sections_and_oc_fd_are_disjoint(tmp_pat
     assert {bit["paper_id"] for bit in open_bits}.isdisjoint({bit["paper_id"] for bit in direction_bits})
     open_body = _section_body(survey, "Open Challenges")
     direction_body = _section_body(survey, "Future Directions")
-    assert _citing_sentences(open_body) and _citing_sentences(direction_body)
+    # Wave8 ③: limitation bits already rendered in the body no longer consume a
+    # pool slot, so a fixture whose body consumed every bit honestly degrades
+    # to the empty-branch sentence instead of a dedup-eaten bit.
+    assert ("limitations discussed above" in open_body
+            or "captured evidence does not yet support" in open_body)
+    assert ("review proposes" in direction_body
+            or "do not yet justify" in direction_body)
     assert not _citing_sentences(open_body) & _citing_sentences(direction_body)
 
 
@@ -874,6 +931,7 @@ def test_abstract_and_intro_are_differentiated(tmp_path, monkeypatch):
     monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
     monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _scaled_inputs(tmp_path, papers_per_category=3)
     request_path = _survey_request(tmp_path, cache, output, "en")
 
@@ -882,11 +940,11 @@ def test_abstract_and_intro_are_differentiated(tmp_path, monkeypatch):
     assert result["status"] == "success"
     survey = (output / "survey.md").read_text(encoding="utf-8")
     allowed = set(json.loads((cache / "citation_ready_set.json").read_text(encoding="utf-8"))["allowed_paper_ids"])
-    plan = json.loads(Path("cache/section_claim_plan.json").read_text(encoding="utf-8"))["sections"]
+    plan = json.loads((tmp_path / "cache" / "section_claim_plan.json").read_text(encoding="utf-8"))["sections"]
 
     abstract = _section_body(survey, "Abstract")
     intro = _section_body(survey, "Introduction")
-    assert _citations(abstract), "abstract carries at least one whitelisted citation"
+    assert not _citations(abstract), "metadata inventory is not an evidence assertion"
     assert _citations(abstract) <= allowed
     for section in plan:
         assert section["section_title"] in intro, f"intro does not preview {section['section_title']!r}"
@@ -896,9 +954,181 @@ def test_abstract_and_intro_are_differentiated(tmp_path, monkeypatch):
     assert _citations(intro) <= allowed
 
 
+# --- T12 intro responsibility dedup (specs/Intro职责化去重.md) -----------------
+
+
+def test_intro_jaccard_guard_deletes_restatement_keeps_fresh_sentences():
+    """Acceptance 1: intro sentence with bag Jaccard >= 0.6 vs a body sentence
+    is dropped; below threshold it stays."""
+    intro = (
+        "Game intelligence needs models that learn how worlds evolve. "
+        "Imagined rollouts show that Dreamer learns latent dynamics for planning. "
+        "Whether learned simulators can support fair evaluation remains open. "
+        "Hand-written rules alone cannot capture how game worlds evolve."
+    )
+    body = [
+        "Dreamer learns latent dynamics for planning in imagined rollouts [p_alpha].",
+        "Benchmarks collect shared evaluation environments for game agents [p_beta].",
+    ]
+    sections = [{"section_title": "Benchmarks"}]
+
+    out = write_survey._dedupe_intro_against_body(intro, body, sections)
+
+    assert "Imagined rollouts show that" not in out  # 7/9 = 0.78 vs body[0]
+    assert "Game intelligence needs models" in out
+    assert "remains open" in out
+    assert "Hand-written rules alone" in out
+
+
+def test_intro_guard_keeps_everything_when_cut_would_hollow_it_out():
+    """Acceptance 1: a cut leaving fewer than 3 sentences is rolled back whole."""
+    intro = (
+        "Dreamer learns latent dynamics for planning in imagined rollouts. "
+        "Game intelligence needs grounded evidence."
+    )
+    body = ["Dreamer learns latent dynamics for planning in imagined rollouts [p_alpha]."]
+
+    out = write_survey._dedupe_intro_against_body(intro, body, [{"section_title": "T"}])
+
+    assert out == intro  # dropping the restatement would leave 1 sentence
+    # no body sentences to compare against: the intro passes through untouched
+    assert write_survey._dedupe_intro_against_body(intro, [], [{"section_title": "T"}]) == intro
+
+
+def test_intro_roadmap_title_overlap_is_exempt_from_the_guard():
+    """Acceptance 2: a map sentence overlapping a body sentence only through
+    section-title words is not deleted (without the exemption its Jaccard is
+    exactly 0.6)."""
+    intro = (
+        "Motivation one stands alone. "
+        "Latent World Models follow. "
+        "Evidence still stops early. "
+        "Methods and metrics belong to later sections."
+    )
+    body = ["Latent world models learn."]
+    sections = [{"section_title": "Latent World Models"}]
+
+    out = write_survey._dedupe_intro_against_body(intro, body, sections)
+
+    assert "Latent World Models follow." in out
+
+
+class _ScriptedLLM:
+    """chat stub returning one scripted reply per call, in order."""
+
+    def __init__(self, replies):
+        self.replies = list(replies)
+
+    def chat(self, messages, **kwargs):
+        return self.replies.pop(0)
+
+
+def test_llm_intro_body_paraphrase_is_cut_after_body_render():
+    """The intro renders before the body, so the guard must run once the body
+    exists: an LLM intro sentence paraphrasing a body claim disappears from
+    the rendered Introduction while fresh motivation and the roadmap stay."""
+    sections = [
+        {
+            "section_id": "sec_01",
+            "section_title": "Latent World Models",
+            "section_goal": "latent dynamics for planning",
+            "allowed_paper_ids": ["p_alpha", "p_beta"],
+            "selected_papers": [
+                {
+                    "paper_id": "p_alpha",
+                    "title": "Dreamer",
+                    "problem": "planning",
+                    "method": "latent dynamics",
+                    "contribution": "policy learning",
+                    "limitations": "short horizon",
+                    "evidence_snippets": ["alpha evidence sentence"],
+                },
+                {
+                    "paper_id": "p_beta",
+                    "title": "Simulacra",
+                    "problem": "control",
+                    "method": "world model rollout",
+                    "contribution": "benchmark breadth",
+                    "limitations": "narrow domain",
+                    "evidence_snippets": ["beta evidence sentence"],
+                },
+            ],
+            "artifact_slots": [],
+            "claims": [],
+        }
+    ]
+    cards = [
+        {"paper_id": "p_alpha", "title": "Dreamer", "year": 2019, "topic_relevance_score": 0.9,
+         "method": "latent dynamics", "contribution": "policy learning", "limitations": "short horizon"},
+        {"paper_id": "p_beta", "title": "Simulacra", "year": 2020, "topic_relevance_score": 0.8,
+         "method": "world model rollout", "contribution": "benchmark breadth", "limitations": "narrow domain"},
+    ]
+    evidence_by_paper = {
+        # claim-bound fulltext rows: papers tier fulltext_ok so the structured
+        # body's limitation-scope claim passes the T8 scope gate
+        "p_alpha": [{"evidence_id": "e1", "paper_id": "p_alpha", "source_type": "paragraph",
+                     "text": "alpha evidence sentence",
+                     "supports_claims": [{"claim_text": "c", "support_type": "direct"}]}],
+        "p_beta": [{"evidence_id": "e2", "paper_id": "p_beta", "source_type": "paragraph",
+                    "text": "beta evidence sentence",
+                    "supports_claims": [{"claim_text": "c", "support_type": "direct"}]}],
+    }
+    for pid, rows in evidence_by_paper.items():
+        rows[0]["text"] = "We learn latent dynamics for planning. We evaluate only short horizons."
+        rows[0]["supports_claims"] = [
+            dict(paper_id=pid, claim_text="Dreamer learns latent dynamics for planning in imagined rollouts",
+                 source_role="own_result", dimension="key_results", source_quote="We learn latent dynamics for planning.",
+                 evidence_ids=[rows[0]["evidence_id"]], support_type="direct"),
+            dict(paper_id=pid, claim_text="The reported evidence stops at short horizons",
+                 source_role="own_limitation", dimension="limitations", source_quote="We evaluate only short horizons.",
+                 evidence_ids=[rows[0]["evidence_id"]], support_type="direct")]
+    sections[0]["selected_papers"] = [write_survey._selected_paper_entry(card, evidence_by_paper) for card in cards]
+    llm = _ScriptedLLM(
+        [
+            # abstract (aliases P1 = p_alpha)
+            "This survey covers one theme over two studies [P1]. Every claim is bound to recorded evidence snippets.",
+            # introduction: sentence 2 paraphrases the body claim below
+            "Game intelligence needs models that learn how worlds evolve. "
+            "Imagined rollouts show that Dreamer learns latent dynamics for planning. "
+            "Whether learned simulators can support fair evaluation remains open.",
+            # body section as structured claims
+            json.dumps(
+                [
+                    {"text": "Dreamer learns latent dynamics for planning in imagined rollouts", "cite": ["P1"], "sources": ["P1S1"], "scope": "contribution"},
+                    {"text": "The reported evidence stops at short horizons", "cite": ["P1"], "sources": ["P1S2"], "scope": "limitation"},
+                ]
+            ),
+            # open challenges
+            "Reported evidence stops at short horizons and narrow evaluation [P1].",
+            # future directions
+            "Follow-up work should extend the reported method to held-out environments [P1].",
+        ]
+    )
+
+    survey = write_survey._render_survey(
+        "World Models",
+        "en",
+        sections,
+        [],
+        cards,
+        evidence_by_paper,
+        llm_chat=llm.chat,
+        structured_out=[],
+    )
+
+    intro = _section_body(survey, "Introduction")
+    assert "Imagined rollouts show that" not in intro  # paraphrase cut
+    assert "Game intelligence needs models" in intro
+    assert "remains open" in intro
+    assert "Latent World Models surveys" in intro  # deterministic roadmap survived
+    body = _section_body(survey, "Latent World Models")
+    assert "Dreamer learns latent dynamics for planning in imagined rollouts [p_alpha]." in body
+
+
 def test_llm_exception_falls_back_to_template_and_still_writes(tmp_path, monkeypatch):
     monkeypatch.setenv("EVISURVEY_WRITER_EMBED", "0")
     monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
     cache, output = _minimal_inputs(tmp_path)
     request_path = _survey_request(tmp_path, cache, output, "en")
 
@@ -919,7 +1149,90 @@ def test_llm_exception_falls_back_to_template_and_still_writes(tmp_path, monkeyp
     assert result["status"] == "success"
     assert exploding.calls  # the writer really tried
     survey = (output / "survey.md").read_text(encoding="utf-8")
-    assert "Its method can be summarized as" in survey  # template body survived
+    assert "reports method findings" in survey  # safe proposition survives without invented framing
     cited = _citations(survey)
     allowed = set(json.loads((cache / "citation_ready_set.json").read_text(encoding="utf-8"))["allowed_paper_ids"])
     assert cited <= allowed
+
+
+def test_template_fallback_readable_no_fragment_symptoms(tmp_path, monkeypatch):
+    """Direction-A regression: GLM-dropout template output must stay readable.
+
+    Pins the four manually-reviewed symptoms: mid-word ellipsis stubs,
+    placeholder limitation filler, doubled framing ("focuses on Focuses on"),
+    and snippet-spliced abstract/meta-talk.
+    """
+    monkeypatch.delenv("EVISURVEY_WRITER_LLM", raising=False)
+    monkeypatch.delenv("GENERATE_KEY", raising=False)
+    _isolated_root(tmp_path, monkeypatch)
+    cache, output = _minimal_inputs(tmp_path)
+    cards_path = cache / "paper_cards.json"
+    cards = json.loads(cards_path.read_text(encoding="utf-8"))
+    long_field = (
+        "Diffusion models have emerged as a powerful new family of deep generative models. "
+        "In this survey, we review the design space in detail"
+    )
+    for card in cards["paper_cards"]:
+        card["limitations"] = ""
+        card["method"] = long_field
+        card["problem"] = long_field
+    cards_path.write_text(json.dumps(cards), encoding="utf-8")
+
+    request_path = _survey_request(tmp_path, cache, output, "en")
+    result = write_survey.run(str(request_path))
+    assert result["status"] == "success"
+    md = (output / "survey.md").read_text(encoding="utf-8")
+
+    assert not re.search(r"[A-Za-z]\.\.\.", md), "mid-word ellipsis stub leaked"
+    assert "available evidence boundary" not in md
+    folded = md.casefold()
+    assert "focuses on focuses on" not in folded
+    assert md.count("## Introduction") == 1
+    assert "citation-ready studies" not in md and "carries the tag" not in md
+    assert "In this survey, we review" not in md, "second sentence of a field leaked past first-sentence rule"
+
+
+def test_writer_fragment_hygiene_helpers():
+    from tools.write_survey import _first_sentence, _shorten, _strip_model_headings, _trim_partial_sentence
+
+    assert _first_sentence("Diffusion models have emerged. In this survey, we") == "Diffusion models have emerged."
+    assert _first_sentence("") == ""
+    # Word boundary: cuts after a complete word, never mid-word ("pre...").
+    assert _shorten("We present GameNGen running at high quality", 18) == "We present..."
+    assert _shorten("We present GameNGen running", 12) == "We..."
+    assert _shorten("We present GameNGen", 20) == "We present GameNGen"
+    assert _strip_model_headings("## Introduction\n\nReal text.") == "Real text."
+    assert _strip_model_headings("Plain paragraph.") == "Plain paragraph."
+    assert _trim_partial_sentence("Toward real") == ""
+    assert _trim_partial_sentence("First sentence. Second cut") == "First sentence."
+    assert _trim_partial_sentence("Complete already.") == "Complete already."
+
+
+def test_selected_paper_entry_excludes_card_claims_unlisted_in_supports_claims():
+    """Wave8 ③a retraction: the claim mapper re-checks the supports_claims
+    correspondence verbatim, so a card claim that failed P5.2's NLI gate must
+    NOT re-enter through entry assembly (first wave8 run: 9 invalid bindings,
+    grounding 0.574, coverage_fail)."""
+    card = {"paper_id": "paper:muzero", "title": "MuZero", "topic_relevance_score": 1.0,
+            "possible_claims": {"limitations": [{"dimension": "limitations", "source_role": "own_limitation",
+                                                 "text": "MuZero does not directly address imperfect information games",
+                                                 "source_quote": "we do not directly address imperfect information games",
+                                                 "evidence_ids": ["paper:muzero_para_px_43"]}]}}
+    ev_item = {"evidence_id": "paper:muzero_para_px_43", "paper_id": "paper:muzero", "source_type": "paragraph",
+               "source_doc_id": "", "source_title": "MuZero", "source_chunk_id": "", "supports_claims": []}
+    entry = write_survey._selected_paper_entry(card, {"paper:muzero": [ev_item]})
+    assert entry["sources"] == []
+    assert entry["limitations"] == ""
+
+
+def test_limitation_pool_skips_bits_already_rendered_in_body():
+    def entry(pid, text):
+        return {"paper_id": pid, "title": pid, "sources": [
+            {"claim_text": text, "source_role": "own_limitation", "source_quote": "distinct quote " + pid}]}
+
+    rendered = "Distillation enables 50 FPS generation but costs simulation quality [paper:1]."
+    seen = {write_survey._norm_sentence(rendered)}
+    e1 = entry("paper:1", "Distillation enables 50 FPS generation but costs simulation quality")
+    e2 = entry("paper:2", "Planning gains were less marked in Atari than in Go")
+    pool = write_survey._limitation_pool([e1, e2], seen=seen)
+    assert [bit["paper_id"] for bit in pool] == ["paper:2"]

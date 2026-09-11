@@ -397,3 +397,54 @@ def test_loop_zero_baseline_figure_refs_guarded(tmp_path):
 
     assert gate.coverage["figure_ref_retention"] == 1.0
     assert gate.stop_reason == goal_gate.STOP_FIXPOINT  # old semantics intact
+
+
+def test_source_roles_and_safe_claim_floor_block_empty_pass():
+    roles = goal_gate.evaluate({**_metrics(), "source_role_violations": 1}, repair_round=0)
+    empty = goal_gate.evaluate({**_metrics(), "empty_evidence_sections": 2,
+                                "no_verifiable_claims": 1}, repair_round=0)
+    assert not roles.passed and roles.source_role_violations == 1
+    assert not empty.passed and empty.evidence_gaps == 3
+    assert roles.stop_reason == empty.stop_reason == goal_gate.STOP_REPAIRING
+
+
+def test_quote_diagnostic_is_advisory_not_goal_gate_support():
+    gate = goal_gate.evaluate({**_metrics(), "quote_like_claims": 4}, repair_round=0)
+    assert gate.passed  # Critic may paraphrase, but lexical overlap is not NLI status.
+
+
+def test_repair_rank_prefers_source_clean_candidate():
+    dirty = {**_metrics(), "source_role_violations": 1}
+    assert _repair_rank(dirty, "long" * 100) > _repair_rank(_metrics(), "short")
+
+
+def test_quote_advisory_gets_one_repair_pass(tmp_path, monkeypatch):
+    monkeypatch.setenv("EVISURVEY_REPAIR_AGENT", "1")
+    output = tmp_path / "output"
+    output.mkdir()
+    (output / "survey.md").write_text("copied claim with sufficient context [p1].")
+    registry = _ScriptedRegistry([{**_metrics(), "quote_like_claims": 1}, _metrics()],
+                                 ["reworded claim with sufficient context [p1]."])
+    registry.output_dir = output
+    loop, _ = _make_loop(tmp_path, registry)
+    assert loop._verify_repair_loop("t").passed
+    assert registry.revise_calls == 1 and registry.verify_calls == 2
+
+
+def test_rollback_restores_source_manifest(tmp_path):
+    output = tmp_path / "output"
+    output.mkdir()
+    (output / "survey.md").write_text("x" * 100)
+    source = tmp_path / "cache" / "structured_claims.json"
+    source.parent.mkdir()
+    source.write_text('{"original": true}')
+    class Registry(_ScriptedRegistry):
+        def run(self, name, request_path):
+            if name == "revise_survey":
+                source.write_text('{"rewritten": true}')
+            return super().run(name, request_path)
+    registry = Registry([_metrics(unsupported=2), _metrics(unsupported=3)], ["y" * 100])
+    registry.output_dir = output
+    loop, _ = _make_loop(tmp_path, registry)
+    loop._verify_repair_loop("t")
+    assert source.read_text() == '{"original": true}'

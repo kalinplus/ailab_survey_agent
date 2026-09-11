@@ -106,3 +106,34 @@ def test_artifacts_paths_stored_verbatim():
     paths = {"retrieved": "/tmp/r.json", "parsed": "/tmp/p.json"}
     b = run("t", "wm", paths, rp, pp, pc, es, fb, tb, tax, ci, [], [], QualityRequirements())
     assert b.artifacts == paths
+
+
+def test_degraded_aspect_marked_when_category_below_floor():
+    from tools.models.artifacts import Category
+
+    rp = RetrievedPapers(task_id="t", papers=[RetrievedPaper(paper_id=f"p{i}", title="T") for i in range(12)])
+    pc = PaperCards(task_id="t", paper_cards=[PaperCard(paper_id=f"p{i}", title="T", card_type="deep") for i in range(6)])
+    tax = Taxonomy(task_id="t", topic="wm", categories=[
+        Category(category_id="c1", category_name="Latent World Models", paper_ids=["p0", "p1"], paper_count=2),
+        Category(category_id="c2", category_name="Benchmarks", paper_ids=["p2"], paper_count=1),
+    ])
+    pp, es, fb, tb, ci = ParsedPapers(task_id="t", papers=[]), EvidenceStore(task_id="t", evidence=[]), FigureBank(task_id="t", figures=[]), TableBank(task_id="t", tables=[]), CitationIndex(task_id="t", citations=[])
+    b = run("t", "wm", {}, rp, pp, pc, es, fb, tb, tax, ci, [], [], QualityRequirements(min_total_papers=10, min_core_papers=5))
+    assert b.quality_report["degraded_aspects"] == ["Benchmarks"]
+    assert b.coverage_report["papers_per_aspect"] == {"Latent World Models": 2, "Benchmarks": 1}
+    assert b.coverage_report["undercovered_aspects"] == ["Benchmarks"]
+
+
+def test_no_degraded_aspect_when_all_categories_meet_floor():
+    from tools.models.artifacts import Category
+
+    rp = RetrievedPapers(task_id="t", papers=[RetrievedPaper(paper_id=f"p{i}", title="T") for i in range(12)])
+    pc = PaperCards(task_id="t", paper_cards=[PaperCard(paper_id=f"p{i}", title="T", card_type="deep") for i in range(6)])
+    tax = Taxonomy(task_id="t", topic="wm", categories=[
+        Category(category_id="c1", category_name="Latent World Models", paper_ids=["p0", "p1"], paper_count=2),
+        Category(category_id="c2", category_name="Benchmarks", paper_ids=["p2", "p3"], paper_count=2),
+    ])
+    pp, es, fb, tb, ci = ParsedPapers(task_id="t", papers=[]), EvidenceStore(task_id="t", evidence=[]), FigureBank(task_id="t", figures=[]), TableBank(task_id="t", tables=[]), CitationIndex(task_id="t", citations=[])
+    b = run("t", "wm", {}, rp, pp, pc, es, fb, tb, tax, ci, [], [], QualityRequirements(min_total_papers=10, min_core_papers=5))
+    assert b.quality_report["degraded_aspects"] == []
+    assert b.coverage_report["undercovered_aspects"] == []

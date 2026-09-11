@@ -41,6 +41,7 @@ class ScriptedNLI:
 class _Result:
     def __init__(self, status):
         self.status = status
+        self.label = {"supported": "entailment", "weak": "neutral", "unsupported": "contradiction"}[status]
 
 
 class ScriptedLLM:
@@ -58,9 +59,11 @@ class ScriptedLLM:
 
 
 class FakeSciverse:
-    def __init__(self, hits_by_needle=None):
+    def __init__(self, hits_by_needle=None, fulltext_by_doc=None):
         self.hits_by_needle = hits_by_needle or {}
+        self.fulltext_by_doc = fulltext_by_doc or {}
         self.calls = []
+        self.reads = []
 
     def agentic_search(self, query, top_k=3):
         self.calls.append({"query": query, "top_k": top_k})
@@ -68,6 +71,10 @@ class FakeSciverse:
             if needle in query:
                 return {"hits": hits}
         return {"hits": []}
+
+    def read_full_text(self, doc_id, max_pages=8):
+        self.reads.append(doc_id)
+        return self.fulltext_by_doc.get(doc_id, "")
 
 
 # --- fixtures -----------------------------------------------------------------
@@ -196,6 +203,7 @@ def test_batch_decision_dispatch_and_anti_hallucination(tmp_path):
                               "playable worlds": "supported"})
     sciverse = FakeSciverse(hits_by_needle={
         "playable worlds": [{"chunk": "Neural game engines render playable worlds from prompts.",
+                             "title": "Game Environment Generation", "doc_id": "doc_dead",
                              "page_no": 3}]})
     result = _run(tmp_path, llm, nli, sciverse)
 
@@ -205,13 +213,17 @@ def test_batch_decision_dispatch_and_anti_hallucination(tmp_path):
     assert "[MADE_UP_ID]" not in result["revised_md"]
     # B: rewrite applied, citation kept, re-verified as supported
     assert log[("B", "claim_0")]["outcome"] == "repaired"
-    assert "World models relate to latent dynamics in games. [p_good]" in result["revised_md"]
+    assert "World models relate to latent dynamics in games [p_good]." in result["revised_md"]
     # C: backfill chunk entered the evidence store and the claim flipped
     assert log[("C", "claim_1")]["outcome"] == "repaired"
     added = [e for e in result["evidence_store"]["evidence"]
              if e.get("source_type") == "agentic_chunk"]
     assert added and added[0]["paper_id"] == "p_dead"
     assert any("render playable worlds" in e["text"] for e in added)
+    # provenance retained: the chunk's real origin survives the backfill
+    assert added[0]["source_doc_id"] == "doc_dead"
+    assert added[0]["source_title"] == "Game Environment Generation"
+    assert added[0]["source_chunk_id"]
     assert sciverse.calls[0]["top_k"] == 3
     # D: kept without changes
     assert log[("D", "claim_2")]["outcome"] == "kept"
@@ -466,3 +478,169 @@ def test_replace_references_silences_unverified_bracket_artifacts(tmp_path):
     assert re.findall(r"(?m)^## .+$", tail) == ["## References"]
     assert "paper:10. The evidence in Cosmos" not in tail  # artifact id never echoed
     assert "- p_good: World Model Reinforcement Learning Survey (2024)." in tail
+
+
+def test_revision_notes_never_carry_brackets(tmp_path):
+    # Regression (batch-4): unresolved-repair reasons interpolate raw exception
+    # text ("[Errno 8] nodename..."); any bracket in revision notes is read as a
+    # citation id by the verifier and becomes phantom invalid citations.
+    from tools.revise_survey import _append_revision_notes
+
+    md = _append_revision_notes("# T\n\nBody.", [
+        "type=B rewrite_claim -> unresolved: call failed: [Errno 8] nodename nor servname",
+    ], notes_dir=tmp_path)
+    assert md == "# T\n\nBody."  # delivered markdown is untouched
+    notes = (tmp_path / "revision_notes.md").read_text(encoding="utf-8")
+    assert "[" not in notes and "]" not in notes
+    assert "(Errno 8)" in notes
+
+
+# --- wave 1B: backfill provenance gate -----------------------------------------
+
+
+def test_backfill_rejects_cross_paper_hits(tmp_path, caplog):
+    """Repair-side provenance fixture: a hit from a different paper never
+    enters the store under the cited paper's id (logged); an identity-matching
+    hit is appended with its origin retained."""
+    import logging
+
+    def plan(call_idx, messages):
+        if "Failure type C" in messages[-1]["content"]:
+            return [{"id": "claim_1", "action": "backfill_evidence", "params": {}, "reason": "r"}]
+        return []
+
+    sciverse = FakeSciverse(hits_by_needle={
+        "playable worlds": [
+            {"chunk": "Resistance avalanche in resistor networks.",
+             "title": "Resistance Avalanche", "doc_id": "10.48550/arxiv.2401.06626", "page_no": 1},
+            {"chunk": "Neural game engines render playable worlds from prompts.",
+             "title": "Game Environment Generation", "doc_id": "doc_dead", "page_no": 2},
+        ]})
+    with caplog.at_level(logging.WARNING, logger="harness.agents.repair_agent"):
+        result = _run(tmp_path, ScriptedLLM(plan),
+                      ScriptedNLI(script={"playable worlds": "supported"}), sciverse)
+    log = {(e["failure_type"], e["id"]): e for e in result["repair_log"]}
+    assert log[("C", "claim_1")]["outcome"] == "repaired"
+    added = [e for e in result["evidence_store"]["evidence"]
+             if e.get("source_type") == "agentic_chunk"]
+    assert len(added) == 1  # off-topic hit rejected, never renamed onto p_dead
+    assert added[0]["text"] == "Neural game engines render playable worlds from prompts."
+    assert added[0]["source_doc_id"] == "doc_dead"
+    assert added[0]["source_title"] == "Game Environment Generation"
+    assert added[0]["source_chunk_id"] == "doc_dead:2:0"
+    assert all("Resistance" not in e["text"] for e in result["evidence_store"]["evidence"])
+    assert any("provenance gate rejected" in r.getMessage() and "2401.06626" in r.getMessage()
+               for r in caplog.records)
+
+
+def test_backfill_all_hits_rejected_leaves_claim_unsupported(tmp_path):
+    """When every hit fails the provenance gate nothing is appended and the
+    claim stays unsupported (no phantom grounding)."""
+
+    def plan(call_idx, messages):
+        if "Failure type C" in messages[-1]["content"]:
+            return [{"id": "claim_1", "action": "backfill_evidence", "params": {}, "reason": "r"}]
+        return []
+
+    sciverse = FakeSciverse(hits_by_needle={
+        "playable worlds": [{"chunk": "Some other paper's chunk.",
+                             "title": "A Different Paper", "doc_id": "doc_other", "page_no": 1}]})
+    before = len(_evidence_store()["evidence"])
+    result = _run(tmp_path, ScriptedLLM(plan), ScriptedNLI(), sciverse)
+    log = {(e["failure_type"], e["id"]): e for e in result["repair_log"]}
+    assert log[("C", "claim_1")]["outcome"] == "still_unsupported"
+    assert len(result["evidence_store"]["evidence"]) == before  # nothing appended
+
+
+# --- wave 3: backfill content-first (own fulltext via doc_id) -------------------
+
+
+def _ready_set_with_doc_id():
+    rs = _ready_set()
+    next(i for i in rs["items"] if i["paper_id"] == "p_dead")["doc_id"] = "doc_dead"
+    return rs
+
+
+def test_backfill_uses_own_fulltext_before_agentic(tmp_path):
+    """A doc_id on the ready-set item grounds the claim with the paper's OWN
+    fulltext (content_chunk, provenance kept) — the agentic path is never hit."""
+    def plan(call_idx, messages):
+        if "Failure type C" in messages[-1]["content"]:
+            return [{"id": "claim_1", "action": "backfill_evidence", "params": {}, "reason": "r"}]
+        return []
+
+    sciverse = FakeSciverse(
+        hits_by_needle={"playable worlds": [{"chunk": "should not be reached", "title": "X", "doc_id": "y"}]},
+        fulltext_by_doc={"doc_dead": "# Game Environment Generation\n\nNeural engines generate playable worlds end to end.\n\nMore filler text follows here."})
+    result = _run(tmp_path, ScriptedLLM(plan),
+                  ScriptedNLI(script={"playable worlds": "supported"}), sciverse,
+                  ready_set=_ready_set_with_doc_id())
+    log = {(e["failure_type"], e["id"]): e for e in result["repair_log"]}
+    assert log[("C", "claim_1")]["outcome"] == "repaired"
+    added = [e for e in result["evidence_store"]["evidence"]
+             if e.get("source_type") == "content_chunk"]
+    assert len(added) == 1
+    assert added[0]["paper_id"] == "p_dead"
+    assert added[0]["source_doc_id"] == "doc_dead"
+    assert added[0]["source_chunk_id"] == "doc_dead:fulltext"
+    assert added[0]["evidence_id"].startswith("p_dead_repair_")
+    assert sciverse.reads == ["doc_dead"]
+    assert sciverse.calls == []  # agentic path never taken
+
+
+def test_backfill_falls_back_to_agentic_when_fulltext_does_not_support(tmp_path):
+    """Own fulltext that fails the NLI check falls through to the gated
+    agentic path unchanged."""
+    def plan(call_idx, messages):
+        if "Failure type C" in messages[-1]["content"]:
+            return [{"id": "claim_1", "action": "backfill_evidence", "params": {}, "reason": "r"}]
+        return []
+
+    sciverse = FakeSciverse(
+        hits_by_needle={"playable worlds": [
+            {"chunk": "Neural game engines render playable worlds from prompts.",
+             "title": "Game Environment Generation", "doc_id": "doc_dead", "page_no": 3}]},
+        fulltext_by_doc={"doc_dead": "# Unrelated topic paper\n\n"
+                                      "This paper studies something entirely different from the claim.\n\n"
+                                      "More unrelated filler sentences widen the window count."})
+    # NLI: unsupported for the fulltext windows, supported for the agentic chunk
+    class PickyNLI(ScriptedNLI):
+        def best_match(self, claim, evidences):
+            if len(evidences) > 1:  # fulltext sentence windows
+                return _Result("unsupported")
+            return _Result("supported")
+
+    result = _run(tmp_path, ScriptedLLM(plan), PickyNLI(), sciverse,
+                  ready_set=_ready_set_with_doc_id())
+    log = {(e["failure_type"], e["id"]): e for e in result["repair_log"]}
+    assert log[("C", "claim_1")]["outcome"] == "repaired"
+    assert sciverse.reads == ["doc_dead"] and len(sciverse.calls) == 1
+    added = [e for e in result["evidence_store"]["evidence"]
+             if e.get("source_type") == "agentic_chunk"]
+    assert len(added) == 1
+
+
+def test_role_failure_and_quote_advisory_are_separate_groups():
+    claim_map = {"entries": [
+        {"claim_text": "Background became our method", "cited_paper_id": "p_good", "status": "unsupported",
+         "source_role_violation": "source_role_scope_mismatch", "scope": "method", "source_bindings": []},
+        {"claim_text": "A long copied result", "cited_paper_id": "p_other", "status": "supported",
+         "quote_diagnostic": {"quote_like": True}, "scope": "contribution", "source_bindings": []},
+    ], "_evidence_by_paper": {"p_good": [], "p_other": []}}
+    groups = group_failures("Background became our method [p_good]. A long copied result [p_other].",
+                             claim_map, _ready_set(), [], set())
+    assert [x["source_role_violation"] for x in groups["F"]] == ["source_role_scope_mismatch"]
+    assert [x["quote_diagnostic"]["quote_like"] for x in groups["Q"]] == [True]
+    assert not groups["B"] and not groups["C"] and not groups["D"]
+
+
+def test_rewrite_requires_entailment_not_neutral():
+    record = {"claim_id": "claim_0", "claim_text": "old supported language", "cited_paper_id": "p_good",
+              "scope": "", "source_bindings": []}
+    decisions = {"B": [{"record": record, "action": "rewrite_claim",
+                         "params": {"new_text": "new weaker but still neutral language"}, "reason": "weaken"}]}
+    md, _ = execute_decisions(decisions, survey_md="old supported language [p_good].",
+        evidence_store=_evidence_store(), allowed_ids=set(_ready_set()["allowed_paper_ids"]),
+        nli=ScriptedNLI(default="weak"), sciverse_budget=_SciverseBudget(None, 0))
+    assert decisions["B"][0]["outcome"] == "still_unsupported"
+    assert "new weaker" in md

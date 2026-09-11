@@ -23,4 +23,4 @@ def test_card_rejects_missing_required():
 def test_evidence_id_roundtrip():
     eid = evidence_id("paper:x", 5, 2)
     e = Evidence(evidence_id=eid, paper_id="paper:x", source_page=5, source_paragraph_index=2, text="t")
-    assert e.evidence_id == "paper:x_p5_2"
+    assert e.evidence_id == "paper:x_para_p5_2"

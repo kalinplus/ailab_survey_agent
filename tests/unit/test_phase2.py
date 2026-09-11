@@ -1,5 +1,9 @@
+import logging
+
 from tools.clients.llm_fake import FakeLLMClient
 from tools.phases.phase2_survey_analyzer import (
+    PRELIM_PROMPT,
+    REFINE_PROMPT,
     SurveyStructure,
     analyze_surveys,
     build_expansion_candidates,
@@ -145,3 +149,96 @@ def test_survey_structure_defaults():
         refined_taxonomy=[], expansion_candidates=[],
     )
     assert ss.survey_update_log == []
+
+
+def _refine_llm(refined):
+    return FakeLLMClient(responses=[
+        ("Generate a paper taxonomy", {"categories": [{"name": "prelim", "description": "d"}]}),
+        ("Refine this taxonomy", {"categories": refined}),
+    ])
+
+
+def test_prompts_constrain_category_count_and_name_length():
+    """Spec T10 design 1: taxonomy prompts demand 3-6 categories, <=6-word names,
+    and no synonymous duplicates."""
+    for prompt in (PRELIM_PROMPT, REFINE_PROMPT):
+        assert "3 to 6" in prompt
+        assert "6 words" in prompt
+        assert "synonymous" in prompt
+
+
+def test_gate_caps_llm_flood_to_six():
+    """Spec T10 acceptance 1: LLM returns 26 categories -> clamped to the first 6."""
+    refined = [{"name": f"cat{i}", "description": "d"} for i in range(26)]
+    s = run("t1", "wm", [], [], _surveys(), _refine_llm(refined))
+    assert [c["name"] for c in s.refined_taxonomy] == [f"cat{i}" for i in range(6)]
+
+
+def test_gate_fills_from_skeleton_below_minimum():
+    """Spec T10 acceptance 1: 2 LLM categories + 3-skeleton survey -> backfilled to >=3."""
+    surveys = [{"paper_id": "sv1", "title": "T", "year": 2024,
+                "meta_data": {"taxonomy_skeleton": ["Skel A", "Skel B", "Skel C"],
+                              "top_referenced_papers": [], "key_sections": []}}]
+    refined = [{"name": "r1", "description": "d"}, {"name": "r2", "description": "d"}]
+    s = run("t1", "wm", [], [], surveys, _refine_llm(refined))
+    names = [c["name"] for c in s.refined_taxonomy]
+    assert len(names) >= 3
+    assert names[:2] == ["r1", "r2"]
+    assert "Skel A" in names
+
+
+def test_gate_merges_same_name_categories():
+    """Spec T10 acceptance 1: case/whitespace name variants merge; first occurrence wins."""
+    refined = [
+        {"name": "World  Models", "description": "first"},
+        {"name": "world models", "description": "second"},
+        {"name": "Prediction", "description": "d"},
+        {"name": "Control", "description": "d"},
+    ]
+    s = run("t1", "wm", [], [], _surveys(), _refine_llm(refined))
+    assert [c["name"] for c in s.refined_taxonomy] == ["World Models", "Prediction", "Control"]
+    assert s.refined_taxonomy[0]["description"] == "first"
+
+
+def test_gate_passes_valid_taxonomy_unchanged():
+    """Spec T10 acceptance 2: a legal 3-6 category output passes through as-is."""
+    refined = [
+        {"name": "Representation", "description": "d1", "incorporated_from": ["sv1"]},
+        {"name": "Prediction", "description": "d2", "incorporated_from": ["sv1"]},
+        {"name": "Control", "description": "d3", "incorporated_from": ["sv1"]},
+        {"name": "Applications", "description": "d4", "incorporated_from": []},
+        {"name": "Evaluation", "description": "d5", "incorporated_from": []},
+    ]
+    s = run("t1", "wm", [], [], _surveys(), _refine_llm(refined))
+    assert s.refined_taxonomy == refined
+
+
+def test_gate_warns_when_skeleton_cannot_fill(caplog):
+    """Spec T10 design 2: still <3 after the fill attempt -> keep result and warn."""
+    refined = [{"name": "only", "description": "d"}]
+    with caplog.at_level(logging.WARNING, logger="tools.phases.phase2_survey_analyzer"):
+        s = run("t1", "wm", [], [], [], _refine_llm(refined))
+    assert [c["name"] for c in s.refined_taxonomy] == ["only"]
+    assert any(r.levelno == logging.WARNING and "taxonomy gate" in r.message for r in caplog.records)
+
+
+def test_skeleton_categories_carry_name_derived_description():
+    """Wave8 ②: the placeholder description leaked into section goals and
+    aspect queries; skeleton fill must describe the name, not the merge."""
+    from tools.phases.phase2_survey_analyzer import _skeleton_categories
+    skels = [["Internal Representation", {"name": "Future Prediction"}]]
+    cats = _skeleton_categories(skels)
+    assert [c["description"] for c in cats] == [
+        "Reported work on Internal Representation.",
+        "Reported work on Future Prediction.",
+    ]
+
+
+def test_gate_skeleton_fill_description_is_not_placeholder():
+    surveys = [{"paper_id": "sv1", "title": "T", "year": 2024,
+                "meta_data": {"taxonomy_skeleton": ["Skel A", "Skel B", "Skel C"],
+                              "top_referenced_papers": [], "key_sections": []}}]
+    refined = [{"name": "r1", "description": "d"}, {"name": "r2", "description": "d"}]
+    s = run("t1", "wm", [], [], surveys, _refine_llm(refined))
+    skeleton = next(c for c in s.refined_taxonomy if c["name"] == "Skel A")
+    assert skeleton["description"] == "Reported work on Skel A."

@@ -48,9 +48,48 @@ def test_agentic_search(client):
 
 @respx.mock
 def test_get_content(client):
-    respx.get("https://sv.test/content").respond(json={"doc_id": "d1", "text": "hello"})
+    route = respx.get("https://sv.test/content").respond(json={"doc_id": "d1", "text": "hello"})
     out = client.get_content("d1")
     assert out["text"] == "hello"
+    # no offset passed -> offset/limit omitted (one call returns the whole text)
+    sent = route.calls[0].request.url.params
+    assert "offset" not in sent and "limit" not in sent
+
+
+@respx.mock
+def test_get_content_sends_offset_when_provided(client):
+    route = respx.get("https://sv.test/content").respond(json={"text": "chunk", "more": False})
+    client.get_content("d1", offset=700, limit=100)
+    sent = route.calls[0].request.url.params
+    assert sent["offset"] == "700" and sent["limit"] == "100"
+
+
+@respx.mock
+def test_read_full_text_single_call_when_not_paginated(client):
+    route = respx.get("https://sv.test/content").respond(
+        json={"text": "whole paper", "more": False, "next_offset": 11})
+    assert client.read_full_text("d1") == "whole paper"
+    assert route.calls.call_count == 1
+
+
+@respx.mock
+def test_read_full_text_follows_more_next_offset(client):
+    route = respx.get("https://sv.test/content").mock(side_effect=[
+        httpx.Response(200, json={"text": "part1-", "more": True, "next_offset": 6}),
+        httpx.Response(200, json={"text": "part2", "more": False}),
+    ])
+    assert client.read_full_text("d1") == "part1-part2"
+    assert route.calls.call_count == 2
+    assert route.calls[1].request.url.params["offset"] == "6"
+
+
+@respx.mock
+def test_read_full_text_stops_at_max_pages(client):
+    page = {"text": "x.", "more": True, "next_offset": 2}
+    route = respx.get("https://sv.test/content").respond(json=page)
+    out = client.read_full_text("d1", max_pages=3)
+    assert route.calls.call_count == 3
+    assert out == "x.x.x."
 
 
 @respx.mock
@@ -62,9 +101,15 @@ def test_get_resource(client):
 
 @respx.mock
 def test_meta_paper_relations(client):
-    respx.post("https://sv.test/meta-paper-relations").respond(json={"relations": [{"id": "r1"}]})
-    out = client.meta_paper_relations("paper:1")
-    assert out["relations"][0]["id"] == "r1"
+    route = respx.post("https://sv.test/meta-paper-relations").respond(
+        json={"data": {"items": [{"id": "r1"}], "total_count": 1}})
+    out = client.meta_paper_relations("paper:10.1/x", relation="REFERENCES", page=2, page_size=50)
+    sent = json.loads(route.calls[0].request.content)
+    # live contract: the key is unique_id (paper:<doi>), never paper_id
+    assert sent["unique_id"] == "paper:10.1/x"
+    assert sent["relation"] == "REFERENCES"
+    assert sent["page"] == 2 and sent["page_size"] == 50
+    assert out["data"]["items"][0]["id"] == "r1"
 
 
 @respx.mock

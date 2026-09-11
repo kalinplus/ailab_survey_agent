@@ -8,7 +8,14 @@ def test_seed_id_stable():
 
 
 def test_evidence_id_format():
-    assert evidence_id("paper:x", 3, 0) == "paper:x_p3_0"
+    # source_type namespaces the id: same (page, idx) never collides across types
+    assert evidence_id("paper:x", 3, 0) == "paper:x_para_p3_0"
+    assert evidence_id("paper:x", 3, 0, "abstract") == "paper:x_abs_p3_0"
+    assert evidence_id("paper:x", 3, 0, "caption") == "paper:x_cap_p3_0"
+    assert evidence_id("paper:x", 3, 0, "agentic_chunk") == "paper:x_agentic_p3_0"
+    assert evidence_id("paper:x", 3, 0, "repair") == "paper:x_repair_p3_0"
+    # page=None (markdown-only parse channel) gets its own token
+    assert evidence_id("paper:x", None, 7) == "paper:x_para_px_7"
 
 
 def test_figure_table_category():
