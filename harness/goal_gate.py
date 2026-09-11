@@ -34,6 +34,8 @@ class GateResult:
     invalid_citations: int
     citation_validity_score: float
     coverage: dict[str, Any] | None = None
+    source_role_violations: int = 0
+    evidence_gaps: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -64,10 +66,15 @@ def evaluate(
         "min_retention": float(min_retention),
         "ok": text_retention >= min_retention and figure_ref_retention >= min_retention,
     }
+    roles = int(metrics.get("source_role_violations", 0))
+    gaps = int(metrics.get("empty_evidence_sections", 0)) + int(metrics.get("no_verifiable_claims", 0))
+    if not coverage["ok"]:
+        return GateResult(False, STOP_COVERAGE, unsupported, invalid, score, coverage, roles, gaps)
+    if roles or gaps:
+        reason = STOP_BUDGET if repair_round >= max_repair_rounds else STOP_REPAIRING
+        return GateResult(False, reason, unsupported, invalid, score, coverage, roles, gaps)
     if invalid == 0 and unsupported == 0 and coverage["ok"]:
         return GateResult(True, STOP_PASSED, unsupported, invalid, score, coverage)
-    if not coverage["ok"]:
-        return GateResult(False, STOP_COVERAGE, unsupported, invalid, score, coverage)
     if repair_round >= max_repair_rounds:
         return GateResult(False, STOP_BUDGET, unsupported, invalid, score, coverage)
     if prev_unsupported is not None and not improved(unsupported, prev_unsupported):

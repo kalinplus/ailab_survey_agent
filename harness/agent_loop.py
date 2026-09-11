@@ -183,9 +183,9 @@ class AgentLoop:
             current_stage="completed",
             finished_stage="final_state",
             ready_artifacts={"final_state": "output/final_state.json"},
-            status="completed",
+            status=final_state["status"],
         )
-        self.logger.log("run_completed", task_id=task_id)
+        self.logger.log("run_completed", task_id=task_id, status=final_state["status"])
         return final_state
 
     def _verify_repair_loop(self, task_id: str) -> goal_gate.GateResult:
@@ -200,12 +200,14 @@ class AgentLoop:
         """
         best_metrics: dict[str, Any] | None = None
         best_text: str | None = None
+        best_artifacts: dict[str, str] = {}
         prev_unsupported: int | None = None
         baseline_chars: int | None = None
         baseline_fig_refs: int | None = None
         min_retention = float(
             os.getenv("EVISURVEY_COVERAGE_MIN", str(goal_gate.MIN_RETENTION_DEFAULT)))
         gate_result = goal_gate.GateResult(False, "not_run", 0, 0, 0.0)
+        best_gate_result: goal_gate.GateResult | None = None
         for repair_round in range(goal_gate.MAX_REPAIR_ROUNDS + 1):
             verify_result = self._run_tool("verify_citations", "requests/verification_request.json")
             metrics = verify_result.get("metrics", {})
@@ -226,8 +228,17 @@ class AgentLoop:
             )
             if best_metrics is None or _repair_rank(metrics, survey_text) < _repair_rank(best_metrics, best_text or ""):
                 best_metrics, best_text = metrics, survey_text
+                best_gate_result = gate_result
+                best_artifacts = {name: (self.config.root_dir / name).read_text(encoding="utf-8")
+                                  for name in ("cache/structured_claims.json", "cache/claim_map.json", "output/citation_result.json")
+                                  if (self.config.root_dir / name).exists()}
             self.logger.log("goal_gate", task_id=task_id, round=repair_round, **gate_result.to_dict())
-            if gate_result.stop_reason != goal_gate.STOP_REPAIRING:
+            # Quote diagnostics do not fail the semantic gate. Offer the
+            # existing Critic one bounded advisory pass before accepting.
+            quote_review = (gate_result.passed and repair_round == 0
+                            and int(metrics.get("quote_like_claims", 0)) > 0
+                            and os.getenv("EVISURVEY_REPAIR_AGENT", "0").lower() in {"1", "true", "yes"})
+            if gate_result.stop_reason != goal_gate.STOP_REPAIRING and not quote_review:
                 break
             revision_request = self.planner.build_revision_request(
                 task_id,
@@ -249,6 +260,23 @@ class AgentLoop:
                 and survey_path.read_text(encoding="utf-8") != best_text:
             self.logger.log("repair_rollback", task_id=task_id)
             survey_path.write_text(best_text, encoding="utf-8")
+            for name, content in best_artifacts.items():
+                (self.config.root_dir / name).write_text(content, encoding="utf-8")
+            # The reported gate must describe the delivered text: claim metrics
+            # come from the best (restored) round, while stop_reason and the
+            # coverage snapshot keep the loop's actual termination diagnostics
+            # (why it stopped — e.g. the retention that broke the line).
+            if best_gate_result is not None:
+                gate_result = goal_gate.GateResult(
+                    best_gate_result.passed,
+                    gate_result.stop_reason,
+                    best_gate_result.unsupported,
+                    best_gate_result.invalid_citations,
+                    best_gate_result.citation_validity_score,
+                    gate_result.coverage,
+                    best_gate_result.source_role_violations,
+                    best_gate_result.evidence_gaps,
+                )
         return gate_result
 
     def _run_tool(self, tool_name: str, request_path: str) -> dict[str, Any]:
@@ -277,10 +305,14 @@ class AgentLoop:
         self, task_id: str, topic: str, gate_result: goal_gate.GateResult | None = None,
     ) -> dict[str, Any]:
         evaluation_report = self._read_optional("output/evaluation_report.json", {})
+        # Honest terminal status: a failed Goal Gate is not "completed".
+        # goal_gate and scores stay in the state for diagnosis; rendering
+        # already ran either way, so the artifacts remain for inspection.
+        status = "completed" if gate_result is None or gate_result.passed else "quality_failed"
         state = {
             "task_id": task_id,
             "topic": topic,
-            "status": "completed",
+            "status": status,
             "goal_gate": gate_result.to_dict() if gate_result else None,
             "final_outputs": {
                 "survey_markdown": "output/survey.md",
@@ -322,7 +354,7 @@ class AgentLoop:
         return read_json(path)
 
 
-def _repair_rank(metrics: dict[str, Any], survey_text: str) -> tuple[int, int, int]:
+def _repair_rank(metrics: dict[str, Any], survey_text: str) -> tuple:
     """Best-so-far ordering for the repair loop: lower is better.
 
     Fewer unsupported claims first, then fewer invalid citations, then the
@@ -331,5 +363,8 @@ def _repair_rank(metrics: dict[str, Any], survey_text: str) -> tuple[int, int, i
     return (
         int(metrics.get("unsupported_claims", 0)),
         int(metrics.get("invalid_citations", 0)),
+        int(metrics.get("source_role_violations", 0)),
+        int(metrics.get("empty_evidence_sections", 0)),
+        int(metrics.get("quote_like_claims", 0)),
         -len(survey_text),
     )

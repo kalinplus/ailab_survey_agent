@@ -26,6 +26,10 @@ from pathlib import Path
 from typing import Any, Callable
 
 from .loop import trajectory_writer
+from tools.models.common import evidence_id as make_evidence_id
+from tools.verify.text_units import evidence_units, sentence_units
+from tools.verify.source_contract import SCOPE_ROLES, valid_support, quote_diagnostic
+from tools.verify.provenance import chunk_id, hit_matches_paper
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +47,8 @@ GROUP_ACTIONS = {
           "claim unsupported and the cited paper has ZERO evidence"),
     "D": ("rewrite_claim, keep", "weak claim (evidence direction ok, assertion too strong)"),
     "E": ("remap_figure, delete_line", "figure reference not in the figure bank"),
+    "F": ("rewrite_claim, delete_claim", "source role or evidence binding violation; NLI alone cannot clear attribution"),
+    "Q": ("rewrite_claim, keep", "advisory quote-like copying; paraphrase while preserving scope and technical terms; overlap is not semantic support"),
 }
 
 ACTION_SCHEMA = {
@@ -145,9 +151,10 @@ def group_failures(
     failures_b: list[dict] = []
     failures_c: list[dict] = []
     failures_d: list[dict] = []
+    failures_f, failures_q = [], []
     for index, entry in enumerate(claim_map.get("entries", [])):
         status = entry.get("status")
-        if status not in {"unsupported", "weak"}:
+        if status not in {"unsupported", "weak"} and not entry.get("source_role_violation") and not entry.get("quote_diagnostic", {}).get("quote_like"):
             continue
         # claims citing a non-whitelist id are collateral damage of an A-type
         # failure: one remap fixes every occurrence, so they must NOT be
@@ -156,11 +163,24 @@ def group_failures(
             continue
         record = {
             "claim_id": f"claim_{index}",
-            "claim_text": str(entry.get("claim_text", ""))[:400],
+            "claim_text": str(entry.get("claim_text", "")),
+            "scope": entry.get("scope", ""),
+            "source_bindings": entry.get("source_bindings", []),
+            "source_role_violation": entry.get("source_role_violation", ""),
+            "quote_diagnostic": entry.get("quote_diagnostic", {}),
             "cited_paper_id": entry.get("cited_paper_id", ""),
         }
         evidences = claim_map.get("_evidence_by_paper", {}).get(record["cited_paper_id"], [])
-        if status == "weak":
+        bound_ids = {b.get("evidence_id") for b in record["source_bindings"]}
+        if bound_ids:
+            evidences = [e for e in evidences if e.get("evidence_id") in bound_ids]
+        if entry.get("source_role_violation"):
+            record["evidence_preview"] = _preview(evidences)
+            failures_f.append(record)
+        elif entry.get("quote_diagnostic", {}).get("quote_like") and status == "supported":
+            record["evidence_preview"] = _preview(evidences)
+            failures_q.append(record)
+        elif status == "weak":
             record["evidence_preview"] = _preview(evidences)
             failures_d.append(record)
         elif evidences:
@@ -179,7 +199,7 @@ def group_failures(
                                "candidates": _figure_candidates(alt_text, ref, figure_items)})
 
     return {"A": failures_a, "B": failures_b, "C": failures_c,
-            "D": failures_d, "E": failures_e}
+            "D": failures_d, "E": failures_e, "F": failures_f, "Q": failures_q}
 
 
 # ---------------------------------------------------------------------------
@@ -203,7 +223,7 @@ def _decision_messages(group: str, records: list[dict]) -> list[dict[str, str]]:
         "candidates (or pick an allowed paper whose title clearly matches the sentence); "
         "when no candidate fits, choose a different action instead of inventing an id.",
         '- rewrite_claim: {"new_text": "<full replacement sentence WITHOUT any [citation]>"} '
-        "-- weaker assertion the evidence can support; do NOT add citations.",
+        "-- weaker assertion the evidence can support; do NOT add citations. For attribution repair, optional scope must match the supplied source roles (background stays background).",
         '- swap_evidence: {"evidence_id": "<id from evidence_preview>"}',
         "- backfill_evidence: {} — semantic search will fetch grounding chunks for the claim.",
         '- remap_figure: {"new_figure_id": "<figure_id from candidates>"}',
@@ -254,7 +274,7 @@ def decide_batches(
     """
     decisions: dict[str, list[dict]] = {}
     stats = {"llm_calls": 0, "unresolved_batches": 0}
-    for group in ["A", "B", "C", "E", "D"]:
+    for group in ["A", "F", "B", "C", "E", "D", "Q"]:
         records = groups.get(group, [])
         decisions[group] = []
         for start in range(0, len(records), BATCH_SIZE):
@@ -343,12 +363,19 @@ class _SciverseBudget:
         self.calls += 1
         return self.client.agentic_search(query=query, top_k=top_k)
 
+    def read_full_text(self, doc_id, max_pages=8):
+        if self.client is None or self.calls >= self.limit:
+            raise RuntimeError("sciverse budget exhausted")
+        self.calls += 1
+        return self.client.read_full_text(doc_id, max_pages=max_pages)
+
 
 def _claim_status(claim_text: str, evidence_texts: list[str], nli) -> str:
     """Incremental re-verification: supported | weak | unsupported."""
     if not evidence_texts:
         return "unsupported"
-    return nli.best_match(claim_text, evidence_texts).status
+    label = nli.best_match(claim_text, evidence_units(evidence_texts)).label
+    return "supported" if label == "entailment" else "weak" if label == "neutral" else "unsupported"
 
 
 def _strip_citation(sentence: str) -> str:
@@ -363,15 +390,20 @@ def execute_decisions(
     allowed_ids: set[str],
     nli,
     sciverse_budget: _SciverseBudget,
+    paper_titles: dict[str, str] | None = None,
+    paper_doc_ids: dict[str, str] | None = None,
     on_event: Callable[[dict], None] | None = None,
 ) -> tuple[str, dict[str, Any]]:
     """Apply validated actions, writing each outcome back into its decision item.
 
     Returns (mutated markdown, mutated evidence_store); the caller builds
-    repair_log from the decision items.
+    repair_log from the decision items. paper_titles (paper_id -> title, from
+    the ready set) feeds the backfill provenance gate's title fallback.
     """
     md = survey_md
     evidence_store = copy.deepcopy(evidence_store)
+    paper_titles = paper_titles or {}
+    paper_doc_ids = paper_doc_ids or {}
     evidence_by_paper: dict[str, list[dict]] = {}
     for evidence in evidence_store.get("evidence", []):
         evidence_by_paper.setdefault(evidence.get("paper_id", ""), []).append(evidence)
@@ -382,9 +414,13 @@ def execute_decisions(
             if action is None:  # unresolved during decision phase
                 continue
             before = md
+            if action not in GROUP_ACTIONS[group][0].split(", "):
+                item["outcome"] = "invalid_action"
+                continue
             outcome, md = _execute_one(
                 action, item.get("params", {}), item["record"], md, evidence_store,
-                evidence_by_paper, allowed_ids, nli, sciverse_budget)
+                evidence_by_paper, allowed_ids, nli, sciverse_budget, paper_titles,
+                paper_doc_ids)
             violation = _invariant_violation(before, md, allowed_ids)
             if violation:
                 # fail per action, not per run: revert only this mutation
@@ -407,14 +443,15 @@ _ID_SHAPED_RE = re.compile(r"paper:|_|/")
 
 
 def _execute_one(action, params, record, md, evidence_store,
-                 evidence_by_paper, allowed_ids, nli, sciverse_budget) -> tuple[str, str]:
+                 evidence_by_paper, allowed_ids, nli, sciverse_budget,
+                 paper_titles, paper_doc_ids) -> tuple[str, str]:
     """Execute one validated action; returns (outcome, mutated markdown)."""
     try:
         if action == "remap_citation":
             new_id = str(params.get("new_id", ""))
             if new_id not in allowed_ids:
                 return "invalid_action", md
-            old_id = record["citation_id"]
+            old_id = record.get("citation_id") or record.get("cited_paper_id", "")
             # Academic numeric markers ([1], [31-36]) are not citation ids:
             # remapping them onto a confabulated whitelist paper mangles the
             # document (S0 round-2/3: blind global replaces spliced DOIs and
@@ -442,11 +479,33 @@ def _execute_one(action, params, record, md, evidence_store,
             cited_id = record.get("cited_paper_id", "")
             # keep the sentence-ending punctuation so adjacent sentences don't fuse
             tail = old_sentence[-1] if old_sentence and old_sentence[-1] in ".。!?" else ""
-            replacement = (f"{new_text} [{cited_id}]{tail}" if cited_id
-                           else f"{new_text}{tail}")
+            actual_cites = [pid for _, cites in sentence_units(old_sentence, allowed_ids) for pid in cites]
+            tags = " ".join(f"[{pid}]" for pid in dict.fromkeys(actual_cites or [cited_id]) if pid)
+            replacement = f"{new_text.rstrip('.。')} {tags}{tail or '.'}"
             md = md.replace(old_sentence, replacement, 1)
-            status = _claim_status(new_text, [e["text"] for e in evidence_by_paper.get(cited_id, [])], nli)
-            return ("repaired" if status != "unsupported" else "still_unsupported"), md
+            evidences = evidence_by_paper.get(cited_id, [])
+            bindings = record.get("source_bindings", [])
+            if bindings:
+                evidences = [e for e in evidences if e.get("evidence_id") in {b.get("evidence_id") for b in bindings}]
+            premises = [b["source_quote"] for b in bindings] if bindings else [e["text"] for e in evidences]
+            status = _claim_status(new_text, premises, nli)
+            for other_id in set(actual_cites) - {cited_id}:
+                if _claim_status(new_text, [e["text"] for e in evidence_by_paper.get(other_id, [])], nli) != "supported":
+                    status = "unsupported"
+            # Preserve claim scope/source provenance through the outer reverify.
+            new_scope = params.get("scope", record.get("scope", ""))
+            role_ok = (not record.get("source_role_violation") or
+                       record.get("source_role_violation") == "source_role_scope_mismatch")
+            if new_scope != record.get("scope", "") and not bindings:
+                return "invalid_action", md.replace(replacement, old_sentence, 1)
+            for binding in bindings:
+                ev = next((e for e in evidences if e.get("evidence_id") == binding.get("evidence_id")), None)
+                role_ok = role_ok and ev is not None and valid_support(binding, ev)
+                role_ok = role_ok and binding.get("source_role") in SCOPE_ROLES.get(new_scope, set())
+            record["rewritten_text"] = new_text.rstrip(".。")
+            record["rewritten_scope"] = new_scope
+            copied = quote_diagnostic(new_text, [e["text"] for e in evidences])["quote_like"]
+            return ("repaired" if status == "supported" and role_ok and not copied else "still_unsupported"), md
 
         if action == "swap_evidence":
             evidence_id = str(params.get("evidence_id", ""))
@@ -457,24 +516,68 @@ def _execute_one(action, params, record, md, evidence_store,
             return ("repaired" if status != "unsupported" else "still_unsupported"), md
 
         if action == "backfill_evidence":
+            cited_id = record.get("cited_paper_id", "")
+            # own-paper fulltext first: identity by construction (the doc_id
+            # channel), no gate needed. Falls through to the gated agentic path
+            # when there is no doc_id or the fulltext does not support the claim.
+            doc_id = paper_doc_ids.get(cited_id, "")
+            if doc_id:
+                try:
+                    own_md = sciverse_budget.read_full_text(doc_id)
+                except RuntimeError:
+                    own_md = ""
+                own_text = own_md.strip()[:30000]  # one row; verifiers window it downstream
+                if own_text and _claim_status(record["claim_text"], evidence_units([own_text]), nli) != "unsupported":
+                    evidence_store.setdefault("evidence", []).append({
+                        "evidence_id": make_evidence_id(
+                            cited_id, None, len(evidence_store["evidence"]), "repair"),
+                        "paper_id": cited_id, "source_type": "content_chunk",
+                        "source_page": None, "source_paragraph_index": 0,
+                        "text": own_text, "supports_claims": [],
+                        "source_doc_id": doc_id,
+                        "source_title": paper_titles.get(cited_id, ""),
+                        "source_chunk_id": f"{doc_id}:fulltext",
+                    })
+                    evidence_by_paper.setdefault(cited_id, []).append(
+                        evidence_store["evidence"][-1])
+                    return "repaired", md
             try:
                 hits = sciverse_budget.agentic_search(record["claim_text"], top_k=3).get("hits", [])
             except RuntimeError:
                 return "unresolved", md
-            chunks = [str(h.get("chunk", "")).strip() for h in hits if h.get("chunk")]
-            if not chunks:
-                return "still_unsupported", md
             cited_id = record.get("cited_paper_id", "")
-            for offset, chunk in enumerate(chunks):
+            accepted = []
+            for hit in hits:
+                chunk = str(hit.get("chunk", "")).strip()
+                if not chunk:
+                    continue
+                # Provenance gate: the chunk must belong to the cited paper
+                # (doc_id for DOI ids, title otherwise); off-topic hits are
+                # rejected instead of renamed onto the cited paper.
+                if not hit_matches_paper(cited_id, paper_titles.get(cited_id, ""), hit):
+                    logger.warning(
+                        f"[repair] provenance gate rejected hit for {cited_id}: "
+                        f"doc_id={hit.get('doc_id')!r} title={str(hit.get('title'))[:80]!r}")
+                    continue
+                accepted.append((hit, chunk))
+            if not accepted:
+                return "still_unsupported", md
+            for hit, chunk in accepted:
+                page_no = hit.get("page_no")
                 evidence_store.setdefault("evidence", []).append({
-                    "evidence_id": f"{cited_id}_repair_{len(evidence_store['evidence'])}_p{offset}",
+                    "evidence_id": make_evidence_id(
+                        cited_id, page_no, len(evidence_store["evidence"]), "repair"),
                     "paper_id": cited_id, "source_type": "agentic_chunk",
-                    "source_page": 0, "source_paragraph_index": offset,
+                    "source_page": int(page_no) if page_no is not None else None,
+                    "source_paragraph_index": int(hit.get("offset") or 0),
                     "text": chunk, "supports_claims": [],
+                    "source_doc_id": str(hit.get("doc_id") or ""),
+                    "source_title": str(hit.get("title") or ""),
+                    "source_chunk_id": chunk_id(hit),
                 })
                 evidence_by_paper.setdefault(cited_id, []).append(
                     evidence_store["evidence"][-1])
-            status = _claim_status(record["claim_text"], chunks, nli)
+            status = _claim_status(record["claim_text"], [chunk for _, chunk in accepted], nli)
             return ("repaired" if status != "unsupported" else "still_unsupported"), md
 
         if action == "delete_claim":
@@ -574,10 +677,14 @@ def run_repair(
     decisions, stats = decide_batches(groups, llm_json_chat, max_llm_calls=max_llm_calls,
                                       on_event=log_line)
     sciverse_budget = _SciverseBudget(sciverse, max_sciverse_calls)
+    ready_items = [item for item in ready_set.get("items", []) if isinstance(item, dict)]
+    paper_titles = {str(item.get("paper_id")): str(item.get("title") or "") for item in ready_items}
+    paper_doc_ids = {str(item.get("paper_id")): str(item.get("doc_id") or "") for item in ready_items}
     md, mutated_evidence = execute_decisions(
         decisions, survey_md=survey_md, evidence_store=evidence_store,
         allowed_ids=allowed_ids, nli=nli,
-        sciverse_budget=sciverse_budget, on_event=log_line)
+        sciverse_budget=sciverse_budget, paper_titles=paper_titles,
+        paper_doc_ids=paper_doc_ids, on_event=log_line)
 
     repair_log = []
     for group, items in decisions.items():
@@ -589,6 +696,12 @@ def run_repair(
                 "action": item.get("action"),
                 "reason": item.get("reason", ""),
                 "outcome": item.get("outcome", ""),
+                "claim_text": item["record"].get("claim_text", ""),
+                "rewritten_text": item["record"].get("rewritten_text", ""),
+                "rewritten_scope": item["record"].get("rewritten_scope", ""),
+                "cited_paper_id": item["record"].get("cited_paper_id", ""),
+                "source_bindings": item["record"].get("source_bindings", []),
+                "scope": item["record"].get("scope", ""),
             })
 
     outcomes: dict[str, int] = {}

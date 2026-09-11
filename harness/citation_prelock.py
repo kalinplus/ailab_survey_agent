@@ -62,6 +62,7 @@ def build_citation_ready_set(
             {
                 "paper_id": paper_id,
                 "title": card.get("title", ""),
+                "doc_id": card.get("doc_id", ""),  # /content key for repair backfill
                 "authors": card.get("authors", []),
                 "year": card.get("year"),
                 "venue": card.get("venue", ""),
@@ -74,6 +75,19 @@ def build_citation_ready_set(
         )
 
     _selection_order(ready_items)
+    # Bib-sourced staples (cited by seed surveys) get a bounded pin, only when
+    # the cap actually binds: recency alone pushed verified landmarks out of the
+    # window even after the corpus hard-keep rescued them (batch-3 audit: 7
+    # canonical papers whitelist_cut). At most half the window is pinned so the
+    # blend still shapes the rest; below-cap pools keep the legacy order.
+    if len(ready_items) > max_core_papers:
+        pinned_count = max(1, max_core_papers // 2)
+        pinned = sorted(
+            (i for i in ready_items if int(i.get("survey_ref_count") or 0) > 0),
+            key=lambda i: (-int(i.get("survey_ref_count") or 0), -_influence(i), i["paper_id"]),
+        )[:pinned_count]
+        pinned_ids = {i["paper_id"] for i in pinned}
+        ready_items = pinned + [i for i in ready_items if i["paper_id"] not in pinned_ids]
     ready_items = ready_items[:max_core_papers]
     return {
         "task_id": task_id,
