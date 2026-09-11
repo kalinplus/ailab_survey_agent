@@ -1,145 +1,32 @@
 # PROGRESS
 
-工作状态文件（人可编辑）。会话开始先读，完成一个有边界的单元或收尾时更新。
-协议见 `~/.claude/CLAUDE.md` 的 File-based Session State；非平凡需求的 spec 放 `specs/<topic>.md`。
+工作状态文件。常驻契约与 v2 改进总览见 `specs/EviSurvey-v2-契约与改进总览.md`；成果汇报见 `docs/改进成果汇报.md`；模块设计见 `docs/RealAgent/`。
 
 ## Current
 
-### S0 第七轮四层评测完成：L3 1.667→3.0，各层首次全面向好（2026-09-04 深夜）
-
-- 评测报告：`output/survey_eval_report.md`（含 T2 新指标）。产物：30 引用/13 唯一/31K/10 节零重复。
-- L1：unsupported 0.022；recall 0.759 / precision 0.733（29 个被引句的**真实样本**，不再是 2 句空转）；0 条 unsupported 引用对。
-- L2'：citation depth/utilization 0→0.224；gold-free 主指标上线：seed-bib recall 0.304、canonical 命中 3/20、多样性 58 篇/24 venue/2019-2026；gold 降级次要诊断（in-gold 0.103 符合预期）。
-- L0：freshness offset 0.0（白名单混合排序生效）；CV 0.72；冗余 max 0.917（仍>0.8，Intro×Benchmarks）。
-- L3：**3.0/5**（1.667→3.0，三维均 3）。rationale：结构清晰，但内容薄——"abstract snippets / placeholder text / requires deeper parsing"（P5 哨兵串漏进正文）、未来方向模板化。
-- 已知问题（下一轮优先级）：
-  1. **P5 哨兵串泄漏**："Detailed limitations require deeper paper parsing" 出现在正文 → L3 明确点名；P5 建卡时占位 limitation 不应进散文
-  2. **canonical staples 缺失**：Dreamer 系/MuZero/World Models 仍不在语料——T1 bib 候选有了但未存活到 whitelist（8/15）；检索引导需再迭代
-  3. **NLI 严格性**：生成侧 claim_map 15 条 11 条 unsupported（评测侧同文档 0 条 unsupported 对——两侧切分/归一不一致，需对齐）
-  4. 冗余 max 0.917（Intro 路线图 × 正文节）；GLM 时延；P2 taxonomy 随机性；MinerU 暂缓
-- 仓库卫生：Claude 署名 trailer 已全部从本地历史移除（远端 origin/main 在 0b909d0，同步需 force push，由用户执行）；`.env`（GLM key）保持未提交。
+（空；下一波候选见 Next，待批准。）
 
 ## Next
 
-### 下一轮迭代（评测证据排序）
+### 波9 候选1：writer 装配层落盘与失败归因
+- 任务目标：`_assemble_claim_paragraphs` 的写侧防御（sanitize 白名单/跨节去重/单句重解析）整体丢弃句子导致回退时，把原始回复+逐句丢弃原因落盘——波8-final2 中验证级拒绝已清零，4/9 单元失败全部后移到这一层且无归因。
+- 验收条件：装配层整体失败也写 writer_llm_rejects.jsonl；真跑 LLM 存活单元 ≥6/9 或落盘数据可归因。
 
-- P5 哨兵串/占位 limitation 不进散文（writer+repair 输入侧过滤，或 P5 不落占位串）
-- canonical staples 入语料：bib 候选 → whitelist 的存活链路排查（blend 权重？相关预过滤误杀？）
-- 生成侧 claim_mapper 与评测器切分/归一对齐（15 条 11 unsupported vs 0 条 unsupported 对的分歧）
-- Intro/Abstract 冗余（路线图句与节内容重叠）
+### 波9 候选2：章节-论文分派精度与 P2 方差
+- 任务目标：P2 分类数 3→6→4 纯方差摊薄正文；关键词弱匹配错位（AvalonBench 胜率句落 Neural Rendering 节等）是 topic_relevance 0.656<0.7 的主要剩余拖分。
+- 验收条件：分派错位句显著减少或分派带相关性校验；真跑 topic_relevance ≥0.7 或失败原因显式改判。
+
+### 波9 候选3：own_limitation 提取覆盖
+- 任务目标：过闸 own_limitation 每轮仅 0-2 条，Future Directions 持续空转；瓶颈在提取端（P5.1）对 selected 论文的覆盖。
+- 验收条件：selected 论文过闸 own_limitation ≥3 条；FD 节有带引用句或显式归因。
 
 ## Log
 
-### 2026-09-04（收工：今日成果总览·说人话版）
+### 2026-09-11 波8 终验收通过（goal gate 全绿）
+两次真跑：第一次诚实失败（entry 补收违反 supports_claims NLI 闸契约 → 9 条 invalid_source_binding 级联 → coverage_fail 拦截+回滚，波8b 撤销并测试钉住契约）；第二次全绿：**0 unsupported、0 角色违规、validity 1.0、coverage 1.0/1.0、grounding 0.574→0.9、L1 R/P 0.833、L3 3/3/3**。writer 拒绝前沿三轮演进（unknown_cite_alias→source_role_out_of_scope→装配层），前两层已清零。P2 占位描述治理连带检索去污（RAP/LLM 综述/SMART-LLM 退出引用，topic_relevance 0.62→0.656）。验收基准 `archive/wave8-final2-20260911-115240`。
 
-**一句话**：这个系统昨天还是"把 12 篇论文的摘要套进固定模板"的填空机，引用是装样子的（84 处引用翻来覆去只有 3 篇论文）；今天它变成了真的会用大模型写综述、每句话都能查到出处的管线——30 处引用来自 13 篇论文、全部通过事实核查，评测分数从 1.667 涨到 3.0。
+### 2026-09-10 波1–波7：证据契约、Agent 关节、管线健壮性全部落地
+claim 三件套契约（source_role/source_quote/evidence_ids + NLI 闸 + mapper 逐字复核）；策略/修复/Goal Gate 三关节（有界循环、A–F 失败分组、三道闸+回滚）；MinerU 台账恢复与 content 双通道；三道主题闸门 + 经典种子注入；agentic 死通道关闭（P5.2 12min→80s）；taxonomy/图表/PDF 渲染修复。各波详细取证在 git 历史（`backup/pre-polish-20260911` 保留改写前完整记录）与本地 archive/。
 
-**修了什么（按人话讲）**：
-
-1. **引用是假的** → 修好了。原因有两层：浅层是"引用白名单"被硬编码成只留 3 篇论文（`--max-core-papers` 参数一直传 3）；深层是写正文的模型会把论文编号写错（DOI 中间插空格、编号裸奔在句子里），下游核查程序认不出来就当垃圾删掉。解法是给模型看假名字（P1、P2），写完再换回真编号；写错的编号用正则压回正确形状再校验，能救活就救活。
-2. **正文越修越短** → 修好了。核查不过的句子原来直接删，删着删着正文就没了，而"防掏空"的闸门只看相对比例，看不出绝对变矮。解法是启用关节2修复代理（改写、换证据、补证据，而不是删），外加硬性规定：修复程序不许改章节结构、不许动参考文献之后的内容。
-3. **每一节长得一模一样** → 修好了。原来四个小节共用同一段"横向比较"的套话，相似度 0.96。照着学术写作的规矩重写：按主题组织而不是按论文罗列、让论文互相比较而不是挨个介绍、地标工作用"作者 prominent"写法、每句话全文只许出现一次。
-4. **一个句号引发的血案**：断句的正则写成了"句号后必切"（不管有没有空格），DOI 里的 `10.` `48550/` 全被切成碎片，六轮实验里引用凭空消失、正文被误删、评测空转通过，全是它。最后发现评测器和生成器用的正则就差一个字符（`\s*` vs `\s+`）。
-5. **GLM 的脾气**：它不守格式、会凭记忆自己编造真实 DOI（写对但带空格）、思考型模型经常把 token 额度全花在暗地里思考导致回复为空。对策：prompt 里只给假名、回复统一归一化、给足预算、失败单节回退模板。
-
-**质量数字（09-02 基线 → 现在）**：引用 84 处/3 篇 → **30 处/13 篇**；事实错误率 12.5% → **2.2%**；引用精确率/召回率 0.58/0.46 → **0.73/0.76**；语料利用率 0 → **0.224**；评委打分 1.667 → **3.0**。参考文献覆盖用了新的 gold-free 度量（7 篇种子综述的引文并集做参照，不再被单篇 gold 的 338 篇分母惩罚）。
-
-**工程沉淀**：三层并行派发协议跑了三遍零冲突；写作管线有了九层防御（别名→句级过滤→id 守卫→括号平衡→DOI 归一→写出 lint→修复不变式→remap 守卫→日志隔离），每层都有测试钉住；380 个单测全绿；三条经验进了长期记忆。
-
-**改进方向（下一轮，按证据排序）**：
-
-1. **P5 哨兵串别进正文**：卡片里"需要更深的论文解析"这类占位文本被原样写进了综述，评委明确点名——在建卡时就不落占位串，最便宜的一分。
-2. **经典论文入语料**：Dreamer 系列、MuZero、World Models 这些领域地标全不在语料里（20 篇地标只命中 3 篇）——bib 候选已生成但没活到白名单，查 blend 权重和相关预过滤的误杀；这是评委"信息量不足"扣分的钥匙。
-3. **两侧核查对齐**：同一篇综述，生成侧判 15 条里 11 条不支持、评测侧判 0 条不支持——把评测器的断句/归一逻辑回灌给生成侧，修复代理才能精准干活，gate 才能真正通过。
-4. **开头两节去重**：摘要×引言 0.89、引言×某正文节 0.92，路线图句和节内容还太像。
-5. 中期：GLM 太慢（单调用偶发 18 分钟）、P2 分类法跨 run 不稳定（类目数 26/4/2/4/5 乱跳）、MinerU 图表链路（接口只回 200 不出结果，已暂缓）。
-
-**仓库状态**：本地领先远端 130 提交、历史已重写去除 AI 署名，推送用 `git push --force-with-lease origin main`；`.env`（含 GLM key）保持本地未提交，不要入库。
-
-### 2026-09-04（深夜二：lint 误伤修正——round 4/5 引用消失的真因）
-
-- round 5"gate passed 但 0 引用"的空转通过根因：lint 的整行括号计数把 card 字段里合法的散括号（数学区间 `[0,1]`、引用标记）也判不平衡，从最后一个 `[`（恰是合法引用）截断 → 连坐删除。round 4/5 两轮引用消失同源。
-- 修复 `492e9c7`：lint 只处理行尾未闭合的引用开括号（`\[(paper:|P\d)[^\]\n]*$`）+ 断裂组剔除，不再整行计数。三情形单测验证。
-- S0 第六轮进行中（DOI 归一化救援 + lint 精度同时生效）。
-
-### 2026-09-04（夜三：S0 第三轮——remap 盲替换是文档损坏的真凶）
-
-- 第三轮结果：无重复节 ✓、正文零断裂括号 ✓、但 gate fixpoint（invalid=5）、claim_map 0 条、fallback 8 次（GLM 空回复仍有 7 次——effort=low 未在 writer 路径生效？待查 `HEAVY_LLM_THINKING_EFFORT` 是否传到了 `_writer_llm_chat` 的 client）。
-- 深挖 invalid=5：巨型 pid 拼接串**再次出现**且含**不属于本轮 taxonomy 的节名**（Procedural Content Generation / Benchmark Construction——旧 run 的渲染文本）→ 追到 `output/repair_log.json` 第 6 轮（上一轮 run 的残留日志）：`remap_citation -> repaired` 把学术编号 `[1]/[2]/[3]/[31–36]` 用**无 count 的全局 `md.replace`** 换成 GLM 臆断的白名单 id（理由全是 confabulation）。
-- 修复三连：`46e0051` remap 三守卫（id 形态 / 句内锚点存在 / 逐句替换）+ `a949972` writer 模板 pid 守卫（含空白即跳过）+ `22ec140` 同上的首版（过严，被单测桩教育后放宽）。
-- 已知问题（下轮处理）：① `repair_log.json` 跨 run 累积、轮次编号续算（fresh run 从 round 7 开始）——`_next_repair_round` 读旧日志；② writer fallback 的 GLM 空回复在 effort=low 后仍有 7 次，怀疑 writer 的 client 没吃到 thinking_effort；③ claim_map 提取 0 条需单独查（可能又是吞块/格式耦合）。
-- 教训：文档级 `str.replace` 必须带 count + 锚点验证；LLM 会把编号引用 remap 到臆断论文，decision 层要有形态预过滤。
-
-### 2026-09-04（深夜：S0 第四轮——lint 生效但暴露 GLM 的系统性 id 幻觉）
-
-- 第四轮：无重复节 ✓、零断裂括号残留 ✓（lint 工作正常），但产出近乎无引用的综述（全文仅 `[11]` `[1]` 两个垃圾编号）——lint 按设计删除了 GLM 写的断裂 id，**删光了引用**。root cause 升级认知：`glm-5.3-flash` 会从预训练记忆**自发写出真实 DOI**（StreamDiffusion 的 arXiv 号一字不差）并空格断裂——别名方案挡不住模型自己记得的 id。
-- 修复 `1b5e0cd`：`_map_alias_citations` 汇合点统一归一化——`[paper:...]` 组内去空白压回紧凑形，白名单校验**救活**引用而非删句；非白名单 id 仍由 sanitize 丢弃。memory 已更新此教训。
-- 三项待办全部完成：repair_log 按 task 隔离（`bf50ffd`）、thinking_effort 确认到位（GLM 方差用 6000 预算兜底）、claim_map 0 提取根因=断裂括号（lint 封类）。
-- S0 第五轮进行中。
-
-### 2026-09-04（夜：S0 第二轮回退取证——"重复节"是引用提取的假象）
-
-- 机制（取证 agent `91eede4` 字节级闭环）：writer 输出的某个句子里有一个**未闭合的 `[`**（`_shorten` 截断切断了引用括号）→ 引用提取器把 1535 字符的多段落块读成一个"citation id" → repair 删不掉（句子匹配找不到完整 `[id]`，记 invalid_action）→ `_replace_references` 的 `title or paper_id` 兜底把该块当 id+title **打印两遍**（25022→29628 的 +4606 字符对账吻合）。"重复节"实为引用列表条目内嵌的标题文本，writer/revise 主体流程从未动过节。
-- 修复三连：`91eede4`（repair 逐动作后置条件：节集合变化 / References 后内容变化 / 新白名单外 id → 还原为 invalid_action 单动作失败）+ `_replace_references` 只列已验证卡 + `33b35e9`（`_shorten` 不得留下未平衡括号，源头消灭）。
-- 教训归档：文本截断/拼接工具必须保证括号平衡；提取器面对畸形输入的吞块行为要靠下游不变式兜底（repair 后置条件正是干这个的）。
-- S0 第三轮进行中（GLM effort=low + 6000 预算 + repair 不变式 + 括号平衡全部生效）。
-
-### 2026-09-04（晚三：T3 合并，三路并行全闭环）
-
-- T3 合并（`6a8bbd8`，378 unit passed）：固定三段骨架 → moves 菜单（按主张分组/让论文互相对话/缺口收尾）；author-prominent + information-prominent 引用风格混用（滞留 tag 归位正则泛化 `_STRANDED_TAGS_RE`）；删 `_evidence_bits`，OC/FD 从 `_limitation_pool` 对半切（构造性不相交）；跨节句子台账 `_fresh_text`（任何句全文只出现一次）；Abstract/Intro 分离（锚点引用 + taxonomy roadmap）。离线真实数据冒烟：全文跨节零重复句、OC×FD 掉出相似度 top8。
-- 已知边界：Abstract×Intro 这类短框架段 bge 天然 ~0.92，L0<0.8 真跑才见分晓；写作 LLM 调用 +4 次/篇（abstract/intro/OC/FD）。
-- 三路并行零冲突收尾（T1 触达 phases/prelock、T2 触达 evaluate/eval-script、T3 触达 write_survey，文件集严格不相交）。
-
-### 2026-09-04（晚二：T1+T2 合并）
-
-- T2 合并（`179f5eb`）：评测器 `_sentence_units` 归一化 citation-only fragment（修 L1 cited=2 / L0 假性零引用）；gold-free 主指标上线（seed-bib recall / canonical hit@N / 语料多样性），gold 降级次要诊断；`cache/seed_survey_bibs.json`（7 综述→23 并集）与生成脚本入库。真实 12 篇语料冒烟：seed-bib 0.261 / in-seed-bib 0.5 / canonical 命中 0.5——方向合理。
-- T1 合并（`a85bf26`）：P2 种子综述参考文献 → `source=bib` expansion（staples world_models/dreamerv3/muzero 在列）；P3 landmark 查询族（无年份窗）+ 标题规范化模糊去重；白名单 recency×influence 混合（`log1p(citation_count+survey_ref_count)`，平手 influence 破平，全零退化为纯 recency）。偏差合理：贯通 `PaperCard.citation_count/survey_ref_count`（否则 blend 在生产退化为纯 recency，boundary 扩展有据）。
-- 修了一个 `98ec405` 遗留的隐性测试破坏（`47874f2`）：repair-agent 测试 stub 的 SimpleNamespace 缺 `intern_api_base_url`——单跑必挂、全量被顺序掩盖，两 agent 独立发现。教训：改构造函数签名后要单跑受影响测试文件。
-- 合并后主工作区 `pytest tests/unit/` 374 passed。T3 进行中。
-
-### 2026-09-04（晚：尝试 5 首次 gate passed，四层 A/B 出炉）
-
-- 尝试 4 被 kill（repair round 5 中途）；死前已证明 round-0 初稿规模保住（19.6K chars/36 引用/invalid=1）。
-- 尝试 5（+`REQUEST_TIMEOUT_SECONDS=300`，60s 默认对 GLM 思考太紧是 sec_04/05 超时兜底的根因）：**goal gate 首次 passed**——unsupported 0 / invalid 0 / coverage 1.137；正文 4 节全带引用；21 引用 / 8 唯一 id（基线 84/3）；repair agent 末轮 claim_map success。决定性变量：repair agent(GLM) + SUMMARY 近引用 prompt + 别名方案。
-- 四层 A/B（vs 09-02 基线）：整体 unsupported 0.125→**0.014**；L1.5 support 0.297→**0.571**；citation depth/utilization 0→**0.145**（id 同空间）；L1 recall/precision 1.0（但样本仅 2 句，失真）；冗余 max 0.952→0.961（回退）；freshness 回退（oldest-first，已修）；gold recall 0.033→0.018（回退）；L3 1.667→1.667（维度 1/3/1→1/1/3）。
-- 新修复 `e007ac7`（未重跑验证）：GLM 句尾挂引用被句子切分变成 citation-only fragment（L1 cited=2 与 L0 正文零引用的评测假象来源）→ 归位到句内；prelock 白名单改最新优先。
-- 评测脚本调用方式（本轮工件配对）：`--survey output/survey.md --evidence-store cache/evidence_store.json --papers cache/paper_cards.json --taxonomy cache/taxonomy.json --figure-bank cache/figure_bank.json --table-bank cache/table_bank.json`。
-
-### 2026-09-04（下午：S0 真跑 4 轮迭代——LLM 写作 × NLI × 修复回路的三重冲突诊断与修复）
-
-- S0 尝试 1 失败：P5.2 agentic backfill 在语料 60 下 692 次搜索 ~18min，超 `TOOL_TIMEOUT_SECONDS=900`，主进程死而 worker 线程活到写完 bundle——假象"跑完"。教训：长真跑命令里不要加 `; echo`（吞退出码）。
-- S0 尝试 2 完成但产物回退（正文 4 节被修复回路吃光）。诊断三重根因：① writer LLM 把 id 裸写进句子且 DOI 内插空格（27 bare vs 8 合法括号），括号白名单过滤看不见 → 全成未引用 claim；② NLI 对 zh LLM 转述 12/15 判 unsupported；③ claim mapper 把 `![caption](id)` 的方括号当引用（cited_paper_id 竟是 caption 文本）→ 垃圾 claim → delete-repair 掏空正文。citation_ready_set 的 `[:max_core_papers]` 硬截是"84 引用 3 唯一 id"的上游机制，`--max-core-papers 15` 放开。
-- 修复 commit `98ec405`：writer prompt 改 [Pn] 别名（模型永远见不到可改坏的 id，解析后映射回真实 id）+ 裸 id/DOI 残段句级丢弃 + `HEAVY_LLM_*` env 三元组（writer/修复走 GLM `glm-5.3-flash`，open.bigmodel.cn OpenAI 兼容端点；GLM 是常思考模型，max_tokens 要给足、`thinking` 不支持 disabled）+ claim mapper 剥 embed 行。Intern 留给简单判断任务。
-- 尝试 3（en + GLM）：structural invalid=0（别名方案生效，零真泄漏）、gate 到 fixpoint、coverage 1.02——但 GLM 带引用句 4/4 被 NLI 判 unsupported，正文仍被吃到只剩 1 节。结论：NLI 杀转述、亲近引用；claim_map 只提出 4 条（GLM 段内引用稀疏）。
-- 尝试 4 进行中：SUMMARY 段改"近乎逐字拼装 evidence snippet + 挂 tag"（评测陷阱 memory 的镜像：verbatim 句过 sentence-window NLI）+ 开 `EVISURVEY_REPAIR_AGENT=1`（关节2 remap/rewrite/backfill 替代 delete-only，正是为 unsupported 设计的机制；`EVISURVEY_NLI_DEVICE=cpu` 防 MPS OOM）。
-- 遗留：P2 taxonomy Intern 随机性大（26/4/~2 类目跨 run）；MinerU `/agent/parse/url` 秒回 200 零轮询 → parsed=0（图表链路断，用户指示先放下）；P1 coverage LLM 偶发 JSON 前缀泄漏（有降级）。覆盖闸盲区：retention 以 round 0 为基线，测"相对变矮"测不了"绝对太矮"。
-
-### 2026-09-04（S1+S2 双 worktree 并行派发第二轮：合并完成）
-
-- 第二轮双任务并行：S1 检索广度与来源深度（`specs/检索广度与来源深度.md`）+ S2 写作端混合内核（`specs/写作端混合内核.md`，用户拍板混合内核：骨架模板+正文 LLM grounded+模板兜底）。spec 先行提交（`f9943a8`）规避上轮 worktree 基点坑，派发提示写明先 `git merge --ff-only main`——本轮零基点摩擦。
-- S1 合并（`6ba5fe5`，ff）：广度旋钮 5 个 env（默认=交付行为，含 `EVISURVEY_MAX_CORPUS` 显式设置时切 aspect 均衡裁剪）+ MinerU 全文只解析 core 窗口（默认 15）。亮点：`phase5_evidence.py`/`search_strategy_builder.py` 零改动即达标（全文经 P3 parsed 输出自动入 P5）。
-- S2 合并（`d3b7fb6`，cherry-pick，分支基点是 S1 合并前）：选文改相关性矩阵+等额配额+有界复用（REUSE_LIMIT=2 硬记账，防塌缩也防空节）；禁词表+节首句去引用+比较段轮转收尾+开放挑战/未来方向/结论改证据句带引用；`EVISURVEY_WRITER_LLM=1` 时正文三段走 Intern-S2（句子级白名单过滤，单节失败回退模板）。final seed 上 max 相似度 0.736→0.566。
-- 偏差记录：S2 的 bge 默认关（`EVISURVEY_WRITER_EMBED=1` 开）——单测不得触发 HF 下载；`ASPECT_MIN_PAPERS` 默认 0（交付路径不回归，S0 显式开 2）；S1 的 aspect 下限救援只在 influence 模式生效（full 模式即 influence 模式，可接受）。
-- 合并后主工作区 `pytest tests/unit/` 336 passed（318 基线 + S1 +S2 新测试）；两 worktree 与分支已清理。剩余：S0 交付级真跑 + 四层复测（Current 挂着）。
-
-### 2026-09-02（下午：双 worktree 并行派发落地）
-
-- 双任务并行派发全流程走通：评测体系 v2 四层改造（spec `specs/评测体系v2-离线四层改造.md`）+ 搜索 SubAgent 工具（spec `specs/搜索SubAgent工具.md`，派发前由主会话补薄设计并提交）。触达文件集不相交，两 worktree 并行零冲突；各 cherry-pick 单 commit 合并（`eeefb94` SubAgent、`a444ee1` 评测 v2）。
-- 评测 v2 真跑验收通过：`EVISURVEY_REAL_NLI=1` 全量四区块报告（`output/survey_eval_report.md`）。L1.5 缓存续跑在真实中断场景验证成功（上次被杀 run 留下 18 条缓存命中，本次仅新检索 19 条）；id 失配告警按设计触发（`10.1109/...` vs `alphastar_2019`）。L3 打分 1.667/5 且 rationale 与 L0/L1 数据交叉印证（84 引用 3 唯一 id、相似度 0.952、零批判）——judge 正确，暴露的是工件本身缺陷，评测体系价值首验。
-- SubAgent 真跑验收通过：`main.py` full 冒烟 exit 0、`meta["subagent"]` 恒存在（delegations=0）；A/B/C 对比全硬断言 PASS，C 配置 survival 全面优于 A/B（1.0 vs 0.25–0.5）。Intern-S2 在 10 个真实场景零自发委托（aspects 健康时不需深挖；委托机制由 4 条单测覆盖：正例摘要/无递归/共享预算/上限拒绝）。
-- 工作流验收："文件为窗口"三条全达成——协议写入用户级 CLAUDE.md、本仓建立 PROGRESS/specs 并提交、真实需求（本双任务）spec→实现→真跑→回写走通。
-- 摩擦点（供协议迭代）：
-  - worktree 基点落后 main（0b909d0），agent 需自行 ff-merge 才能看到派发前提交的 spec——派发前应确认 Agent tool 的 worktree 基点行为或派发说明里写明基点 commit。
-  - 真跑验收有顺序依赖：评测先于 smoke（smoke 覆盖 `output/survey.md` 会破坏评测的工件配对）；多任务真跑要按数据依赖排序，不是简单串行。
-  - 后台长命令输出经管道缓冲后中途不可观测，被杀时零诊断信息——长真跑一律 `python -u` 直出。
-  - review 发现的问题（评测 id 失配裸 0.0）通过 SendMessage 回传 agent amend 单 commit 解决，保持一任务一 commit，闭环顺畅。
-- 清理：删除已合入 main 的遗留分支 `feat/module-b-knowledge-pipeline`；两个 worktree 与 `worktree-agent-*` 分支已清理。`docs/相关工作对比.md` 仍未跟踪，待用户决定归档方式。
-
-### 2026-09-02
-
-- 评测体系 v2 立项：诊断确认现有三层过度集中于引用核查（L1 与线上 verify 同源、L2 依赖 gold、L3 单 judge 偏置），最大盲区是 citation_coverage≈0.4–0.5 的未引用正文无人核查。定稿四层方案（确定性画像 / corpus-grounded coverage / 未引用句验证 / DeepSurvey 三维 judge；AHA 明确不做），spec 在 `specs/评测体系v2-离线四层改造.md`，按并行派发协议出 worktree。
-- 工作流迁移模板落地 `~/.claude/templates/workflow-bootstrap.md`：引导 prompt + 项目协议节填空模板，供新仓库快速迁移（协议本体在用户级 CLAUDE.md 全局生效，迁移仅项目级四件）。
-- 落地 worktree 并行派发协议：项目 CLAUDE.md 增 "Parallel Dispatch Protocol" 小节；用户级 CLAUDE.md 增通用 "Git Worktree 并行派发" 原则；`PROGRESS.md` 首次提交（worktree 只见已提交内容，此为派发前提）。下一个真实任务（搜索 SubAgent 工具）按协议派发，验证全链路。
-- 建立工作流：`PROGRESS.md` + `specs/` + 用户级 CLAUDE.md 协议（含 PROGRESS 模板）；项目转个人开发，本文件与 `specs/` 提交进 git（项目 CLAUDE.md 已注明）。
-- 未跟踪文件 `docs/相关工作对比.md` 待归档/提交。
-- （承接此前状态）v2 三关节完成：关节1 策略 Agent（`harness/agents/`）、关节2 修复回路 + Goal Gate（`harness/goal_gate.py`）、关节3 coverage 闸；总计划与审计在 `docs/RealAgent/`。
+### 2026-09-08 批次 T1–T12：从 grounding 0.042 到 0.476
+MinerU 异步轮询修复、SciVerse 精确标题检索、goal gate 诚实化（quality_failed+非零退出）、final-seed 测试污染修复、GLM/DeepSeek 空回复根因（推理烧尽预算）与 thinking disabled 路由定型。

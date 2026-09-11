@@ -1,81 +1,62 @@
-Let me first fetch the pages for all 6 Sciverse API interfaces
+# SciVerse API 接口说明（2026-09-09 实测版）
 
-Let me fetch the meta-catalog page as well
+Base URL：`https://api.sciverse.space`（注意不是网站域名）。鉴权：`Authorization: Bearer <SCIVERSE_API_KEY>`。官方文档站 <https://sciverse.space/docs>（概览），官方 SDK <https://github.com/opendatalab/Sciverse-Agent-Tools>。API host 不暴露 `/docs`/`/openapi.json`。同一把 Key 可用于 Sciverse / 点石 / Skills 生态。
 
-以下是 Sciverse 六大 API 接口的全面总结，涵盖每个接口的概述、适用场景、不适用场景及核心能力。
+本文档全部条目于 2026-09-09 用真实 Key 逐一验证过（样本：GameNGen, arXiv 2408.14837）。此前版本的"六接口总结"来自厂商页面转述，方法名/参数键/分页语义多处与实测不符，已废弃。
 
----
+## 数据身份（先读这个）
 
-### **1. agentic-search — 智能检索与片段返回**
+- **`doc_id`：64 位不透明内部哈希**（如 `6442a8e2a2da…`），既不是 DOI 也不是 arXiv id。它是 `/content` 的钥匙，**只在 meta-search / agentic-search 的返回里出现**，必须检索时持久化，无法从 paper_id 推导。
+- **`unique_id`：`paper:<doi>` 形态**，即本仓库的 paper_id。`meta-paper-relations` 用它查询。
+- meta-search 记录同时携带 `doc_id` 与 `doi`，两者可互相对应但不相等。
 
-**概述：** 面向 LLM Agent 与 RAG 场景设计，用自然语言提问，返回最相关的可引用文献段落。每条结果包含标题、正文片段、doc_id、页码/偏移位置等来源信息，适合快速找到可引用的上下文。
+## 1. POST /meta-search — 结构化元数据检索
 
-**适用场景：** RAG 应用中为 LLM 补充含引用的文献证据；Agent 工具调用中一屏拿到可回链的片段与原文位置；问答系统中结合文献原文与片段生成带出处的回答。
+请求：`{query, page, page_size, filters?, sort?, fields?, freshness_boost?, impact_boost?}`（可选键只在提供时发送；boosts 仅 `MILD`/`STRONG`，且只在未设 sort 时生效；`sort` 与 boost 同发会被拒）。
 
-**不适用场景：** 精确 DOI、标题或字段化分页导出（应使用 meta-search）；读取完整原文上下文（应使用 content 接口）；下载图表或附件资源（应使用 resource）。
+响应：`results[]`，单条含 `doc_id`、`unique_id`、`doi`、`title`、`abstract`、`author[]`、`publication_published_year`、`publication_venue_name_unified`、`keywords`、`citation_count`、`influential_citation_count`、`fwci`、`citation_normalized_percentile`、`access_*`、`locations` 等。
 
-**核心能力：** 支持 query（最长 4096 字符）、top_k（1-100）、sub_queries 查询改写（0-4）；支持按语言、标题、作者、发表年份、期刊、被引次数、主题领域等维度做过滤器（filters）。注意该接口只返回语义证据片段，不生成最终答案。
+实测注意：`access_oa_url`/`locations` 在我们的 Key 下返回空（权限或覆盖未定，不要依赖它找 PDF URL）。
 
----
+## 2. POST /agentic-search — 语义片段检索
 
-### **2. meta-search — 按字段过滤与排序检索元数据**
+请求：`{query, top_k, filters}`。响应键是 **`hits[]`**（不是 `results`），单条含 `chunk`（片段文本）、`chunk_id`、`doc_id`、`title`、`page_no`、`offset`、`score` 及出版元数据。`author` 字段损坏（要用作者走 meta-search）。
 
-**概述：** 按年份、期刊、DOI、语言等结构化条件筛选论文书目信息，返回标题、摘要、作者、发表年份等元数据，不返回段落正文。支持不传 query 仅以 filters/sort 精准检索，也支持传入 query 做全文模糊检索。
+**关键实测结论（2026-09-09）**：这是"语义相关论文"检索器——即使拿论文自身的标题/断言作 query，**被查论文自己的 chunk 也不会出现在 top-8**。因此它不能用于为被引论文提供自身证据；历史上把它当作 grounding 通道并挂到论文名下，是跨论文冒名归属的根源（见诊断文档 §4.1）。正确用法：找相关文献线索；自身证据用 `/content`。
 
-**适用场景：** 按年份、期刊、DOI、语言、开放获取状态等字段筛选论文，返回论文级元数据列表；论文列表的批量导出与分页。
+## 3. GET /content — 按 doc_id 读全文（自有证据通道）
 
-**不适用场景：** 不返回全文片段（需要证据片段用 agentic-search，需要原文正文用 content）。
+请求：`?doc_id=<完整doc_id>`；**不带 offset 时一次返回全文**（实测 GameNGen 50,742 字符 Markdown，`more=false`）。`offset`/`limit` 仅显式传入才发送（limit 默认 700 字符只在传 offset 时生效）。
 
-**核心能力：** 支持 papers / authors / sources 三种集合检索；丰富的 FilterItem 算子（EQ/NE/GT/GTE/LT/LTE/IN/NIN/CONTAINS/MATCH/MATCH_PHRASE）；SortItem 排序；分页支持 page/page_size 浅翻页和 cursor 深翻页；支持 freshness_boost（MILD/STRONG 新鲜度加权）和 impact_boost（MILD/STRONG 影响力加权），两者可叠加。字段可见性受 Token 权限影响。
+响应：`{text, more, next_offset}`（另有 `code/biz_code/message` 等信封字段；`bytes_returned`/`request_tokens` 计量）。超长文档按 `more=true` + `next_offset` 续读。
 
----
+正文是 Markdown，标题行 `# ...`，**图片以相对路径内嵌**（`![...](dt=…/hash.jpg)`），这些相对路径是 `/resource` 的输入。全文含 References 节文本——本仓库用 `_split_markdown` 的 `role="reference"` 标记将其排除出证据。
 
-### **3. content — 按 doc_id 读取原文**
+## 4. GET /resource — 按相对路径下载二进制附件
 
-**概述：** 用 doc_id 分段读取文献全文文本，doc_id 通常来自 agentic-search 或 meta-search 的返回结果。适合详情页展示、引用核对和长文分批加载。
+请求：`?file_name=<content 返回的相对路径>`（不得含 `\`、`..`、不得以 `/` 开头）。响应：二进制流（实测 `image/jpeg`，合法 JPEG 头，11KB，2 秒）。
 
-**适用场景：** 从 agentic-search 的 evidence chunk 继续读取上下文；查看完整文献正文以进行引用核对或深度阅读。
+实测注意：遇到过一次瞬时 ReadTimeout，重试即成功——客户端 `_request` 已带传输错误退避重试。早期记录的"507 不可用"已过时。
 
-**不适用场景：** 不适合直接在元数据检索或片段检索中使用（依赖上游接口先提供 doc_id）。
+## 5. GET /meta-catalog — 字段目录
 
-**核心能力：** 通过 doc_id 必填参数定位文献；支持 offset/limit 分段拉取（limit 默认 700 字符，仅在传入 offset 时生效）；响应返回 text（Markdown/纯文本）、chars_returned、next_offset 和 more 字段，推荐根据 more/next_offset 续读以降低超时风险。按 Unicode 字符计数，不按字节。
+请求：`?collection=papers|authors|sources`。响应：每字段 `name/type/filterable/sortable/default_returned/operators/sample_values`。papers 集合共 65 字段；`doc_id`、`doi`、年份、venue、被引数、`primary_topic.*`（domain/field/subfield）、`fwci` 等均可过滤，`citation_count`/`fwci`/年份可排序。字段可见性受 Key 权限影响。
 
----
+## 6. POST /meta-paper-relations — 引用关系（必须 POST，键是 unique_id）
 
-### **4. resource — 按相对路径下载附件**
+请求体：`{unique_id: "paper:10.48550/arxiv.2408.14837", relation: "CITATIONS"|"REFERENCES"|"RELATED_WORKS", page, page_size}`。**GET 返回 405；请求键是 `unique_id`，发 `paper_id` 无效**（客户端旧方法正是错的这个）。
 
-**概述：** 用于拉取论文插图、实验图、解析图等文献相关二进制附件。file_name 通常来自检索结果、解析结果或正文中的图片路径，只传相对路径，不要传完整 URL。响应为二进制流。
+响应：`{items[]（每条 id/id_type/title，id_type 如 semantic_scholar）, total_count, page, page_size, total_pages}`。实测 GameNGen REFERENCES=34 条。用途：经典覆盖的原料（拉核心论文的参考文献清单做真实 bib 扩展）。
 
-**适用场景：** 下载论文中的图片（Figure、图表等）和其他二进制附件。
+## 客户端实现约定（tools/clients/sciverse_client.py）
 
-**不适用场景：** 不返回文本内容或解释图表含义（图表理解需要上层多模态模型）；不接受完整 URL（只接受平台返回的相对路径，避免 SSRF 和路径穿越风险）。
+- 全端点走 `_request`：429/5xx 指数退避（429 基数更长）、传输错误重试、请求间隔 `SCIVERSE_MIN_INTERVAL`（默认 1s）。
+- `get_content(doc_id, offset=None, limit=None)`：可选参数不传就不发；`read_full_text(doc_id, max_pages=8)` 负责首呼全量 + 按 more 续读。
+- `meta_paper_relations(unique_id, relation, page, page_size)`。
+- `meta_search` 的 boosts 语义见上；`agentic_search` 返回 `hits`。
 
-**核心能力：** 请求参数仅 file_name（相对路径，不得含 \、..，不得以 / 开头）；响应为二进制流，带 Content-Type、Content-Disposition 和 X-Request-ID。file_name 通常来自 content Markdown、解析结果、agentic-search 或 meta-search 返回的资源引用字段。
+## 本仓库的接入位置
 
----
-
-### **5. meta-catalog — 查看元数据字段目录**
-
-**概述：** 返回 meta-search 可用字段的 schema，包括哪些字段可以筛选或排序、默认返回哪些列，以及过滤算子和枚举样本值。适合在搭建筛选器、生成查询表单或让 Agent 自动拼装 meta-search 请求前调用。
-
-**适用场景：** 当 Agent 或前端需要动态生成 meta-search 筛选器、字段选择器或排序条件时，先读取 catalog 获取字段能力信息。
-
-**不适用场景：** 不返回论文结果（论文结果由 meta-search 返回）；sample values 仅为样本值（不代表完整取值空间，会缓存 24 小时）。
-
-**核心能力：** 支持 collection 参数（papers / authors / sources）；每个字段返回 name、type、filterable、sortable、searchable、default_returned、description、operators、sample_values；全局返回 default_fields 和 filter_operators 列表。不同账号权限看到的结果可能不同，调用方需动态构造请求。
-
----
-
-### **6. meta-paper-relations — 分页查论文引用关系**
-
-**概述：** citations / references / related_works 是无界关系数组（高被引文献可达数千条），meta-search 出于响应体积考虑只内联截断少量条目。本接口先用 meta-search 或 agentic-search 拿到目标论文 unique_id，再按 relation 类型分页获取完整列表。
-
-**适用场景：** 查看某篇论文的完整被引列表（CITATIONS）、参考文献列表（REFERENCES）或相关工作列表（RELATED_WORKS）。
-
-**不适用场景：** 无法通过 doc_id 查询引用关系（必须用 unique_id）；RELATED_WORKS 不能替代语义检索（开放问题的语义证据召回应使用 agentic-search）。
-
-**核心能力：** 必填参数有 unique_id（如 paper:10.1038/xxx）和 relation（CITATIONS / REFERENCES / RELATED_WORKS）；支持 page/page_size 分页（1-200）；响应返回 items（每条含 id、id_type、title）、total_count、page、page_size、total_pages。CITATIONS 表示"谁引用了我"，REFERENCES 表示"我引用了谁"，两者方向相反。
-
----
-
-以上六个接口覆盖了从语义检索（agentic-search）、结构化元数据检索（meta-search）、字段能力探查（meta-catalog）、原文读取（content）、附件下载（resource）到引用关系追踪（meta-paper-relations）的完整学术文献工作流。所有接口统一使用 API Key Bearer Token 鉴权，同一套 API Key 可用于已开通的 Sciverse、点石与 Skills 能力。
+- 检索（P3）：`_to_retrieved` 从 hit 保留 `doc_id`（身份链起点）。
+- 卡片（P5.1）：深卡/浅卡从 retrieved 传递 `doc_id` 到 `PaperCard`。
+- 证据（P5.2）：`_content_backfill` 用 `read_full_text(card.doc_id)` 拉论文自身全文 → `content_chunk` 证据（provenance 三字段齐全）；`_agentic_backfill` 保留但受来源闸门约束（`tools/verify/provenance.py`：DOI 相等 OR 归一化标题相等，否则拒绝）。
