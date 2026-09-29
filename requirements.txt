@@ -4,3 +4,4 @@ pydantic>=2.6.0
 sentence-transformers>=3.0.0
 pytest>=8.0.0
 respx>=0.21.0
+typesafe-sdk>=0.7.0
