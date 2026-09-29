@@ -65,7 +65,7 @@ def run(request_path: str) -> dict:
     generation_llm = heavy if heavy.is_configured() else llm
     logger.info(f"[worker] generation model={generation_llm.model_name} (fallback core: {llm.model_name})")
 
-    # Phase 1-6 (Phase 4 RAG removed — superseded by agentic-search; see docs/模块B-架构设计.md)
+    # Phase 1-6 (Phase 4 RAG removed — superseded by agentic-search)
     logger.info(f"[worker] start task_id={request.task_id} topic={request.topic!r} "
                 f"use_mineru={request.pipeline_config.use_mineru} seed={len(seed_papers)} surveys={len(surveys)}")
 
