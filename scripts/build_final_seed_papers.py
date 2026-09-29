@@ -209,6 +209,23 @@ PAPERS = [
 ]
 
 
+# Deterministic claim bindings for the seed evidence: the card claims are
+# drawn verbatim from these fields, so the support row is exact by
+# construction (same gate shape as phase5_evidence._support_rows). Without
+# these rows the wave8 claim gate in write_survey rejects every seed claim and
+# the FINAL_SEED replay degrades to a claim-less survey (quality_failed).
+_KIND_ROLES = {
+    "method": "own_method",
+    "contribution": "own_contribution",
+    "limitations": "own_limitation",
+}
+_KIND_DIMENSION = {
+    "method": "method",
+    "contribution": "key_results",
+    "limitations": "limitations",
+}
+
+
 def build_final_seed_data(task_id: str = "task_world_models_and_gamecraft_final_001") -> dict[str, Any]:
     categories = [dict(item, paper_ids=[]) for item in CATEGORIES]
     by_category = {item["category_id"]: item for item in categories}
@@ -236,6 +253,20 @@ def build_final_seed_data(task_id: str = "task_world_models_and_gamecraft_final_
             }
         )
         for kind in ["problem", "method", "contribution", "limitations"]:
+            supports = []
+            if kind in _KIND_ROLES:
+                supports = [
+                    {
+                        "paper_id": card["paper_id"],
+                        "claim_text": card[kind],
+                        "dimension": _KIND_DIMENSION[kind],
+                        "source_role": _KIND_ROLES[kind],
+                        "source_quote": card[kind],
+                        "evidence_ids": [f"ev_{card['paper_id']}_{kind}"],
+                        "support_type": "direct",
+                        "confidence": 0.95,
+                    }
+                ]
             evidence.append(
                 {
                     "evidence_id": f"ev_{card['paper_id']}_{kind}",
@@ -244,6 +275,7 @@ def build_final_seed_data(task_id: str = "task_world_models_and_gamecraft_final_
                     "source_type": "final_seed_card",
                     "supports": [kind],
                     "confidence": 0.95,
+                    "supports_claims": supports,
                 }
             )
     return {

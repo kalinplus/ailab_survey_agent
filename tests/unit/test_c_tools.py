@@ -414,7 +414,7 @@ def test_final_seed_write_and_render_submission_ready(tmp_path, monkeypatch):
     request_path = tmp_path / "requests" / "survey_generation_request.json"
     _write_json(request_path, request)
     write_result = write_survey.run(str(request_path))
-    assert write_result["status"] == "partial_success"  # legacy seed cards have no source-role contract
+    assert write_result["status"] == "success"  # seed claims carry supports_claims bindings and pass the claim gate
 
     output = tmp_path / "output"
     cache = tmp_path / "cache"
