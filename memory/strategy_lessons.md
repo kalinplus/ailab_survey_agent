@@ -118,3 +118,11 @@
 - 2026-09-11T11:17:00: For World Models for Games: A Survey, the latest full strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.
 
 - 2026-09-11T11:55:13: For World Models for Games: A Survey, the latest full strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.
+
+- 2026-09-21T21:22:06: For World Models and GameCraft for Interactive Game Intelligence, the latest demo strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.
+
+- 2026-09-21T21:26:38: For World Models and GameCraft for Interactive Game Intelligence, the latest demo strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.
+
+- 2026-09-21T21:38:05: For World Models and GameCraft for Interactive Game Intelligence, the latest demo strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.
+
+- 2026-09-21T21:55:24: For World Models and GameCraft for Interactive Game Intelligence, the latest demo strategy used memory, did not use probing, and produced aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling.

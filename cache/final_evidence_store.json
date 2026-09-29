@@ -9,7 +9,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_world_models_2018_method",
@@ -19,7 +20,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "world_models_2018",
+          "claim_text": "A variational autoencoder compresses observations, an MDN-RNN predicts latent dynamics, and a compact controller is optimized in latent space.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "A variational autoencoder compresses observations, an MDN-RNN predicts latent dynamics, and a compact controller is optimized in latent space.",
+          "evidence_ids": [
+            "ev_world_models_2018_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_world_models_2018_contribution",
@@ -29,7 +44,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "world_models_2018",
+          "claim_text": "The paper showed that agents can be trained inside learned models of game environments such as CarRacing and VizDoom.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "The paper showed that agents can be trained inside learned models of game environments such as CarRacing and VizDoom.",
+          "evidence_ids": [
+            "ev_world_models_2018_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_world_models_2018_limitations",
@@ -39,7 +68,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "world_models_2018",
+          "claim_text": "The demonstrations use relatively simple environments, and accumulated rollout error can weaken long-horizon planning.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "The demonstrations use relatively simple environments, and accumulated rollout error can weaken long-horizon planning.",
+          "evidence_ids": [
+            "ev_world_models_2018_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_dreamerv3_2023_problem",
@@ -49,7 +92,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_dreamerv3_2023_method",
@@ -59,7 +103,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "dreamerv3_2023",
+          "claim_text": "DreamerV3 learns a latent world model and trains actor-critic behavior from imagined trajectories.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "DreamerV3 learns a latent world model and trains actor-critic behavior from imagined trajectories.",
+          "evidence_ids": [
+            "ev_dreamerv3_2023_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_dreamerv3_2023_contribution",
@@ -69,7 +127,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "dreamerv3_2023",
+          "claim_text": "It broadened the empirical case for world-model agents across visual control and game-like domains.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "It broadened the empirical case for world-model agents across visual control and game-like domains.",
+          "evidence_ids": [
+            "ev_dreamerv3_2023_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_dreamerv3_2023_limitations",
@@ -79,7 +151,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "dreamerv3_2023",
+          "claim_text": "The approach still depends on learned model quality and careful evaluation across domains.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "The approach still depends on learned model quality and careful evaluation across domains.",
+          "evidence_ids": [
+            "ev_dreamerv3_2023_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_muzero_2020_problem",
@@ -89,7 +175,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_muzero_2020_method",
@@ -99,7 +186,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "muzero_2020",
+          "claim_text": "MuZero learns representation, dynamics, and prediction functions and uses tree search over the learned model.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "MuZero learns representation, dynamics, and prediction functions and uses tree search over the learned model.",
+          "evidence_ids": [
+            "ev_muzero_2020_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_muzero_2020_contribution",
@@ -109,7 +210,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "muzero_2020",
+          "claim_text": "The system achieved strong results in Atari and classic board games while learning the model used for planning.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "The system achieved strong results in Atari and classic board games while learning the model used for planning.",
+          "evidence_ids": [
+            "ev_muzero_2020_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_muzero_2020_limitations",
@@ -119,7 +234,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "muzero_2020",
+          "claim_text": "The planning machinery and training pipeline are computationally demanding.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "The planning machinery and training pipeline are computationally demanding.",
+          "evidence_ids": [
+            "ev_muzero_2020_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_gamengen_2024_problem",
@@ -129,7 +258,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_gamengen_2024_method",
@@ -139,7 +269,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "gamengen_2024",
+          "claim_text": "The system uses a diffusion model conditioned on previous frames and actions to produce playable game-video dynamics.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "The system uses a diffusion model conditioned on previous frames and actions to produce playable game-video dynamics.",
+          "evidence_ids": [
+            "ev_gamengen_2024_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_gamengen_2024_contribution",
@@ -149,7 +293,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "gamengen_2024",
+          "claim_text": "It framed diffusion models as neural game engines capable of interactive visual simulation.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "It framed diffusion models as neural game engines capable of interactive visual simulation.",
+          "evidence_ids": [
+            "ev_gamengen_2024_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_gamengen_2024_limitations",
@@ -159,7 +317,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "gamengen_2024",
+          "claim_text": "Real-time generative play raises consistency, controllability, and evaluation challenges.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "Real-time generative play raises consistency, controllability, and evaluation challenges.",
+          "evidence_ids": [
+            "ev_gamengen_2024_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_genie_2024_problem",
@@ -169,7 +341,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_genie_2024_method",
@@ -179,7 +352,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "genie_2024",
+          "claim_text": "Genie learns a latent action model and video generator to create controllable environments from visual examples.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "Genie learns a latent action model and video generator to create controllable environments from visual examples.",
+          "evidence_ids": [
+            "ev_genie_2024_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_genie_2024_contribution",
@@ -189,7 +376,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "genie_2024",
+          "claim_text": "It connected generative video modeling with interactive environment construction for agents and players.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "It connected generative video modeling with interactive environment construction for agents and players.",
+          "evidence_ids": [
+            "ev_genie_2024_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_genie_2024_limitations",
@@ -199,7 +400,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "genie_2024",
+          "claim_text": "Generated environments require careful evaluation of controllability, temporal coherence, and task semantics.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "Generated environments require careful evaluation of controllability, temporal coherence, and task semantics.",
+          "evidence_ids": [
+            "ev_genie_2024_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_alphastar_2019_problem",
@@ -209,7 +424,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_alphastar_2019_method",
@@ -219,7 +435,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "alphastar_2019",
+          "claim_text": "AlphaStar combines supervised learning, reinforcement learning, and league-based multi-agent training.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "AlphaStar combines supervised learning, reinforcement learning, and league-based multi-agent training.",
+          "evidence_ids": [
+            "ev_alphastar_2019_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_alphastar_2019_contribution",
@@ -229,7 +459,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "alphastar_2019",
+          "claim_text": "The work demonstrated grandmaster-level performance in StarCraft II and highlighted the value of competitive training ecosystems.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "The work demonstrated grandmaster-level performance in StarCraft II and highlighted the value of competitive training ecosystems.",
+          "evidence_ids": [
+            "ev_alphastar_2019_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_alphastar_2019_limitations",
@@ -239,7 +483,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "alphastar_2019",
+          "claim_text": "The system relies on extensive engineering, training scale, and domain-specific interfaces.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "The system relies on extensive engineering, training scale, and domain-specific interfaces.",
+          "evidence_ids": [
+            "ev_alphastar_2019_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_dota2_2019_problem",
@@ -249,7 +507,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_dota2_2019_method",
@@ -259,7 +518,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "dota2_2019",
+          "claim_text": "OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "OpenAI Five uses large-scale self-play reinforcement learning with recurrent policies and extensive distributed training.",
+          "evidence_ids": [
+            "ev_dota2_2019_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_dota2_2019_contribution",
@@ -269,7 +542,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "dota2_2019",
+          "claim_text": "The project showed that self-play can produce strong coordinated behavior in Dota 2.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "The project showed that self-play can produce strong coordinated behavior in Dota 2.",
+          "evidence_ids": [
+            "ev_dota2_2019_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_dota2_2019_limitations",
@@ -279,7 +566,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "dota2_2019",
+          "claim_text": "The training regime is compute-intensive and tied to a specific game abstraction.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "The training regime is compute-intensive and tied to a specific game abstraction.",
+          "evidence_ids": [
+            "ev_dota2_2019_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_generative_agents_2023_problem",
@@ -289,7 +590,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_generative_agents_2023_method",
@@ -299,7 +601,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "generative_agents_2023",
+          "claim_text": "The system combines memory streams, reflection, planning, and language-model-driven action selection.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "The system combines memory streams, reflection, planning, and language-model-driven action selection.",
+          "evidence_ids": [
+            "ev_generative_agents_2023_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_generative_agents_2023_contribution",
@@ -309,7 +625,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "generative_agents_2023",
+          "claim_text": "It illustrated how generative agents can populate interactive worlds with coherent behavior.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "It illustrated how generative agents can populate interactive worlds with coherent behavior.",
+          "evidence_ids": [
+            "ev_generative_agents_2023_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_generative_agents_2023_limitations",
@@ -319,7 +649,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "generative_agents_2023",
+          "claim_text": "Behavioral realism and evaluation remain difficult, and language-model outputs need guardrails.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "Behavioral realism and evaluation remain difficult, and language-model outputs need guardrails.",
+          "evidence_ids": [
+            "ev_generative_agents_2023_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_unisim_2024_problem",
@@ -329,7 +673,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_unisim_2024_method",
@@ -339,7 +684,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "unisim_2024",
+          "claim_text": "UniSim trains generative world simulators from broad visual interaction data.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "UniSim trains generative world simulators from broad visual interaction data.",
+          "evidence_ids": [
+            "ev_unisim_2024_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_unisim_2024_contribution",
@@ -349,7 +708,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "unisim_2024",
+          "claim_text": "It positions learned simulators as reusable environments for interactive intelligence.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "It positions learned simulators as reusable environments for interactive intelligence.",
+          "evidence_ids": [
+            "ev_unisim_2024_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_unisim_2024_limitations",
@@ -359,7 +732,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "unisim_2024",
+          "claim_text": "General-purpose simulator quality depends on broad data coverage and robust interaction evaluation.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "General-purpose simulator quality depends on broad data coverage and robust interaction evaluation.",
+          "evidence_ids": [
+            "ev_unisim_2024_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_diffusion_world_models_2024_problem",
@@ -369,7 +756,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_diffusion_world_models_2024_method",
@@ -379,7 +767,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "diffusion_world_models_2024",
+          "claim_text": "The work uses diffusion models to represent or predict environment dynamics for model-based learning.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "The work uses diffusion models to represent or predict environment dynamics for model-based learning.",
+          "evidence_ids": [
+            "ev_diffusion_world_models_2024_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_diffusion_world_models_2024_contribution",
@@ -389,7 +791,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "diffusion_world_models_2024",
+          "claim_text": "It expands the design space of generative world models beyond recurrent latent dynamics.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "It expands the design space of generative world models beyond recurrent latent dynamics.",
+          "evidence_ids": [
+            "ev_diffusion_world_models_2024_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_diffusion_world_models_2024_limitations",
@@ -399,7 +815,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "diffusion_world_models_2024",
+          "claim_text": "Diffusion rollouts can be expensive and must be assessed for temporal consistency.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "Diffusion rollouts can be expensive and must be assessed for temporal consistency.",
+          "evidence_ids": [
+            "ev_diffusion_world_models_2024_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_gaia1_2023_problem",
@@ -409,7 +839,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_gaia1_2023_method",
@@ -419,7 +850,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "gaia1_2023",
+          "claim_text": "GAIA-1 models video, action, and scene context to generate plausible future driving observations.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "GAIA-1 models video, action, and scene context to generate plausible future driving observations.",
+          "evidence_ids": [
+            "ev_gaia1_2023_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_gaia1_2023_contribution",
@@ -429,7 +874,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "gaia1_2023",
+          "claim_text": "Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "Although outside games, it shows how controllable world models can transfer to high-stakes embodied simulation.",
+          "evidence_ids": [
+            "ev_gaia1_2023_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_gaia1_2023_limitations",
@@ -439,7 +898,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "gaia1_2023",
+          "claim_text": "Driving-focused results do not directly solve game intelligence evaluation and require domain-specific validation.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "Driving-focused results do not directly solve game intelligence evaluation and require domain-specific validation.",
+          "evidence_ids": [
+            "ev_gaia1_2023_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_minedojo_2022_problem",
@@ -449,7 +922,8 @@
       "supports": [
         "problem"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": []
     },
     {
       "evidence_id": "ev_minedojo_2022_method",
@@ -459,7 +933,21 @@
       "supports": [
         "method"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "minedojo_2022",
+          "claim_text": "MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources.",
+          "dimension": "method",
+          "source_role": "own_method",
+          "source_quote": "MineDojo builds a Minecraft-based environment with tasks, data, and knowledge resources.",
+          "evidence_ids": [
+            "ev_minedojo_2022_method"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_minedojo_2022_contribution",
@@ -469,7 +957,21 @@
       "supports": [
         "contribution"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "minedojo_2022",
+          "claim_text": "It provides a large open-ended game environment for embodied agent research.",
+          "dimension": "key_results",
+          "source_role": "own_contribution",
+          "source_quote": "It provides a large open-ended game environment for embodied agent research.",
+          "evidence_ids": [
+            "ev_minedojo_2022_contribution"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     },
     {
       "evidence_id": "ev_minedojo_2022_limitations",
@@ -479,7 +981,21 @@
       "supports": [
         "limitations"
       ],
-      "confidence": 0.95
+      "confidence": 0.95,
+      "supports_claims": [
+        {
+          "paper_id": "minedojo_2022",
+          "claim_text": "Minecraft-specific affordances and task design choices shape what can be concluded.",
+          "dimension": "limitations",
+          "source_role": "own_limitation",
+          "source_quote": "Minecraft-specific affordances and task design choices shape what can be concluded.",
+          "evidence_ids": [
+            "ev_minedojo_2022_limitations"
+          ],
+          "support_type": "direct",
+          "confidence": 0.95
+        }
+      ]
     }
   ]
 }

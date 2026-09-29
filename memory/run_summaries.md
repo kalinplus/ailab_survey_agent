@@ -517,3 +517,39 @@
 - used_probing: false
 - organization_mode: hybrid
 - aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling
+
+## 2026-09-21T21:22:06 - World Models and GameCraft for Interactive Game Intelligence
+
+- event: search_strategy_generated
+- mode: demo
+- used_memory: true
+- used_probing: false
+- organization_mode: hybrid
+- aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling
+
+## 2026-09-21T21:26:38 - World Models and GameCraft for Interactive Game Intelligence
+
+- event: search_strategy_generated
+- mode: demo
+- used_memory: true
+- used_probing: false
+- organization_mode: hybrid
+- aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling
+
+## 2026-09-21T21:38:05 - World Models and GameCraft for Interactive Game Intelligence
+
+- event: search_strategy_generated
+- mode: demo
+- used_memory: true
+- used_probing: false
+- organization_mode: hybrid
+- aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling
+
+## 2026-09-21T21:55:24 - World Models and GameCraft for Interactive Game Intelligence
+
+- event: search_strategy_generated
+- mode: demo
+- used_memory: true
+- used_probing: false
+- organization_mode: hybrid
+- aspects: Generative Game World Simulation, Agent Planning and Control in Learned Worlds, GameCraft Benchmarks and Evaluation Protocols, Neural Rendering and Multimodal Game State Modeling
